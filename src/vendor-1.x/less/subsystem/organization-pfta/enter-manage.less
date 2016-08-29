@@ -1,0 +1,128 @@
+/* ========================================================================
+   Component: enter-manage Created by zppro on 16-5-5.
+ ========================================================================== */
+ul.charge-item-in-enter{
+  list-style: none;
+  padding-left: 0px;
+  margin-left: 0px;
+  border-radius: 5px;
+  border: solid 1px lighten(@btn-primary-bg, 5%);
+  li.charge-item-level-one{
+    background-color: lighten(@btn-primary-bg, 10%);
+    font-size: 18px;
+    padding: 10px;
+    > span{color:@gray-darker}
+  }
+  li.charge-item-level-two{
+    background-color: lighten(@btn-primary-bg, 30%);
+    padding: 5px;
+    span{padding-left: 30px;color:darken(@gray,20%)}
+  }
+  li.charge-item-level-two.selected{
+    background-color: lighten(@btn-primary-bg, 20%);
+    padding: 5px;
+    span{color:@gray-darker}
+  }
+}
+.tree-tile {
+  > .ul-container {
+    > ul {
+      background-color: white;
+      > li {
+
+        .tree-group-head{
+          border-radius: 0;
+          cursor: default;
+          background-color: darken(@btn-primary-bg, 20%);
+        }
+
+        .tree-item {
+          color:white;
+          text-align: right;
+          height: 158px !important;
+          background-color: darken(@btn-primary-bg, 10%);
+          .floor {
+            > span {
+              width: 16px !important;
+              font-size: 16px !important;
+            }
+          }
+        }
+        .tree-item-children {
+
+          li {
+            width: 128px !important;
+            height:148px !important;
+            background-color: darken(@btn-primary-bg, 10%);
+          }
+
+          .room-head {
+            height: 20px;
+            cursor: default;
+            background-color: darken(@btn-primary-bg, 15%);
+          }
+          .room-head:hover {
+            background-color: darken(@btn-primary-bg, 15%);
+          }
+          .room-body {
+            display: table;
+            //background-color: darken(@btn-primary-bg, 20%);
+            height: 128px;
+            width: 100%;
+            padding: 2px;
+            > li {
+              margin: 0;
+              padding: 2px;
+              display: table;
+            }
+            > .single-bed {
+              width: 100%!important;
+              height: 100%!important;
+            }
+            > .double-beds {
+              width: 50%!important;
+              height: 100%!important;
+            }
+            > .four-beds {
+              width: 50%!important;
+              height: 50%!important;
+            }
+            > .six-beds {
+              width: 33%!important;
+              height: 50%!important;
+            }
+
+            .room-bed {
+              color: white;
+              display: table-cell;
+              vertical-align: middle;
+              border: solid 1px darken(@btn-primary-bg, 30%);
+              width: 100%;
+              height: 100%;
+              cursor: pointer;
+              background-color: darken(@btn-primary-bg, 20%);
+              .elderly-name {
+                display: block;
+              }
+            }
+            .room-bed:hover {
+              background-color: darken(@btn-primary-bg, 10%);
+            }
+            .room-bed.disabled {
+              cursor: default;
+              background-color: #CCC;
+              color: darkgrey;
+            }
+
+            .tree-node-selected,.tree-node-selected:hover {
+              background-color: orange!important;
+            }
+
+          }
+        }
+
+
+      }
+    }
+  }
+}

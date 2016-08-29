@@ -1,0 +1,27 @@
+.abs-center.wd-xl(ng-controller="LockFormController as lock")
+  // START panel
+  .p
+    img.img-thumbnail.img-circle.center-block(ng-src="{{user.picture}}", alt="Avatar", width="60", height="60")
+  .panel.widget.b0
+    .panel-body
+      p.text-center {{ 'page.lock.TIP' | translate}}.
+      form(role='form', name="lock.lockForm",ng-submit="lock.unlock()",novalidate='')
+        .form-group.has-feedback
+          input.form-control(type='password', placeholder="{{'page.lock.PLACEHOLDER-PASSWORD'|translate}}", required='', name='lock_password', ng-model="lock.password")
+          span.fa.fa-lock.form-control-feedback.text-muted
+          span.text-danger(ng-show="lock.lockForm.lock_password.$dirty && lock.lockForm.lock_password.$error.required") {{ "validator.REQUIRED" | translate}}
+        .clearfix
+          .pull-left.mt-sm
+            a(ui-sref="page.recover").text-muted: small {{ 'page.lock.FORGOT-YOUR-PASSWORD' | translate}}?
+          .pull-right
+            // Change this button type to submit to send the form data
+            button.btn.btn-sm.btn-primary(type='submit') {{ 'page.lock.UNLOCK' | translate}}
+      .alert.alert-danger.text-center(ng-show='lock.authMsg') {{lock.authMsg}}
+  // END panel
+  .p-lg.text-center
+    span &copy; 
+    span(ng-bind="app.year") 
+    span  - 
+    span(ng-bind="app.name")
+    br
+    span(ng-bind="app.description")

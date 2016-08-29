@@ -1,0 +1,23 @@
+script(type='text/ng-template', id="tree-demo-extend-renderer.html")
+    .tree-node.no-select(tree-index="{{tIndex}}",node-index="{{nIndex}}",node-id="{{node._id}}",support-pre-select-or-check,ng-click="vm.trees[tIndex].select(node,$event)",ng-dblclick="vm.trees[tIndex].toggle(nIndex,$event)",ng-init="vm.trees[tIndex].addIndex(nIndex)")
+        i(ng-if="node.children",class="fa",ng-class="{'fa-caret-right':!vm.trees[tIndex].isExpanded(nIndex),'fa-caret-down':vm.trees[tIndex].isExpanded(nIndex)}",ng-click="vm.trees[tIndex].toggle(nIndex,$event)")
+        i(ng-if="!node.children",class="fa",ng-class="{'fa-caret-right':vm.trees[tIndex].mode=='grid'}")
+        .checkbox.c-checkbox(ng-if="vm.trees[tIndex].mode=='check'")
+            label
+                input(type='checkbox',ng-click="vm.trees[tIndex].toggleCheck(nIndex,$event)",ng-model="vm.trees[tIndex].inputCheckedIndex[nIndex]")
+                span.fa.fa-check(ng-class="{'undetermined':vm.trees[tIndex].isUndetermined(nIndex)}")
+        i(class="{{node.icon}}", ng-if="node.icon")
+        span {{node.name}}
+        span(ng-if="node.template" ng-include="node.template")
+    ul(ng-if="node.children",ng-show="vm.trees[tIndex].isExpanded(nIndex)")
+        li(ng-repeat='node in node.children',ng-include="'tree-demo-extend-renderer.html'",ng-init="nIndex = (nIndex+vm.trees[tIndex].levelSplitChar+$index)")
+.col-xs-3
+    .tree.tree-demo#tree1(ng-style="{height:vm.size.h-15}")
+        ul
+            li(ng-repeat='node in vm.trees[0].treeData',ng-include="'tree-demo-extend-renderer.html'",ng-init="tIndex=0;nIndex = $index")
+    span selected:{{vm.trees[0].selectedNode.name}}
+.col-xs-3
+    .tree.tree-demo#tree2(ng-style="{height:vm.size.h-15}")
+        ul
+            li(ng-repeat='node in vm.trees[1].treeData',ng-include="'tree-demo-extend-renderer.html'",ng-init="tIndex=1;nIndex = $index")
+    span checked:{{vm.trees[1].checkedNodes}}

@@ -1,0 +1,59 @@
+
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        <!--冲红时间-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-CHECK_IN_TIME') | translate}}:
+                        .col-md-10
+                            .form-readable(ng-if="vm.readonly || vm._action_=='edit'") {{vm.model.check_in_time|date}}
+                        .col-md-10
+                            .form-readable(ng-if="vm._action_=='add'") {{'label.AUTO-GEN' | translate }}
+                    fieldset: .form-group
+                        <!--记账凭证号-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-VOUCHER_NO') | translate}}:
+                        .col-md-10
+                            .form-readable(ng-if="vm.readonly || vm._action_=='edit'") {{vm.model.voucher_no}}
+                        .col-md-10
+                            .form-readable(ng-if="vm._action_=='add'") {{'label.AUTO-GEN' | translate }}
+                    fieldset: .form-group
+                        <!--冲红凭证号-->
+                        label.col-md-2.control-label {{ 'label.VOUCHER_NO-TO-RED' | translate}}:
+                        .col-md-4(ng-if="!vm.readonly && vm._action_!='edit' ")
+                            //input.form-control(type='text', name='name',ng-model='vm.model.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-ELDERLY")|translate}}' ,required='')
+                            div#elderly(angucomplete-alt,input-name="voucher_no_to_red",minlength="1",field-required="true",text-searching='{{"label.TEXT-SEARCHING"|translate}}',text-no-results='{{"label.TEXT-NO-RESULTS"|translate}}',placeholder="{{'placeholder.VOUCHER_NO-TO-RED'|translate}}",pause="400",selected-object="vm.selectVoucherNo",remote-api-handler="vm.queryVoucherNo",title-field="voucher_no",initial-value="vm.selectedVoucherNo",input-class="form-control form-control-small")
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'voucher_no_to_red','autocomplete-required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-4(ng-if="vm.readonly || vm._action_=='edit'")
+                            .form-readable {{vm.model.voucher_no_to_red}}
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-RAW_AMOUNT') | translate}}:
+                        .col-md-4
+                            .form-readable {{vm.raw_amount || '--'}}
+                    fieldset: .form-group
+                        <!--充值金额-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-AMOUNT') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm.itCanDisableOrChange")
+                            input.form-control(type='number',name='amount' ,ng-model='vm.model.amount',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-AMOUNT")|translate}}', required='' ui-validate="'$value>0'" )
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'amount','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'amount','number')") {{ "validator.NUMBER" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'amount','validator')") {{ "validator.MIN" | translate:{min:0.01} }}
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.model.amount}}
+                    fieldset: .form-group
+                        <!--备注-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-REMARK') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            textarea.form-control(name='remark',ng-model='vm.model.remark',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-REMARK")|translate}}',maxlength="400")
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.model.remark}}
+    .text-right.mt-lg
+        button.btn.btn-danger.pull-left(ng-if="vm.readonly && !vm.waiting && vm.itCanDisableOrChange",type="button",ng-click="vm.disableRechargeAndUnbooking()") {{'button.REMOVE'|translate}}
+        button.btn.btn-primary(ng-if="vm.readonly && !vm.waiting && vm.itCanDisableOrChange",type="button",ng-click="vm.toEditView()") {{'button.EDIT'|translate}}
+        button.btn.btn-warning(ng-if="!vm.readonly",type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(ng-if="!vm.readonly && !vm.waiting && vm.itCanDisableOrChange",type="submit") {{'button.SAVE'|translate}}
+        button.btn.btn-primary(ng-if="vm.readonly",type="button",ng-click="vm.toListView()") {{'button.RETURN'|translate}}

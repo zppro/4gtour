@@ -1,0 +1,79 @@
+/* ========================================================================
+   Component: block-ui Created by zppro on 16-3-2.
+ ========================================================================== */
+
+// Height variables (appears count calculates by raw css)
+@height0: 100%; // Appears 2 times
+@height1: 0; // Appears 3 times
+
+
+.block-ui {
+  position: relative;
+}
+body.block-ui {
+  position: static;
+}
+body.block-ui>.block-ui-container {
+  position: fixed;
+}
+.block-ui-main>.block-ui-container {
+  position: fixed;
+}
+.block-ui-container {
+  bottom: 0;
+  filter: alpha(opacity=00);
+  height: @height1;
+  left: 0;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 10000;
+}
+.block-ui-active>.block-ui-container {
+  cursor: wait;
+  height: @height0;
+}
+.block-ui-active {
+  .block-ui-active>.block-ui-container {
+    height: @height1;
+  }
+}
+.block-ui-visible>.block-ui-container {
+  filter: alpha(opacity=100);
+  opacity: 1;
+}
+.block-ui-overlay {
+  background-color: white;
+  filter: alpha(opacity=50);
+  height: @height0;
+  opacity: 0.5;
+  width: 100%;
+}
+.block-ui-message-container {
+  height: @height1;
+  left: 0;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 35%;
+  z-index: 10001;
+}
+.block-ui-message {
+  background-color: #aaaaaa;//#333333
+  border-radius: 4px;
+  color: #f5f5f5;
+  display: inline-block;
+  filter: alpha(opacity=100);
+  font-size: 20px;
+  font-weight: bold;
+  padding: 20px;
+  text-align: left;
+}
+.block-ui-anim-fade>.block-ui-container {
+  transition: height 0s linear 200ms, opacity 200ms ease 0s;
+}
+.block-ui-anim-fade.block-ui-active>.block-ui-container {
+  transition-delay: 0s;
+}

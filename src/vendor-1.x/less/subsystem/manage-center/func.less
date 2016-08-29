@@ -1,0 +1,43 @@
+/* ========================================================================
+   Component: func-module Created by zppro on 16-4-6.
+ ========================================================================== */
+@func-price-padding: 5px;
+@func-price-li-height:60px;
+@func-price-margin-bottom:40px;
+
+@func-price-totals-vertical:     6px;
+@func-price-totals-horizontal:   16px;
+
+.func-price-totals{
+
+  padding:@func-price-totals-vertical @func-price-totals-horizontal;
+  > span.currency{
+    border-bottom: solid 1px @gray-dark;
+    padding:0 10px;
+  }
+}
+.func-price {
+  margin:0 auto;
+  padding:@func-price-padding;
+  overflow-y: auto;
+  margin-bottom: @func-price-margin-bottom;
+  ul {
+    list-style: none;
+    padding-left: 0px;
+    margin-left: 0px;
+
+  }
+  li {
+    height: @func-price-li-height;
+    cursor: pointer;
+    border-bottom: solid 1px @gray-light;
+    &.header{
+      border-bottom: solid 2px @gray-light;
+      height: @func-price-li-height/2;
+    }
+    .func-item {
+      line-height: 55px;
+      vertical-align: bottom;
+    }
+  }
+}

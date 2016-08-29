@@ -1,0 +1,63 @@
+[
+  {
+    "_id": "menu.demo-center.GRID",
+    "name": "网格",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.demo-center.GRID-BASIC",
+        "name": "网格-基本功能",
+        "sref": "app.demo-center.grid-basic.list"
+      }
+    ]
+  },
+  {
+    "_id": "menu.demo-center.TREE",
+    "name": "树",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.demo-center.TREE-BASIC",
+        "name": "树-基本功能",
+        "sref": "app.demo-center.tree-basic"
+      },
+      {
+        "_id": "menu.demo-center.TREE-EXTEND",
+        "name": "树-扩展功能",
+        "sref": "app.demo-center.tree-extend"
+      },
+      {
+        "_id": "menu.demo-center.TREE-DIRECTIVE",
+        "name": "树-指令",
+        "sref": "app.demo-center.tree-directive"
+      },
+      {
+        "_id": "menu.demo-center.TREE-NAV",
+        "name": "树-导航",
+        "sref": "app.demo-center.tree-nav"
+      },
+      {
+        "_id": "menu.demo-center.TREE-TILE",
+        "name": "树-平铺",
+        "sref": "app.demo-center.tree-tile"
+      }
+    ]
+  },
+  {
+    "_id": "menu.demo-center.DROPDOWN",
+    "name": "下拉选择",
+    "sref": "app.demo-center.dropdown"
+  },
+  {
+    "_id": "menu.demo-center.BOX-INPUT",
+    "name": "方框输入框",
+    "sref": "app.demo-center.box-input"
+  },
+  {
+    "_id": "menu.demo-center.PROMISE",
+    "name": "Promise",
+    "sref": "app.demo-center.promise"
+  }
+]

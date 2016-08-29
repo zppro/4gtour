@@ -1,0 +1,30 @@
+//
+   Created by zppro on 16-2-23.
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="")
+    .panel
+        fieldset: .form-group
+        fieldset: .form-group
+            <!--身份证号-->
+            label.col-md-2.control-label {{ vm.moduleTranslatePath('ID_NO') | translate}}:
+            .col-md-10
+                input(type='text', name='id_no',ng-model='vm.id_no',required='',maxlength="18",box-input,id-no2)
+                span.text-danger(ng-show="utils.vinput(this.theForm,'id_no','required')") {{ "validator.REQUIRED" | translate}}
+                span.text-danger(ng-show="utils.vinput(this.theForm,'id_no','IDNo')") {{ "validator.ID-NO" | translate}}
+        fieldset: .form-group
+            <!--性别-->
+            label.col-md-2.control-label {{ vm.moduleTranslatePath('SEX') | translate}}:
+            .col-md-10
+                .btn-group
+                    .btn.btn-primary(name='sex',ng-repeat='sex in vm.selectBinding.sex',ng-model='vm.sex',btn-radio="sex.value",required='',extract-sex="vm.id_no") {{sex.name}}
+                span.text-danger(ng-show="utils.vinput(this.theForm,'sex','required')") {{ "validator.REQUIRED" | translate}}
+        fieldset: .form-group
+            <!--出生日期-->
+            label.col-md-2.control-label {{ vm.moduleTranslatePath('BIRTHDAY') | translate}}:
+            .col-md-2
+                .input-group
+                    input.form-control(type="text",name='birthday',is-open="vm.openedDP",datepicker-popup="",ng-model="vm.birthday" ,placeholder='{{vm.viewTranslatePath("BIRTHDAY")|translate}}',required='',ng-click="vm.openDP($event)",extract-birthday="vm.id_no")
+                    span.input-group-btn
+                        button.btn.btn-primary(ng-click="vm.openDP($event)")
+                            i.glyphicon.glyphicon-calendar
+                span.text-danger(ng-show="utils.vinput(this.theForm,'birthday','required')") {{ "validator.REQUIRED" | translate}}
+                span.text-danger(ng-show="utils.vinput(this.theForm,'birthday','date')") {{ "validator.DATE" | translate}}

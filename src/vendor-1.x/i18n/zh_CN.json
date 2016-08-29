@@ -1,0 +1,273 @@
+{
+  "button": {
+    "SUBMIT":"提交",
+    "CANCEL": "取消",
+    "RETURN": "返回",
+    "SAVE": "保存",
+    "ADD": "新增",
+    "REFRESH":"刷新",
+    "BATCH-ADD": "批量新增",
+    "BATCH-EDIT": "批量修改",
+    "EDIT": "修改",
+    "CHANGE": "变更",
+    "READ": "查看",
+    "AUDIT": "审核",
+    "AUDIT-TRUE": "审核通过",
+    "AUDIT-FALSE": "审核不通过",
+    "REMOVE": "删除",
+    "CLEAR": "清空",
+    "CONFIRM": "确定",
+    "USER": "管理用户",
+    "RESET-USER-PASSWORD":"重设密码",
+    "OPEN-FUNCS": "开通功能模块",
+    "ORDER": "管理订单",
+    "ORDER-SUBMIT": "提交订单",
+    "CONFIRM-RECEIPT": "确认收款",
+    "CONFIRM-ORDER-RECEIPT": "确认收款",
+    "CONFIRM-ORDER-REFUND": "确认退款",
+    "ORDER-COMPLETE":"完成订单",
+    "REFUND-ENTRY":"申请退款",
+    "EXIT-ENTRY":"申请出院",
+    "EXIT-SETTLEMENT":"出院结算",
+    "CHARGE-LIST":"费用清单",
+    "BOOKING":"记账",
+    "RED":"冲红"
+  },
+  "label": {
+    "NONE": "无",
+    "AUTO-GEN": "自动生成",
+    "TOTAL1": "合计",
+    "TEXT-SEARCHING": "查找匹配项...",
+    "TEXT-NO-RESULTS": "未找到匹配项",
+    "VOUCHER_NO-TO-RED": "冲红凭证号",
+    "AMOUNT-BOOKING": "记账金额",
+    "AMOUNT-TO-RED": "冲红金额",
+    "REMARK": "备注"
+  },
+  "placeholder":{
+    "VOUCHER_NO-TO-RED":"需要冲红流水的记账凭证号码..",
+    "AMOUNT-TO-RED":"100.00..",
+    "REMARK":"补充说明一些情况"
+  },
+  "grid": {
+    "LABEL-SEARACH": "关键字",
+    "NO-RESULTS": "没有找到任何数据"
+  },
+  "validator": {
+    "FIELD-INVALID": "字段验证不通过;",
+    "REQUIRED": "必填;",
+    "NUMBER": "数字格式不正确;",
+    "DATE": "日期格式不正确;",
+    "MIN": "大于等于{{min}};",
+    "MAX": "小于等于{{max}};",
+    "EMAIL": "邮箱格式不正确;",
+    "FORMAT": "{{item}}格式不正确;",
+    "PASSWORD-FORMAT": "密码必须匹配大小写字母并且长度大于6小于10;",
+    "PASSWORD-MATCH": "二次输入密码不一至;",
+    "PASSWORD-NEED-CHANGED":"新密码不能和旧密码相同;",
+    "TERM-AGREE": "必须同意条款;",
+    "ALREADY-EXISTS": "已经存在相同的{{item}};",
+    "ORDER-MUST_CHOOSE_ONE_FUNC": "订单必须选择至少一个功能;",
+    "ID-NO": "身份证格式不正确;",
+    "SERVER-SIDE-CHECK":"后端验证错误：{{item}};"
+  },
+  "dialog": {
+    "remove": {
+      "TITLE": "删除确认对话框",
+      "MESSAGE": "您确定要删除当前选中记录码？"
+    },
+    "normal": {
+      "TITLE": "确认对话框",
+      "MESSAGE": "您确定要在当前选中记录上执行操作码？"
+    }
+  },
+  "notification": {
+    "SAVE-SUCCESS": "保存成功",
+    "REMOVE-SUCCESS": "删除成功",
+    "NORMAL-SUCCESS": "操作成功",
+    "SELECT-NONE-WARNING": "没有选中任何记录",
+    "BATCH-ADD-NONE-WARNING": "选中的批量添加记录都已经存在，请重新选择",
+    "NO-CHANGE": "当前数据没有变化",
+    "BOOKING-SUCCESS": "记账成功",
+    "RED-SUCCESS": "冲红成功",
+    "DISABLE-RECHARGE-SUCCESS": "撤销充值成功",
+    "CHANGE-RECHARGE-BOOKING-AMOUNT-SUCCESS": "修改充值记账金额成功",
+    "DISABLE-RED-SUCCESS": "撤销冲红成功",
+    "CHANGE-RED-BOOKING-AMOUNT-SUCCESS": "修改冲红金额成功"
+  },
+  "confirm": {
+    "SUBMIT": "确定要提交么？",
+    "BOOKING": "确定要记账么？",
+    "RED":"确定要冲红么？"
+  },
+  "dashboard": {
+    "WELCOME": "欢迎来到{{appName}}"
+  },
+  "topbar": {
+    "aside": {
+      "COLLAPSE-TITLE": "折叠边栏",
+      "EXPAND-TITLE": "展开边栏"
+    },
+    "user-block": {
+      "TITLE": "用户信息"
+    },
+    "lock": {
+      "TITLE": "锁定屏幕"
+    },
+    "logout": {
+      "TITLE": "退出系统"
+    },
+    "search": {
+      "PLACEHOLDER": "输入查询内容.."
+    }
+  },
+  "subsystem": {
+    "ORGANIZATION-PFTA-STANDARD": "机构养老云-标准版",
+    "COMMUNITY-PFTA-STANDARD": "社区养老云-待定",
+    "MANAGE-CENTER": "管理中心",
+    "DEMO-CENTER": "演示中心"
+  },
+  "menu":{
+    "organization-pfta": {
+      "OLDMAN-MANAGE": "老人管理",
+      "ENTER-MANAGE": "入院管理",
+      "IN-MANAGE": "在院管理",
+      "EXIT-MANAGE": "出院管理",
+      "RECEPTION-MANAGE": "接待管理",
+      "LEAVE-MANAGE": "外出管理",
+      "------------": "",
+      "FINANCIAL-MANAGE": "财务管理",
+      "ENTER-PAYMENT": "老人入院缴费",
+      "RECHARGE": "老人账户充值",
+      "ARREARAGE-MANAGE": "老人欠费管理",
+      "EXIT-SETTLEMENT": "老人出院结算",
+      "RED": "机构冲红明细",
+      "ORG-RECEIPTS-AND-DISBURSEMENTS-DETAILS": "机构收支明细",
+      "------------": "",
+      "MATERIAL-MANAGE": "物资管理",
+      "EXIT-ITEM-RETURN":"出院物品归还",
+      "INVENTORY-MANAGE": "库存管理(暂缓)",
+      "DONATION-MANAGE": "捐赠管理(暂缓)",
+      "------------": "",
+      "KNOWLEDGE-BASE-MANAGE": "知识库管理(暂缓)",
+      "------------": "",
+      "SYSTEM-MANAGE": "系统管理",
+      "USER-MANAGE": "用户管理",
+      "DEPARTMENT-MANAGE": "部门管理(暂缓)",
+      "ROOM-MANAGE": "房间管理",
+      "DISTRICT-MANAGE": "片区管理",
+      "CHARGE-STANDARD": "收费标准",
+      "CHARGE-ITEM-CUSTOMIZED": "特色服务",
+      "LOG": "系统日志(暂缓)"
+    },
+    "manage-center": {
+      "TRAVEL-AGENCY-MANAGE": "旅行社管理",
+      "TRAVEL-AGENCY-ACCOUNT-MANAGE": "帐号管理",
+      "TRAVEL-AGENCY-USER-MANAGE": "用户管理",
+      "TRAVEL-AGENCY-ORDER-MANAGE": "订单管理",
+      "------------": "",
+      "AGENT-MANAGE": "代理商管理",
+      "AGENT-ACCOUNT-MANAGE": "帐号管理",
+      "AGENT-USER-MANAGE": "用户管理",
+      "AGENT-ORDER-MANAGE": "订单管理",
+      "------------": "",
+      "PLATFORM-MANAGE": "平台管理",
+      "PLATFORM-USER-MANAGE": "用户管理",
+      "FUNC": "功能模块",
+      "ORDER-RECEIPT-CONFIRMATION": "收款确认",
+      "ORDER-REFUND-CONFIRMATION": "退款确认",
+      "------------": "",
+      "METADATA-MANAGE": "元数据管理",
+      "DICTIONARY-MANAGE": "字典管理",
+      "PARAM": "系统参数"
+    },
+    "demo-center": {
+      "GRID": "网格",
+      "GRID-BASIC": "网格-基本功能",
+      "TREE": "树",
+      "TREE-BASIC": "树-基本功能",
+      "TREE-EXTEND": "树-扩展功能",
+      "TREE-DIRECTIVE": "树-指令",
+      "TREE-NAV": "树-导航",
+      "TREE-TILE": "树-平铺",
+      "DROPDOWN": "下拉选择",
+      "BOX-INPUT": "方框输入框",
+      "PROMISE": "Promise"
+    }
+  },
+  "sidebar": {
+    "WELCOME": "欢迎",
+    "reset-password":{
+      "TITLE":"重设密码",
+      "LABEL-OLD-PASSWORD":"旧密码",
+      "LABEL-NEW-PASSWORD":"新密码",
+      "LABEL-RE-NEW-PASSWORD":"确认新密码",
+      "PLACEHOLDER-OLD-PASSWORD":"请输入当前密码",
+      "PLACEHOLDER-NEW-PASSWORD":"请输入需要修改的新密码",
+      "PLACEHOLDER-RE-NEW-PASSWORD":"请再次输入新密码"
+    }
+  },
+  "page": {
+    "lock": {
+      "TITLE": "锁屏",
+      "TIP": "登录解锁屏幕",
+      "FORGOT-YOUR-PASSWORD": "忘记密码",
+      "PLACEHOLDER-PASSWORD": "输入密码",
+      "UNLOCK": "解锁"
+    },
+    "login": {
+      "TITLE": "登录",
+      "TIP": "登录后继续",
+      "REMEMBER-ME": "记住我",
+      "FORGOT-YOUR-PASSWORD": "忘记密码",
+      "LOGIN": "登录",
+      "NEED-SIGN-UP": "需要注册",
+      "SIGN-UP-NOW": "立即注册",
+      "PLACEHOLDER-CODE": "手机/邮箱",
+      "PLACEHOLDER-PASSWORD": "密码"
+    },
+    "register": {
+      "TITLE": "注册",
+      "TIP": "注册后立即访问",
+      "TIP-CODE": "手机/邮箱",
+      "PLACEHOLDER-CODE": "手机/邮箱",
+      "TIP-PASSWORD": "输入密码",
+      "TIP-REPASSWORD": "再次输入密码",
+      "TERM-AGREE-A": "我已阅读并同意",
+      "TERM-AGREE-B": "条款",
+      "CREATE-ACCOUNT": "创建帐号",
+      "EXIST-ACCOUNT": "已存在帐号"
+    },
+    "recover": {
+      "TITLE": "找回密码",
+      "TIP": "重置密码",
+      "TIP-DESCRIPTION": "输入邮箱或手机号后根据收到的指令重置密码",
+      "TIP-CODE": "手机/邮箱",
+      "PLACEHOLDER-CODE": "手机/邮箱",
+      "RESET": "重置"
+    },
+    "404": {
+      "TITLE": "无法找到网页",
+      "TIP": "我们无法找到该页面",
+      "TIP-DESCRIPTION": "您请求的页面不存在",
+      "PLACEHOLDER-SEARCH": "试着搜搜其他",
+      "ACTION-RETURN": "返回首页",
+      "ACTION-LOGIN": "登录",
+      "ACTION-REGISTER": "注册"
+    }
+  },
+  "error": {
+    "server": {
+      "mongodb": {
+        "0": "未知错误",
+        "E11000": "唯一性检测到该数据项已被使用"
+      }
+    }
+  },
+  "aggregate_keywords":{
+    "MAX":"最大值",
+    "MIN":"最小值",
+    "AVERAGE":"平均值"
+  }
+}
+

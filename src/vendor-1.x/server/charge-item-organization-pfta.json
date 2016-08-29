@@ -1,0 +1,78 @@
+[
+  {
+    "_id": "S1",
+    "name": "标准",
+    "children": [
+      {
+        "_id": "charge-item.organization-pfta.ROOM-S1",
+        "name": "床位费",
+        "children": [
+          {
+            "_id": "charge-item.organization-pfta.room-s1.SINGLE-ROOM",
+            "name": "单人间",
+            "data": {"capacity": 1}
+          },
+          {
+            "_id": "charge-item.organization-pfta.room-s1.DOUBLE-ROOM",
+            "name": "双人间",
+            "data": {"capacity": 2}
+          },
+          {
+            "_id": "charge-item.organization-pfta.room-s1.TRIPLE-ROOM",
+            "name": "三人间",
+            "data": {"capacity": 3}
+          },
+          {
+            "_id": "charge-item.organization-pfta.room-s1.DOMITORY-ROOM",
+            "name": "多人间",
+            "data": {"capacity": [4,13]}
+          }
+        ]
+      },
+      {
+        "_id": "charge-item.organization-pfta.BOARD-S1",
+        "name": "伙食费",
+        "children": [
+          {
+            "_id": "charge-item.organization-pfta.board-s1.NUTRITION",
+            "name": "营养餐"
+          }
+        ]
+      },
+      {
+        "_id": "charge-item.organization-pfta.NURSING-S1",
+        "name": "护理费",
+        "children": [
+          {
+            "_id": "charge-item.organization-pfta.nursing-s1.SELF-CARE",
+            "name": "自理老人"
+          },
+          {
+            "_id": "charge-item.organization-pfta.nursing-s1.DEVICE-AIDED",
+            "name": "介助老人(半失能/半失智)"
+          },
+          {
+            "_id": "charge-item.organization-pfta.nursing-s1.NURSING-CARD",
+            "name": "介护老人(失能/失智)"
+          }
+        ]
+      },
+      {
+        "_id": "charge-item.organization-pfta.OTHER-S1",
+        "name": "其他费用",
+        "children": [
+          {
+            "_id": "charge-item.organization-pfta.other-s1.SHARE-BILLS",
+            "name": "水/电费",
+            "data": {"manual_seletable": true}
+          },
+          {
+            "_id": "charge-item.organization-pfta.other-s1.HEATING-COOLING",
+            "name": "空调/暖气费",
+            "data": {"manual_seletable": true}
+          }
+        ]
+      }
+    ]
+  }
+]

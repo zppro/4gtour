@@ -1,0 +1,26 @@
+.block-center.mt-xl.wd-xl
+  // START panel
+  .panel.panel-dark.panel-flat
+    .panel-heading.text-center
+      a(href="#")
+        img.block-center.img-rounded(src='app/img/logo.png', alt='Image')
+    .panel-body
+      p.text-center.pv {{ 'page.recover.TIP' | translate}}
+      form.form-validate(role='form', name="recoverForm", novalidate='')
+        p.text-center {{ 'page.recover.TIP-DESCRIPTION' | translate}}.
+        .form-group.has-feedback
+          label.text-muted {{ 'page.recover.TIP-CODE' | translate}}
+          input.form-control(type='email', name='email', placeholder='{{ "page.recover.PLACEHOLDER-CODE" | translate}}', autocomplete="off", ng-model="recover.email", required='')
+          span.fa.fa-envelope.form-control-feedback.text-muted
+          span.text-danger(ng-show="recoverForm.email.$dirty && recoverForm.email.$error.required") {{ "validator.REQUIRED" | translate}}
+          span.text-danger(ng-show="recoverForm.email.$dirty && recoverForm.email.$error.email") {{ "validator.FORMAT" | translate:{item:"邮箱地址"} }}
+        button.btn.btn-danger.btn-block(type='submit') {{ 'page.recover.RESET' | translate}}
+            
+  // END panel
+  .p-lg.text-center
+    span &copy; 
+    span(ng-bind="app.year") 
+    span  - 
+    span(ng-bind="app.name")
+    br
+    span(ng-bind="app.description")

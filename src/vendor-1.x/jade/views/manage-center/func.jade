@@ -1,0 +1,35 @@
+
+.col-xs-2.col-fixed
+    .row.btn-group
+            label.btn.btn-primary(ng-repeat='subsystem in vm.selectBinding.subsystems',ng-model='vmc.selectedSubsystem',btn-radio="subsystem",ng-change="vmc.onSubsystemChanged()") {{subsystem.name}}
+    .row
+        .tree.tree-basic#tree1(ng-style="{height:vm.size.h-(vm.switches.setTenantOpenFuncs?45:15)}")
+            ul
+                li.repeat-modify(ng-repeat='node in vm.trees[0].treeData',ng-include="'tree-basic-renderer.html'",ng-init="tIndex=0;nIndex = $index")
+    .row(ng-if="vm.switches.setTenantOpenFuncs")
+        ui-select(ng-model='vmc.selectedTenantId', theme='bootstrap',on-select="vmc.onTenantIdChanged()")
+            ui-select-match(placeholder='{{vm.viewTranslatePath("PLACEHOLDER-SELECTED-TENANT")|translate}}') {{$select.selected.name}}
+            ui-select-choices(repeat='tenant._id as tenant in vm.selectBinding.tenants | filter: {name: $select.search}')
+                div(ng-bind-html='tenant.name | highlight: $select.search')
+.col-xs-10
+    .row.row-fixed
+        .col-xs-1
+            button.btn.btn-success(ng-click="vmc.save()") {{'button.SAVE'|translate}}
+        .col-xs-11
+            .func-price-totals {{vm.moduleTranslatePath("SUM-TITLE")|translate}}
+                span.currency {{vmc.totalPrice()}}
+                span {{vm.moduleTranslatePath("SUM-PERIOD")|translate}}
+    .row-split
+    .row.row-fixed
+        .func-price
+            ul
+                li.header
+                    label.col-md-2 {{vm.moduleTranslatePath("HEADER-FUNC-NAME")|translate}}
+                    label.col-md-1(ng-if="vm.switches.setTenantOpenFuncs") {{vm.moduleTranslatePath("HEADER-MARKET-PRICE")|translate}}
+                    label.col-md-9.text-center {{vm.moduleTranslatePath("HEADER-PRICER")|translate}}
+                li.repeat-modify(ng-repeat='node in vm.trees[0].checkedNodes',ng-init="vmc.createFunc(node)")
+                    .col-md-2.func-item {{ node.name}}:
+                    .col-md-1.func-item(ng-if="vm.switches.setTenantOpenFuncs")
+                         | {{vmc.funcs[node._id].market_price}}
+                    .col-md-9
+                        rzslider(rz-slider-model='vmc.funcs[node._id].price',rz-slider-options="vmc.slider.options")

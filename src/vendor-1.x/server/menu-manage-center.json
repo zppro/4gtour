@@ -1,0 +1,94 @@
+[
+  {
+    "_id": "menu.manage-center.TRAVEL-AGENCY-MANAGE",
+    "name": "养老机构管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.manage-center.TRAVEL-AGENCY-ACCOUNT-MANAGE",
+        "name": "帐号管理",
+        "sref": "app.manage-center.travel-agency-account-manage.list"
+      },
+      {
+        "_id": "menu.manage-center.TRAVEL-AGENCY-USER-MANAGE",
+        "name": "用户管理",
+        "sref": "app.manage-center.travel-agency-user-manage.list"
+      },
+      {
+        "_id": "menu.manage-center.TRAVEL-AGENCY-ORDER-MANAGE",
+        "name": "订单管理",
+        "sref": "app.manage-center.travel-agency-order-manage.list"
+      }
+    ]
+  },
+  {
+    "_id": "menu.manage-center.AGENT-MANAGE",
+    "name": "代理商管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.manage-center.AGENT-ACCOUNT-MANAGE",
+        "name": "帐号管理",
+        "sref": "app.manage-center.agent-account-manage.list"
+      },
+      {
+        "_id": "menu.manage-center.AGENT-USER-MANAGE",
+        "name": "用户管理",
+        "sref": "app.manage-center.agent-user-manage.list"
+      },
+      {
+        "_id": "menu.manage-center.AGENT-ORDER-MANAGE",
+        "name": "订单管理",
+        "sref": "app.manage-center.agent-order-manage.list"
+      }
+    ]
+  },
+  {
+    "_id": "menu.manage-center.PLATFORM-MANAGE",
+    "name": "平台管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.manage-center.PLATFORM-USER-MANAGE",
+        "name": "用户管理",
+        "sref": "app.manage-center.platform-user-manage.list"
+      },
+      {
+        "_id": "menu.manage-center.FUNC",
+        "name": "功能模块",
+        "sref": "app.manage-center.func"
+      },
+      {
+        "_id": "menu.manage-center.ORDER-RECEIPT-CONFIRMATION",
+        "name": "收款确认",
+        "sref": "app.manage-center.order-receipt-confirmation.list"
+      },
+      {
+        "_id": "menu.manage-center.ORDER-REFUND-CONFIRMATION",
+        "name": "退款确认",
+        "sref": "app.manage-center.order-refund-confirmation.list"
+      }
+    ]
+  },
+  {
+    "_id": "menu.manage-center.METADATA-MANAGE",
+    "name": "Metadata",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.manage-center.DICTIONARY-MANAGE",
+        "name": "DictionaryManage",
+        "sref": "app.manage-center.metadata-dictionary-manage"
+      },
+      {
+        "_id": "menu.manage-center.PARAM",
+        "name": "Param",
+        "sref": "app.manage-center.metadata-param"
+      }
+    ]
+  }
+]

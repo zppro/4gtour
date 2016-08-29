@@ -1,0 +1,38 @@
+/* ========================================================================
+   Component: box-input Created by zppro on 16-4-22.
+ ========================================================================== */
+@box-width:                               36px;
+@box-height:                              36px;
+@box-background-color:                    #FFFFFF;
+@box-focus-background-color:              #FFFECF;
+
+.virbox {
+  display: block;
+  span {
+    width: @box-width;
+    height: @box-height;
+    padding: @padding-base-vertical @padding-base-horizontal;
+    display: block;
+    border: 1px solid #ccc;
+    float: left;
+    border-right: 0 none;
+    text-align: center;
+    font-weight: bold;
+    background-color: @box-background-color;
+    &.focus {
+      background-color: @box-focus-background-color;
+    }
+  }
+  span:last-child {
+    border: 1px solid #ccc;
+  }
+}
+
+.realbox {
+  width: 0px;
+  //height: 0px;
+  display: block;
+  position: fixed;
+  top: -30px;
+  left: -30px;
+}

@@ -1,0 +1,26 @@
+script(type='text/ng-template', id="tree-directive-demo-renderer.html")
+    .ul-container
+        ul
+            li(ng-repeat='node in $tree.treeData',ng-include="'tree-directive-demo-node-renderer.html'",ng-init="nIndex = $index;")
+script(type='text/ng-template', id="tree-directive-demo-node-renderer.html")
+    .tree-node(s-tree-node)
+        i(ng-if="node.children",class="fa",ng-class="{'fa-caret-right':!$tree.isExpanded(nIndex),'fa-caret-down':$tree.isExpanded(nIndex)}",ng-click="$tree.toggle(nIndex,$event)")
+        i(ng-if="!node.children",class="fa",ng-class="{'fa-caret-right':$tree.mode=='grid'}")
+        .checkbox.c-checkbox(ng-if="$tree.mode=='check'")
+            label
+                input(type='checkbox',ng-click="$tree.toggleCheck(node,$event)",ng-model="$tree.inputCheckedIndex[nIndex]")
+                span.fa.fa-check(ng-class="{'undetermined':$tree.isUndetermined(nIndex)}")
+        i(class="{{node.icon}}", ng-if="node.icon")
+        span {{node.name}}
+        span(ng-if="node.template" ng-include="node.template")
+    ul(ng-if="node.children",ng-show="$tree.isExpanded(nIndex)")
+        li(ng-repeat='node in node.children',ng-include="'tree-directive-demo-node-renderer.html'",ng-init="nIndex = (nIndex+$tree.levelSplitChar+$index)")
+.col-xs-3
+    .tree.tree-demo(s-tree,s-tree-data="vm.treeDataPromise",s-tree-height="vm.size.h-15", s-tree-template-url='tree-directive-demo-renderer.html', ng-model="vm.selectedDistrict")
+    span selected:{{vm.selectedDistrict}}
+.col-xs-3
+    .tree.tree-demo(s-tree,s-tree-data="vm.treeDataPromise",s-tree-height="vm.size.h-15", s-tree-template-url='tree-directive-demo-renderer.html',s-tree-option="{mode:'check',checkCascade: true,selectNodeFormat:'object'}",ng-model="vm.checkedDistricts")
+    span checked:{{vm.checkedDistricts}}
+.col-xs-3
+    .tree.tree-dropdown(s-tree,s-tree-data="vm.treeDataPromise",s-tree-height="vm.size.h-60", s-tree-template-url='tree-directive-demo-renderer.html',s-tree-option="{mode:'check',layout:'dropdown',readonly:false}", ng-model="vm.selectedDistrictOfDropDown")
+    span selected:{{vm.selectedDistrictOfDropDown}}

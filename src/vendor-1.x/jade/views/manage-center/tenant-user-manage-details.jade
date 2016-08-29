@@ -1,0 +1,65 @@
+//
+   Created by zppro on 16-2-23.
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-CODE') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='code',ng-model='vm.model.code',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-CODE")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'code','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NAME') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='name',ng-model='vm.model.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-NAME")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'name','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset(ng-if="vm.selectBinding.tenants"): .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-TENANT_ID') | translate}}:
+                        .col-md-10
+                            //input.form-control(type='text', name='name',ng-model='vm.model.name',placeholder='{{vm.viewviewTranslatePath("TAB1-PLACEHOLDER-NAME")|translate}}' ,required='')
+                            ui-select(name="tenantId",ng-model='vm.model.tenantId', theme='bootstrap',required='')
+                                ui-select-match(placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-TENANT_ID")|translate}}') {{$select.selected.name}}
+                                ui-select-choices(repeat='tenant._id as tenant in vm.selectBinding.tenants | filter: {name: $select.search}')
+                                    div(ng-bind-html='tenant.name | highlight: $select.search')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'tenantId','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ROLE') | translate}}:
+                        .col-md-10
+                            //input.form-control(type='text', name='name',ng-model='vm.model.name',placeholder='{{vm.viewviewTranslatePath("TAB1-PLACEHOLDER-NAME")|translate}}' ,required='')
+                            ui-select(name="roles",multiple,require-multiple,ng-model='vm.model.roles', theme='bootstrap')
+                                ui-select-match(placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-ROLE")|translate}}') {{$item.name}}
+                                ui-select-choices(repeat='role.value as role in vm.selectBinding.roles | filter: {name: $select.search}')
+                                    div(ng-bind-html='role.name | highlight: $select.search')
+                            //span.text-danger(ng-show="this.theForm.role.$error") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'roles','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-FLAG-COLLECTION') | translate}}:
+                        .col-md-2
+                            .checkbox.c-checkbox
+                                label
+                                    input#stopFlag(type='checkbox',ng-model='vm.model.stop_flag')
+                                    span.fa.fa-check
+                            label(for="stopFlag") {{ vm.viewTranslatePath('TAB1-LABEL-STOP_FLAG') | translate}}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-PHONE') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text',name='phone' , ng-model='vm.model.phone',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-PHONE")|translate}}' ,required='',ng-model-options="{debounce:500}",ui-validate="{phone: 'utils.isPhone($value)'}" ,ui-validate-async="{alreadyExists: 'vm.notExist({phone:$value})'}")
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'phone','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'phone','phone')") {{ "validator.FORMAT" | translate:{item:"手机号码"} }}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'phone','alreadyExists')") {{ "validator.ALREADY-EXISTS" | translate:{item:"手机号码"} }}
+            //tab(active="vm.tab2.active")
+            //    tab-heading
+            //        | {{ vm.viewTranslatePath('TAB2') | translate}}
+            //        span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab2')")
+            //            i.glyphicon.glyphicon-minus-sign
+            //    div#contentTab2
+            //        | tab2
+    .text-right.mt-lg
+        button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(type="submit") {{'button.SAVE'|translate}}

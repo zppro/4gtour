@@ -1,0 +1,40 @@
+.block-center.mt-xl.wd-xl(ng-controller="LoginFormController as login")
+  // START panel
+  .panel.panel-dark.panel-flat
+    .panel-heading.text-center
+      a(href="#")
+        img.block-center.img-rounded(src='app/img/logo.png', alt='Image')
+    .panel-body
+      p.text-center.pv {{ 'page.login.TIP' | translate}}.
+      form.form-validate(role='form', ng-submit="login.login()", name='login.loginForm', novalidate='').mb-lg
+        .form-group.has-feedback
+          input#exampleInputEmail1.form-control(type='email', name="account_email" placeholder='{{ "page.login.PLACEHOLDER-CODE" | translate}}', autocomplete="off", ng-model="login.account.email", required='')
+          span.fa.fa-envelope.form-control-feedback.text-muted
+          span.text-danger(ng-show="login.loginForm.account_email.$dirty && login.loginForm.account_email.$error.required") {{ "validator.REQUIRED" | translate}}
+          span.text-danger(ng-show="login.loginForm.account_email.$dirty && login.loginForm.account_email.$error.email") {{ "validator.FORMAT" | translate:{item:"邮箱地址"} }}
+        .form-group.has-feedback
+          input#exampleInputPassword1.form-control(type='password', name="account_password" placeholder='{{ "page.login.PLACEHOLDER-PASSWORD" | translate}}', ng-model="login.account.password", required='')
+          span.fa.fa-lock.form-control-feedback.text-muted
+          span.text-danger(ng-show="login.loginForm.account_password.$dirty && login.loginForm.account_password.$error.required") {{ "validator.REQUIRED" | translate}}
+        .clearfix
+          .checkbox.c-checkbox.pull-left.mt0
+            label
+              input(type='checkbox', value='', name="account_remember", ng-model="login.account.remember")
+              span.fa.fa-check
+              |  {{ 'page.login.REMEMBER-ME' | translate}}
+          .pull-right
+            a.text-muted(ui-sref="page.recover") {{ 'page.login.FORGOT-YOUR-PASSWORD' | translate}}?
+        
+        button.btn.btn-block.btn-primary.mt-lg(type='submit') {{ 'page.login.LOGIN' | translate}}
+      
+      .alert.alert-danger.text-center(ng-show='login.authMsg') {{login.authMsg}}
+      p.pt-lg.text-center {{ 'page.login.NEED-SIGN-UP' | translate}}?
+      a(ui-sref="page.register").btn.btn-block.btn-default {{ 'page.login.SIGN-UP-NOW' | translate}}
+  // END panel
+  .p-lg.text-center
+    span &copy; 
+    span(ng-bind="app.year") 
+    span  - 
+    span(ng-bind="app.name")
+    br
+    span(ng-bind="app.description")

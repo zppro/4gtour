@@ -1,0 +1,43 @@
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset(ng-if="vm.selectBinding.districts"): .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-DISTRICT_ID') | translate}}:
+                        .col-md-10
+                            ui-select(name="districtId",ng-model='vm.model.districtId', theme='bootstrap',required='',ng-change='vm.switchDistrict()')
+                                ui-select-match(placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-DISTRICT_ID")|translate}}') {{$select.selected.name}}
+                                ui-select-choices(repeat='district._id as district in vm.selectBinding.districts | filter: {name: $select.search}')
+                                    div(ng-bind-html='district.name | highlight: $select.search')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'districtId','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-FLOOR') | translate}}:
+                        .col-md-10
+                            rzslider(rz-slider-model='vm.model.floor_from',rz-slider-high="vm.model.floor_to",rz-slider-options="vm.slider.floor_options")
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NUMBER-IN-FLOOR') | translate}}:
+                        .col-md-10
+                            rzslider(rz-slider-model='vm.model.number_in_floor_from',rz-slider-high="vm.model.number_in_floor_to",rz-slider-options="vm.slider.number_in_floor_options")
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-CAPACITY') | translate}}:
+                        .col-md-10
+                            input.form-control(type='number',name='capacity' ,ng-model='vm.model.capacity',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-CAPACITY")|translate}}', required='' ui-validate="'$value>=1'" )
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'capacity','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'capacity','number')") {{ "validator.NUMBER" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'capacity','validator')") {{ "validator.MIN" | translate:{min:1} }}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-FLAG-COLLECTION') | translate}}:
+                        .col-md-2
+                            .checkbox.c-checkbox
+                                label
+                                    input#stopFlag(type='checkbox',ng-model='vm.model.stop_flag')
+                                    span.fa.fa-check
+                            label(for="stopFlag") {{ vm.viewTranslatePath('TAB1-LABEL-STOP_FLAG') | translate}}
+    .text-right.mt-lg
+        button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(type="submit") {{'button.SAVE'|translate}}

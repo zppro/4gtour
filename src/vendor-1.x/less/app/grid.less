@@ -1,0 +1,64 @@
+/* ========================================================================
+   Component: grid Created by zppro on 16-2-26.
+ ========================================================================== */
+
+.grid{
+
+  table-layout: fixed;//added by zppro 保证column定义中的width有效
+  > thead th {
+    cursor: default;
+  }
+
+  > thead th.sortable {
+    cursor: pointer;
+  }
+
+  > thead > tr > th {
+    padding: 14px 8px;
+    color: #888;
+  }
+  > tbody > tr > td {
+    vertical-align: middle;
+    min-height:40px;
+    > .media {
+      img {
+        width: 36px;
+        height: 36px;
+        margin: 0 auto;
+      }
+    }
+  }
+
+  .checkbox {
+    margin: 0 auto;
+    width: 20px;
+  }
+
+  .progress {
+    margin-bottom: 0
+  }
+
+  .radial-bar {
+    margin-bottom: 0;
+    margin: 0 auto;
+  }
+
+  .relative {
+    position: relative;
+  }
+
+  .relative .popover {
+    width: 200px;
+  }
+
+  .pagination-sm {
+    margin: 0;
+  }
+
+  .page-search {
+    margin-bottom: 20px;
+  }
+  .dropdown button {
+    margin: 0;
+  }
+}

@@ -1,0 +1,27 @@
+.abs-center.wd-xl
+  // START panel
+  .text-center.mb-xl
+    .text-lg.mb-lg 404
+    p.lead.m0 {{ 'page.404.TIP' | translate}}.
+    p {{ 'page.404.TIP-DESCRIPTION' | translate}}.
+
+  .input-group.mb-xl
+    input.form-control(type='text', placeholder="{{ 'page.404.PLACEHOLDER-SEARCH' | translate}}")
+    span.input-group-btn
+      button.btn.btn-default(type='button')
+          em.fa.fa-search
+  
+  ul.list-inline.text-center.text-sm.mb-xl
+    li: a.text-muted(href="", ui-sref="app.dashboard") {{ 'page.404.ACTION-RETURN' | translate}}
+    li.text-muted | 
+    li: a.text-muted(href="", ui-sref="page.login") {{ 'page.404.ACTION-LOGIN' | translate}}
+    li.text-muted | 
+    li: a.text-muted(href="", ui-sref="page.register") {{ 'page.404.ACTION-REGISTER' | translate}}
+
+  .p-lg.text-center
+    span &copy; 
+    span(ng-bind="app.year") 
+    span  - 
+    span(ng-bind="app.name")
+    br
+    span(ng-bind="app.description")

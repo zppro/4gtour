@@ -1,0 +1,24 @@
+script(type='text/ng-template', id="tree-demo-nav-renderer.html")
+    .ul-container
+        ul
+            li(ng-repeat='node in $tree.treeData',ng-include="'tree-demo-nav-group-renderer.html'",ng-init="nIndex = $index;")
+script(type='text/ng-template', id="tree-demo-nav-group-renderer.html")
+    .tree-group-head.no-select(s-tree-node)
+        i(class="{{node.icon}}", ng-if="node.icon")
+        span {{node.name}}
+        span(ng-if="node.template" ng-include="node.template")
+    ul.tree-group-content(ng-if="node.children",ng-show="$tree.isExpanded(nIndex)")
+        li(ng-repeat='node in node.children',ng-include="'tree-demo-nav-item-renderer.html'",ng-init="nIndex = (nIndex+$tree.levelSplitChar+$index)")
+script(type='text/ng-template', id="tree-demo-nav-item-renderer.html")
+    .tree-item.tree-node(s-tree-node)
+        i(ng-if="node.children",class="fa",ng-class="{'fa-caret-right':!$tree.isExpanded(nIndex),'fa-caret-down':$tree.isExpanded(nIndex)}",ng-click="$tree.toggle(nIndex,$event)")
+        i(ng-if="!node.children",class="fa",ng-class="{'fa-caret-right':$tree.mode=='grid'}")
+        i(class="{{node.icon}}", ng-if="node.icon")
+        a
+            span {{node.name}}
+        span(ng-if="node.template" ng-include="node.template")
+    ul(ng-if="node.children",ng-show="$tree.isExpanded(nIndex)")
+        li(ng-repeat='node in node.children',ng-include="'tree-demo-nav-item-renderer.html'",ng-init="nIndex = (nIndex+$tree.levelSplitChar+$index)")
+.col-xs-3
+    .tree.tree-nav(s-tree,s-tree-data="vm.treeDataPromise",s-tree-height="400", s-tree-template-url='tree-demo-nav-renderer.html',s-tree-option="{layout:'nav'}", ng-model="vm.selectedDistrict")
+    span selected:{{vm.selectedDistrict}}

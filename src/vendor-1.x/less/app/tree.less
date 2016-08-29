@@ -1,0 +1,317 @@
+/* ========================================================================
+   Component: tree Created by zppro on 16-3-30.
+ ========================================================================== */
+
+//** laytout=dropdown 预定义
+@tree-border:                                                 #dde6e9;
+@tree-dropdown-ul-margin-horizontal:                          @padding-base-horizontal;
+@node-text-padding:                                           4px;
+@node-text-margin:                                            4px;
+
+//** laytout=nav 预定义
+@tree-nav-group-margin-horizontal:                            @padding-base-horizontal;
+@tree-nav-group-padding:                                      @padding-base-horizontal;
+
+//** Background color on `.tree-nav-group`
+@tree-nav-group-bg:                 @brand-primary;
+//** `.list-group-item` border color
+@tree-nav-group-border:             darken(@brand-primary, 6.5%);
+//** List group border radius
+@tree-nav-group-border-radius:      @border-radius-base;
+
+//** Background color of single list items on hover
+@tree-nav-group-hover-bg:           lighten(@brand-primary, 6.5%);
+//** Text color of active list items
+@tree-nav-group-active-color:       @component-active-color;
+//** Background color of active list items
+@tree-nav-group-active-bg:          @component-active-bg;
+//** Border color of active list elements
+@tree-nav-group-active-border:      @tree-nav-group-hover-bg;
+//** Text color for content within active list items
+@tree-nav-group-active-text-color:  lighten(@tree-nav-group-active-bg, 40%);
+
+//** Text color of disabled list items
+@tree-nav-group-disabled-color:      @gray-light;
+//** Background color of disabled list items
+@tree-nav-group-disabled-bg:         @gray-lighter;
+//** Text color for content within disabled list items
+@tree-nav-group-disabled-text-color: @tree-nav-group-disabled-color;
+
+@tree-nav-group-link-color:         #555;
+@tree-nav-group-link-hover-color:   @tree-nav-group-link-color;
+@tree-nav-group-link-heading-color: #333;
+
+
+
+.tree {
+
+  .form-control {
+    box-shadow: 0 0 0 #000;
+  }
+
+  .tree-input-readable {
+    display: block;
+    width: 100%;
+    //height: @input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
+    padding: @padding-base-vertical @padding-base-horizontal;
+    font-size: @font-size-base;
+    line-height: @line-height-base;
+    color: @input-color;
+    background-color: @input-bg-disabled;
+    cursor: @cursor-disabled;
+    background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+    border: 1px solid @input-border;
+    border-radius: @input-border-radius; // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
+    .box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+    .transition(~"border-color ease-in-out .15s, box-shadow ease-in-out .15s");
+    height: auto;
+  }
+
+  overflow-y: auto;
+  ul {
+    list-style: none;
+    padding-left: 0px;
+    margin-left: 0px;
+  }
+  li {
+    padding-left: 0.8em;
+    margin: 0.25em 0;
+    //background-color: red;
+    > .tree-node {
+      //width: 150%;
+
+      > i {
+        width: 16px;
+        //padding-left: -0.5em;
+        //margin-right: 0.25em;
+        //width:16px;
+        text-align: center;
+        display: inline-block;
+      }
+      > span {
+        text-indent: 0px;
+        //border: solid 1px green;
+        padding: @node-text-padding/2 @node-text-padding;
+        cursor: pointer;
+      }
+      > span.tree-node-selected,
+      > span.tree-node-selected:hover{
+        background: #0092DC;
+        color: white;
+        cursor: default;
+      }
+      .tree-data-part {
+        margin:0 5px;
+      }
+    }
+    > div.tree-node.tree-node-selected,
+    > div.tree-node.tree-node-selected:hover{
+      background: #0092DC;
+      color: white;
+    }
+    > div.tree-node:hover {
+      background: #E2E2E2;
+    }
+
+    .cascade-selectable{
+      //可被级联选取的样式
+    }
+    .tree-node-cascade-selected {
+      //级联选取后的样式
+      background-color: orange!important;
+    }
+
+    .tree-group-head {
+      width: 100%;
+      background-color: @tree-nav-group-bg;
+      border-color: @tree-nav-group-border;
+      border-radius: @tree-nav-group-border-radius;
+      height: @line-height-base;
+      line-height: @line-height-base;
+      padding: @tree-nav-group-padding;
+      cursor: pointer;
+      > span {
+        padding-left: 5px;
+      }
+    }
+    .tree-group-head:hover {
+      background-color: @tree-nav-group-hover-bg;
+      border-color: @tree-nav-group-border;
+    }
+    .tree-group-content {
+      overflow: auto;
+    }
+  }
+
+  input[type=checkbox]:checked + span.undetermined{
+    opacity: 0.3;
+  }
+
+
+  .no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    > span {
+      cursor: default !important;
+    }
+  }
+}
+
+.tree-basic{
+  border: solid 1px @tree-border;
+  background: whitesmoke;
+}
+.tree-demo{
+  border: solid 1px @tree-border;
+  background: white;
+}
+
+.tree-dropdown {
+  > .ul-container {
+    margin: 0 @tree-dropdown-ul-margin-horizontal;
+    border: solid 1px #dde6e9;
+    background: white;
+    width:100%;
+    overflow: auto;
+    position: absolute;
+    top: 35px;
+    left: 0px;
+    z-index: 6999;
+  }
+}
+
+.tree-nav {
+  > .ul-container {
+    > ul {
+      background-color: white;
+      > li {
+        color: white;
+        padding: 0; //@tree-nav-group-padding;
+        li {
+          padding-left: 0.8em !important;
+          margin: 0.25em 0 !important;
+        }
+        .tree-item {
+          color: black;
+          > i {
+            width: 16px;
+            //padding-left: -0.5em;
+            //margin-right: 0.25em;
+            //width:16px;
+            text-align: center;
+            display: inline-block;
+          }
+          > a {
+            color: black;
+            > span {
+              text-indent: 0px;
+              padding: @node-text-padding/2 @node-text-padding;
+              cursor: pointer;
+            }
+            > span.tree-node-selected,
+            > span.tree-node-selected:hover {
+              background: #0092DC;
+              color: white;
+              cursor: default;
+            }
+          }
+          .tree-data-part {
+            margin: 0 5px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.tree-tile {
+  li{padding:0;margin: 0;}
+  .row {
+    margin: 0;
+    border-top: solid 1px @tree-border;
+    border-bottom: solid 1px @tree-border;
+  }
+  > .ul-container {
+    > ul {
+      background-color: white;
+      > li {
+        color: white;
+        > .tree-group-content{
+
+        }
+        .tree-group-content {
+          li {
+            color: black;
+          }
+        }
+        .col-border-right{
+          border-right: solid 1px @tree-border;
+        }
+        .col-border-left {
+          border-left: solid 1px @tree-border;
+        }
+        .tree-item {
+          border-right: solid 1px @tree-border;
+          width: 24px;
+          padding: 5px;
+          display: table;
+          height: 74px;
+          .vertical-middle {
+            display: table-cell;
+            vertical-align: middle;
+            > span{
+              display: block;
+              width: 14px;
+              word-wrap: break-word;
+              font-size: 14px;
+              letter-spacing: 5px;
+            }
+          }
+        }
+        .tree-item-children {
+          border-left: solid 1px @tree-border;
+          background-color: @btn-primary-bg;
+          padding:0;
+          li {
+            width: 64px;
+            height:64px;
+            text-align: center;
+            float: left;
+            margin-left:5px;
+            margin-top:5px;
+          }
+          li:last-child{
+            margin-bottom:5px;
+          }
+          .tree-sub-item {
+            width:100%;
+            height:100%;
+            display: table;
+            background-color: @btn-primary-bg;
+            cursor: pointer;
+            color:white;
+            .vertical-middle {
+              display: table-cell;
+              vertical-align: middle;
+            }
+          }
+          .tree-sub-item:hover {
+            background-color: darken(@btn-primary-bg, 10%);
+          }
+          .tree-node-selected {
+            background-color: orange;
+          }
+        }
+      }
+    }
+  }
+}
+
+.tree-hidden{
+  display: none !important;
+}
+

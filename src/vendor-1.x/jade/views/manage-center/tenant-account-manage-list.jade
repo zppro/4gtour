@@ -1,0 +1,63 @@
+//
+   Created by zppro on 16-2-23.
+.col-xs-12.text-center
+    .row
+        form.form-search
+            .input-group.pull-right.page-search
+                label.input-group-addon {{'grid.LABEL-SEARACH'|translate}}
+                input.form-control(type="text",ng-model="vm.filter.$")
+    .row-split
+    .row
+        .panel.panel-default.panel-grid
+            table.grid.table.table-bordered.table-hover.table-striped
+                thead
+                    tr
+                        th.text-center(check-all,width="30")
+                            .checkbox.c-checkbox(data-toggle="tooltip",data-title="Check All")
+                                label(ng-click="vm.selectAll($event)")
+                                    input(type='checkbox')
+                                    span.fa.fa-check
+                        th.text-center(ng-repeat="column in vm.columns",width="{{column|width}}",ng-hide="column|hide",ng-click="vm.sort.toggle(column)",ng-class="{sortable: column.sortable !== false}")
+                            | {{column.label}}
+                            i.glyphicon(ng-if="column.name === vm.sort.column && vm.sort.direction",ng-class="vm.sort.direction|orderClass")
+                tbody
+                    tr(ng-repeat="row in vm.rows|filter:vm.filter|orderBy:vm.sort.column:vm.sort.direction===-1|paging:vm" , ng-click="vm.selectRow($event,row)",ng-dblclick="vm.dblclickRow(row.id)")
+                        td
+                            .checkbox.c-checkbox
+                                label
+                                    input(type='checkbox' data="trBubble" ng-model="row.checked" )
+                                    span.fa.fa-check(data="trBubble")
+                        td.text-left {{::row.name}}
+                        td.text-center {{::row.validate_util|date:'yyyy-MM-dd'}}
+                        td {{::row.active_flag|boolFilter}}
+                        td {{::row.certificate_flag|boolFilter}}
+                        td {{::row.phone}}
+                        td {{::row.email}}
+                        td {{::row.type|formatter:'type':vm.columns}}
+                        td
+                            .btn-group
+                                a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
+                                    i.glyphicon.glyphicon-pencil
+                            .btn-group
+                                a.btn.btn-primary.btn-xs(title="{{'button.USER'|translate}}",ng-click="$state.go(vm.transTo.user,{tenantId:row._id})")
+                                    i.glyphicon.glyphicon-user
+                            .btn-group
+                                a.btn.btn-primary.btn-xs(title="{{'button.OPEN-FUNCS'|translate}}",ng-click="$state.go(vm.transTo.openFuncs,{tenantId:row._id})")
+                                    i.glyphicon.glyphicon-th-list
+                            .btn-group
+                                a.btn.btn-primary.btn-xs(title="{{'button.ORDER'|translate}}",ng-click="$state.go(vm.transTo.order,{tenantId:row._id})")
+                                    i.glyphicon.glyphicon-list-alt
+
+                    tr(ng-if="vm.paged.length==0")
+                        td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}
+            .panel-footer
+                .row
+                    .col-md-4.text-left
+                        .btn-toolbar
+                            .btn-group
+                                a.btn.btn-primary.btn-sm(title="{{'button.ADD'|translate}}",ng-click="vm.add()")
+                                    i.glyphicon.glyphicon-plus
+                                a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.remove()")
+                                    i.glyphicon.glyphicon-minus
+                    .col-md-8
+                        pagination.pagination-sm.pull-right(total-items="vm.page.totals",ng-model="vm.page.no",max-size="5",items-per-page="vm.page.size",boundary-links="true" ,ng-change="vm.paging()")

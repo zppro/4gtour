@@ -1,0 +1,198 @@
+{
+  "manage-center": {
+    "HEAD-ORG-NAME": "平台管理",
+    "dashboard": {
+      "TITLE": "管理中心-数据面板"
+    },
+    "travel-agency-account-manage": {
+      "list": {
+        "TITLE": "管理中心-旅行社-帐号-列表"
+      },
+      "details": {
+        "TITLE": "管理中心-旅行社-帐号-详情",
+        "TAB1": "基本信息",
+        "TAB2": "缴费历史",
+        "TAB1-LABEL-NAME": "旅行社名称",
+        "TAB1-PLACEHOLDER-NAME": "XX市XX旅行社..",
+        "TAB1-LABEL-PHONE": "手机号码",
+        "TAB1-PLACEHOLDER-PHONE": "137XXXX0258..",
+        "TAB1-LABEL-EMAIL": "邮箱地址",
+        "TAB1-PLACEHOLDER-EMAIL": "abc@123.com..",
+        "TAB1-LABEL-TYPE": "旅行社类型",
+        "TAB1-PLACEHOLDER-TYPE": "请选择一个旅行社类型..",
+        "TAB1-LABEL-FLAG-COLLECTION": "标志集合",
+        "TAB1-LABEL-ACTIVE_FLAG": "开通",
+        "TAB1-LABEL-CERTIFICATE_FLAG": "认证",
+        "TAB1-LABEL-VALIDATE_UTIL": "有效期至",
+        "TAB1-PLACEHOLDER-VALIDATE_UTIL": "日期..",
+        "TAB1-LABEL-LIMIT_TO": "入住限额",
+        "TAB1-PLACEHOLDER-LIMIT_TO": "可以入住的最大老人数量(0为不限额).."
+      }
+    },
+    "travel-agency-user-manage": {
+      "list": {
+        "TITLE": "管理中心-旅行社-用户-列表",
+        "RESET-USER-PASSWORD-COMMENT":"密码将会被重设为默认值"
+      },
+      "details": {
+        "TITLE": "管理中心-旅行社-用户-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-CODE": "用户编码",
+        "TAB1-PLACEHOLDER-CODE": "rainbow@abc.com",
+        "TAB1-LABEL-NAME": "用户名称",
+        "TAB1-PLACEHOLDER-NAME": "钟XX..",
+        "TAB1-LABEL-FLAG-COLLECTION": "标志集合",
+        "TAB1-LABEL-STOP_FLAG": "停用",
+        "TAB1-LABEL-TENANT_ID": "所属旅行社",
+        "TAB1-PLACEHOLDER-TENANT_ID": "请选择用户所属旅行社..",
+        "TAB1-LABEL-ROLE": "角色",
+        "TAB1-PLACEHOLDER-ROLE": "请设置用户角色..",
+        "TAB1-LABEL-PHONE": "手机号码",
+        "TAB1-PLACEHOLDER-PHONE": "137XXXX0258.."
+      }
+    },
+    "travel-agency-open-funcs": {
+      "TITLE": "管理中心-旅行社-开通功能",
+      "PLACEHOLDER-SELECTED-TENANT": "请选择一个旅行社进行开通功能",
+      "SUM-TITLE": "合计：￥",
+      "SUM-PERIOD": "/月",
+      "HEADER-FUNC-NAME": "功能模块",
+      "HEADER-MARKET-PRICE": "市场价",
+      "HEADER-PRICER": "调价器"
+    },
+    "travel-agency-order-manage": {
+      "list": {
+        "TITLE": "管理中心-旅行社-功能订单-列表",
+        "COMPLETE-ORDER-COMMENT":"完成订单后将立即开通订单所选功能"
+      },
+      "details": {
+        "TITLE": "管理中心-旅行社-功能订单-详情",
+        "REFUND-ORDER-COMMENT":"订单退款后将立即关闭订单所选功能",
+        "ORDER-ITEM-COMMENT-1":"功能开通截止>",
+        "ORDER-ITEM-COMMENT-2":"功能未开通",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-CODE": "订单编号",
+        "TAB1-PLACEHOLDER-CODE": "自动生成..",
+        "TAB1-LABEL-PERIOD_CHARGE": "单价",
+        "TAB1-PLACEHOLDER-PERIOD_CHARGE": "选定购买模块后自动计算..",
+        "TAB1-LABEL-ORDER_ITEMS": "功能明细",
+        "TAB1-LABEL-DURATION": "数量(月)",
+        "TAB1-PLACEHOLDER-DURATION": "12..",
+        "TAB1-LABEL-TENANT_ID": "所属旅行社",
+        "TAB1-PLACEHOLDER-TENANT_ID": "请选择订单所属旅行社..",
+        "TAB1-LABEL-ORDER_STATUS": "订单状态"
+      }
+    },
+    "agent-account-manage": {
+      "list": {
+        "TITLE": "管理中心-代理商-帐号-列表"
+      },
+      "details": {
+        "TITLE": "管理中心-代理商-帐号-详情",
+        "TAB1": "基本信息",
+        "TAB2": "缴费历史",
+        "TAB1-LABEL-NAME": "代理商名称",
+        "TAB1-PLACEHOLDER-NAME": "XX市XX公司..",
+        "TAB1-LABEL-PHONE": "手机号码",
+        "TAB1-PLACEHOLDER-PHONE": "137XXXX0258..",
+        "TAB1-LABEL-EMAIL": "邮箱地址",
+        "TAB1-PLACEHOLDER-EMAIL": "abc@123.com..",
+        "TAB1-LABEL-TYPE": "代理商类型",
+        "TAB1-PLACEHOLDER-TYPE": "请选择一个代理商类型..",
+        "TAB1-LABEL-FLAG-COLLECTION": "标志集合",
+        "TAB1-LABEL-ACTIVE_FLAG": "开通",
+        "TAB1-LABEL-CERTIFICATE_FLAG": "认证",
+        "TAB1-LABEL-VALIDATE_UTIL": "有效期至",
+        "TAB1-PLACEHOLDER-VALIDATE_UTIL": "日期..",
+        "TAB1-LABEL-LIMIT_TO": "入住限额",
+        "TAB1-PLACEHOLDER-LIMIT_TO": "可以入住的最大老人数量(0为不限额).."
+      }
+    },
+    "agent-user-manage": {
+      "list": {
+        "TITLE": "管理中心-代理商-用户-列表",
+        "RESET-USER-PASSWORD-COMMENT":"密码将会被重设为默认值"
+      },
+      "details": {
+        "TITLE": "管理中心-代理商-用户-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-CODE": "用户编码",
+        "TAB1-PLACEHOLDER-CODE": "rainbow@abc.com",
+        "TAB1-LABEL-NAME": "用户名称",
+        "TAB1-PLACEHOLDER-NAME": "钟XX..",
+        "TAB1-LABEL-FLAG-COLLECTION": "标志集合",
+        "TAB1-LABEL-STOP_FLAG": "停用",
+        "TAB1-LABEL-TENANT_ID": "所属代理商",
+        "TAB1-PLACEHOLDER-TENANT_ID": "请选择用户所属代理商..",
+        "TAB1-LABEL-ROLE": "角色",
+        "TAB1-PLACEHOLDER-ROLE": "请设置用户角色..",
+        "TAB1-LABEL-PHONE": "手机号码",
+        "TAB1-PLACEHOLDER-PHONE": "137XXXX0258.."
+      }
+    },
+    "agent-open-funcs": {
+      "TITLE": "管理中心-代理商-开通功能",
+      "PLACEHOLDER-SELECTED-TENANT": "请选择一个代理商进行开通功能",
+      "SUM-TITLE": "合计：￥",
+      "SUM-PERIOD": "/月",
+      "HEADER-FUNC-NAME": "功能模块",
+      "HEADER-MARKET-PRICE": "市场价",
+      "HEADER-PRICER": "调价器"
+    },
+    "agent-order-manage": {
+      "list": {
+        "TITLE": "管理中心-代理商-功能订单-列表"
+      },
+      "details": {
+        "TITLE": "管理中心-代理商-功能订单-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-CODE": "订单编号",
+        "TAB1-PLACEHOLDER-CODE": "自动生成..",
+        "TAB1-LABEL-PERIOD_CHARGE": "单价",
+        "TAB1-PLACEHOLDER-PERIOD_CHARGE": "选定购买模块后自动计算..",
+        "TAB1-LABEL-ORDER_ITEMS": "功能明细",
+        "TAB1-LABEL-DURATION": "数量(月)",
+        "TAB1-PLACEHOLDER-DURATION": "12..",
+        "TAB1-LABEL-TENANT_ID": "所属代理商",
+        "TAB1-PLACEHOLDER-TENANT_ID": "请选择订单所属代理商..",
+        "TAB1-LABEL-ORDER_STATUS": "订单状态"
+      }
+    },
+    "platform-user-manage": {
+      "list": {
+        "TITLE": "管理中心-平台-用户-列表"
+      },
+      "details": {
+        "TITLE": "管理中心-平台-用户-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-CODE": "用户编码",
+        "TAB1-PLACEHOLDER-CODE": "rainbow@abc.com",
+        "TAB1-LABEL-NAME": "用户名称",
+        "TAB1-PLACEHOLDER-NAME": "钟XX..",
+        "TAB1-LABEL-FLAG-COLLECTION": "标志集合",
+        "TAB1-LABEL-STOP_FLAG": "停用",
+        "TAB1-LABEL-ROLE": "角色",
+        "TAB1-PLACEHOLDER-ROLE": "请设置用户角色..",
+        "TAB1-LABEL-PHONE": "手机号码",
+        "TAB1-PLACEHOLDER-PHONE": "137XXXX0258.."
+      }
+    },
+    "func": {
+      "TITLE": "管理中心-平台-功能模块",
+      "SUM-TITLE": "合计：￥",
+      "SUM-PERIOD": "/月",
+      "HEADER-FUNC-NAME": "功能模块",
+      "HEADER-PRICER": "调价器"
+    },
+    "order-receipt-confirmation": {
+      "list": {
+        "TITLE": "管理中心-平台-收款确认订单-列表"
+      }
+    },
+    "order-refund-confirmation": {
+      "list": {
+        "TITLE": "管理中心-平台-退款确认订单-列表"
+      }
+    }
+  }
+}

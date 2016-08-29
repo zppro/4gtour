@@ -1,0 +1,61 @@
+//
+   Created by zppro on 16-2-23.
+//h3
+//    | {{ vm.viewTranslatePath('TITLE') | translate}}
+
+form.form-validate.mb-lg(role='form', name="demoForm", novalidate='', ng-submit="vm.doSubmit()")
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ID') | translate}}:
+                        .col-md-10
+                            input.form-control(type='number',name='id' , ng-model='vm.model.id',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-ID")|translate}}',required='')
+                            span.text-danger(ng-show="utils.vinput(this.demoForm,'id','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.demoForm,'id','number')") {{ "validator.NUMBER" | translate}}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NAME') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', ng-model='vm.model.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-NAME")|translate}}')
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-BIRTHDAY') | translate}}:
+                        .col-md-2
+                            .input-group
+                                input.form-control(type="text",name='birthday',is-open="vm.openedDP",datepicker-popup="",ng-model="vm.model.birthday" ,placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-BIRTHDAY")|translate}}',required='',ng-click="vm.openDP($event)")
+                                span.input-group-btn
+                                    button.btn.btn-primary(ng-click="vm.openDP($event)")
+                                        i.glyphicon.glyphicon-calendar
+                            span.text-danger(ng-show="utils.vinput(this.demoForm,'birthday','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.demoForm,'birthday','date')") {{ "validator.DATE" | translate}}
+                    fieldset: .form-group
+                        .checkbox.c-checkbox
+                            label
+                                input(type='checkbox')
+                                span.fa.fa-check
+            tab(active="vm.tab2.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB2') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab2')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab2
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-FOLLOWERS') | translate}}:
+                        .col-md-10
+                            input.form-control(type='number',name='followers' ,ng-model='vm.model.followers',placeholder='{{vm.viewTranslatePath("TAB2-PLACEHOLDER-FOLLOWERS")|translate}}', required='' ui-validate="'$value>=0'" )
+                            span.text-danger(ng-show="utils.vinput(this.demoForm,'followers','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.demoForm,'followers','number')") {{ "validator.NUMBER" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.demoForm,'followers','validator')") {{ "validator.MIN" | translate:{min:0} }}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-INCOME') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', ng-model='vm.model.income',placeholder='{{vm.viewTranslatePath("TAB2-PLACEHOLDER-INCOME")|translate}}')
+    .text-right.mt-lg
+        button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(type="submit") {{'button.SAVE'|translate}}
+        button.btn.btn-primary(type="button",ng-click="vm.tab1.active = true") {{vm.viewTranslatePath('BUTTON-TOGGLE-TAB') | translate:{num:1} }}
+        button.btn.btn-primary(type="button",ng-click="vm.tab2.active = true") {{vm.viewTranslatePath('BUTTON-TOGGLE-TAB') | translate:{num:2} }}

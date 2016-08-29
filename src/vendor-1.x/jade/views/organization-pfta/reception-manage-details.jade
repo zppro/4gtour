@@ -1,0 +1,110 @@
+//
+   Created by zppro on 16-2-23.
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .row
+        .col-md-1.control-label {{ vm.viewTranslatePath('HEAD-LABEL-CODE') | translate}}:
+        .col-md-3
+            input.read-control-underline(readonly,placeholder='{{vm.viewTranslatePath("HEAD-PLACEHOLDER-CODE")|translate}}',ng-model="vm.model.code")
+        .col-md-5
+        .col-md-1.control-label {{ vm.viewTranslatePath('HEAD-LABEL-BEGIN_ON') | translate}}:
+        .col-md-2
+            .input-group(ng-if="!vm.readonly")
+                input.read-control-underline(type="text",name='begin_on',is-open="vm.openedDP[0]",datepicker-popup="",ng-model="vm.model.begin_on" ,required='',ng-click="vm.openDP($event,2,0)")
+                span.input-group-btn
+                    button.btn.btn-primary.btn-xs(ng-click="vm.openDP($event,2,0)")
+                        i.glyphicon.glyphicon-calendar
+            input.read-control-underline(ng-if="vm.readonly",readonly,value="{{vm.model.begin_on|date}}")
+    .row-split
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        <!--探望老人-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm._action_!='edit' ")
+                            div#elderly(angucomplete-alt,input-name="elderly",minlength="1",field-required="true",text-searching='{{"label.TEXT-SEARCHING"|translate}}',text-no-results='{{"label.TEXT-NO-RESULTS"|translate}}',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-ELDERLY")|translate}}',pause="400",selected-object="vm.selectElerly",remote-api-handler="vm.queryElderly",title-field="name",initial-value="vm.selectedElderly",input-class="form-control form-control-small")
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly','autocomplete-required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly || vm._action_=='edit'")
+                            .form-readable {{vm.model.elderly_name}}
+                    fieldset: .form-group
+                        <!--访客姓名-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-VISIT_INFO-NAME') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            input.form-control(type='text', name='visit_info$name',ng-model='vm.model.visit_info.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-VISIT_INFO-NAME")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'visit_info$name','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.model.visit_info.name}}
+                    fieldset: .form-group
+                        <!--访客身份证号-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-VISIT_INFO-ID_NO') | translate}}:
+                        .col-md-10
+                            input(type='text',name='visit_info$id_no',ng-model='vm.model.visit_info.id_no',required='',maxlength="18",box-input,box-readonly="vm.readonly",id-no2="{successEvent:true}")
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'visit_info$id_no','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'visit_info$id_no','IDNo')") {{ "validator.ID-NO" | translate}}
+                    fieldset: .form-group
+                        <!--访客性别-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-VISIT_INFO-SEX') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            .btn-group
+                                .btn.btn-primary(name='visit_info$sex',ng-repeat='sex in vm.selectBinding.sex',ng-model='vm.model.visit_info.sex',btn-radio="sex.value",required='',extract-sex="vm.model.visit_info.id_no") {{sex.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'visit_info$sex','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .btn-group
+                                .btn.btn-primary.cursor-not-allowed(name='elderly$sex',ng-repeat='sex in vm.selectBinding.sex',ng-class="{'active':vm.model.visit_info.sex==sex.value}") {{sex.name}}
+                    fieldset: .form-group
+                        <!--访客与老人关系-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-VISIT_INFO-RELATION_WITH') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            .btn-group
+                                .btn.btn-primary(name='visit_info$relation_with',ng-repeat='relation in vm.selectBinding.relationsWithTheElderly',ng-model='vm.model.visit_info.relation_with',btn-radio="relation.value",required='') {{relation.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'visit_info$relation_with','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .btn-group
+                                .btn.btn-primary.cursor-not-allowed(name='visit_info$relation_with',ng-repeat='relation in vm.selectBinding.relationsWithTheElderly',ng-class="{'active':vm.model.visit_info.relation_with==relation.value}") {{relation.name}}
+                    fieldset: .form-group
+                        <!--访客联系电话-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-VISIT_INFO-PHONE') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            input.form-control(type='text',name='visit_info$phone' , ng-model='vm.model.visit_info.phone',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-VISIT_INFO-PHONE")|translate}}' ,required='',ui-validate="{phone: 'utils.isPhone($value)'}" )
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'visit_info$phone','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'visit_info$phone','phone')") {{ "validator.FORMAT" | translate:{item:"手机号码"} }}
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.model.visit_info.phone}}
+                    fieldset: .form-group
+                        <!--访客联系住址-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-VISIT_INFO-ADDRESS') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            textarea.form-control(name='visit_info$address',ng-model='vm.model.visit_info.address',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-VISIT_INFO-ADDRESS")|translate}}',maxlength="100")
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.model.visit_info.address}}
+                    fieldset: .form-group
+                        <!--探望结束时间-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-END_ON') | translate}}:
+                        .col-md-2(ng-if="!vm.readonly")
+                            .input-group.date(datetime-picker,options='{format: "HH:mm",allowInputToggle: true}',ng-model='vm.model.end_on')
+                                input.form-control(type='text')
+                                span.input-group-addon
+                                    span.glyphicon.glyphicon-time
+                        .col-md-2(ng-if="!vm.readonly")
+                            a.btn.btn-primary.btn-md(title="{{'button.CANCEL'|translate}}",ng-click="vm.clearEndOn()")
+                                | {{'button.CLEAR'|translate}}
+                        .col-md-2(ng-if="vm.readonly")
+                            .form-readable {{vm.model.end_on|date:'HH:mm'}}
+                    fieldset: .form-group
+                        <!--备注-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-REMARK') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            textarea.form-control(name='remark',ng-model='vm.model.remark',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-REMARK")|translate}}',maxlength="400")
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.model.remark}}
+    .text-right.mt-lg
+        button.btn.btn-danger.pull-left(ng-if="vm.readonly",type="button",ng-click="vm.disable()") {{'button.REMOVE'|translate}}
+        button.btn.btn-primary(ng-if="vm.readonly",type="button",ng-click="vm.toEditView()") {{'button.EDIT'|translate}}
+        button.btn.btn-warning(ng-if="!vm.readonly",type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(ng-if="!vm.readonly",type="submit") {{'button.SAVE'|translate}}
+        button.btn.btn-primary(ng-if="vm.readonly",type="button",ng-click="vm.toListView()") {{'button.RETURN'|translate}}

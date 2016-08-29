@@ -1,0 +1,68 @@
+//
+   Created by zppro on 16-2-23.
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-CODE') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            input.form-control(disabled, type='text', name='code',ng-model='vm.model.code',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-CODE")|translate}}')
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.model.full_code}}
+                    fieldset(ng-if="vm.selectBinding.tenants"): .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-TENANT_ID') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            ui-select(name="tenantId",ng-model='vm.model.tenantId', theme='bootstrap',required='',on-select="vmc.onTenantIdChanged()")
+                                ui-select-match(placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-TENANT_ID")|translate}}') {{$select.selected.name}}
+                                ui-select-choices(repeat='tenant._id as tenant in vm.selectBinding.tenants | filter: {name: $select.search}')
+                                    div(ng-bind-html='tenant.name | highlight: $select.search')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'tenantId','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.fieldConvert('tenantId')}}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-PERIOD_CHARGE') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            input.form-control(readonly,type='number',name='period_charge' ,ng-model='vm.model.period_charge',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-PERIOD_CHARGE")|translate}}', required='' ui-validate="'$value>=0'" )
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'period_charge','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'period_charge','number')") {{ "validator.NUMBER" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'period_charge','validator')") {{ "validator.MIN" | translate:{min:0} }}
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.model.period_charge}}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ORDER_ITEMS') | translate}}:
+                        .col-md-10
+                            .tree.tree-basic#tree1(name='order_items',ng-model='vm.model.order_items',require-multiple)
+                                ul
+                                    li.repeat-modify(ng-repeat='node in vm.trees[0].treeData',ng-include="'tree-basic-renderer.html'",ng-init="tIndex=0;nIndex = $index")
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'order_items','required')") {{ "validator.ORDER-MUST_CHOOSE_ONE_FUNC" | translate}}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-DURATION') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            input.form-control(type='number',name='duration' ,ng-model='vm.model.duration',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-DURATION")|translate}}', required='' ui-validate="'$value>=1'" )
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'duration','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'duration','number')") {{ "validator.NUMBER" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'duration','validator')") {{ "validator.MIN" | translate:{min:1} }}
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.model.duration}}
+            //tab(active="vm.tab2.active")
+            //    tab-heading
+            //        | {{ vm.viewTranslatePath('TAB2') | translate}}
+            //        span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab2')")
+            //            i.glyphicon.glyphicon-minus-sign
+            //    div#contentTab2
+            //        | tab2
+    .text-right.mt-lg
+        button.btn.btn-warning(ng-if="!vm.readonly",type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(ng-if="!vm.readonly",type="submit") {{'button.SAVE'|translate}}
+        button.btn.btn-danger(ng-if="vm.model.order_status=='A1004'",type="button",ng-click="vmc.refundOrder()") {{'button.REFUND-ENTRY'|translate}}
+        button.btn.btn-primary(ng-if="vm.readonly",type="button",ng-click="vm.cancel()") {{'button.RETURN'|translate}}
+
+script(type='text/ng-template', id="order-item-renderer.html")
+    span.tree-data-part {{node.data}}
+    span.tree-data-part {{vmc.orderItemComment(node._id)}}

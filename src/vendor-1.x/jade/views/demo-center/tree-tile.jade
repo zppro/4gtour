@@ -1,0 +1,27 @@
+script(type='text/ng-template', id="tree-demo-tile-renderer.html")
+    .ul-container
+        ul
+            li(ng-repeat='node in $tree.treeData',ng-include="'tree-demo-tile-group-renderer.html'",ng-init="nIndex = $index;")
+script(type='text/ng-template', id="tree-demo-tile-group-renderer.html")
+    .tree-group.no-select(s-tree-node)
+        .tree-group-head.cascade-selectable
+            i(class="{{node.icon}}", ng-if="node.icon")
+            span {{node.name}}
+            span(ng-if="node.template" ng-include="node.template")
+        ul.tree-group-content(ng-if="node.children",ng-show="$tree.isExpanded(nIndex)")
+            li(ng-repeat='node in node.children',ng-include="'tree-demo-tile-item-renderer.html'",ng-init="nIndex = (nIndex+$tree.levelSplitChar+$index)")
+script(type='text/ng-template', id="tree-demo-tile-item-renderer.html")
+    .tree-group.row.no-select(s-tree-node)
+        .col-md-1.tree-item.cascade-selectable
+            .vertical-middle.floor
+                span {{node.name}}
+        .col-md-11.tree-item-children
+            ul(ng-if="node.children",ng-show="$tree.isExpanded(nIndex)")
+                li(ng-repeat='node in node.children',ng-include="'tree-demo-tile-sub-item-renderer.html'",ng-init="nIndex = (nIndex+$tree.levelSplitChar+$index)")
+script(type='text/ng-template', id="tree-demo-tile-sub-item-renderer.html")
+    .tree-sub-item.tree-node(s-tree-node)
+        .vertical-middle
+            span {{node.name}}
+.col-xs-10
+    .tree.tree-tile(s-tree,s-tree-data="vm.treeDataPromise",s-tree-height="400", s-tree-template-url='tree-demo-tile-renderer.html',s-tree-option="{layout:'tile',expandLevel:2,readonly:true}", ng-model="vm.selectedDistrict")
+    span selected:{{vm.selectedDistrict}}

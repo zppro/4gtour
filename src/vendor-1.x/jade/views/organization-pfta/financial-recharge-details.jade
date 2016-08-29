@@ -1,0 +1,110 @@
+//
+   Created by zppro on 16-6-27.
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        <!--充值对象-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm._action_!='edit' ")
+                            //input.form-control(type='text', name='name',ng-model='vm.model.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-ELDERLY")|translate}}' ,required='')
+                            div#elderly(angucomplete-alt,input-name="elderly",minlength="1",field-required="true",text-searching='{{"label.TEXT-SEARCHING"|translate}}',text-no-results='{{"label.TEXT-NO-RESULTS"|translate}}',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-ELDERLY")|translate}}',pause="400",selected-object="vm.selectElerly",remote-api-handler="vm.queryElderly",title-field="name",initial-value="vm.selectedElderly",input-class="form-control form-control-small")
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly','autocomplete-required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly || vm._action_=='edit'")
+                            .form-readable {{vm.model.elderly_name}}
+                    fieldset: .form-group
+                        <!--充值方式-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-TYPE') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            .btn-group
+                                .btn.btn-primary(name='type',ng-repeat='type in vm.selectBinding.rechargeTypes',ng-model='vm.model.type',btn-radio="type.value",required='') {{type.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'type','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .btn-group
+                                .btn.btn-primary.cursor-not-allowed(name='type',ng-repeat='type in vm.selectBinding.rechargeTypes',ng-class="{'active':vm.model.type==type.value}") {{type.name}}
+                    fieldset: .form-group
+                        <!--充值金额-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-AMOUNT') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm.itCanDisableOrChange")
+                            input.form-control(type='number',name='amount' ,ng-model='vm.model.amount',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-AMOUNT")|translate}}', required='' ui-validate="'$value>0'" )
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'amount','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'amount','number')") {{ "validator.NUMBER" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'amount','validator')") {{ "validator.MIN" | translate:{min:0.01} }}
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.model.amount}}
+                    fieldset: .form-group
+                        <!--备注-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-REMARK') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            textarea.form-control(name='remark',ng-model='vm.model.remark',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-REMARK")|translate}}',maxlength="400")
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.model.remark}}
+                    .panel.panel-default.panel-grid(ng-if="vm.readonly && vm.hadRededToRecharge")
+                        .panel-heading-normal
+                            a {{ vm.viewTranslatePath('TAB1-REDED-TO-RECHARGE') | translate}}
+                        table.grid.table.table-bordered.table-hover.table-striped
+                            thead
+                                tr
+                                    th.text-center(width="80")
+                                        | {{ vm.viewTranslatePath('TAB1-REDED-TO-RECHARGE-CHECK_IN_TIME') | translate}}
+                                    th.text-center(width="40")
+                                        | {{ vm.viewTranslatePath('TAB1-REDED-TO-RECHARGE-VOUCHER_NO') | translate}}
+                                    th.text-center(width="40")
+                                        | {{ vm.viewTranslatePath('TAB1-REDED-TO-RECHARGE-AMOUNT') | translate}}
+                                    th.text-center(width="200")
+                                        | {{ vm.viewTranslatePath('TAB1-REDED-TO-RECHARGE-REMARK') | translate}}
+                            tbody
+                                tr(ng-repeat="row in vm.rededToRecharge|orderBy:'-check_in_time'")
+                                    td.text-center {{::row.check_in_time|date:'yyyy-MM-dd HH:mm:ss'}}
+                                    td.text-center {{::row.voucher_no}}
+                                    td.text-right.text-danger {{::row.amount|currency}}
+                                    td {{::row.remark}}
+                        .panel-footer
+    .text-right.mt-lg
+        button.btn.btn-danger.pull-left(ng-if="vm.readonly && !vm.elderlyDisabled && !vm.waiting && vm.itCanDisableOrChange",type="button",ng-click="vm.disableRechargeAndUnbooking()") {{'button.REMOVE'|translate}}
+        button.btn.btn-danger.pull-left(ng-if="vm.readonly && !vm.elderlyDisabled && !vm.waiting && !vm.itCanDisableOrChange",type="button",ng-click="vm.redRecharge()") {{'button.RED'|translate}}
+        button.btn.btn-primary(ng-if="vm.readonly && !vm.elderlyDisabled && !vm.waiting && vm.itCanDisableOrChange",type="button",ng-click="vm.toEditView()") {{'button.EDIT'|translate}}
+        button.btn.btn-warning(ng-if="!vm.readonly",type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(ng-if="!vm.readonly && !vm.elderlyDisabled && !vm.waiting && vm.itCanDisableOrChange",type="submit") {{'button.SAVE'|translate}}
+        button.btn.btn-primary(ng-if="vm.readonly",type="button",ng-click="vm.toListView()") {{'button.RETURN'|translate}}
+
+script(type="text/ng-template", id="do-red-for-recharge.html")
+    form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+        .ngdialog-message
+            h3.mt0 {{ vm.title | translate}}
+        .ngdialog-input
+            fieldset: .form-group
+                <!--冲红凭证号-->
+                label.col-md-2.control-label {{ 'label.VOUCHER_NO-TO-RED' | translate}}:
+                .col-md-10
+                    .form-readable {{vm.voucher_no_to_red}}
+            fieldset: .form-group
+                <!--充红金额-->
+                label.col-md-2.control-label {{ 'label.AMOUNT-BOOKING' | translate}}:
+                .col-md-10
+                    .form-readable {{vm.amount_booking}}
+            fieldset: .form-group
+                <!--充红金额-->
+                label.col-md-2.control-label {{ 'label.AMOUNT-TO-RED' | translate}}:
+                .col-md-10
+                    input.form-control(type='number',name='amount' ,ng-model='vm.amount',placeholder="{{'placeholder.AMOUNT-TO-RED' |translate}}", required='' ui-validate="'$value>0'" )
+                    span.text-danger(ng-show="utils.vinput(this.theForm,'amount','required')") {{ "validator.REQUIRED" | translate}}
+                    span.text-danger(ng-show="utils.vinput(this.theForm,'amount','number')") {{ "validator.NUMBER" | translate}}
+                    span.text-danger(ng-show="utils.vinput(this.theForm,'amount','validator')") {{ "validator.MIN" | translate:{min:0.01} }}
+            fieldset: .form-group
+                <!--备注-->
+                label.col-md-2.control-label {{ 'label.REMARK' | translate}}:
+                .col-md-10
+                    textarea.form-control(name='remark',ng-model='vm.remark',placeholder="{{'placeholder.REMARK' |translate}}",maxlength="400")
+        .ngdialog-buttons
+            .alert.alert-danger.text-center(ng-show='vm.authMsg') {{vm.authMsg}}
+            .row
+                .col-md-9
+                .col-md-3
+                    button.btn.btn-success(type='submit') {{ "button.CONFIRM" | translate}}

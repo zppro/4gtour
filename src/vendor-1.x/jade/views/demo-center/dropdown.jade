@@ -1,0 +1,15 @@
+script(type='text/ng-template', id="dropdown-demo-renderer.html")
+    .btn-group(dropdown)
+        button.btn.btn-primary(type="button",ng-if="isButton",ng-bind="showText")
+        button.btn.btn-primary.dropdown-toggle(type="button",ng-if="isButton",dropdown-toggle)
+            span.caret
+        a.dropdown-toggle(ng-if="!isButton",ng-bind="showText",dropdown-toggle)
+        span(ng-if="!isButton").caret
+        ul.dropdown-menu(role='menu')
+            li(ng-repeat='item in items')
+                a(href='#',ng-bind="item.name",ng-click="select(item)")
+.col-xs-6
+    .dropdown(s-dropdown,is-button,ng-model="vm.period",s-dropdown-data="vm.dropdownDataPromise",dropdown-template-url='dropdown-demo-renderer.html', on-select="vm.onSelect(item)")
+    //.dropdown(s-dropdown,s-dropdown-option="{selectItemFormat:'object'}",is-button,ng-model="vm.period",s-dropdown-data="vm.dropdownDataPromise",dropdown-template-url='dropdown-demo-renderer.html', on-select="vm.onSelect(item)")
+    div selected:{{vm.period}}
+    div on select :{{vm.selected}}

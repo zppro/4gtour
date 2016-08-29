@@ -1,0 +1,85 @@
+/* ========================================================================
+   Component: in-manage Created by zppro on 16-6-3.
+ ========================================================================== */
+ul.charge-item-of-other-and-customized{
+  list-style: none;
+  padding-left: 0px;
+  //margin-left: 0px;
+  margin:10.5px auto;
+  width:97%;
+  padding-bottom: 5px;
+  border-radius: 5px;
+  border: solid 1px lighten(@btn-primary-bg, 5%);
+  li.charge-item-level-one{
+    background-color: lighten(@btn-primary-bg, 10%);
+    font-size: 18px;
+    padding: 10px;
+    > span{color:@gray-darker}
+  }
+  li.charge-item-level-two{
+    background-color: lighten(@btn-primary-bg, 30%);
+    padding: 5px;
+    span{padding-left: 30px;color:darken(@gray,20%)}
+  }
+  li.charge-item-level-two.selected{
+    background-color: lighten(@btn-primary-bg, 20%);
+    padding: 5px;
+    span{color:@gray-darker}
+  }
+}
+
+tr.begin_exit_flow {
+  background-color: orangered!important;
+  color:white;
+  &:hover{
+    background-color: orangered!important;
+    color:white!important;
+  }
+}
+.ngdialog.ngdialog-theme-default.ngdialog-change-elderly-room-info {
+  padding-top:50px;
+  .ngdialog-content {
+    width: 988px;
+    .ngdialog-message{
+      width:100%;
+      position: absolute;
+      height:30px;
+      top: 10px;
+    }
+    .ngdialog-buttons {
+      width:100%;
+      position: absolute;
+      bottom: 5px;
+    }
+    .ngdialog-input {
+      margin-top: 30px;
+      margin-bottom:30px;
+      height: 600px;
+      overflow-y: auto;
+    }
+  }
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-change-elderly-charge-item-for-other-and-customized {
+  padding-top:50px;
+  .ngdialog-content {
+    width: 688px;
+    .ngdialog-message{
+      width:100%;
+      position: absolute;
+      height:30px;
+      top: 10px;
+    }
+    .ngdialog-buttons {
+      width:100%;
+      position: absolute;
+      bottom: 5px;
+    }
+    .ngdialog-input {
+      margin-top: 30px;
+      margin-bottom:30px;
+      height: 400px;
+      overflow-y: auto;
+    }
+  }
+}
