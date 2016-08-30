@@ -12,7 +12,7 @@
             'CURRENT_SUBSYSTEM' :'currentSubsystem',
             'STORAGE_ID_ORGANIZATION_PFTA': 'organization_pfta',
             'STORAGE_ID_MANAGE_CENTER': 'manage_center',
-            'SREF_ORGANIZATION_PFTA': 'app.organization-pfta',
+            'SREF_ORGANIZATION_PFTA': 'app.organization-travel',
             'SREF_MANAGE_CENTER': 'app.manage-center'
         })
       ;

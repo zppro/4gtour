@@ -244,9 +244,8 @@ co(function*() {
 
     console.log('configure sequences...');
     app.sequenceFactory = require('./libs/SequenceFactory').init(app.modelFactory(),app.models['pub_sequence']);
-    console.log(345);
+
     _.each(app.conf.sequenceDefNames, function (o) {
-        console.log(o);
         app.sequenceFactory.factory(o);
     });
 

@@ -13,8 +13,7 @@
             {
                 files: [
                     {prefix: 'app/i18n/', suffix: '.json'},
-                    {prefix: 'app/i18n/organization-pfta-standard-', suffix: '.json'},
-                    {prefix: 'app/i18n/community-pfta-standard-', suffix: '.json'},
+                    {prefix: 'app/i18n/organization-travel-standard-', suffix: '.json'},
                     {prefix: 'app/i18n/manage-center-', suffix: '.json'},
                     {prefix: 'app/i18n/demo-center-', suffix: '.json'}
                 ]

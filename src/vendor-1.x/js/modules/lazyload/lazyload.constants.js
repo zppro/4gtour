@@ -38,7 +38,7 @@
                 {name: 'locale_zh-cn', files: ['vendor/angular-i18n/angular-locale_zh-cn.js']},
                 {name: 'echarts-ng', files: ['vendor/echarts-ng/dist/echarts-ng.js']},
                 {name: 'subsystem.manage-center', files: ['app/css/manage-center.css']},
-                {name: 'subsystem.organization-pfta', files: ['app/css/organization-pfta.css']}
+                {name: 'subsystem.organization-travel', files: ['app/css/organization-travel.css']}
             ]
         })
     ;

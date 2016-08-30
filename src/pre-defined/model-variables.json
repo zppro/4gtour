@@ -1,30 +1,6 @@
 {
   "SERVER_GEN": "server-gen",
-  "TENANT_CHARGE_ITEM_CUSTOMIZED_CATAGORY": {
-    "_ID": "charge-item.organization-pfta.CUSTOMIZED",
-    "NAME": "特色服务"
-  },
-  "TENANT_CHARGE_ITEM_OTHER_CATAGORY": {
-    "_ID": "charge-item.organization-pfta.OTHER",
-    "NAME": "其他"
-  },
   "SEQUENCE_DEFS": {
-    "ENTER_TO_TENANT": "enter$tenant",
-    "RECEPTION_TO_TENANT": "reception$tenant",
-    "LEAVE_TO_TENANT": "leave$tenant",
-    "BOOKING_TO_TENANT": "booking$tenant",
-    "TENANT_ACCOUNT": "pub_tenantJournalAccount$voucher_no",
-    "ELDERLY_ACCOUNT": "pub_elderly$journal_account$voucher_no"
-  },
-  "SOURCE_TYPES": {
-    "ELDERLY": "pub_elderly",
-    "RECHARGE": "pub_recharge",
-    "RED": "pub_red"
-  },
-  "ROOM_CATEGORIES": {
-    "SINGLE-ROOM": 1,
-    "DOUBLE-ROOM": 2,
-    "TRIPLE-ROOM": 3,
-    "DOMITORY-ROOM": [4,5,6,7,8,9,10,11,12,13]
+    "TENANT_ACCOUNT": "pub_tenantJournalAccount$voucher_no"
   }
 }

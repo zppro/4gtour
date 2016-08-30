@@ -376,16 +376,23 @@ fieldset {
   font-size: @font-size-base * 1.2;
 }
 
-@gray-darker:            #232735;
-@gray-dark:              #3a3f51;
-@gray:                   #dde6e9;
-@gray-light:             #e4eaec;
-@gray-lighter:           #edf1f2;
-@panel-global-border:    #cfdbe2;
-@body-bg:                #f5f7fa;
-@text-color:             #515253;
-
+/////////////////////true reset/////////////////////////////
 body {
   color: @text-color;
   background-color: @body-bg;
+}
+.alert-success {
+  .alert-variant(@alert-success-bg; @alert-success-border; @alert-success-text);
+}
+
+.alert-info {
+  .alert-variant(@alert-info-bg; @alert-info-border; @alert-info-text);
+}
+
+.alert-warning {
+  .alert-variant(@alert-warning-bg; @alert-warning-border; @alert-warning-text);
+}
+
+.alert-danger {
+  .alert-variant(@alert-danger-bg; @alert-danger-border; @alert-danger-text);
 }

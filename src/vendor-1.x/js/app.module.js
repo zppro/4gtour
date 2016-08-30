@@ -37,7 +37,7 @@
             'app.dropdown',
             'app.demo',
             'subsystem.manage-center',
-            'subsystem.organization-pfta'
+            'subsystem.organization-travel'
         ]);
 })();
 

@@ -122,13 +122,12 @@
     }
   },
   "subsystem": {
-    "ORGANIZATION-PFTA-STANDARD": "机构养老云-标准版",
-    "COMMUNITY-PFTA-STANDARD": "社区养老云-待定",
+    "organization-travel-STANDARD": "机构养老云-标准版",
     "MANAGE-CENTER": "管理中心",
     "DEMO-CENTER": "演示中心"
   },
   "menu":{
-    "organization-pfta": {
+    "organization-travel": {
       "OLDMAN-MANAGE": "老人管理",
       "ENTER-MANAGE": "入院管理",
       "IN-MANAGE": "在院管理",

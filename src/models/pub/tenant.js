@@ -34,14 +34,10 @@ module.exports = function(ctx,name) {
             type: {type: String, enum: ctx._.rest(ctx.dictionary.keys["D1002"])},
             active_flag: {type: Boolean, default: false},//开通标志 租户是否可用
             certificate_flag: {type: Boolean, default: false},//认证标志 是否式正式租户
-            //terms_validity: {
-            //    latest: {type: Date},
-            //    history: [{from: {type: Date, required: true}, to: {type: Date}}]
-            //},
             token: {type: String, required: true, minlength: 8, maxlength: 8},//租户标识(8位)
             token_expired: {type: Date},//租户标识过期时间
             validate_util: {type: Date, required: true},
-            limit_to:{type: Number, min: 0},//0不限额
+            limit_to:{type: Number, min: 0,default:0},//0不限发布产品数量
             //定价模块
             price_funcs: [{
                 check_in_time: {type: Date, default: Date.now},//最新定价时间
@@ -63,16 +59,6 @@ module.exports = function(ctx,name) {
                 orderNo: {type: Number, default: 0},//排序序号
                 //payed: {type: Boolean, default: false},
                 expired_on: {type: Date, default: ctx.moment('1970-01-01T00:00:00+0000')}
-            }],
-            //收费(标准+项目)
-            charge_standard: {type: String, required: true},
-            charge_items: [{
-                check_in_time: {type: Date, default: Date.now},
-                item_id: {type: String, required: true},
-                item_name: {type: String, required: true},
-                period_price: {type: Number, default: 0.00},
-                period: {type: String, required: true, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D1015"])},
-                orderNo: {type: Number, default: 0}
             }],
             general_ledger:{type: Number, default: 0.00},//一般在通过流水月结转
             subsidiary_ledger: {
@@ -107,9 +93,9 @@ module.exports = function(ctx,name) {
 
         tenantSchema.$$skipPaths = ['price_funcs', 'open_funcs','charge_items','subsidiary_ledger'];
 
-        tenantSchema.methods.needRefreshToken = function(){
-            console.log(this);
-        }
+        //tenantSchema.methods.needRefreshToken = function(){
+        //    console.log(this);
+        //}
 
         return mongoose.model(name, tenantSchema, name);
     }

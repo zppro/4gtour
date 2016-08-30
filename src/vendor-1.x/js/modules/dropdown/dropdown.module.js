@@ -6,5 +6,7 @@
     'use strict';
 
     angular
-        .module('app.dropdown', []);
+        .module('app.dropdown',[])
+    ;
+
 })();

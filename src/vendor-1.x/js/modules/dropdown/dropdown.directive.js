@@ -10,12 +10,14 @@
         .directive('sDropdown', sDropdown)
     ;
 
-    sDropdown.$inject = ['$q'];
-    function sDropdown($q) {
+    sDropdown.$inject = ['$q','$compile','$templateRequest'];
+    function sDropdown($q,$compile,$templateRequest) {
+
+
         var directive = {
             restrict: 'EA',
             templateUrl: function (elem, attrs) {
-                return attrs.dropdownTemplateUrl || 'dropdown-default-renderer.html'
+                return attrs.dropdownTemplateUrl || 'dropdown-default-renderer.html';
             },
             link: link,
             scope: {sDropdownData: '=', onSelect: '&', model: '=ngModel', emptyPlaceholder: '='}
@@ -48,7 +50,6 @@
             //    scope.model = val;
             //});
 
-            scope.showText = scope.emptyPlaceholder || '请选择';
 
 
             scope.isButton = 'isButton' in attrs;
@@ -65,20 +66,14 @@
             };
 
             $q.when(data).then(function (items) {
-                if (items == data) {
-                    //console.log('raw data')
-                    //取数据构建树对象
-                }
-                else {
-                    //console.log('promise data')
 
-                }
                 scope.items = items;
 
                 setShowText();
             });
 
             function setShowText() {
+                scope.showText = scope.emptyPlaceholder || '请选择';
                 for (var i = 0; i < scope.items.length; i++) {
 
                     if (selectItemFormat == 'object') {
@@ -95,6 +90,9 @@
                         }
                     }
                 }
+
+
+
             }
         }
     }

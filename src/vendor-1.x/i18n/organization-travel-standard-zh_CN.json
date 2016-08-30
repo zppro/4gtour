@@ -1,0 +1,491 @@
+{
+  "organization-travel": {
+    "dashboard": {
+      "TITLE": "机构养老云-数据面板",
+      "LIVE-IN":"入住总人数",
+      "LIVE-IN-ON-CURRENTMONTH":"本月新增",
+      "LIVE-IN-MAN-TIME":"入住总人次",
+      "SUBSIDIARY_LEDGER-SELF":"主账户",
+      "SUBSIDIARY_LEDGER-GOV_SUBSIDY":"政府补助账户",
+      "SUBSIDIARY_LEDGER-SOCIAL_DONATION":"社会捐赠账户",
+      "BED-INFO-TOTALS":"床位总数",
+      "BED-INFO-LIVEINS":"占用数",
+      "BED-INFO-VACANCY_RATE":"床位空置率",
+      "CHART-TITLE-ELDERLY-AGE-GROUPS":"入住老人年龄分布",
+      "CHART-SERIE-NAME-ELDERLY-AGE-GROUPS":"年龄区间",
+      "&lt60":"60周岁以下",
+      "60-69":"60-69周岁",
+      "70-79":"70-79周岁",
+      "&gte80":"80周岁及以上",
+      "CHART-TITLE-ROOM-VACANCY_RATE-MONTHLY":"近期入住情况",
+      "CHART-SERIE-NAME-ROOM-VACANCY_RATE-MONTHLY":"入住人数",
+      "CHART-SERIE-DATA-UNIT-ROOM-VACANCY_RATE-MONTHLY":"人",
+      "CHART-TITLE-ROOM-CATAGORY-OF-MANTIME":"入住房型情况",
+      "CHART-SERIE-NAME-ROOM-CATAGORY-OF-MANTIME":"房间类型",
+      "SINGLE-ROOM": "单人间",
+      "DOUBLE-ROOM": "双人间",
+      "TRIPLE-ROOM": "三人间",
+      "DOMITORY-ROOM": "多人间",
+      "CHART-TITLE-ROOM-CATAGORY-OF-MANTIME-Monthly":"近期入住房型情况"
+    },
+    "enter-manage": {
+      "list": {
+        "TITLE": "机构养老云-老人管理-入院-列表",
+        "SUBMIT-ENTER-FINANCIAL-AUDIT":"提交财务审核",
+        "COMPLETE-ENTER":"确认完成入院",
+        "CAN-NOT-ADD-AS-LIMIT":"无法新增入院记录，因为机构当前已经达到最大入住数量"
+      },
+      "details": {
+        "TITLE": "机构养老云-老人管理-入院-详情",
+        "HEAD-LABEL-CODE":"入院登记号",
+        "HEAD-PLACEHOLDER-CODE":"自动生成",
+        "HEAD-LABEL-ENTER_ON":"入院日期",
+        "TAB1": "老人信息",
+        "TAB2": "食宿信息",
+        "TAB3": "护理与服务",
+        "TAB4": "费用信息",
+        "TAB1-LABEL-ELDERLY-NAME": "老人姓名",
+        "TAB1-PLACEHOLDER-ELDERLY-NAME": "张三",
+        "TAB1-LABEL-ELDERLY-ID_NO": "身份证号",
+        "TAB1-LABEL-ELDERLY-SEX": "性别",
+        "TAB1-LABEL-ELDERLY-BIRTHDAY": "出生日期",
+        "TAB1-PLACEHOLDER-ELDERLY-BIRTHDAY": "从身份证读取..",
+        "TAB1-LABEL-ELDERLY-MARRIAGE": "婚姻情况",
+        "TAB1-LABEL-ELDERLY-HOME_ADDRESS": "家庭住址",
+        "TAB1-PLACEHOLDER-ELDERLY-HOME_ADDRESS": "XX小区X幢X单元XXX",
+        "TAB1-LABEL-ELDERLY-MEDICAL_INSURANCE": "医保所在地",
+        "TAB1-LABEL-ELDERLY-POLITICS_STATUS": "政治面貌",
+        "TAB1-LABEL-ELDERLY-INHABIT_STATUS": "居住状况",
+        "TAB1-LABEL-ELDERLY-FINANCIAL_STATUS": "经济状况",
+        "TAB1-LABEL-ELDERLY-HOBBIES": "爱好特长",
+        "TAB1-LABEL-ELDERLY-MEDICAL_HISTORIES": "过往病史",
+        "TAB1-LABEL-REMARK":"备注",
+        "TAB1-PLACEHOLDER-REMARK":"补充说明一些情况",
+        "TAB1-LABEL-ELDERLY-FAMILY-MEMBER": "家庭成员",
+        "TAB1-PLACEHOLDER-ELDERLY-FAMILY-MEMBER-NAME": "家属姓名",
+        "TAB1-PLACEHOLDER-ELDERLY-FAMILY-MEMBER-PHONE": "联系电话",
+        "TAB1-PLACEHOLDER-ELDERLY-FAMILY-MEMBER-ADDRESS": "联系地址",
+        "TAB2-BOARD-INFO":"饮食套餐",
+        "TAB2-ROOM-INFO":"房间床位",
+        "TAB3-NURSING-INFO":"护理信息",
+        "TAB3-CUSTOM-SERVICE-INFO":"特色服务",
+        "TAB4-CHARGE-ITEM":"收费项目",
+        "TAB4-CHARGE-PERIOD-PRICE-SUM":"费用小计",
+        "TAB4-PERIOD-VALUE-IN-ADVANCE":"预收",
+        "TAB4-PERIOD-OF-MONTH":"{{period_value}}月",
+        "TAB4-CHARGE-TOTALS":"费用总计",
+        "SUBMIT-ENTER-FINANCIAL-AUDIT":"提交财务审核",
+        "UNDO-ENTER-FINANCIAL-AUDIT":"撤回编辑",
+        "COMPLETE-ENTER":"确认完成入院"
+      }
+    },
+    "in-manage":{
+      "list": {
+        "TITLE": "机构养老云-老人管理-在院-列表"
+      },
+      "details": {
+        "TITLE": "机构养老云-老人管理-在院-详情",
+        "TAB1": "老人信息",
+        "TAB2": "财务信息",
+        "TAB1-LABEL-NAME": "老人姓名",
+        "TAB1-PLACEHOLDER-NAME": "张三",
+        "TAB1-LABEL-ID_NO": "身份证号",
+        "TAB1-LABEL-SEX": "性别",
+        "TAB1-LABEL-BIRTHDAY": "出生日期",
+        "TAB1-PLACEHOLDER-BIRTHDAY": "从身份证读取..",
+        "TAB1-LABEL-MARRIAGE": "婚姻情况",
+        "TAB1-LABEL-HOME_ADDRESS": "家庭住址",
+        "TAB1-PLACEHOLDER-HOME_ADDRESS": "XX小区X幢X单元XXX",
+        "TAB1-LABEL-MEDICAL_INSURANCE": "医保所在地",
+        "TAB1-LABEL-POLITICS_STATUS": "政治面貌",
+        "TAB1-LABEL-INHABIT_STATUS": "居住状况",
+        "TAB1-LABEL-FINANCIAL_STATUS": "经济状况",
+        "TAB1-LABEL-HOBBIES": "爱好特长",
+        "TAB1-LABEL-MEDICAL_HISTORIES": "过往病史",
+        "TAB1-LABEL-REMARK":"备注",
+        "TAB1-PLACEHOLDER-REMARK":"补充说明一些情况",
+        "TAB1-LABEL-FAMILY-MEMBER": "家庭成员",
+        "TAB1-LABEL-FAMILY-MEMBER-NAME": "姓名",
+        "TAB1-LABEL-FAMILY-MEMBER-ID_NO": "身份证",
+        "TAB1-LABEL-FAMILY-MEMBER-SEX": "性别",
+        "TAB1-LABEL-FAMILY-MEMBER-RELATION_WITH": "与老人关系",
+        "TAB1-LABEL-FAMILY-MEMBER-PHONE": "联系电话",
+        "TAB1-LABEL-FAMILY-MEMBER-ADDRESS": "地址",
+        "TAB1-PLACEHOLDER-FAMILY-MEMBER-NAME": "家属姓名",
+        "TAB1-PLACEHOLDER-FAMILY-MEMBER-ID_NO": "家属身份证号码",
+        "TAB1-PLACEHOLDER-FAMILY-MEMBER-PHONE": "联系电话",
+        "TAB1-PLACEHOLDER-FAMILY-MEMBER-ADDRESS": "联系地址",
+        "TAB1-BOARD-INFO":"饮食套餐",
+        "TAB1-ROOM-INFO":"房间床位",
+        "TAB1-OTHER-AND-CUSTOMIZED-INFO":"其他费用与特色服务",
+        "TAB1-ROOM-OCCUPANCY-CHANGE-HISTORY":"入住房间变动情况",
+        "TAB1-ROOM-OCCUPANCY-CHANGE-HISTORY-ROOM_SUMMARY":"房间床位信息",
+        "TAB1-ROOM-OCCUPANCY-CHANGE-HISTORY-IN_FLAG":"动作",
+        "TAB1-ROOM-OCCUPANCY-CHANGE-HISTORY-IN_FLAG-TRUE":"入住",
+        "TAB1-ROOM-OCCUPANCY-CHANGE-HISTORY-IN_FLAG-FALSE":"搬离",
+        "TAB1-ROOM-OCCUPANCY-CHANGE-HISTORY-CHECK_IN_TIME":"入住时间",
+        "TAB1-ROOM-OCCUPANCY-CHANGE-HISTORY-CHECK_OUT_TIME":"搬离时间",
+        "TAB1-NURSING-INFO":"护理信息",
+        "TAB2-LABEL-SUBSIDIARY_LEDGER":"账户信息",
+        "TAB2-LABEL-SUBSIDIARY_LEDGER-SELF":"个人账户",
+        "TAB2-LABEL-SUBSIDIARY_LEDGER-GOV_SUBSIDY":"政府补贴账户",
+        "TAB2-CHARGE-ITEM":"收费项目",
+        "TAB2-CHARGE-PERIOD-PRICE-SUM":"费用小计",
+        "TAB2-CHARGE-PERIOD-PRICE":"项目费用",
+        "TAB2-PERIOD-MONTH":"月",
+        "TAB2-LABEL-JOURNAL_ACCOUNT": "账户流水",
+        "TAB2-LABEL-JOURNAL_ACCOUNT-CHECK_IN_TIME": "发生时间",
+        "TAB2-LABEL-JOURNAL_ACCOUNT-VOUCHER_NO":"记账凭证号",
+        "TAB2-LABEL-JOURNAL_ACCOUNT-REVENUE_AND_EXPENDITURE_TYPE": "科目",
+        "TAB2-LABEL-JOURNAL_ACCOUNT-DIGEST": "摘要",
+        "TAB2-LABEL-JOURNAL_ACCOUNT-AMOUNT": "金额",
+        "COMPLETE-ENTER":"确认完成入院",
+        "EXIT-CONFIRM-MESSAGE": "您确定要申请出院么？"
+      }
+    },
+    "exit-manage": {
+      "list": {
+        "TITLE": "机构养老云-老人管理-出院-列表",
+        "SUBMIT-EXIT-PRE-FLOW-AUDIT": "提交部门流转审核",
+        "AUDIT-ITEM_RETURN":"归还物品检查",
+        "AUDIT-SETTLEMENT":"出院结算",
+        "COMPLETE-EXIT": "确认完成出院",
+        "COMPLETE-EXIT-CONFIRM-MESSAGE":"老人将最终完成出院，确定要继续么？"
+      },
+      "details": {
+        "NONE":"",
+        "TITLE": "机构养老云-老人管理-出院-详情",
+        "HEAD-LABEL-ELDERLY_NAME":"出院老人",
+        "HEAD-LABEL-APPLICATION_DATE":"申请日期",
+        "TAB1": "基本信息",
+        "TAB2": "物品归还",
+        "TAB3": "财务结算",
+        "TAB1-LABEL-ENTER_CODE":"入院登记号",
+        "TAB1-LABEL-ENTER_ON":"入院日期",
+        "TAB1-LABEL-AGENT_INFO-NAME":"申请代理人-姓名",
+        "TAB1-PLACEHOLDER-AGENT_INFO-NAME":"张三",
+        "TAB1-LABEL-AGENT_INFO-ID_NO":"申请代理人-身份证号",
+        "TAB1-LABEL-AGENT_INFO-SEX":"申请代理人-性别",
+        "TAB1-LABEL-AGENT_INFO-RELATION_WITH":"申请代理人-与老人关系",
+        "TAB1-LABEL-AGENT_INFO-PHONE":"申请代理人-联系电话",
+        "TAB1-PLACEHOLDER-AGENT_INFO-PHONE":"187-8172-7282/0571-88234567",
+        "TAB1-LABEL-AGENT_INFO-ADDRESS":"申请代理人-联系地址",
+        "TAB1-PLACEHOLDER-AGENT_INFO-ADDRESS":"XX小区X幢X单元XXX",
+        "TAB1-LABEL-REMARK":"备注",
+        "TAB1-PLACEHOLDER-REMARK":"补充说明一些情况",
+        "TAB1-LABEL-EXIT_MATERIAL":"相关材料",
+        "TAB1-LABEL-EXIT_MATERIAL-NAME":"名称",
+        "TAB1-LABEL-FLOW_AUDIT":"流转审核",
+        "TAB1-LABEL-FLOW_AUDIT-NAME":"名称",
+        "TAB1-LABEL-FLOW_AUDIT-OPERATED_ON":"审核日期",
+        "TAB1-LABEL-FLOW_AUDIT-OPERATED_BY_NAME":"审核人",
+        "TAB1-LABEL-FLOW_AUDIT-PASS_FLAG":"审核通过",
+        "TAB1-LABEL-FLOW_AUDIT-COMMENT":"审核意见",
+        "TAB2-LABEL-ITEM_RETURN_LIST":"归还物品清单",
+        "TAB2-LABEL-ITEM_RETURN_AUDIT-OPERATED_ON":"归还物品-审核时间",
+        "TAB2-LABEL-ITEM_RETURN_AUDIT-OPERATED_BY_NAME":"归还物品-审核人",
+        "TAB2-LABEL-ITEM_RETURN_AUDIT-PASS_FLAG":"归还物品-审核结果",
+        "TAB2-LABEL-ITEM_RETURN_AUDIT-COMMENT":"归还物品-审核意见",
+        "TAB2-PLACEHOLDER-ITEM_RETURN_AUDIT-COMMENT":"归还物品审核人的意见",
+        "TAB3-LABEL-SETTLEMENT_INFO":"结算信息",
+        "TAB3-LABEL-SETTLEMENT_INFO-ADVANCE_PAYMENT_AMOUNT":"预缴金额",
+        "TAB3-LABEL-SETTLEMENT_INFO-CHARGE_TOTAL":"费用合计",
+        "TAB3-LABEL-SETTLEMENT_INFO-BALANCE_TO_PAY":"费用补缴",
+        "TAB3-LABEL-SETTLEMENT_INFO-BALANCE_TO_RETURN":"预存款退还",
+        "TAB3-LABEL-SETTLEMENT_INFO-RECORDED_CHARGE_TOTAL":"入账费用合计",
+        "TAB3-LABEL-SETTLEMENT_INFO-UNRECORDED_CHARGE_TOTAL":"未入账费用合计",
+        "TAB3-LABEL-SUBSIDIARY_LEDGER":"账户余额",
+        "TAB3-LABEL-UNRECORDED_CHARGE_TOTAL":"未入账费用",
+        "TAB3-LABEL-SUBSIDIARY_LEDGER-BALANCE_TO_PAY":"费用补缴",
+        "TAB3-LABEL-SUBSIDIARY_LEDGER-BALANCE_TO_RETURN":"预存款退还",
+        "TAB3-LABEL-SETTLEMENT_AUDIT-OPERATED_ON":"出院结算-审核时间",
+        "TAB3-LABEL-SETTLEMENT_AUDIT-OPERATED_BY_NAME":"出院结算-审核人",
+        "TAB3-LABEL-SETTLEMENT_AUDIT-PASS_FLAG":"出院结算-审核结果",
+        "TAB3-LABEL-SETTLEMENT_AUDIT-COMMENT":"出院结算-审核意见",
+        "TAB3-PLACEHOLDER-SETTLEMENT_AUDIT-COMMENT":"出院结算审核人的意见",
+        "TO-AUDIT-ITEM_RETURN":"提交归还物品检查",
+        "TO-AUDIT-ITEM_RETURN-CONFIRM-MESSAGE":"您确定要提交到仓库检查出院归还物品的步骤么？",
+        "TO-AUDIT-SETTLEMENT":"提交财务出院结算",
+        "TO-AUDIT-SETTLEMENT-CONFIRM-MESSAGE":"您确定要提交到财务出院结算的步骤么？",
+        "TO-CONFIRM-EXIT":"提交最终确认出院",
+        "TO-CONFIRM-EXIT-WITHOUT-SETTLEMENT-WARNING":"结算完成才能提交确认出院",
+        "TO-CONFIRM-EXIT-CONFIRM-MESSAGE":"您确定要提交到最终的确认出院的步骤么？",
+        "TO-CONFIRM-SETTLEMENT-CONFIRM-MESSAGE":"一旦执行将无法撤销，您确定要继续执行出院结算么？",
+        "EXIT-ITEM_RETURN":"归还物品",
+        "EXIT-SETTLEMENT":"出院结算",
+        "TO-COMPLETE-EXIT-CONFIRM-MESSAGE":"老人将最终完成出院，确定要继续么？"
+      }
+    },
+    "reception-manage": {
+      "list": {
+        "TITLE": "机构养老云-老人管理-接待-列表"
+      },
+      "details": {
+        "TITLE": "机构养老云-老人管理-接待-详情",
+        "HEAD-LABEL-CODE": "接待登记号",
+        "HEAD-PLACEHOLDER-CODE": "自动生成",
+        "HEAD-LABEL-BEGIN_ON": "探望日期",
+        "TAB1":"来访信息",
+        "TAB1-LABEL-ELDERLY":"探望对象",
+        "TAB1-PLACEHOLDER-ELDERLY":"输入老人的姓名、及其拼音或五笔码查找。例如：张三/zs/xd",
+        "TAB1-LABEL-VISIT_INFO-NAME":"访客-姓名",
+        "TAB1-PLACEHOLDER-VISIT_INFO-NAME":"张三",
+        "TAB1-LABEL-VISIT_INFO-ID_NO":"访客-身份证号",
+        "TAB1-LABEL-VISIT_INFO-SEX":"访客-性别",
+        "TAB1-LABEL-VISIT_INFO-RELATION_WITH":"访客-与老人关系",
+        "TAB1-LABEL-VISIT_INFO-PHONE":"访客-联系电话",
+        "TAB1-PLACEHOLDER-VISIT_INFO-PHONE":"187-8172-7282/0571-88234567",
+        "TAB1-LABEL-VISIT_INFO-ADDRESS":"访客-联系地址",
+        "TAB1-PLACEHOLDER-VISIT_INFO-ADDRESS":"XX小区X幢X单元XXX",
+        "TAB1-LABEL-END_ON": "探望结束时间",
+        "TAB1-LABEL-REMARK":"备注",
+        "TAB1-PLACEHOLDER-REMARK":"补充说明一些情况",
+        "SYNC_FAMILY_MEMBERS_SUCCESS":"同步老人家庭成员数据成功"
+      }
+    },
+    "leave-manage": {
+      "list": {
+        "TITLE": "机构养老云-老人管理-外出-列表"
+      },
+      "details": {
+        "TITLE": "机构养老云-老人管理-外出-详情",
+        "HEAD-LABEL-CODE": "外出登记号",
+        "HEAD-PLACEHOLDER-CODE": "自动生成",
+        "HEAD-LABEL-BEGIN_ON": "外出日期",
+        "TAB1":"外出信息",
+        "TAB1-LABEL-ELDERLY":"外出老人",
+        "TAB1-PLACEHOLDER-ELDERLY":"输入老人的姓名、及其拼音或五笔码查找。例如：张三/zs/xd",
+        "TAB1-LABEL-ACCOMPANY_INFO-NAME":"陪同人-姓名",
+        "TAB1-PLACEHOLDER-ACCOMPANY_INFO-NAME":"张三",
+        "TAB1-LABEL-ACCOMPANY_INFO-ID_NO":"陪同人-身份证号",
+        "TAB1-LABEL-ACCOMPANY_INFO-SEX":"陪同人-性别",
+        "TAB1-LABEL-ACCOMPANY_INFO-RELATION_WITH":"陪同人-与老人关系",
+        "TAB1-LABEL-ACCOMPANY_INFO-PHONE":"陪同人-联系电话",
+        "TAB1-PLACEHOLDER-ACCOMPANY_INFO-PHONE":"187-8172-7282/0571-88234567",
+        "TAB1-LABEL-ACCOMPANY_INFO-ADDRESS":"陪同人-联系地址",
+        "TAB1-PLACEHOLDER-ACCOMPANY_INFO-ADDRESS":"XX小区X幢X单元XXX",
+        "TAB1-LABEL-END_ON": "归还时间",
+        "TAB1-LABEL-REMARK":"备注",
+        "TAB1-PLACEHOLDER-REMARK":"补充说明一些情况",
+        "SYNC_FAMILY_MEMBERS_SUCCESS":"同步老人家庭成员数据成功"
+      }
+    },
+    "financial-enter-payment":{
+      "list":{
+        "TITLE": "机构养老云-财务管理-入院缴费-列表"
+      }
+    },
+    "financial-recharge": {
+      "list": {
+        "TITLE": "机构养老云-财务管理-账户充值-列表"
+      },
+      "details": {
+        "TITLE": "机构养老云-财务管理-账户充值-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-ELDERLY":"充值对象",
+        "TAB1-PLACEHOLDER-ELDERLY":"输入老人的姓名、及其拼音或五笔码查找。例如：张三/zs/xd",
+        "TAB1-LABEL-TYPE":"充值方式",
+        "TAB1-LABEL-AMOUNT": "充值金额",
+        "TAB1-PLACEHOLDER-AMOUNT": "100.00..",
+        "TAB1-LABEL-REMARK":"备注",
+        "TAB1-PLACEHOLDER-REMARK":"补充说明一些情况",
+        "TAB1-REDED-TO-RECHARGE":"充值冲红记录",
+        "TAB1-REDED-TO-RECHARGE-CHECK_IN_TIME":"发生时间",
+        "TAB1-REDED-TO-RECHARGE-VOUCHER_NO":"记账凭证号",
+        "TAB1-REDED-TO-RECHARGE-AMOUNT":"发生金额",
+        "TAB1-REDED-TO-RECHARGE-REMARK":"备注",
+        "DISABLE-RECHARGE-CONFIRM-MESSAGE": "您确定要撤销当前的充值记录么？",
+        "DO-RED-FOR-RECHARGE":"充值流水冲红",
+        "RED-CONFIRM-MESSAGE": "您确定要冲红当前的充值记录么？"
+      }
+    },
+    "financial-exit-settlement":{
+      "list":{
+        "TITLE": "机构养老云-财务管理-出院结算-列表",
+        "AUDIT-SETTLEMENT":"出院结算"
+      }
+    },
+    "financial-red": {
+      "list": {
+        "TITLE": "机构养老云-财务管理-机构冲红明细-列表"
+      },
+      "details": {
+        "TITLE": "机构养老云-财务管理-机构冲红明细-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-VOUCHER_NO":"记账凭证号",
+        "TAB1-LABEL-CHECK_IN_TIME":"发生时间",
+        "TAB1-LABEL-AMOUNT": "充红金额",
+        "TAB1-PLACEHOLDER-AMOUNT": "100.00..",
+        "TAB1-LABEL-RAW_AMOUNT": "原始记账金额",
+        "TAB1-LABEL-REMARK":"备注",
+        "TAB1-PLACEHOLDER-REMARK":"补充说明一些情况",
+        "DISABLE-RED-CONFIRM-MESSAGE":"您确定要撤销当前的冲红记录么？",
+        "INVALID-VOUCHER_NO-TO-RED":"凭证号无效或者还没有结转，请确认"
+      }
+    },
+    "financial-org-receipts-and-disbursements-details":{
+      "list":{
+        "TITLE": "机构养老云-财务管理-机构收支明细-列表"
+      }
+    },
+    "material-exit-item-return": {
+      "list": {
+        "TITLE": "机构养老云-物资管理-出院物品归还-列表",
+        "AUDIT-ITEM_RETURN": "归还物品检查"
+      }
+    },
+    "user-manage": {
+      "list": {
+        "TITLE": "机构养老云-系统管理-用户-列表",
+        "RESET-USER-PASSWORD-COMMENT":"密码将会被重设为默认值"
+      },
+      "details": {
+        "TITLE": "机构养老云-系统管理-用户-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-CODE": "用户编码",
+        "TAB1-PLACEHOLDER-CODE": "rainbow@abc.com",
+        "TAB1-LABEL-NAME": "用户名称",
+        "TAB1-PLACEHOLDER-NAME": "钟XX..",
+        "TAB1-LABEL-FLAG-COLLECTION": "标志集合",
+        "TAB1-LABEL-STOP_FLAG": "停用",
+        "TAB1-LABEL-ROLE": "角色",
+        "TAB1-PLACEHOLDER-ROLE": "请设置用户角色..",
+        "TAB1-LABEL-PHONE": "手机号码",
+        "TAB1-PLACEHOLDER-PHONE": "137XXXX0258.."
+      }
+    },
+    "room-manage": {
+      "list": {
+        "TITLE": "机构养老云-系统管理-房间-列表"
+      },
+      "details": {
+        "TITLE": "机构养老云-系统管理-房间-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-DISTRICT_ID":"所在片区",
+        "TAB1-PLACEHOLDER-DISTRICT_ID":"请选择一个片区..",
+        "TAB1-LABEL-FLOOR": "所在楼层",
+        "TAB1-LABEL-NUMBER-IN-FLOOR": "楼层房间号",
+        "TAB1-LABEL-NAME": "房间名称",
+        "TAB1-PLACEHOLDER-NAME": "1201..",
+        "TAB1-LABEL-CAPACITY": "床位数量",
+        "TAB1-PLACEHOLDER-CAPACITY": "4..",
+        "TAB1-LABEL-FLAG-COLLECTION": "标志集合",
+        "TAB1-LABEL-STOP_FLAG": "停用"
+      },
+      "details-batch-add": {
+        "TITLE": "机构养老云-系统管理-房间-批量添加",
+        "TAB1": "批量添加信息",
+        "TAB1-LABEL-DISTRICT_ID":"所在片区",
+        "TAB1-PLACEHOLDER-DISTRICT_ID":"请选择一个片区..",
+        "TAB1-LABEL-FLOOR": "所在楼层",
+        "TAB1-LABEL-NUMBER-IN-FLOOR": "楼层房间号",
+        "TAB1-LABEL-CAPACITY": "床位数量",
+        "TAB1-PLACEHOLDER-CAPACITY": "4..",
+        "TAB1-LABEL-FLAG-COLLECTION": "标志集合",
+        "TAB1-LABEL-STOP_FLAG": "停用"
+      },
+      "details-batch-edit": {
+        "TITLE": "机构养老云-系统管理-房间-批量编辑",
+        "TAB1": "批量编辑信息",
+        "TAB1-LABEL-CAPACITY": "床位数量",
+        "TAB1-PLACEHOLDER-CAPACITY": "4..",
+        "TAB1-LABEL-FLAG-COLLECTION": "标志集合",
+        "TAB1-LABEL-STOP_FLAG": "停用"
+      }
+    },
+    "district-manage": {
+      "list": {
+        "TITLE": "机构养老云-系统管理-片区-列表"
+      },
+      "details": {
+        "TITLE": "机构养老云-系统管理-片区-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-NAME": "片区名称",
+        "TAB1-PLACEHOLDER-NAME": "A区南楼.."
+      }
+    },
+    "charge-standard": {
+      "TITLE": "机构养老云-系统管理-收费标准",
+      "HEADER-ITEM_NAME": "收费项目",
+      "HEADER-PERIOD_PRICE": "收费价格",
+      "HEADER-PRICER": "调价器",
+      "HEADER-PERIOD": "收费周期"
+    },
+    "charge-item-customized": {
+      "list": {
+        "TITLE": "机构养老云-系统管理-特色服务-列表"
+      },
+      "details": {
+        "TITLE": "机构养老云-系统管理-特色服务-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-NAME": "服务名称",
+        "TAB1-PLACEHOLDER-NAME": "每月体检..",
+        "TAB1-LABEL-Served_Quantity":"服务老人数量",
+        "TAB1-LABEL-REMARK":"备注",
+        "TAB1-PLACEHOLDER-REMARK":"补充说明一些情况"
+      }
+    }
+  },
+  "charge-item": {
+    "organization-travel": {
+      "ROOM-S1": "床位费",
+      "room-s1": {
+        "SINGLE-ROOM": "单人间",
+        "DOUBLE-ROOM": "双人间",
+        "TRIPLE-ROOM": "三人间",
+        "DOMITORY-ROOM": "多人间"
+      },
+      "BOARD-S1": "伙食费",
+      "board-s1":{
+        "NUTRITION":"营养餐"
+      },
+      "NURSING-S1": "护理费",
+      "nursing-s1":{
+        "SELF-CARE":"自理老人",
+        "DEVICE-AIDED":"介助老人(半失能/半失智)",
+        "NURSING-CARD":"介护老人(失能/失智)"
+      },
+      "OTHER-S1": "其他费用",
+      "other-s1":{
+        "DEPOSIT":"押金/保证金",
+        "SHARE-BILLS":"水/电费",
+        "HEATING-COOLING":"空调/暖气费"
+      },
+      "ROOM-S1": "床位费",
+      "room-s2": {
+        "SINGLE-ROOM": "单人间",
+        "DOUBLE-ROOM": "双人间",
+        "TRIPLE-ROOM": "三人间",
+        "FOUR-ROOM": "四人间",
+        "FIVE-ROOM": "五人间",
+        "SIX-ROOM": "六人间",
+        "DOMITORY-ROOM": "多人间"
+      },
+      "BOARD-S2": "伙食费",
+      "board-s2":{
+        "ONE":"一类",
+        "TWO":"二类",
+        "THREE":"三类",
+        "FOUR":"四类"
+      },
+      "NURSING-S2": "护理费",
+      "nursing-s2":{
+        "GRADE-FOUR":"四级(全自理)",
+        "GRADE-THREE":"三级(半自理)",
+        "GRADE-TWO":"二级(半护理)",
+        "GRADE-ONE":"一级(全护理)",
+        "GRADE-SPECIAL":"特级(全卧床)"
+      },
+      "OTHER-S2": "其他费用",
+      "other-s2":{
+        "DEPOSIT":"押金/保证金",
+        "WATER":"水费",
+        "ELECTRIC":"电费",
+        "COOLING":"空调费",
+        "HEATING":"暖气费"
+      },
+      "CUSTOMIZED-S1": "特色服务",
+      "CUSTOMIZED-S2": "特色服务"
+    }
+  }
+}

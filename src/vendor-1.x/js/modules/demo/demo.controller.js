@@ -633,17 +633,22 @@
             console.log('123');
 
             vm.dropdownDataPromise = vmh.shareService.d('D1015').then(function(items){
-                vm.period = items[2].value;
+                //vm.period = items[2].value;
                 return items;
             });
 
             vm.onSelect = onSelect;
+
+            vm.makeEmpty = makeEmpty;
         }
 
         function onSelect(item){
             vm.selected = 'callback received ' + angular.toJson(item);
         }
 
+        function makeEmpty(){
+            vm.period = '';
+        }
     }
 
     DemoBoxInputController.$inject = ['$scope','vmh', 'instanceVM'];

@@ -1,0 +1,72 @@
+[
+  {
+    "_id": "menu.organization-travel.QUALIFICATION-MANAGE",
+    "name": "资质管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.organization-travel.ENTER-MANAGE",
+        "name": "入院管理",
+        "sref": "app.organization-travel.enter-manage.list"
+
+      },
+      {
+        "_id": "menu.organization-travel.IN-MANAGE",
+        "name": "在院管理",
+        "sref": "app.organization-travel.in-manage.list"
+      },
+      {
+        "_id": "menu.organization-travel.EXIT-MANAGE",
+        "name": "出院管理",
+        "sref": "app.organization-travel.exit-manage.list"
+      },
+      {
+        "_id": "menu.organization-travel.RECEPTION-MANAGE",
+        "name": "接待管理",
+        "sref": "app.organization-travel.reception-manage.list"
+      },
+      {
+        "_id": "menu.organization-travel.LEAVE-MANAGE",
+        "name": "外出管理",
+        "sref": "app.organization-travel.leave-manage.list"
+      }
+    ]
+  },
+  {
+    "_id": "menu.organization-travel.FINANCIAL-MANAGE",
+    "name": "财务管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.organization-travel.RED",
+        "name": "机构冲红明细",
+        "sref": "app.organization-travel.financial-red.list"
+      },
+      {
+        "_id": "menu.organization-travel.ORG-RECEIPTS-AND-DISBURSEMENTS-DETAILS",
+        "name": "机构收支明细",
+        "sref": "app.organization-travel.financial-org-receipts-and-disbursements-details.list"
+      }
+    ]
+  },
+  {
+    "_id": "menu.organization-travel.SYSTEM-MANAGE",
+    "name": "系统管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.organization-travel.USER-MANAGE",
+        "name": "用户管理",
+        "sref": "app.organization-travel.user-manage.list"
+      },
+      {
+        "_id": "menu.organization-travel.LOG",
+        "name": "系统日志",
+        "sref": "app.organization-travel.system-log"
+      }
+    ]
+  }
+]

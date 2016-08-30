@@ -1,19 +1,11 @@
 [
   {
-    "_id": "subsystem.ORGANIZATION-PFTA-STANDARD",
-    "name": "机构养老云",
-    "sref": "app.organization-pfta",
+    "_id": "subsystem.organization-travel-STANDARD",
+    "name": "旅行社产品云",
+    "sref": "app.organization-travel",
     "mtype":"business",
     "usertype": ["A0002"],
-    "menujson": "menu-organization-pfta.json"
-  },
-  {
-    "_id": "subsystem.COMMUNITY-PFTA-STANDARD",
-    "name": "社区养老云",
-    "sref": "app.community-pfta",
-    "mtype":"business",
-    "usertype": ["A0002"],
-    "menujson": "menu-community-pfta.json"
+    "menujson": "menu-organization-travel.json"
   },
   {
     "_id": "subsystem.MANAGE-CENTER",

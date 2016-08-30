@@ -78,7 +78,7 @@
                 return false;
             },
             isAuthenticated: function () {
-                return _user ? true : false;
+                return _token && _user ? true : false;
             },
             getUser: function () {
                 this.ensureUser();

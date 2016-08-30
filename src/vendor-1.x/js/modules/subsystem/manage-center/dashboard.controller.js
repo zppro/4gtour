@@ -6,7 +6,7 @@
     'use strict';
 
     angular
-        .module('subsystem.organization-pfta')
+        .module('subsystem.organization-travel')
         .controller('DashboardControllerOfManageCenterController', DashboardControllerOfManageCenterController)
     ;
 
