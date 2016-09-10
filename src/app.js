@@ -65,12 +65,12 @@ app.conf = {
 };
 
 console.log('config...');
+console.log(process.version);
 // conf
 rfcore.config(app.conf,process.argv);
 
 //去除字符对bool的影响
 app.conf.isProduction = app.conf.isProduction == true || app.conf.isProduction === 'true';
-
 
 //console.log(JSON.stringify(app.conf.db.mongodb));
 
@@ -285,6 +285,7 @@ co(function*() {
             });
         });
     }
+
 
     //注册静态文件（客户端文件）
     if (app.conf.isProduction) {
