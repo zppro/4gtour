@@ -35,7 +35,7 @@
             'app.grid',
             'app.tree',
             'app.dropdown',
-            'app.demo',
+            //'app.demo',
             'subsystem.manage-center',
             'subsystem.organization-travel'
         ]);

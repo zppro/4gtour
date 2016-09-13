@@ -36,6 +36,9 @@
     "tree-tile": {
       "TITLE": "演示中心-树-平铺"
     },
+    "img-process-qiniu": {
+      "TITLE": "图片处理-七牛云"
+    },
     "dropdown": {
       "TITLE": "演示中心-下拉选择",
       "DEFAULT-PLACEHOLDER": "请选择"

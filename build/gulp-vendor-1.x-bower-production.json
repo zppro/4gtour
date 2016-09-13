@@ -18,8 +18,11 @@
   "src/{{target}}/bower_components/angucomplete-alt/angucomplete-alt.css",
   "src/{{target}}/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js",
   "src/{{target}}/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css",
-  "src/{{target}}/bower_components/echarts/dist/echarts.simple.js",
-  "src/{{target}}/bower_components/echarts/dist/echarts.common.js",
-  "src/{{target}}/bower_components/echarts/dist/echarts.js",
-  "src/{{target}}/bower_components/echarts-ng/dist/echarts-ng.js"
+  "src/{{target}}/bower_components/echarts/dist/echarts.common.min.js",
+  "src/{{target}}/bower_components/echarts-ng/dist/echarts-ng.min.js",
+  "src/{{target}}/bower_components/respond/dest/respond.min.js",
+  "src/{{target}}/bower_components/plupload/js/plupload.full.min.js",
+  "src/{{target}}/bower_components/plupload/js/moxie.swf",
+  "src/{{target}}/bower_components/plupload/js/i18n/zh_CN.js",
+  "src/{{target}}/bower_components/qiniu/dist/qiniu.min.js"
 ]

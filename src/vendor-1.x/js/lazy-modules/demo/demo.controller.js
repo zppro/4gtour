@@ -15,6 +15,7 @@
         .controller('DemoTreeDirectiveController', DemoTreeDirectiveController)
         .controller('DemoTreeNavController', DemoTreeNavController)
         .controller('DemoTreeTileController', DemoTreeTileController)
+        .controller('DemoIMGProcessQiNiuController',DemoIMGProcessQiNiuController)
         .controller('DemoDropdownController', DemoDropdownController)
         .controller('DemoBoxInputController', DemoBoxInputController)
         .controller('DemoPromiseController',DemoPromiseController)
@@ -616,6 +617,18 @@
             });
         }
 
+    }
+
+    DemoIMGProcessQiNiuController.$inject = ['$scope','vmh', 'instanceVM'];
+    function DemoIMGProcessQiNiuController($scope, vmh, vm){
+        $scope.vm = vm;
+
+        init();
+
+        function init() {
+            vm.init();
+
+        }
     }
 
     DemoDropdownController.$inject = ['$scope','vmh', 'instanceVM'];

@@ -31,7 +31,8 @@
     "EXIT-SETTLEMENT":"出院结算",
     "CHARGE-LIST":"费用清单",
     "BOOKING":"记账",
-    "RED":"冲红"
+    "RED":"冲红",
+    "PICK-FIELS":"挑选文件"
   },
   "label": {
     "NONE": "无",
@@ -191,7 +192,9 @@
       "TREE-TILE": "树-平铺",
       "DROPDOWN": "下拉选择",
       "BOX-INPUT": "方框输入框",
-      "PROMISE": "Promise"
+      "PROMISE": "Promise",
+      "IMG-PROCESS":"图片处理",
+      "IMG-PROCESS-QINIU":"七牛云"
     }
   },
   "sidebar": {

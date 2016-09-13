@@ -12,9 +12,9 @@
                 'classyloader':       ['vendor/jquery-classyloader/js/jquery.classyloader.min.js'],
                 'eonasdan-bootstrap-datetimepicker': ['vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
                     'vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js'],
-                'echarts.simple': ['vendor/echarts/dist/echarts.simple.js'],
-                'echarts.common': ['vendor/echarts/dist/echarts.common.js'],
-                'echarts': ['vendor/echarts/dist/echarts.js']
+                'echarts.common': ['vendor/echarts/dist/echarts.common.min.js'],
+                'qiniu':['vendor/plupload/js/plupload.dev.js','vendor/plupload/js/moxie.js',
+                    'vendor/plupload/js/i18n/zh_CN.js','vendor/qiniu/dist/qiniu.js']
             },
             // Angular based script (use the right module name)
             modules: [
@@ -36,9 +36,10 @@
                     'vendor/ng-dialog/css/ngDialog-theme-default.min.css']
                 },
                 {name: 'locale_zh-cn', files: ['vendor/angular-i18n/angular-locale_zh-cn.js']},
-                {name: 'echarts-ng', files: ['vendor/echarts-ng/dist/echarts-ng.js']},
+                {name: 'echarts-ng', files: ['vendor/echarts-ng/dist/echarts-ng.min.js']},
                 {name: 'subsystem.manage-center', files: ['app/css/manage-center.css']},
-                {name: 'subsystem.organization-travel', files: ['app/css/organization-travel.css']}
+                {name: 'subsystem.organization-travel', files: ['app/css/organization-travel.css']},
+                {name: 'app.demo',files:['app/js/lazy-modules/demo.js']}
             ]
         })
     ;

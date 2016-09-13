@@ -95,6 +95,8 @@ module.exports = {
                                 // sign with default (HMAC SHA256)
                                 var token = jwt.sign(user, app.conf.secure.authSecret + ':' + (new Date().f('yyyy-MM-dd').toString()));
 
+                                console.log(token);
+
                                 this.body = app.wrapper.res.ret({
                                     user: _.defaults(_.pick(user, '_id', 'code', 'name', 'type', 'roles'), {
                                         tenant: tenant

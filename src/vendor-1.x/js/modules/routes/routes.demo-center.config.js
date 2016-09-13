@@ -24,6 +24,7 @@
                 template: '<div class="module-header-wrapper" data-ui-view="module-header"></div><div class="module-content-wrapper" data-ui-view="module-content"></div>',
                 resolve: {
                     vmh: helper.buildVMHelper()
+                    , deps: helper.resolveFor2('app.demo')
                 }
             })
             .state('app.demo-center.grid-basic', {
@@ -178,6 +179,24 @@
                         controller: 'DemoTreeTileController',
                         resolve: {
                             instanceVM: helper.buildInstanceVM('app.demo-center.tree-tile')
+                        }
+                    }
+                }
+            })
+            .state('app.demo-center.img-process-qiniu', {
+                url: '/img-process-qiniu',
+                access_level: AUTH_ACCESS_LEVELS.ADMIN,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath('partials/module-header.html'),
+                        controller: 'ModuleHeaderController'
+                    },
+                    "module-content": {
+                        templateUrl: helper.basepath('demo-center/img-process-qiniu.html'),
+                        controller: 'DemoIMGProcessQiNiuController',
+                        resolve: {
+                            instanceVM: helper.buildInstanceVM('app.demo-center.img-process-qiniu')
+                            , deps: helper.resolveFor2('qiniu')
                         }
                     }
                 }

@@ -46,6 +46,19 @@
     ]
   },
   {
+    "_id": "menu.demo-center.IMG-PROCESS",
+    "name": "图片处理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.demo-center.IMG-PROCESS-QINIU",
+        "name": "图片处理-七牛云",
+        "sref": "app.demo-center.img-process-qiniu"
+      }
+    ]
+  },
+  {
     "_id": "menu.demo-center.DROPDOWN",
     "name": "下拉选择",
     "sref": "app.demo-center.dropdown"

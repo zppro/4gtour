@@ -3,19 +3,18 @@ var args        = require('yargs').argv,
     $plugins    = require('gulp-load-plugins')(),
     gulpsync    = $plugins.sync(gulp),
     del         = require('del'),
+    path        = require('path'),
+    merge       = require('merge-stream'),
     _           = require('underscore');
 
 // production mode (see build task)
 var isProduction = !(args.level === 'develop' || args.level === 'dev');
+var useSourceMaps = !!args.usm;
 var mode = isProduction ? 'production':'develop';
 
 console.log(mode);
 
-var target = args.target;
-if(!target)
-{
-    target = 'default';
-}
+var target = args.target || 'default';
 
 var paths = {
     src_client: './src/' + target + '/',
@@ -82,6 +81,14 @@ var source = {
         ],
         name_concat_js: 'app.js'
     },
+    lazyModules:{
+        scripts: _.map(_.where(require(paths.build + 'gulp-' + target + '-lazy-modules.json'),{type:'js'}), function (o) {
+            return o.path.replace(/\{\{(.+?)\}\}/g, target)
+        }),
+        less:_.map( _.where(require(paths.build + 'gulp-' + target + '-lazy-modules.json'),{type:'less'}), function (o) {
+            return o.path.replace(/\{\{(.+?)\}\}/g, target)
+        })
+    },
     jade: {
         watch: paths.src_client + 'jade/**/*.jade',
         index: paths.src_client + 'jade/index.jade',
@@ -99,6 +106,10 @@ var build = {
         i18n: paths.pub_client_app_develop + 'i18n/',
         styles: paths.pub_client_app_develop + 'css/',
         scripts: paths.pub_client_app_develop + 'js/',
+        lazyModules: {
+            scripts: paths.pub_client_app_develop + 'js/lazy-modules/',
+            less: paths.pub_client_app_develop + 'css/lazy-modules/'
+        },
         jade: {
             index: paths.pub_client_develop,
             pages: paths.pub_client_app_develop + 'pages/',
@@ -110,6 +121,10 @@ var build = {
         i18n: paths.pub_client_app_production + 'i18n/',
         styles: paths.pub_client_app_production + 'css/',
         scripts: paths.pub_client_app_production + 'js/',
+        lazyModules: {
+            scripts: paths.pub_client_app_production + 'js/lazy-modules/',
+            less: paths.pub_client_app_production + 'css/lazy-modules/'
+        },
         jade: {
             index: paths.pub_client_production,
             pages: paths.pub_client_app_production + 'pages/',
@@ -208,11 +223,11 @@ gulp.task('i18n',[
 gulp.task('styles:less:app',function() {
     log('Building less app..');
     return gulp.src(source.less.app)
-        .pipe($plugins.if(isProduction, $plugins.sourcemaps.init()))
+        .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.init()))
         .pipe($plugins.less())
         .on('error', handleError)
         .pipe($plugins.if(isProduction, $plugins.minifyCss()))
-        .pipe($plugins.if(isProduction, $plugins.sourcemaps.write('.')))
+        .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.write('.')))
         .pipe(gulp.dest(isProduction ? build.production.styles : build.develop.styles))
         .pipe($plugins.livereload())
         ;
@@ -222,12 +237,12 @@ gulp.task('styles:less:app',function() {
 gulp.task('styles:less:app-rtl', function() {
     log('Building less app-RTL styles..');
     return gulp.src(source.less.app)
-        .pipe($plugins.if(isProduction, $plugins.sourcemaps.init()))
+        .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.init()))
         .pipe($plugins.less())
         .on('error', handleError)
         .pipe($plugins.cssFlipper())
         .pipe($plugins.if(isProduction, $plugins.minifyCss()))
-        .pipe($plugins.if(isProduction, $plugins.sourcemaps.write('.')))
+        .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.write('.')))
         .pipe($plugins.rename(function(path) {
             path.basename += "-rtl";
             return path;
@@ -241,11 +256,11 @@ gulp.task('styles:less:app-rtl', function() {
 gulp.task('styles:less:themes', function() {
     log('Building less app theme styles..');
     return gulp.src(source.less.themes)
-        .pipe($plugins.if(isProduction, $plugins.sourcemaps.init()))
+        .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.init()))
         .pipe($plugins.less())
         .on('error', handleError)
         .pipe($plugins.if(isProduction, $plugins.minifyCss()))
-        .pipe($plugins.if(isProduction, $plugins.sourcemaps.write('.')))
+        .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.write('.')))
         .pipe(gulp.dest(isProduction ? build.production.styles : build.develop.styles))
         //.pipe($plugins.livereload())
         ;
@@ -255,11 +270,11 @@ gulp.task('styles:less:themes', function() {
 gulp.task('styles:less:subsystem', function() {
     log('Building less app subsystem styles..');
     return gulp.src(source.less.subsystem)
-        .pipe($plugins.if(isProduction, $plugins.sourcemaps.init()))
+        .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.init()))
         .pipe($plugins.less())
         .on('error', handleError)
         .pipe($plugins.if(isProduction, $plugins.minifyCss()))
-        .pipe($plugins.if(isProduction, $plugins.sourcemaps.write('.')))
+        .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.write('.')))
         .pipe(gulp.dest(isProduction ? build.production.styles : build.develop.styles))
         .pipe($plugins.livereload())
         ;
@@ -279,13 +294,13 @@ gulp.task('scripts:app', function() {
     return gulp.src(source.scripts.app)
         .pipe($plugins.jsvalidate())
         .on('error', handleError)
-        .pipe($plugins.if(isProduction, $plugins.sourcemaps.init()))
+        .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.init()))
         .pipe($plugins.concat(source.scripts.name_concat_js))
         .pipe($plugins.ngAnnotate())
         .on('error', handleError)
         .pipe($plugins.if(isProduction, $plugins.uglify({preserveComments: 'some'})))
         .on('error', handleError)
-        .pipe($plugins.if(isProduction, $plugins.sourcemaps.write('.')))
+        .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.write('.')))
         .pipe(gulp.dest(isProduction ? build.production.scripts : build.develop.scripts))
         .pipe($plugins.livereload())
         ;
@@ -293,6 +308,74 @@ gulp.task('scripts:app', function() {
 
 gulp.task('scripts',[
     'scripts:app'
+]);
+
+
+// LAZY-MODULES LESS
+gulp.task('lazy-modules:less', function() {
+    log('Building lazy-modules:less..');
+
+    var tasks = source.lazyModules.scripts.map(function(o) {
+        var arr = o.split('/');
+        var dirName = '';
+        if (o.lastIndexOf('/') == o.length - 1) {
+            dirName = arr[arr.length - 2];
+        }
+        else {
+            dirName = arr[arr.length - 1];
+        }
+
+        return gulp.src(path.join(o, '*.less'))
+            .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.init()))
+            .pipe($plugins.less())
+            .on('error', handleError)
+            .pipe($plugins.if(isProduction, $plugins.minifyCss()))
+            .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.write('.')))
+            .pipe(gulp.dest(isProduction ? build.production.lazyModules.less : build.develop.lazyModules.less))
+            .pipe($plugins.livereload())
+            ;
+    });
+
+    return merge(tasks);
+});
+
+// LAZY-MODULES SCRIPTS
+gulp.task('lazy-modules:scripts', function() {
+    log('Building lazy-modules:scripts..');
+
+    var tasksOfModuleHeads = source.lazyModules.scripts.map(function(o) {
+        var arr = o.split('/');
+        var dirName = '';
+        if (o.lastIndexOf('/') == o.length - 1) {
+            dirName = arr[arr.length - 2];
+        }
+        else {
+            dirName = arr[arr.length - 1];
+        }
+
+        return gulp.src([path.join(o, '*.module.js'),path.join(o, '*.js')])
+            .pipe($plugins.jsvalidate())
+            .on('error', handleError)
+            .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.init()))
+            .pipe($plugins.concat(dirName + '.js'))
+            .pipe($plugins.ngAnnotate())
+            .on('error', handleError)
+            .pipe($plugins.if(isProduction, $plugins.uglify({preserveComments: 'some'})))
+            .on('error', handleError)
+            .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.write('.')))
+            .pipe(gulp.dest(isProduction ? build.production.lazyModules.scripts : build.develop.lazyModules.scripts))
+            .pipe($plugins.livereload())
+            ;
+    });
+
+
+    return merge(tasksOfModuleHeads);
+});
+
+
+gulp.task('lazy-modules',[
+    'lazy-modules:less',
+    'lazy-modules:scripts'
 ]);
 
 // JADE
@@ -351,6 +434,8 @@ gulp.task('watch', function() {
     gulp.watch(source.jade.watch, ['jade']);
     gulp.watch(source.less.watch, ['styles:less:app', 'styles:less:app-rtl','styles:less:subsystem']);
     gulp.watch(source.scripts.watch, ['scripts:app']);
+    gulp.watch(source.lazyModules.scripts, ['lazyModules:scripts']);
+    //gulp.watch(source.lazyModules.less, ['lazyModules:less']);
 
 });
 
@@ -400,6 +485,7 @@ gulp.task('production', gulpsync.sync([
     'i18n',
     'styles',
     'scripts',
+    'lazy-modules',
     'jade'
 ]), function(){
 
@@ -419,6 +505,7 @@ gulp.task('develop', gulpsync.sync([
     'i18n',
     'styles',
     'scripts',
+    'lazy-modules',
     'jade',
     'watch'
 ]), function(){

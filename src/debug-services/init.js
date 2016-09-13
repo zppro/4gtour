@@ -27,6 +27,22 @@ module.exports = {
         //_[action]_格式的算是初始化步骤的action，禁止删除
         this.actions = [
             {
+                method: 'head',
+                verb: 'get',
+                url: this.service_url_prefix + "/head",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            this.body = 'ok';
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: '_initSystem_',
                 verb: 'post',
                 url: this.service_url_prefix + "/_initSystem_",

@@ -10,8 +10,8 @@
         .directive('sDropdown', sDropdown)
     ;
 
-    sDropdown.$inject = ['$q','$compile','$templateRequest'];
-    function sDropdown($q,$compile,$templateRequest) {
+    sDropdown.$inject = ['$q'];
+    function sDropdown($q) {
 
 
         var directive = {
