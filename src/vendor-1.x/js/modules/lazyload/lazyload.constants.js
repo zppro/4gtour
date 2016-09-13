@@ -13,8 +13,7 @@
                 'eonasdan-bootstrap-datetimepicker': ['vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
                     'vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js'],
                 'echarts.common': ['vendor/echarts/dist/echarts.common.min.js'],
-                'qiniu':['vendor/plupload/js/plupload.dev.js','vendor/plupload/js/moxie.js',
-                    'vendor/plupload/js/i18n/zh_CN.js','vendor/qiniu/dist/qiniu.js']
+                'qiniu':['vendor/plupload/js/plupload.full.min.js','vendor/qiniu/dist/qiniu.js']
             },
             // Angular based script (use the right module name)
             modules: [
@@ -39,7 +38,8 @@
                 {name: 'echarts-ng', files: ['vendor/echarts-ng/dist/echarts-ng.min.js']},
                 {name: 'subsystem.manage-center', files: ['app/css/manage-center.css']},
                 {name: 'subsystem.organization-travel', files: ['app/css/organization-travel.css']},
-                {name: 'app.demo',files:['app/js/lazy-modules/demo.js']}
+                {name: 'app.demo',files:['app/js/lazy-modules/demo.js']},
+                {name:'qiniu-ng',files:['app/js/lazy-modules/qiniu-ng.js']}
             ]
         })
     ;

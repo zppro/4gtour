@@ -6,17 +6,17 @@
     'use strict';
 
     angular
-        .module('app.qiniu')
+        .module('qiniu-ng')
         .run(qiniuRun);
     ;
 
     qiniuRun.$inject = ['$templateCache'];
 
     function qiniuRun($templateCache) {
-        var templateContent = '<div id="#container-id#">\
-                <a class="btn btn-default btn-lg " id="#button-id#" href="#" >\
+        var templateContent = '<div id="{{containerId}}">\
+                <a class="btn btn-default btn-lg " id="{{buttonId}}" href="#" >\
                 <i class="glyphicon glyphicon-plus"></i>\
-                <span>#button-text#</span></a></div>';
+                <span>{{buttonText}}</span></a></div>';
         $templateCache.put("qiniu-uploader-default.html",templateContent);
 
     }

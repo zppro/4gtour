@@ -2,8 +2,12 @@
     'use strict';
 
     angular
-        .module('app.qiniu')
+        .module('qiniu-ng')
         .directive('qiniuUploader', qiniuUploader);
+
+    function genContainerId() {
+        return Math.random().toString(36).substr(2, 9);
+    }
 
     qiniuUploader.$inject = ['$timeout', '$q',$templateRequest];
     function qiniuUploader ($timeout, $q,$templateRequest) {
@@ -16,8 +20,10 @@
 
         ///////
 
-        function link(scope, el) {
+        function link(scope, el,attrs) {
 
+            console.log(123);
+            scope.containerId = attrs.containerId || genContainerId;
             var templateUrl = attrs.qiniuUploaderTemplateUrl || 'qiniu-uploader-default.html';
             $templateRequest(templateUrl).then(function(htmlStr){
                 var template = angular.element(htmlStr);
@@ -25,6 +31,7 @@
 
             });
 
+            console.log(scope);
 
         } //link
     }
