@@ -196,7 +196,7 @@
                         controller: 'DemoIMGProcessQiNiuController',
                         resolve: {
                             instanceVM: helper.buildInstanceVM('app.demo-center.img-process-qiniu')
-                            , deps: helper.resolveFor2(['qiniu'])
+                            , deps: helper.resolveFor2('qiniu','qiniu-ng')
                         }
                     }
                 }

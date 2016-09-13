@@ -1,5 +1,5 @@
 (function() {
     'use strict';
     angular
-        .module('qiniu-ng', []);
+        .module('qiniu-ng', ['ng']);
 })();
