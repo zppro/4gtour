@@ -13,7 +13,8 @@
                 'eonasdan-bootstrap-datetimepicker': ['vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
                     'vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js'],
                 'echarts.common': ['vendor/echarts/dist/echarts.common.min.js'],
-                'qiniu':['vendor/plupload/js/plupload.full.min.js','vendor/qiniu/dist/qiniu.js']
+                'qiniu':['vendor/plupload/js/plupload.full.min.js','vendor/plupload/js/i18n/zh_CN.js','vendor/qiniu/dist/qiniu.js'],
+                'qiniu2':['vendor/plupload/js/moxie.js','vendor/plupload/js/plupload.dev.js','vendor/plupload/js/i18n/zh_CN.js','vendor/qiniu/dist/qiniu.js']
             },
             // Angular based script (use the right module name)
             modules: [

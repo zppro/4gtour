@@ -69,7 +69,7 @@ var source = {
         subsystem: paths.src_client + 'less/subsystem/*.*'
     },
     scripts: {
-        watch: [paths.src_client + 'js/**/*', '!' + paths.src_client + 'js/custom/**/*'],
+        watch: [paths.src_client + 'js/**/*', '!' + paths.src_client + 'js/custom/**/*', '!' + paths.src_client + 'js/lazy-modules/**/*'],
         app: [
             paths.src_client + 'js/app.module.js',
             // template modules
@@ -82,6 +82,7 @@ var source = {
         name_concat_js: 'app.js'
     },
     lazyModules:{
+        watch:[paths.src_client+'js/lazy-modules/**/*'],
         scripts: _.map(_.where(require(paths.build + 'gulp-' + target + '-lazy-modules.json'),{type:'js'}), function (o) {
             return o.path.replace(/\{\{(.+?)\}\}/g, target)
         }),
@@ -434,7 +435,7 @@ gulp.task('watch', function() {
     gulp.watch(source.jade.watch, ['jade']);
     gulp.watch(source.less.watch, ['styles:less:app', 'styles:less:app-rtl','styles:less:subsystem']);
     gulp.watch(source.scripts.watch, ['scripts:app']);
-    gulp.watch(source.lazyModules.scripts, ['lazyModules:scripts']);
+    gulp.watch(source.lazyModules.watch, ['lazy-modules:scripts']);
     //gulp.watch(source.lazyModules.less, ['lazyModules:less']);
 
 });
