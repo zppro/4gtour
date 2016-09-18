@@ -1,7 +1,6 @@
 [
   "src/{{target}}/bower_components/jquery/dist/jquery.js",
   "src/{{target}}/bower_components/angular/angular.js",
-  "src/{{target}}/bower_components/angular-route/angular-route.js",
   "src/{{target}}/bower_components/angular-cookies/angular-cookies.js",
   "src/{{target}}/bower_components/angular-animate/angular-animate.js",
   "src/{{target}}/bower_components/angular-touch/angular-touch.js",

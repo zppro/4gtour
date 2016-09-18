@@ -3,7 +3,6 @@
 
     angular
         .module('app.core', [
-            'ngRoute',
             'ngAnimate',
             'ngStorage',
             'ngCookies',
