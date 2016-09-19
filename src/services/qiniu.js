@@ -32,26 +32,27 @@ module.exports = {
             {
                 method: 'uploadToken',
                 verb: 'get',
-                url: this.service_url_prefix + "/uploadToken/:bucket/:key/:userId",
+                url: this.service_url_prefix + "/uploadToken/:user,:bucket,:key?",
                 handler: function (app, options) {
                     return function * (next) {
                         try {
 
-                            var buconfigcket = this.params.bucket || default_bucket;
+                            var bucket = this.params.bucket || default_bucket;
                             var key = this.params.key;
-                            var userId = this.params.userId;
+                            var user = this.params.user;
 
                             var pubPolicyObj = {
                                 scope: key ? bucket + ':' + key : bucket,
                                 expire: app.moment().add(1, 'day'),
-                                endUser: userId
+                                endUser: user
                             };
                             var pubPolicy = new qiniu.rs.PutPolicy2(pubPolicyObj);
 
                             this.set("Cache-Control", "max-age=0, private, must-revalidate");
                             this.set("Pragma", "no-cache");
                             this.set("Expires", 0);
-
+                            this.set('Parse','no-parse');
+                            
                             this.body = {uptoken: pubPolicy.token()};
                         } catch (e) {
                             self.logger.error(e.message);

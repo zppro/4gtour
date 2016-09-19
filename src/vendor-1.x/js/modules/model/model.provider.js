@@ -11,6 +11,7 @@
         .provider('extensionNode', ExtensionNode)
         .provider('extensionOfOrganzationOfPFTANode',extensionOfOrganzationOfPFTANode)
         .provider('extensionOfDashboardOfTenantNode',extensionOfDashboardOfTenantNode)
+        .provider('qiniuNode',qiniuNode)
         .provider('debugNode',DebugNode)
         .provider('clientData',ClientData)
     ;
@@ -500,6 +501,42 @@
 
                 function roomCatagoryOfManTimeMonthly(tenantId,start,end){
                     return $http.get(baseUrl + 'roomCatagoryOfManTimeMonthly/' + tenantId+ '/' + start + '/' + end);
+                }
+            }]
+        };
+
+        function setBaseUrl(url) {
+            baseUrl = url;
+        }
+    }
+
+    function qiniuNode(){
+        var baseUrl;
+        return {
+            // provider access level
+            setBaseUrl: setBaseUrl,
+
+            // controller access level
+            $get: ['$http', function ($http) {
+
+                return {
+                    uploadToken: uploadToken
+                };
+
+                function uploadToken(user,bucket,key) {
+                    if (!bucket) {
+                        return null;
+                    }
+
+                    if(!user){
+                        user = 'admin@local'
+                    }
+
+                    if (!key) {
+                        key = '';
+                    }
+
+                    return $http.get(baseUrl + 'uploadToken/' + user + ',' + bucket + ',' + key);
                 }
             }]
         };

@@ -27,6 +27,10 @@
 
                 var _url = resp.config.url.toLowerCase();
                 if (_url.indexOf('services/') == 0) {
+                    if(resp.headers().parse == 'no-parse'){
+                        return resp;
+                    }
+                    
                     if (resp.data.success) {
                         //console.log(resp.data);
                         //console.log(resp.headers());

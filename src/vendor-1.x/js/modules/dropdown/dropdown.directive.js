@@ -64,9 +64,9 @@
                     scope.onSelect({item: item});
                 }
             };
-
+            console.log(23424)
             $q.when(data).then(function (items) {
-
+                console.log(5555)
                 scope.items = items;
 
                 setShowText();

@@ -79,7 +79,7 @@
         function setData(data) {
             self.rawData = data;
         }
-buildGrid
+
 
         function query(param) {
             var queryParam = angular.extend({}, self.searchForm, param);

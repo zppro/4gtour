@@ -619,15 +619,16 @@
 
     }
 
-    DemoIMGProcessQiNiuController.$inject = ['$scope','vmh', 'instanceVM'];
-    function DemoIMGProcessQiNiuController($scope, vmh, vm){
+    DemoIMGProcessQiNiuController.$inject = ['$scope','vmh', 'instanceVM','Auth'];
+    function DemoIMGProcessQiNiuController($scope, vmh, vm,Auth) {
         $scope.vm = vm;
 
         init();
 
         function init() {
             vm.init();
-
+            vm.user_code = Auth.getUser().code;
+            
         }
     }
 
@@ -642,9 +643,6 @@
 
         function init() {
             vm.init();
-
-            console.log('123');
-
             vm.dropdownDataPromise = vmh.shareService.d('D1015').then(function(items){
                 //vm.period = items[2].value;
                 return items;
