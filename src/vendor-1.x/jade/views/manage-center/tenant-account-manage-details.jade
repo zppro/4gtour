@@ -58,9 +58,8 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                     fieldset: .form-group
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-PHONE') | translate}}:
                         .col-md-10
-                            input.form-control(type='text',name='phone' , ng-model='vm.model.phone',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-PHONE")|translate}}' ,required='',ng-model-options="{debounce:500}",ui-validate="{phone: 'utils.isPhone($value)'}" ,ui-validate-async="{alreadyExists: 'vm.notExist({phone:$value})'}")
+                            input.form-control(type='text',name='phone' , ng-model='vm.model.phone',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-PHONE")|translate}}' ,required='',ng-model-options="{debounce:500}",ui-validate-async="{alreadyExists: 'vm.notExist({phone:$value})'}")
                             span.text-danger(ng-show="utils.vinput(this.theForm,'phone','required')") {{ "validator.REQUIRED" | translate}}
-                            span.text-danger(ng-show="utils.vinput(this.theForm,'phone','phone')") {{ "validator.FORMAT" | translate:{item:"手机号码"} }}
                             span.text-danger(ng-show="utils.vinput(this.theForm,'phone','alreadyExists')") {{ "validator.ALREADY-EXISTS" | translate:{item:"手机号码"} }}
                     fieldset: .form-group
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-EMAIL') | translate}}:

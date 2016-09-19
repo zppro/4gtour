@@ -1,35 +1,25 @@
 [
   {
-    "_id": "menu.organization-travel.QUALIFICATION-MANAGE",
-    "name": "资质管理",
+    "_id": "menu.organization-travel.PRODUCT-MANAGE",
+    "name": "产品管理",
     "sref": "#",
     "icon": "icon-folder",
     "children": [
       {
-        "_id": "menu.organization-travel.ENTER-MANAGE",
-        "name": "入院管理",
-        "sref": "app.organization-travel.enter-manage.list"
+        "_id": "menu.organization-travel.ENTRANCE-TICKET",
+        "name": "票务",
+        "sref": "app.organization-travel.product-entrance-ticket.list"
 
       },
       {
-        "_id": "menu.organization-travel.IN-MANAGE",
-        "name": "在院管理",
-        "sref": "app.organization-travel.in-manage.list"
+        "_id": "menu.organization-travel.accommodation",
+        "name": "住宿",
+        "sref": "app.organization-travel.product-accommodation.list"
       },
       {
-        "_id": "menu.organization-travel.EXIT-MANAGE",
-        "name": "出院管理",
-        "sref": "app.organization-travel.exit-manage.list"
-      },
-      {
-        "_id": "menu.organization-travel.RECEPTION-MANAGE",
-        "name": "接待管理",
-        "sref": "app.organization-travel.reception-manage.list"
-      },
-      {
-        "_id": "menu.organization-travel.LEAVE-MANAGE",
-        "name": "外出管理",
-        "sref": "app.organization-travel.leave-manage.list"
+        "_id": "menu.organization-travel.TRAVEL-LINE",
+        "name": "线路",
+        "sref": "app.organization-travel.product-travel-line.list"
       }
     ]
   },
@@ -61,6 +51,11 @@
         "_id": "menu.organization-travel.USER-MANAGE",
         "name": "用户管理",
         "sref": "app.organization-travel.user-manage.list"
+      },
+      {
+        "_id": "menu.organization-travel.QUALIFICATION-MANAGE",
+        "name": "资质管理",
+        "sref": "app.organization-travel.qualification-manage.list"
       },
       {
         "_id": "menu.organization-travel.LOG",
