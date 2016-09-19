@@ -272,17 +272,18 @@ co(function*() {
 
         var service_module = require('./services/' + o);
         _.each(service_module.actions, function (action) {
+
             Router.prototype[action.verb].apply(router, [service_module.name + "_" + action.method, action.url, action.handler(app)]);
         });
     });
 
     if(!app.conf.isProduction){
-
         _.each(app.conf.debugServiceNames, function (o) {
             var service_module = require('./debug-services/' + o);
             _.each(service_module.actions, function (action) {
                 Router.prototype[action.verb].apply(router, [service_module.name + "_" + action.method, action.url, action.handler(app)]);
             });
+            console.log(o);
         });
     }
 
