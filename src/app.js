@@ -120,6 +120,13 @@ app.clone = require('clone');
 //pinyin
 //app.pinyin = require('pinyin');
 
+app.coOnError = function (err) {
+    // log any uncaught errors
+    // co will not throw any errors you do not handle!!!
+    // HANDLE ALL YOUR ERRORS!!!
+    console.error(err.stack);
+};
+
 //moment
 app.moment = moment;
 
@@ -272,7 +279,6 @@ co(function*() {
 
         var service_module = require('./services/' + o);
         _.each(service_module.actions, function (action) {
-
             Router.prototype[action.verb].apply(router, [service_module.name + "_" + action.method, action.url, action.handler(app)]);
         });
     });
@@ -283,7 +289,6 @@ co(function*() {
             _.each(service_module.actions, function (action) {
                 Router.prototype[action.verb].apply(router, [service_module.name + "_" + action.method, action.url, action.handler(app)]);
             });
-            console.log(o);
         });
     }
 
@@ -317,7 +322,7 @@ co(function*() {
 
     console.log('listening...');
 
-});
+}).catch(app.coOnError);
 
 
 
