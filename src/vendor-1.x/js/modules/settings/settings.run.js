@@ -13,7 +13,7 @@
         // -----------------------------------
         $rootScope.app = {
             name: '四季游-业务管理系统',
-            description: '旅行社发布产品跟踪订单',
+            description: '商户发布产品跟踪订单',
             year: ((new Date()).getFullYear()),
             layout: {
                 isFixed: true,

@@ -1,4 +1,11 @@
 [
-  { "type":"js","path":"src/{{target}}/js/lazy-modules/demo" },
-  { "type":"js","path":"src/{{target}}/js/lazy-modules/qiniu-ng" }
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/demo/" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/qiniu-ng/" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/dashboard.js" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/tenant-account-manage.js" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/tenant-order-manage.js" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/tenant-user-manage.js" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/func.js" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/order-receipt-confirmation.js" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/order-refund-confirmation.js" }
 ]

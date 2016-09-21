@@ -1,7 +1,7 @@
 [
   {
     "_id": "subsystem.organization-travel-STANDARD",
-    "name": "旅行社产品云",
+    "name": "商户产品云",
     "sref": "app.organization-travel",
     "mtype":"business",
     "usertype": ["A0002"],

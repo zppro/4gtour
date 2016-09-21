@@ -45,6 +45,7 @@
                         }
                     }
                 }
+                , resolve: helper.resolveFor('subsystem.manage-center.dashboard.js')
             })
             .state('app.manage-center.travel-agency-account-manage', {
                 url: '/travel-agency-account-manage',
@@ -80,7 +81,7 @@
                         serverPaging: true,
                         columns: [
                             {
-                                label: '旅行社名称',
+                                label: '商户名称',
                                 name: 'name',
                                 type: 'string',
                                 width: 200,
@@ -148,7 +149,7 @@
                         }
                         , blockUI: true
                     })
-                    //, deps: helper.resolveFor2('ui.select')
+                    ,deps: helper.resolveFor2('subsystem.manage-center.tenant-account-manage.js')
                 }
             })
             .state('app.manage-center.travel-agency-user-manage', {
@@ -169,6 +170,7 @@
                     //treeFilterObject: {"type": ['A0001', 'A0002', 'A0003']}//使用tmg时的过滤 treeFilter[key]==treeNode[key]
                     treeFilterObject: {"type": {"$in": ['A0001', 'A0002', 'A0003']}} //使用tmp时的过滤
                 }
+                , resolve: helper.resolveFor('subsystem.manage-center.tenant-user-manage.js')
             })
             .state('app.manage-center.travel-agency-user-manage.list', {
                 url: '/list/:action/:tenantId',
@@ -271,6 +273,7 @@
                 data: {
                     selectFilterObject: {"tenants": {"type": {"$in": ['A0001', 'A0002', 'A0003']}}}
                 }
+                , resolve: helper.resolveFor('subsystem.manage-center.func.js')
             })
             .state('app.manage-center.travel-agency-order-manage', {
                 url: '/travel-agency-order-manage',
@@ -290,6 +293,7 @@
                     //treeFilterObject: {"type": ['A0001', 'A0002', 'A0003']}//使用tmg时的过滤 treeFilter[key]==treeNode[key]
                     treeFilterObject: {"type": {"$in": ['A0001', 'A0002', 'A0003']}} //使用tmp时的过滤
                 }
+                , resolve: helper.resolveFor('subsystem.manage-center.tenant-order-manage.js')
             })
             .state('app.manage-center.travel-agency-order-manage.list', {
                 url: '/list/:action/:tenantId',
@@ -495,7 +499,7 @@
                         }
                         , blockUI: true
                     })
-                    //, deps: helper.resolveFor2('ui.select')
+                    ,deps: helper.resolveFor2('subsystem.manage-center.tenant-account-manage.js')
                 }
             })
             .state('app.manage-center.agent-user-manage', {
@@ -516,6 +520,7 @@
                     //treeFilterObject: {"type": ['A1001', 'A1002']}//使用tmg时的过滤 treeFilter[key]==treeNode[key]
                     treeFilterObject: {"type": {"$in": ['A1001', 'A1002']}} //使用tmp时的过滤
                 }
+                , resolve: helper.resolveFor('subsystem.manage-center.tenant-user-manage.js')
             })
             .state('app.manage-center.agent-user-manage.list', {
                 url: '/list/:action/:tenantId',
@@ -618,6 +623,7 @@
                 data: {
                     selectFilterObject: {"tenants": {"type": {"$in": ['A1001', 'A1002']}}}
                 }
+                , resolve: helper.resolveFor('subsystem.manage-center.func.js')
             })
             .state('app.manage-center.agent-order-manage', {
                 url: '/agent-order-manage',
@@ -636,6 +642,7 @@
                     //treeFilterObject: {"type": ['A1001', 'A1002']}//使用tmg时的过滤 treeFilter[key]==treeNode[key]
                     treeFilterObject: {"type": {"$in": ['A1001', 'A1002']}} //使用tmp时的过滤
                 }
+                , resolve: helper.resolveFor('subsystem.manage-center.tenant-order-manage.js')
             })
             .state('app.manage-center.agent-order-manage.list', {
                 url: '/list/:action/:tenantId',
@@ -844,6 +851,7 @@
                         }
                     }
                 }
+                , resolve: helper.resolveFor('subsystem.manage-center.func.js')
             })
             .state('app.manage-center.order-receipt-confirmation', {
                 url: '/order-receipt-confirmation',
@@ -857,6 +865,7 @@
                         template: '<div class="data-ui-view"></div>'
                     }
                 }
+                , resolve: helper.resolveFor('subsystem.manage-center.order-receipt-confirmation.js')
             })
             .state('app.manage-center.order-receipt-confirmation.list', {
                 url: '/list/:action/:tenantId',
@@ -954,6 +963,7 @@
                         template: '<div class="data-ui-view"></div>'
                     }
                 }
+                , resolve: helper.resolveFor('subsystem.manage-center.order-refund-confirmation.js')
             })
             .state('app.manage-center.order-refund-confirmation.list', {
                 url: '/list/:action/:tenantId',

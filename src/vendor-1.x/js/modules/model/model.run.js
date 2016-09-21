@@ -10,7 +10,7 @@
     ;
     modelRun.$inject = ['modelNode'];
     function modelRun(modelNode) {
-        //旅行社机构
+        //商户机构
         // modelNode.factory('pfta-enter');
         // modelNode.factory('pfta-exit');
         // modelNode.factory('pfta-reception');

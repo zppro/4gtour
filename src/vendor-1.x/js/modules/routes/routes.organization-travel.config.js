@@ -15,7 +15,7 @@
     function routesOrganizationPFTAConfig($stateProvider, helper, AUTH_ACCESS_LEVELS,MODEL_VARIABLES) {
 
 
-        // 机构养老云开始
+        // 商户开始
         $stateProvider
             .state('app.organization-travel', {
                 url: '/organization-travel',

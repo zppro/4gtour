@@ -83,6 +83,7 @@ var source = {
     },
     lazyModules:{
         watch:[paths.src_client+'js/lazy-modules/**/*'],
+        root: paths.src_client+'js/lazy-modules',
         scripts: _.map(_.where(require(paths.build + 'gulp-' + target + '-lazy-modules.json'),{type:'js'}), function (o) {
             return o.path.replace(/\{\{(.+?)\}\}/g, target)
         }),
@@ -345,28 +346,47 @@ gulp.task('lazy-modules:scripts', function() {
     log('Building lazy-modules:scripts..');
 
     var tasksOfModuleHeads = source.lazyModules.scripts.map(function(o) {
-        var arr = o.split('/');
-        var dirName = '';
-        if (o.lastIndexOf('/') == o.length - 1) {
-            dirName = arr[arr.length - 2];
+
+        if (o.lastIndexOf('.js') != -1) {
+            //单文件
+            return gulp.src(o,{base:source.lazyModules.root})
+                .pipe($plugins.jsvalidate())
+                .on('error', handleError)
+                .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.init()))
+                .pipe($plugins.ngAnnotate())
+                .on('error', handleError)
+                .pipe($plugins.if(isProduction, $plugins.uglify({preserveComments: 'some'})))
+                .on('error', handleError)
+                .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.write('.')))
+                .pipe(gulp.dest(isProduction ? build.production.lazyModules.scripts : build.develop.lazyModules.scripts))
+                .pipe($plugins.livereload())
+                ;
         }
         else {
-            dirName = arr[arr.length - 1];
+            var arr = o.split('/');
+            var dirName = '';
+            if (o.lastIndexOf('/') == o.length - 1) {
+                dirName = arr[arr.length - 2];
+            }
+            else {
+                dirName = arr[arr.length - 1];
+            }
+            //目录合并
+            return gulp.src([path.join(o, '*.module.js'), path.join(o, '*.js')],{base:source.lazyModules.root})
+                .pipe($plugins.jsvalidate())
+                .on('error', handleError)
+                .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.init()))
+                .pipe($plugins.concat(dirName + '.js'))
+                .pipe($plugins.ngAnnotate())
+                .on('error', handleError)
+                .pipe($plugins.if(isProduction, $plugins.uglify({preserveComments: 'some'})))
+                .on('error', handleError)
+                .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.write('.')))
+                .pipe(gulp.dest(isProduction ? build.production.lazyModules.scripts : build.develop.lazyModules.scripts))
+                .pipe($plugins.livereload())
+                ;
         }
 
-        return gulp.src([path.join(o, '*.module.js'),path.join(o, '*.js')])
-            .pipe($plugins.jsvalidate())
-            .on('error', handleError)
-            .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.init()))
-            .pipe($plugins.concat(dirName + '.js'))
-            .pipe($plugins.ngAnnotate())
-            .on('error', handleError)
-            .pipe($plugins.if(isProduction, $plugins.uglify({preserveComments: 'some'})))
-            .on('error', handleError)
-            .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.write('.')))
-            .pipe(gulp.dest(isProduction ? build.production.lazyModules.scripts : build.develop.lazyModules.scripts))
-            .pipe($plugins.livereload())
-            ;
     });
 
 

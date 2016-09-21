@@ -54,7 +54,7 @@ module.exports = {
                             var result = [];
                             var tenantGroupOption = {
                                 TP: {
-                                    name:'旅行社',
+                                    name:'商户',
                                     where: {
                                         "type": {"$in": ['A0001', 'A0002', 'A0003']}
                                     }

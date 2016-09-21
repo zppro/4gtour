@@ -6,7 +6,7 @@
     'use strict';
 
     angular
-        .module('subsystem.manage-center')
+        .module('subsystem.manage-center.tenant-order-manage',[])
         .controller('TenantOrderManageGridController', TenantOrderManageGridController)
         .controller('TenantOrderManageDetailsController', TenantOrderManageDetailsController)
     ;
@@ -141,6 +141,7 @@
                         vmc.totalFuncs = _.union(vmc.totalFuncs, results[i]);
                     }
 
+
                     onTenantIdChanged();
 
                 });
@@ -173,6 +174,9 @@
                 vmh.fetch(tenantService.query({_id: vm.model.tenantId}, 'price_funcs open_funcs')).then(function (currentTenant) {
                     vmc.pricedFuncs = currentTenant[0].price_funcs;
                     vmc.open_funcs = currentTenant[0].open_funcs;
+
+                    console.log(vmc.totalFuncs);
+                    console.log(vmc.pricedFuncs);
 
                     var pricedFuncIds = _.map(vmc.pricedFuncs, function (o) {
                         return o.func_id;
