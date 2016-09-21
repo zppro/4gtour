@@ -8,7 +8,9 @@
   { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/func.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/order-receipt-confirmation.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/order-refund-confirmation.js" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/organization-travel-share/" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/organization-travel/dashboard.js" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/organization-travel/scenic-spot.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/organization-travel/user-manage.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/organization-travel/financial-org-receipts-and-disbursements-details.js" }
 ]

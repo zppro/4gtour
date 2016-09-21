@@ -6,20 +6,24 @@
     "icon": "icon-folder",
     "children": [
       {
-        "_id": "menu.organization-travel.ENTRANCE-TICKET",
+        "_id": "menu.organization-travel.SCENIC-SPOT",
+        "name": "景区",
+        "sref": "app.organization-travel.scenic-spot.list"
+      },
+      {
+        "_id": "menu.organization-travel.TICKET",
         "name": "票务",
-        "sref": "app.organization-travel.product-entrance-ticket.list"
-
+        "sref": "app.organization-travel.ticket.list"
       },
       {
         "_id": "menu.organization-travel.HOTEL",
         "name": "酒店",
-        "sref": "app.organization-travel.product-hotel.list"
+        "sref": "app.organization-travel.hotel.list"
       },
       {
         "_id": "menu.organization-travel.TRAVEL-LINE",
         "name": "线路",
-        "sref": "app.organization-travel.product-travel-line.list"
+        "sref": "app.organization-travel.travel-line.list"
       }
     ]
   },

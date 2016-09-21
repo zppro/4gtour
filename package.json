@@ -1,6 +1,6 @@
 {
   "name": "4gtour",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "",
   "main": "src/app.js",
   "scripts": {
@@ -66,7 +66,7 @@
     "koa-static-cache": "^3.1.7",
     "log4js": "^0.6.25",
     "moment": "^2.13.0",
-    "mongoose": "^4.5.3",
+    "mongoose": "^4.6.1",
     "node-schedule": "^1.1.1",
     "qiniu": "^6.1.11",
     "rand-token": "0.2.1",

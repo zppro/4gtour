@@ -33,7 +33,7 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var rows =  yield app.ptf.fetch$Get_ScenicSpot_List(self.logger,1000);
+                            var rows =  yield app.pft.fetch$Get_ScenicSpot_List(self.logger,1000);
 
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
@@ -51,7 +51,7 @@ module.exports = {
                 handler: function (app, options) {
                     return function * (next) {
                         try {
-                            var rows =  yield app.ptf.fetch$Get_Ticket_List(self.logger,Number(this.params.scenicSpotId));
+                            var rows =  yield app.pft.fetch$Get_Ticket_List(self.logger,Number(this.params.scenicSpotId));
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
@@ -60,7 +60,24 @@ module.exports = {
                         yield next;
                     };
                 }
-            }
+            },
+            {
+                method: 'PFT$Sync_ScenicSpot',
+                verb: 'post',
+                url: this.service_url_prefix + "/PFT$Sync_ScenicSpot",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            yield app.pft.sync$ScenicSpot(self.logger);
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
         ];
 
         return this;

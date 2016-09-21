@@ -47,6 +47,73 @@
                 }
                 , resolve: helper.resolveFor('echarts.common','echarts-ng','classyloader')
             })
+            .state('app.organization-travel.scenic-spot', {
+                url: '/scenic-spot',
+                title: '景区',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath('partials/organization-travel/module-header.html'),
+                        controller: 'ModuleHeaderForTenantController'
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id:'menu.organization-travel.SCENIC-SPOT'//业务系统使用
+                }
+                , resolve: helper.resolveFor('subsystem.organization-travel.scenic-spot.js')
+            })
+            .state('app.organization-travel.scenic-spot.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath('organization-travel/scenic-spot-PFT-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'ScenicSpotGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM('app.organization-travel.scenic-spot.list', {
+                        modelName: 'idc-scenicSpot_PFT',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '景区名称',
+                                name: 'UUtitle',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '景区添加时间',
+                                name: 'UUaddtime',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '所在地区',
+                                name: 'UUarea',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '产品类型',
+                                name: 'UUp_type',
+                                type: 'string',
+                                width: 120,
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/IDC00/object')
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 60
+                            }
+                        ]
+                    })
+                }
+            })
             .state('app.organization-travel.financial-org-receipts-and-disbursements-details', {
                 url: '/financial-org-receipts-and-disbursements-details',
                 title: '收支明细',

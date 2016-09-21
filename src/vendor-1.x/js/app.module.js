@@ -34,8 +34,7 @@
             'app.charts',
             'app.grid',
             'app.tree',
-            'app.dropdown',
-            'subsystem.organization-travel'
+            'app.dropdown'
         ]);
 })();
 

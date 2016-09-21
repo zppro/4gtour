@@ -9,9 +9,9 @@
         .provider('modelNode', ModelNode)
         .provider('shareNode', ShareNode)
         .provider('extensionNode', ExtensionNode)
-        .provider('extensionOfOrganzationOfPFTANode',extensionOfOrganzationOfPFTANode)
-        .provider('extensionOfDashboardOfTenantNode',extensionOfDashboardOfTenantNode)
-        .provider('qiniuNode',qiniuNode)
+        .provider('idtNode',IDTNode)
+        .provider('extensionOfDashboardOfTenantNode',ExtensionOfDashboardOfTenantNode)
+        .provider('qiniuNode',QiniuNode)
         .provider('debugNode',DebugNode)
         .provider('clientData',ClientData)
     ;
@@ -410,7 +410,7 @@
         }
     }
 
-    function extensionOfOrganzationOfPFTANode(){
+    function IDTNode(){
         var baseUrl;
         return {
             // provider access level
@@ -420,16 +420,21 @@
             $get: ['$http', function ($http) {
 
                 return {
-                    receptionVisiterSyncElderlyFamilyMembers: receptionVisiterSyncElderlyFamilyMembers,
-                    leaveAccompanierSyncElderlyFamilyMembers: leaveAccompanierSyncElderlyFamilyMembers
+                    PFT$Get_ScenicSpot_List: PFT$Get_ScenicSpot_List,
+                    PFT$Get_Ticket_List: PFT$Get_Ticket_List,
+                    PFT$Sync_ScenicSpot: PFT$Sync_ScenicSpot
                 };
 
-                function receptionVisiterSyncElderlyFamilyMembers(receptionId) {
-                    return $http.post(baseUrl + 'receptionVisiterSyncElderlyFamilyMembers/' + receptionId);
+                function PFT$Get_ScenicSpot_List() {
+                    return $http.get(baseUrl + 'PFT$Get_ScenicSpot_List');
                 }
 
-                function leaveAccompanierSyncElderlyFamilyMembers(leaveId){
-                    return $http.post(baseUrl + 'leaveAccompanierSyncElderlyFamilyMembers/' + leaveId);
+                function PFT$Get_Ticket_List(scenicSpotId){
+                    return $http.get(baseUrl + 'PFT$Get_Ticket_List/' + scenicSpotId);
+                }
+
+                function PFT$Sync_ScenicSpot(){
+                    return $http.post(baseUrl + 'PFT$Sync_ScenicSpot');
                 }
 
 
@@ -441,7 +446,7 @@
         }
     }
 
-    function extensionOfDashboardOfTenantNode(){
+    function ExtensionOfDashboardOfTenantNode(){
         var baseUrl;
         return {
             // provider access level
@@ -510,7 +515,7 @@
         }
     }
 
-    function qiniuNode(){
+    function QiniuNode(){
         var baseUrl;
         return {
             // provider access level

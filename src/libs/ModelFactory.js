@@ -174,6 +174,7 @@ ModelFactory._one =function (model,data) {
 ModelFactory._bulkInsert =function (model,data) {
     var canInsert = true;
     if(data.removeWhere) {
+        console.log(1);
         model.remove(data.removeWhere, function (err) {
             if (err) {
                 canInsert = false;
@@ -182,7 +183,7 @@ ModelFactory._bulkInsert =function (model,data) {
         });
     }
 
-    if(canInsert) {
+    if(canInsert) { 
         return model.insertMany(data.rows);
     }
 };

@@ -32,7 +32,8 @@
     "CHARGE-LIST":"费用清单",
     "BOOKING":"记账",
     "RED":"冲红",
-    "PICK-FIELS":"挑选文件"
+    "PICK-FIELS":"挑选文件",
+    "SYNC-INTERFACE-DATA":"同步接口数据"
   },
   "label": {
     "NONE": "无",
@@ -75,11 +76,11 @@
   "dialog": {
     "remove": {
       "TITLE": "删除确认对话框",
-      "MESSAGE": "您确定要删除当前选中记录码？"
+      "MESSAGE": "您确定要删除当前选中记录吗？"
     },
     "normal": {
       "TITLE": "确认对话框",
-      "MESSAGE": "您确定要在当前选中记录上执行操作码？"
+      "MESSAGE": "您确定要在当前选中记录上执行操作吗？"
     }
   },
   "notification": {
@@ -130,6 +131,7 @@
   "menu":{
     "organization-travel": {
       "PRODUCT-MANAGE": "产品管理",
+      "SCENIC-SPOT": "景区",
       "ENTRANCE-TICKET": "票务",
       "HOTEL": "酒店",
       "TRAVEL-LINE": "线路",
