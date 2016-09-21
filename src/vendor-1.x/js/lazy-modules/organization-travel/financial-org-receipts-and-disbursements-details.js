@@ -7,7 +7,7 @@
     'use strict';
 
     angular
-        .module('subsystem.organization-travel')
+        .module('subsystem.organization-travel.financial-org-receipts-and-disbursements-details',[])
         .controller('FinancialORGReceiptsAndDisbursementsDetailsGridController', FinancialORGReceiptsAndDisbursementsDetailsGridController)
     ;
 

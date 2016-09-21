@@ -38,16 +38,19 @@
                 {name: 'locale_zh-cn', files: ['vendor/angular-i18n/angular-locale_zh-cn.js']},
                 {name: 'echarts-ng', files: ['vendor/echarts-ng/dist/echarts-ng.min.js']},
                 {name:'qiniu-ng',files:['app/js/lazy-modules/qiniu-ng.js']},
-                {name: 'subsystem.manage-center', files: ['app/css/manage-center.css']},
-                {name: 'subsystem.organization-travel', files: ['app/css/organization-travel.css']},
-                {name: 'app.demo',files:['app/js/lazy-modules/demo.js']},
+                {name:'app.demo',files:['app/js/lazy-modules/demo.js']},
+                {name:'subsystem.manage-center', files: ['app/css/manage-center.css']},
                 {name:'subsystem.manage-center.dashboard.js',files:['app/js/lazy-modules/manage-center/dashboard.js']},
                 {name:'subsystem.manage-center.tenant-account-manage.js',files:['app/js/lazy-modules/manage-center/tenant-account-manage.js']},
                 {name:'subsystem.manage-center.tenant-order-manage.js',files:['app/js/lazy-modules/manage-center/tenant-order-manage.js']},
                 {name:'subsystem.manage-center.tenant-user-manage.js',files:['app/js/lazy-modules/manage-center/tenant-user-manage.js']},
                 {name:'subsystem.manage-center.func.js',files:['app/js/lazy-modules/manage-center/func.js']},
                 {name:'subsystem.manage-center.order-receipt-confirmation.js',files:['app/js/lazy-modules/manage-center/order-receipt-confirmation.js']},
-                {name:'subsystem.manage-center.order-refund-confirmation.js',files:['app/js/lazy-modules/manage-center/order-refund-confirmation.js']}
+                {name:'subsystem.manage-center.order-refund-confirmation.js',files:['app/js/lazy-modules/manage-center/order-refund-confirmation.js']},
+                {name:'subsystem.organization-travel', files: ['app/css/organization-travel.css']},
+                {name:'subsystem.organization-travel.dashboard.js',files:['app/js/lazy-modules/organization-travel/dashboard.js']},
+                {name:'subsystem.organization-travel.user-manage.js',files:['app/js/lazy-modules/organization-travel/user-manage.js']},
+                {name:'subsystem.organization-travel.financial-org-receipts-and-disbursements-details.js',files:['app/js/lazy-modules/organization-travel/financial-org-receipts-and-disbursements-details.js']}
             ]
         })
     ;

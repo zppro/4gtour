@@ -38,9 +38,10 @@
                     },
                     "module-content": {
                         templateUrl: helper.basepath('organization-travel/dashboard.html'),
-                        controller: 'DashboardControllerOfOrganizationOfPFTAController',
+                        controller: 'DashboardControllerOfOrganizationOfTravelController',
                         resolve: {
                             instanceVM: helper.buildInstanceVM('app.organization-travel.dashboard')
+                            , deps: helper.resolveFor2('subsystem.organization-travel.dashboard.js')
                         }
                     }
                 }
@@ -62,6 +63,7 @@
                 data:{
                     func_id:'menu.organization-travel.ORG-RECEIPTS-AND-DISBURSEMENTS-DETAILS'//业务系统使用
                 }
+                , resolve: helper.resolveFor('subsystem.organization-travel.financial-org-receipts-and-disbursements-details.js')
             })
             .state('app.organization-travel.financial-org-receipts-and-disbursements-details.list', {
                 url: '/list/:action',
@@ -139,6 +141,7 @@
                 data:{
                     func_id:'menu.organization-travel.USER-MANAGE'//业务系统使用
                 }
+                , resolve: helper.resolveFor('subsystem.organization-travel.user-manage.js')
             })
             .state('app.organization-travel.user-manage.list', {
                 url: '/list/:action/:roles',

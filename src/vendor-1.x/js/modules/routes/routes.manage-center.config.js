@@ -756,6 +756,7 @@
                         template: '<div class="data-ui-view"></div>'
                     }
                 }
+                , resolve: helper.resolveFor('subsystem.manage-center.tenant-user-manage.js')
             })
             .state('app.manage-center.platform-user-manage.list', {
                 url: '/list/:action',

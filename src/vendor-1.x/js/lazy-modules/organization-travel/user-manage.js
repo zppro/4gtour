@@ -7,7 +7,7 @@
     'use strict';
 
     angular
-        .module('subsystem.organization-travel')
+        .module('subsystem.organization-travel.user-manage',[])
         .controller('UserManageGridController', UserManageGridController)
         .controller('UserManageDetailsController', UserManageDetailsController)
     ;

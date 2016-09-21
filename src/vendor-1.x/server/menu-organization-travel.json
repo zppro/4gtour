@@ -12,9 +12,9 @@
 
       },
       {
-        "_id": "menu.organization-travel.accommodation",
-        "name": "住宿",
-        "sref": "app.organization-travel.product-accommodation.list"
+        "_id": "menu.organization-travel.HOTEL",
+        "name": "酒店",
+        "sref": "app.organization-travel.product-hotel.list"
       },
       {
         "_id": "menu.organization-travel.TRAVEL-LINE",

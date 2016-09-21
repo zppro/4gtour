@@ -52,9 +52,8 @@
             },
             isPermit: function (func_id) {
                 this.ensureUser();
-                if (_user ) {
-
-                    if(_user.tenant && _user.tenant.type=='A0002' && _open_funcs){
+                if (_user) {
+                    if(_user.tenant && _user.type=='A0002' && _open_funcs){
                         //机构用户
                         var func = _.find(_open_funcs, function (o) {
                             return o.func_id == func_id;
@@ -64,7 +63,7 @@
                             if (_user.tenant.limit_to > 0) {
                                 return true;
                             }
-                            else {
+                            else { 
                                 return angular.isDefined(moment) && moment(func.expired_on).diff(moment()) >= 0;
                             }
                         }

@@ -6,13 +6,13 @@
     'use strict';
 
     angular
-        .module('subsystem.organization-travel')
-        .controller('DashboardControllerOfOrganizationOfPFTAController', DashboardControllerOfOrganizationOfPFTAController)
+        .module('subsystem.organization-travel.dashboard',[])
+        .controller('DashboardControllerOfOrganizationOfTravelController', DashboardControllerOfOrganizationOfTravelController)
     ;
 
-    DashboardControllerOfOrganizationOfPFTAController.$inject = ['$scope', '$echarts','extensionOfDashboardOfTenantNode','vmh', 'instanceVM'];
+    DashboardControllerOfOrganizationOfTravelController.$inject = ['$scope', '$echarts','extensionOfDashboardOfTenantNode','vmh', 'instanceVM'];
 
-    function DashboardControllerOfOrganizationOfPFTAController($scope, $echarts,extensionOfDashboardOfTenantNode,vmh, vm) {
+    function DashboardControllerOfOrganizationOfTravelController($scope, $echarts,extensionOfDashboardOfTenantNode,vmh, vm) {
         $scope.vm = vm;
 
         init();
