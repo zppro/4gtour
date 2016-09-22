@@ -33,7 +33,8 @@
     "BOOKING":"记账",
     "RED":"冲红",
     "PICK-FIELS":"挑选文件",
-    "SYNC-INTERFACE-DATA":"同步接口数据"
+    "SYNC-INTERFACE-DATA":"同步接口数据",
+    "PREVIEW":"预览"
   },
   "label": {
     "NONE": "无",
@@ -124,7 +125,7 @@
     }
   },
   "subsystem": {
-    "organization-travel-STANDARD": "机构养老云-标准版",
+    "organization-travel-STANDARD": "商户-标准版",
     "MANAGE-CENTER": "管理中心",
     "DEMO-CENTER": "演示中心"
   },
@@ -132,7 +133,7 @@
     "organization-travel": {
       "PRODUCT-MANAGE": "产品管理",
       "SCENIC-SPOT": "景区",
-      "ENTRANCE-TICKET": "票务",
+      "TICKET": "票务",
       "HOTEL": "酒店",
       "TRAVEL-LINE": "线路",
       "------------": "",

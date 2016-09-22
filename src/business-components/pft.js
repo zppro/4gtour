@@ -11,8 +11,9 @@ module.exports = {
         console.log('init pft... ');
         this.file = __filename;
         this.filename = this.file.substr(this.file.lastIndexOf('/') + 1);
+        this.log_name = 'bc_' + this.filename;
         this.ctx = ctx;
-        this.logger = require('log4js').getLogger(this.filename);
+        this.logger = require('log4js').getLogger(this.log_name);
         if (!this.logger) {
             console.error('logger not loaded in ' + this.file);
         }
@@ -86,34 +87,44 @@ module.exports = {
             try {
 
                 var rows =  yield self.fetch$Get_ScenicSpot_List(outerLogger,1000);
-                //
-                // yield self.ctx.modelFactory().model_bulkInsert(self.ctx.models['idc_scenicSpot_PFT'], {
-                //     //removeWhere: {},
-                //     rows: rows
-                // });
-                // yield self.ctx.modelFactory().model_create(self.ctx.models['idc_scenicSpot_PFT'], rows[0]);
-                var model = self.ctx.models['idc_scenicSpot_PFT'];
+                console.log(rows.length);
 
+                var arrIndexOfUpdate= [];
+                //简单格式化接口获取到的数据
                 for(var i=0;i< rows.length;i++){
-                    console.log(i);
-                    yield model.insertMany([rows[i]], onInsert);
-                }
-
-                //self.ctx.models['idc_scenicSpot_PFT'].collection.insert(rows, onInsert);
-
-                function onInsert(err, docs) {
-                    console.log(docs);
-                    if (err) {
-                        // TODO: handle error
-                    } else {
-                        console.info('%d potatoes were successfully stored.', docs.length);
+                    if(rows[i].UUaddtime.indexOf('00-00-00 00:00:00') != -1) {
+                        rows[i].UUaddtime = '1970-01-01 00:00:00';
+                        arrIndexOfUpdate.push(i);
                     }
                 }
-                return rows;
+
+                yield self.ctx.modelFactory().model_bulkInsert(self.ctx.models['idc_scenicSpot_PFT'], {
+                    removeWhere: {},
+                    rows: rows
+                });
+
+                // var model = self.ctx.models['idc_scenicSpot_PFT'];
+                // for(var i=0;i< rows.length;i++){
+                //     console.log(i);
+                //     yield model.insertMany([rows[i]], onInsert);
+                // }
+                //
+                // self.ctx.models['idc_scenicSpot_PFT'].collection.insert(rows, onInsert);
+                //
+                // function onInsert(err, docs) {
+                //     console.log(docs);
+                //     if (err) {
+                //         // TODO: handle error
+                //     } else {
+                //         console.info('%d potatoes were successfully stored.', docs.length);
+                //     }
+                // }
+                return true;
             }
             catch (e) {
                 console.log(e);
                 self.logger.error(e.message);
+                return false;
             }
         }).catch(self.ctx.coOnError);
     }

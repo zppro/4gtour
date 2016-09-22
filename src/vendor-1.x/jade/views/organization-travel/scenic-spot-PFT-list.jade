@@ -1,6 +1,6 @@
 //
    Created by zppro on 16-2-23.
-.col-xs-12.text-center
+.col-xs-12.text-center(block-ui="list-block")
     .row
         form.form-search
             .input-group.pull-right.page-search
@@ -27,11 +27,14 @@
                                 label
                                     input(type='checkbox' data="trBubble" ng-model="row.checked" )
                                     span.fa.fa-check(data="trBubble")
-                        td {{::row.UUid}}
+                        td
+                            .btn-group(ng-if="row.UUimgpath.indexOf('http://') != -1 || row.UUimgpath.indexOf('https://')!=-1")
+                                a.btn.btn-primary.btn-xs(title="{{'button.PREVIEW'|translate}}",popover-template=" 'TP-UUimgpath.html' " popover-title="{{::row.UUtitle}}",popover-placement="right",popover-trigger="mouseenter")
+                                    i.glyphicon.glyphicon-eye-open
                         td.text-left {{::row.UUtitle}}
                         td {{::row.UUaddtime|date:'yyyy-MM-dd'}}
                         td.text-left {{::row.UUarea}}
-                        td {{::row.UUp_type}}
+                        td {{::row.UUp_type|formatter:'UUp_type':vm.columns}}
                         td
                             .btn-group
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row.id)")
@@ -45,9 +48,11 @@
                             .btn-group
                                 a.btn.btn-primary.btn-sm(title="{{'button.ADD'|translate}}",ng-click="vm.add()")
                                     i.glyphicon.glyphicon-plus
-                                a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.remove()")
+                                a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.disable()")
                                     i.glyphicon.glyphicon-minus
                             .btn-group
                                 a.btn.btn-success(ng-click="vm.syncInterfaceData()") {{'button.SYNC-INTERFACE-DATA'|translate}}
                     .col-md-8
-                        pagination.pagination-sm.pull-right(total-items="vm.page.totals",ng-model="vm.page.no",max-size="5",items-per-page="vm.page.size",boundary-links="true")
+                        pagination.pagination-sm.pull-right(total-items="vm.page.totals",ng-model="vm.page.no",max-size="5",items-per-page="vm.page.size",boundary-links="true" ,ng-change="vm.paging()")
+script(type='text/ng-template', id="TP-UUimgpath.html")
+    img(ng-src="{{row.UUimgpath}}")

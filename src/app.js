@@ -221,24 +221,36 @@ co(function*() {
 
     console.log('configure logs...');
     var configAppenders = [];
-    configAppenders = _.union(configAppenders,_.map(app.conf.serviceNames, function (o) {
-        return {
-            type: 'dateFile',
-            filename: path.join(app.conf.dir.log, o + '.js'),
-            pattern: '-yyyy-MM-dd.log',
-            alwaysIncludePattern: true,
-            category: o + '.js'
-        };
-    }));
+    configAppenders = _.union(configAppenders,
+        _.map(app.conf.serviceNames, function (o) {
+            var logName = 'svc_' + o+ '.js';
+            return {
+                type: 'dateFile',
+                filename: path.join(app.conf.dir.log, logName),
+                pattern: '-yyyy-MM-dd.log',
+                alwaysIncludePattern: true,
+                category: logName
+            };
+        }),_.map(app.conf.businessComponentNames, function (o) {
+            var logName = 'bc_' + o + '.js';
+            return {
+                type: 'dateFile',
+                filename: path.join(app.conf.dir.log, logName),
+                pattern: '-yyyy-MM-dd.log',
+                alwaysIncludePattern: true,
+                category: logName
+            };
+        }));
 
     if(!app.conf.isProduction){
         configAppenders = _.union(configAppenders,_.map(app.conf.debugServiceNames, function (o) {
+            var logName = 'dsvc_' + o+ '.js';
             return {
                 type: 'dateFile',
-                filename: path.join(app.conf.dir.log, o + '.js'),
+                filename: path.join(app.conf.dir.log, logName),
                 pattern: '-yyyy-MM-dd.log',
                 alwaysIncludePattern: true,
-                category: o + '.js'
+                category: logName
             };
         }));
     }

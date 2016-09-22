@@ -253,7 +253,7 @@
         function buildEntryVM(name, option) {
             option = option || {};
             var arrNames = name.split('.');
-            return ['$state', '$stateParams', '$window', '$q', '$translate', '$timeout', '$http', 'Auth', 'modelNode', 'Notify', 'GridDemoModelSerivce', function ($state, $stateParams, $window, $q, $translate, $timeout, $http, Auth, modelNode, Notify, GridDemoModelSerivce) {
+            return ['$state', '$stateParams', '$window', '$q', '$translate', '$timeout', '$http', 'blockUI', 'Auth', 'modelNode', 'Notify', 'GridDemoModelSerivce', function ($state, $stateParams, $window, $q, $translate, $timeout, $http, blockUI, Auth, modelNode, Notify, GridDemoModelSerivce) {
                 var modelService = option.modelName ? modelNode.services[option.modelName] : GridDemoModelSerivce;
 
                 function getParam(name) {
@@ -446,10 +446,16 @@
                     this.conditionBeforeQuery && this.conditionBeforeQuery();
 
                     if (self.serverPaging) {
+                        if (self.blocker) {
+                            self.blocker.start();
+                        }
                         self.rows = modelService.page(self.page, self.searchForm, null, (self.sort.direction > 0 ? '' : '-') + self.sort.column);
                         //服务端totals在查询数据时计算
                         modelService.totals(self.searchForm).$promise.then(function (ret) {
                             self.page.totals = ret.totals;
+                            if (self.blocker) {
+                                self.blocker.stop();
+                            }
                         });
                     }
                     else {
@@ -530,7 +536,7 @@
                     modelService: modelService,
                     name: name || 'no-entryName',
                     pk: option.pk || '_id',
-                    blocker: option.blockUI ? blockUI.instances.get('module-block') : false,
+                    blocker: option.blockUI ? blockUI.instances.get('list-block') : false,
                     serverPaging: option.serverPaging,
                     page: _.defaults(option.page || {}, {size: 9, no: 1}),
                     switches: option.switches || {},

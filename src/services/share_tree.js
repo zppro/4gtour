@@ -10,10 +10,10 @@ module.exports = {
         this.filename = this.file.substr(this.file.lastIndexOf('/') + 1);
         this.module_name = this.filename.substr(0, this.filename.lastIndexOf('.'));
         this.service_url_prefix = '/services/' + this.module_name.split('_').join('/');
-
+        this.log_name = 'svc_' + this.filename;
         option = option || {};
 
-        this.logger = require('log4js').getLogger(this.filename);
+        this.logger = require('log4js').getLogger(this.log_name);
 
         if (!this.logger) {
             console.error('logger not loaded in ' + this.file);

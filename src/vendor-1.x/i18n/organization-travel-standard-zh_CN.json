@@ -1,7 +1,7 @@
 {
   "organization-travel": {
     "dashboard": {
-      "TITLE": "商户产品云-数据面板",
+      "TITLE": "商户-数据面板",
       "LIVE-IN":"入住总人数",
       "LIVE-IN-ON-CURRENTMONTH":"本月新增",
       "LIVE-IN-MAN-TIME":"入住总人次",
@@ -30,7 +30,7 @@
     },
     "scenic-spot": {
       "list": {
-        "TITLE": "商户产品云-产品管理-景区-列表"
+        "TITLE": "商户-产品管理-景区-列表"
       },
       "details": {
         "TITLE": "机构养老云-老人管理-入院-详情",

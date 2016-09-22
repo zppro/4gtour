@@ -69,18 +69,25 @@
                 url: '/list/:action',
                 templateUrl: helper.basepath('organization-travel/scenic-spot-PFT-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'ScenicSpotGridController',
+                controller: 'PFT_ScenicSpotGridController',
                 resolve: {
                     entryVM: helper.buildEntryVM('app.organization-travel.scenic-spot.list', {
                         modelName: 'idc-scenicSpot_PFT',
                         searchForm: {"status": 1},
                         serverPaging: true,
+                        blockUI: true,
                         columns: [
+                            {
+                                label: '预览',
+                                name: 'preview',
+                                sortable: false,
+                                width:  30
+                            },
                             {
                                 label: '景区名称',
                                 name: 'UUtitle',
                                 type: 'string',
-                                width: 120,
+                                width: 240,
                                 sortable: true
                             },
                             {
@@ -94,14 +101,14 @@
                                 label: '所在地区',
                                 name: 'UUarea',
                                 type: 'string',
-                                width: 60,
+                                width: 120,
                                 sortable: true
                             },
                             {
                                 label: '产品类型',
                                 name: 'UUp_type',
                                 type: 'string',
-                                width: 120,
+                                width: 60,
                                 formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/IDC00/object')
                             },
                             {

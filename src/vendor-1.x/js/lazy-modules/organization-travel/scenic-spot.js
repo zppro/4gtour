@@ -8,13 +8,13 @@
 
     angular
         .module('subsystem.organization-travel.scenic-spot',[])
-        .controller('ScenicSpotGridController', ScenicSpotGridController) 
+        .controller('PFT_ScenicSpotGridController', PFT_ScenicSpotGridController)
     ;
 
 
-    ScenicSpotGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
+    PFT_ScenicSpotGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
 
-    function ScenicSpotGridController($scope, ngDialog, vmh, vm) {
+    function PFT_ScenicSpotGridController($scope, ngDialog, vmh, vm) {
         $scope.vm = vm;
         $scope.utils = vmh.utils.g;
         var vmc = $scope.vmc = {};
@@ -30,7 +30,8 @@
 
             // vmh.translate(vm.viewTranslatePath('RESET-USER-PASSWORD-COMMENT')).then(function (ret) {
             //     $scope.dialogData = {details: ret};
-            // }); 
+            // });
+            vm.searchForm['tenantId'] = undefined;
             vm.query();
         }
 
@@ -42,6 +43,7 @@
             }).then(function () {
 
                 vmh.idtService.PFT$Sync_ScenicSpot().then(function(){
+                    vm.query();
                     vmh.alertSuccess();
                 });
             });
