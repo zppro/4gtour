@@ -42,7 +42,7 @@ module.exports = {
             }
         }).catch(self.ctx.coOnError);
     },
-    fetch$Get_ScenicSpot_List: function (outerLogger,num) {
+    fetchScenicSpot: function (outerLogger,num) {
         var self = this;
         return co(function *() {
             try {
@@ -62,7 +62,7 @@ module.exports = {
             }
         }).catch(self.ctx.coOnError);
     },
-    fetch$Get_Ticket_List: function (outerLogger,scenicSpotId) {
+    fetchTicket: function (outerLogger,scenicSpotId) {
         var self = this;
         return co(function *() {
             try {
@@ -81,27 +81,27 @@ module.exports = {
             }
         }).catch(self.ctx.coOnError);
     },
-    sync$ScenicSpot: function (outerLogger) {
+    syncScenicSpot: function (outerLogger) {
         var self = this;
         return co(function *() {
             try {
 
-                var rows =  yield self.fetch$Get_ScenicSpot_List(outerLogger,1000);
-                console.log(rows.length);
+                var rows =  yield self.fetchScenicSpot(outerLogger,1000);
 
-                var arrIndexOfUpdate= [];
-                //简单格式化接口获取到的数据
-                for(var i=0;i< rows.length;i++){
-                    if(rows[i].UUaddtime.indexOf('00-00-00 00:00:00') != -1) {
-                        rows[i].UUaddtime = '1970-01-01 00:00:00';
-                        arrIndexOfUpdate.push(i);
+                if(rows.length>0) {
+                    //简单格式化接口获取到的数据
+                    for (var i = 0; i < rows.length; i++) {
+                        if (rows[i].UUaddtime.indexOf('00-00-00 00:00:00') != -1) {
+                            rows[i].UUaddtime = '1970-01-01 00:00:00';
+                        }
                     }
+
+                    yield self.ctx.modelFactory().model_bulkInsert(self.ctx.models['idc_scenicSpot_PFT'], {
+                        removeWhere: {},
+                        rows: rows
+                    });
                 }
 
-                yield self.ctx.modelFactory().model_bulkInsert(self.ctx.models['idc_scenicSpot_PFT'], {
-                    removeWhere: {},
-                    rows: rows
-                });
 
                 // var model = self.ctx.models['idc_scenicSpot_PFT'];
                 // for(var i=0;i< rows.length;i++){
@@ -119,6 +119,34 @@ module.exports = {
                 //         console.info('%d potatoes were successfully stored.', docs.length);
                 //     }
                 // }
+                return true;
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+                return false;
+            }
+        }).catch(self.ctx.coOnError);
+    },
+    syncTicket: function (outerLogger) {
+        var self = this;
+        return co(function *() {
+            try {
+
+                var scenicSpot_rows = self.ctx.modelFactory().model_query(self.ctx.models['idc_ticket_PFT'],{select:'UUid -_id',where:{status:1}});
+
+                for (var i = 0; i < scenicSpot_rows.length; i++) {
+                    var scenicSpotId = scenicSpot_rows[i].UUid;
+                    var rows = yield self.fetchTicket(outerLogger, scenicSpotId);
+
+                    if (rows.length > 0) {
+                        yield self.ctx.modelFactory().model_bulkInsert(self.ctx.models['idc_ticket_PFT'], {
+                            removeWhere: {UUlid: scenicSpotId},
+                            rows: rows
+                        });
+                    }
+                    console.log('complete :' + i);
+                }
                 return true;
             }
             catch (e) {

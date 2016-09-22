@@ -38,47 +38,17 @@
         "HEAD-PLACEHOLDER-CODE":"自动生成",
         "HEAD-LABEL-ENTER_ON":"入院日期",
         "TAB1": "老人信息",
-        "TAB2": "食宿信息",
-        "TAB3": "护理与服务",
-        "TAB4": "费用信息",
         "TAB1-LABEL-ELDERLY-NAME": "老人姓名",
         "TAB1-PLACEHOLDER-ELDERLY-NAME": "张三",
         "TAB1-LABEL-ELDERLY-ID_NO": "身份证号",
-        "TAB1-LABEL-ELDERLY-SEX": "性别",
-        "TAB1-LABEL-ELDERLY-BIRTHDAY": "出生日期",
-        "TAB1-PLACEHOLDER-ELDERLY-BIRTHDAY": "从身份证读取..",
-        "TAB1-LABEL-ELDERLY-MARRIAGE": "婚姻情况",
-        "TAB1-LABEL-ELDERLY-HOME_ADDRESS": "家庭住址",
-        "TAB1-PLACEHOLDER-ELDERLY-HOME_ADDRESS": "XX小区X幢X单元XXX",
-        "TAB1-LABEL-ELDERLY-MEDICAL_INSURANCE": "医保所在地",
-        "TAB1-LABEL-ELDERLY-POLITICS_STATUS": "政治面貌",
-        "TAB1-LABEL-ELDERLY-INHABIT_STATUS": "居住状况",
-        "TAB1-LABEL-ELDERLY-FINANCIAL_STATUS": "经济状况",
-        "TAB1-LABEL-ELDERLY-HOBBIES": "爱好特长",
-        "TAB1-LABEL-ELDERLY-MEDICAL_HISTORIES": "过往病史",
-        "TAB1-LABEL-REMARK":"备注",
-        "TAB1-PLACEHOLDER-REMARK":"补充说明一些情况",
-        "TAB1-LABEL-ELDERLY-FAMILY-MEMBER": "家庭成员",
-        "TAB1-PLACEHOLDER-ELDERLY-FAMILY-MEMBER-NAME": "家属姓名",
-        "TAB1-PLACEHOLDER-ELDERLY-FAMILY-MEMBER-PHONE": "联系电话",
-        "TAB1-PLACEHOLDER-ELDERLY-FAMILY-MEMBER-ADDRESS": "联系地址",
-        "TAB2-BOARD-INFO":"饮食套餐",
-        "TAB2-ROOM-INFO":"房间床位",
-        "TAB3-NURSING-INFO":"护理信息",
-        "TAB3-CUSTOM-SERVICE-INFO":"特色服务",
-        "TAB4-CHARGE-ITEM":"收费项目",
-        "TAB4-CHARGE-PERIOD-PRICE-SUM":"费用小计",
-        "TAB4-PERIOD-VALUE-IN-ADVANCE":"预收",
-        "TAB4-PERIOD-OF-MONTH":"{{period_value}}月",
-        "TAB4-CHARGE-TOTALS":"费用总计",
-        "SUBMIT-ENTER-FINANCIAL-AUDIT":"提交财务审核",
-        "UNDO-ENTER-FINANCIAL-AUDIT":"撤回编辑",
-        "COMPLETE-ENTER":"确认完成入院"
+        "TAB1-LABEL-ELDERLY-SEX": "性别"
       }
     },
-    "in-manage":{
+    "ticket":{
       "list": {
-        "TITLE": "机构养老云-老人管理-在院-列表"
+        "TITLE": "商户-产品管理-票务-列表",
+        "SYNC-INTERFACE-TICKET-SELECTED":"同步选中景点的票务数据",
+        "SYNC-INTERFACE-TICKET-ALL": "同步所有景点的票务数据"
       },
       "details": {
         "TITLE": "机构养老云-老人管理-在院-详情",

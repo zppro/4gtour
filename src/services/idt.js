@@ -27,13 +27,13 @@ module.exports = {
 
         this.actions = [
             {
-                method: 'PFT$Get_ScenicSpot_List',
+                method: 'PFT$fetchScenicSpot',
                 verb: 'get',
-                url: this.service_url_prefix + "/PFT$Get_ScenicSpot_List",
+                url: this.service_url_prefix + "/PFT$fetchScenicSpot",
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var rows =  yield app.pft.fetch$Get_ScenicSpot_List(self.logger,1000);
+                            var rows =  yield app.pft.fetchScenicSpot(self.logger,1000);
 
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
@@ -45,13 +45,13 @@ module.exports = {
                 }
             },
             {
-                method: 'PFT$Get_Ticket_List',
+                method: 'PFT$fetchTicket',
                 verb: 'get',
-                url: this.service_url_prefix + "/PFT$Get_Ticket_List/:scenicSpotId",
+                url: this.service_url_prefix + "/PFT$fetchTicket/:scenicSpotId",
                 handler: function (app, options) {
                     return function * (next) {
                         try {
-                            var rows =  yield app.pft.fetch$Get_Ticket_List(self.logger,Number(this.params.scenicSpotId));
+                            var rows =  yield app.pft.fetchTicket(self.logger,Number(this.params.scenicSpotId));
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
@@ -62,13 +62,13 @@ module.exports = {
                 }
             },
             {
-                method: 'PFT$Sync_ScenicSpot',
+                method: 'PFT$syncScenicSpot',
                 verb: 'post',
-                url: this.service_url_prefix + "/PFT$Sync_ScenicSpot",
+                url: this.service_url_prefix + "/PFT$syncScenicSpot",
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            yield app.pft.sync$ScenicSpot(self.logger);
+                            yield app.pft.syncScenicSpot(self.logger);
                             this.body = app.wrapper.res.default();
                         } catch (e) {
                             self.logger.error(e.message);
@@ -78,6 +78,23 @@ module.exports = {
                     };
                 }
             },
+            {
+                method: 'PFT$syncTicket',
+                verb: 'post',
+                url: this.service_url_prefix + "/PFT$syncTicket",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            yield app.pft.syncTicket(self.logger);
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            }
         ];
 
         return this;

@@ -308,7 +308,7 @@
                                 else if (_.isString(f)) {
                                     if (f.indexOf('dictionary-local:') == 0) {
                                         ///dictionary-remote:{v1:k1,v2:k2}
-                                        var jsonStr = _.rest(f.split(':')).join(':');
+                                        var jsonStr = _.rest(f.split(':')).join(':'); 
                                         column.formatterData = angular.fromJson(jsonStr);
                                     }
                                     else if (f.indexOf('dictionary-remote:') == 0) {

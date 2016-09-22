@@ -462,8 +462,7 @@
                         }
                         //this.mode == 'check' ||
 
-                        //console.log(angular.element('#' + id + ' .tree-node-selected').size());
-
+                        //console.log(angular.element('#' + id + ' .tree-node-selected').size()); 
                         this.el.find('.tree-node-selected').removeClass('tree-node-selected');
                         this.el.find('.tree-node-cascade-selected').removeClass('tree-node-cascade-selected');
                         //angular.element('#' + id + ' .tree-node-selected').removeClass('tree-node-selected');

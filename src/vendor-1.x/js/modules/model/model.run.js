@@ -11,8 +11,8 @@
     modelRun.$inject = ['modelNode'];
     function modelRun(modelNode) {
         //商户机构
-         modelNode.factory('idc-scenicSpot_PFT');
-        // modelNode.factory('pfta-exit');
+        modelNode.factory('idc-scenicSpot_PFT');
+        modelNode.factory('idc-ticket_PFT');
         // modelNode.factory('pfta-reception');
         // modelNode.factory('pfta-leave');
         // modelNode.factory('pfta-room');

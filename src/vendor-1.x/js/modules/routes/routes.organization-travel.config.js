@@ -84,14 +84,14 @@
                                 width:  30
                             },
                             {
-                                label: '景区名称',
+                                label: '名称',
                                 name: 'UUtitle',
                                 type: 'string',
                                 width: 240,
                                 sortable: true
                             },
                             {
-                                label: '景区添加时间',
+                                label: '添加时间',
                                 name: 'UUaddtime',
                                 type: 'date',
                                 width: 60,
@@ -120,6 +120,129 @@
                         ]
                     })
                 }
+            })
+            .state('app.organization-travel.ticket.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath('organization-travel/ticket-PFT-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'PFT_TicketGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM('app.organization-travel.ticket.list', {
+                        modelName: 'idc-ticket_PFT',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        blockUI: true,
+                        columns: [
+                            {
+                                label: '名称',
+                                name: 'UUtitle',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '取票信息',
+                                name: 'UUgetaddr',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '在售状态',
+                                name: 'UUstatus',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '出发地',
+                                name: 'UUstartplace',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '目的地',
+                                name: 'UUendplace',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '游客信息',
+                                name: 'UUtourist_info',
+                                type: 'string',
+                                width: 80,
+                                formatter: 'dictionary-local:{"0":"不需要填写","1":"只需填写一位游客信息","2":"需要填写每位游客信息"}'
+                            },
+                            {
+                                label: '集合地点',
+                                name: 'UUass_station',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '门市价',
+                                name: 'UUtprice',
+                                type: 'currency',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '支付方式',
+                                name: 'UUtprice',
+                                type: 'string',
+                                width: 60,
+                                formatter: 'dictionary-local:{"0":"现场支付","1":"在线支付"}'
+                            },
+                            {
+                                label: '限购',
+                                name: '$UUbuy_limit',
+                                type: 'string',
+                                width: 60
+                            },
+                            {
+                                label: '需要退款审核',
+                                name: 'UUrefund_audit',
+                                type: 'bool',
+                                width: 40
+                            },
+                            {
+                                label: '产品说明',
+                                name: 'UUnotes',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 20
+                            }
+                        ],
+                        switches: {leftTree: true}
+                    })
+                }
+            })
+            .state('app.organization-travel.ticket', {
+                url: '/ticket',
+                title: '票务',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath('partials/organization-travel/module-header.html'),
+                        controller: 'ModuleHeaderForTenantController'
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id:'menu.organization-travel.TICKET'//业务系统使用
+                }
+                , resolve: helper.resolveFor('subsystem.organization-travel.ticket.js')
             })
             .state('app.organization-travel.financial-org-receipts-and-disbursements-details', {
                 url: '/financial-org-receipts-and-disbursements-details',

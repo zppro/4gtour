@@ -35,11 +35,22 @@ module.exports = function(ctx,name) {
             UUjqts: {type: String},//景区相关提示
             UUjtzn: {type: String},//交通指南
             UUbhjq: {type: String}//景点介绍
+        }, {
+            toObject: {
+                virtuals: true
+            }
+            , toJSON: {
+                virtuals: true
+            }
         });
 
         scenicSpot_PFT_Schema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();
+        });
+
+        scenicSpot_PFT_Schema.virtual('name').get(function () {
+            return this.UUtitle;
         });
 
         return mongoose.model(name, scenicSpot_PFT_Schema, name);

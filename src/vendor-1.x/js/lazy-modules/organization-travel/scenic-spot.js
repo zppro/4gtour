@@ -16,8 +16,7 @@
 
     function PFT_ScenicSpotGridController($scope, ngDialog, vmh, vm) {
         $scope.vm = vm;
-        $scope.utils = vmh.utils.g;
-        var vmc = $scope.vmc = {};
+        $scope.utils = vmh.utils.g; 
 
         init();
 
@@ -42,7 +41,7 @@
                 scope: $scope
             }).then(function () {
 
-                vmh.idtService.PFT$Sync_ScenicSpot().then(function(){
+                vmh.idtService.PFT$syncScenicSpot().then(function(){
                     vm.query();
                     vmh.alertSuccess();
                 });

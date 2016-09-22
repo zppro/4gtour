@@ -420,23 +420,27 @@
             $get: ['$http', function ($http) {
 
                 return {
-                    PFT$Get_ScenicSpot_List: PFT$Get_ScenicSpot_List,
-                    PFT$Get_Ticket_List: PFT$Get_Ticket_List,
-                    PFT$Sync_ScenicSpot: PFT$Sync_ScenicSpot
+                    PFT$fetchScenicSpot: PFT$fetchScenicSpot,
+                    PFT$fetchTicket: PFT$fetchTicket,
+                    PFT$syncScenicSpot: PFT$syncScenicSpot,
+                    PFT$syncTicket: PFT$syncTicket
                 };
 
-                function PFT$Get_ScenicSpot_List() {
-                    return $http.get(baseUrl + 'PFT$Get_ScenicSpot_List');
+                function PFT$fetchScenicSpot() {
+                    return $http.get(baseUrl + 'PFT$fetchScenicSpot');
                 }
 
-                function PFT$Get_Ticket_List(scenicSpotId){
-                    return $http.get(baseUrl + 'PFT$Get_Ticket_List/' + scenicSpotId);
+                function PFT$fetchTicket(scenicSpotId){
+                    return $http.get(baseUrl + 'PFT$fetchTicket/' + scenicSpotId);
                 }
 
-                function PFT$Sync_ScenicSpot(){
-                    return $http.post(baseUrl + 'PFT$Sync_ScenicSpot');
+                function PFT$syncScenicSpot(){
+                    return $http.post(baseUrl + 'PFT$syncScenicSpot');
                 }
 
+                function PFT$syncTicket(){
+                    return $http.post(baseUrl + 'PFT$syncTicket');
+                }
 
             }]
         };
