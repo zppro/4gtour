@@ -51,7 +51,7 @@
                                 a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.disable()")
                                     i.glyphicon.glyphicon-minus
                             .btn-group
-                                a.btn.btn-success(ng-click="vm.syncInterfaceData()") {{'button.SYNC-INTERFACE-DATA'|translate}}
+                                a.btn.btn-success(ng-click="vm.syncInterfaceData()") {{ vm.viewTranslatePath('SYNC-INTERFACE-SCENIC-SPOT-ALL') | translate}}
                     .col-md-8
                         pagination.pagination-sm.pull-right(total-items="vm.page.totals",ng-model="vm.page.no",max-size="5",items-per-page="vm.page.size",boundary-links="true" ,ng-change="vm.paging()")
 script(type='text/ng-template', id="TP-UUimgpath.html")

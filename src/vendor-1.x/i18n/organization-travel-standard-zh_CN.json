@@ -30,7 +30,8 @@
     },
     "scenic-spot": {
       "list": {
-        "TITLE": "商户-产品管理-景区-列表"
+        "TITLE": "商户-产品管理-景区-列表",
+        "SYNC-INTERFACE-SCENIC-SPOT-ALL": "同步景区数据"
       },
       "details": {
         "TITLE": "机构养老云-老人管理-入院-详情",
@@ -47,8 +48,8 @@
     "ticket":{
       "list": {
         "TITLE": "商户-产品管理-票务-列表",
-        "SYNC-INTERFACE-TICKET-SELECTED":"同步选中景点的票务数据",
-        "SYNC-INTERFACE-TICKET-ALL": "同步所有景点的票务数据"
+        "SYNC-INTERFACE-TICKET-SELECTED":"同步选中景区的票务数据",
+        "SYNC-INTERFACE-TICKET-ALL": "同步所有景区的票务数据"
       },
       "details": {
         "TITLE": "机构养老云-老人管理-在院-详情",

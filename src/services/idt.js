@@ -81,11 +81,11 @@ module.exports = {
             {
                 method: 'PFT$syncTicket',
                 verb: 'post',
-                url: this.service_url_prefix + "/PFT$syncTicket",
+                url: this.service_url_prefix + "/PFT$syncTicket/:scenicSpotId?",
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            yield app.pft.syncTicket(self.logger);
+                            yield app.pft.syncTicket(self.logger,this.params.scenicSpotId);
                             this.body = app.wrapper.res.default();
                         } catch (e) {
                             self.logger.error(e.message);

@@ -148,11 +148,11 @@
                                 sortable: true
                             },
                             {
-                                label: '在售状态',
+                                label: '状态',
                                 name: 'UUstatus',
                                 type: 'string',
-                                width: 80,
-                                sortable: true
+                                width: 40,
+                                formatter: 'dictionary-local:{"0":"在售"}'
                             },
                             {
                                 label: '出发地',
@@ -191,7 +191,7 @@
                             },
                             {
                                 label: '支付方式',
-                                name: 'UUtprice',
+                                name: 'UUpay',
                                 type: 'string',
                                 width: 60,
                                 formatter: 'dictionary-local:{"0":"现场支付","1":"在线支付"}'
@@ -203,10 +203,10 @@
                                 width: 60
                             },
                             {
-                                label: '需要退款审核',
+                                label: '需退审',
                                 name: 'UUrefund_audit',
                                 type: 'bool',
-                                width: 40
+                                width: 50
                             },
                             {
                                 label: '产品说明',
@@ -219,7 +219,7 @@
                                 label: '',
                                 name: 'actions',
                                 sortable: false,
-                                width: 20
+                                width: 40
                             }
                         ],
                         switches: {leftTree: true}

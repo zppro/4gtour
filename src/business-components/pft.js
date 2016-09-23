@@ -72,9 +72,22 @@ module.exports = {
                 var rows = (yield self.dl$xml2js(rets[0].Get_Ticket_List.$value, {
                     explicitArray: false,
                     ignoreAttrs: true
-                })).Data.Rec;
+                })).Data.Rec; 
+                if(!self.ctx._.isArray(rows) && self.ctx._.isObject(rows) && rows.UUerrorcode=='105') {
+                    return [];
+                }
 
-                return rows;
+                if(self.ctx._.isArray(rows)){
+                    return rows;
+                }
+                else if(self.ctx._.isObject(rows)) {
+                    if (rows.UUerrorcode == '105') {
+                        return [];
+                    }
+                    else {
+                        return [rows];
+                    }
+                }
             }
             catch (e) {
                 self.logger.error(e.message);
@@ -128,24 +141,39 @@ module.exports = {
             }
         }).catch(self.ctx.coOnError);
     },
-    syncTicket: function (outerLogger) {
+    syncTicket: function (outerLogger,theScenicSpotId) {
         var self = this;
         return co(function *() {
             try {
 
-                var scenicSpot_rows = self.ctx.modelFactory().model_query(self.ctx.models['idc_ticket_PFT'],{select:'UUid -_id',where:{status:1}});
+                if(!theScenicSpotId){
+                    var scenicSpot_rows = yield self.ctx.modelFactory().model_query(self.ctx.models['idc_scenicSpot_PFT'],{select:'UUid -_id',where:{status:1}});
+ 
+                    for (var i = 0; i < scenicSpot_rows.length; i++) {
+                        var scenicSpotId = scenicSpot_rows[i].UUid;
+                        var rows = yield self.fetchTicket(outerLogger, scenicSpotId);
 
-                for (var i = 0; i < scenicSpot_rows.length; i++) {
-                    var scenicSpotId = scenicSpot_rows[i].UUid;
-                    var rows = yield self.fetchTicket(outerLogger, scenicSpotId);
-
+                        if (rows.length > 0) {
+                            yield self.ctx.modelFactory().model_bulkInsert(self.ctx.models['idc_ticket_PFT'], {
+                                removeWhere: {UUlid: scenicSpotId},
+                                rows: rows
+                            });
+                        }
+                        console.log('complete :' + i);
+                    }
+                }
+                else {
+                    var rows = yield self.fetchTicket(outerLogger, theScenicSpotId);
+                    console.log(rows);
+                    console.log('theScenicSpotId:' + theScenicSpotId);
                     if (rows.length > 0) {
+
                         yield self.ctx.modelFactory().model_bulkInsert(self.ctx.models['idc_ticket_PFT'], {
-                            removeWhere: {UUlid: scenicSpotId},
+                            removeWhere: {UUlid: theScenicSpotId},
                             rows: rows
                         });
                     }
-                    console.log('complete :' + i);
+
                 }
                 return true;
             }

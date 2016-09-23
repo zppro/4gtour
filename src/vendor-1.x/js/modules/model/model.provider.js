@@ -438,8 +438,9 @@
                     return $http.post(baseUrl + 'PFT$syncScenicSpot');
                 }
 
-                function PFT$syncTicket(){
-                    return $http.post(baseUrl + 'PFT$syncTicket');
+                function PFT$syncTicket(scenicSpotId) {
+                    var params = scenicSpotId ? '/' + scenicSpotId : '';
+                    return $http.post(baseUrl + 'PFT$syncTicket' + params);
                 }
 
             }]

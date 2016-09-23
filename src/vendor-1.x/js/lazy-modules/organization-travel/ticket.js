@@ -47,16 +47,19 @@
             vm.query();
         }
 
-        function syncInterfaceTicket(UUid) {
+        function syncInterfaceTicket(scenicSpotId) {
+
             ngDialog.openConfirm({
                 template: 'normalConfirmDialog.html',
                 className: 'ngdialog-theme-default',
                 scope: $scope
             }).then(function () {
-
-                vmh.idtService.PFT$Sync_ScenicSpot().then(function(){
+                vm.blocker.start();
+                vmh.idtService.PFT$syncTicket(scenicSpotId).then(function(){
                     vm.query();
                     vmh.alertSuccess();
+                }).finally(function(){
+                    vm.blocker.stop();
                 });
             });
         }

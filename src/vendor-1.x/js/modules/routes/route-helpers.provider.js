@@ -445,7 +445,7 @@
 
                     this.conditionBeforeQuery && this.conditionBeforeQuery();
 
-                    if (self.serverPaging) {
+                    if (self.serverPaging) { 
                         if (self.blocker) {
                             self.blocker.start();
                         }
