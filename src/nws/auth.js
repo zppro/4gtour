@@ -10,12 +10,12 @@ module.exports = function (app){
     return function * (next) {
         var self = this;
         var isIgnored = false;
-        if(ignoreAuthPaths){
-            _.each(ignoreAuthPaths,function(o){
-               if(self.path.startsWith(o)) {
-                   isIgnored = true;
-                   return false;
-               }
+        if(ignoreAuthPaths) { 
+            _.each(ignoreAuthPaths, function (o) {
+                if (self.path.startsWith(o.replace(/\$/,'\\$'))) {
+                    isIgnored = true;
+                    return false;
+                }
             });
         }
         if(!isIgnored){
