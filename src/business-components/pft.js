@@ -27,6 +27,7 @@ module.exports = {
         //测试账号 100019 密码jjl4yk11f82ce6c0f33a5c003f2fec56
         var account = ctx.conf.isProduction ? '536075':'100019';
         var password = ctx.conf.isProduction ? 'c40077a84036c3f708e47fb775d2471d':'jjl4yk11f82ce6c0f33a5c003f2fec56';
+        this.logger.info('account:'+account+' password:'+password);
         this.parseWSDL(null,'http://open.12301dev.com/openService/MXSE_beta.wsdl',account,password);
         console.log('parseWSDL done... ');
         return this;
