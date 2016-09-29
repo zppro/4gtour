@@ -27,6 +27,23 @@ module.exports = {
 
         this.actions = [
             {
+                method: 'PFT$Callback',
+                verb: 'get',
+                url: this.service_url_prefix + "/PFT$Callback",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+
+                            this.body = 'success'
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = e.message;
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'PFT$fetchScenicSpot',
                 verb: 'get',
                 url: this.service_url_prefix + "/PFT$fetchScenicSpot",

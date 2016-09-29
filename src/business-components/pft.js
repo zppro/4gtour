@@ -24,7 +24,9 @@ module.exports = {
 
         //账号 13003673092  密码gxr888
         //测试 100019 密码jjl4yk11f82ce6c0f33a5c003f2fec56
-        this.parseWSDL(null,'http://open.12301dev.com/openService/MXSE_beta.wsdl','100019','jjl4yk11f82ce6c0f33a5c003f2fec56');
+        var account = ctx.conf.isProduction ? '100019':'100019';
+        var password = ctx.conf.isProduction ? '100019':'jjl4yk11f82ce6c0f33a5c003f2fec56';
+        this.parseWSDL(null,'http://open.12301dev.com/openService/MXSE_beta.wsdl',account,password);
         console.log('parseWSDL done... ');
         return this;
     },
