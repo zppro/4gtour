@@ -25,7 +25,7 @@ module.exports = {
         //120cc 13003673092  密码gxr888
         //正式账号：536075 密码：c40077a84036c3f708e47fb775d2471d
         //测试账号 100019 密码jjl4yk11f82ce6c0f33a5c003f2fec56
-        var url = ctx.conf.isProduction ? 'http://open.12301.com/openService/MXSE.wsdl':'http://open.12301dev.com/openService/MXSE_beta.wsdl';
+        var url = ctx.conf.isProduction ? 'http://open.12301.cc/openService/MXSE.wsdl':'http://open.12301dev.com/openService/MXSE_beta.wsdl';
         this.logger.info('url:'+url);
         var account = ctx.conf.isProduction ? '536075':'100019';
         var password = ctx.conf.isProduction ? 'c40077a84036c3f708e47fb775d2471d':'jjl4yk11f82ce6c0f33a5c003f2fec56';
