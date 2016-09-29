@@ -36,7 +36,7 @@ app.conf = {
         static_production: '../pub-client-production/'
     },
     auth: {
-        ignorePaths: ['/services/share/login']
+        ignorePaths: ['/services/share/login','/services/idt/PFT$Callback']
     },
     db: {
         //mssql数据库配置
