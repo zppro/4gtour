@@ -22,6 +22,8 @@ module.exports = {
         }
         this.dl$xml2js = this.ctx.wrapper.cb(xml2js.parseString);
 
+        //账号 13003673092  密码gxr888
+        //测试 100019 密码jjl4yk11f82ce6c0f33a5c003f2fec56
         this.parseWSDL(null,'http://open.12301dev.com/openService/MXSE_beta.wsdl','100019','jjl4yk11f82ce6c0f33a5c003f2fec56');
         console.log('parseWSDL done... ');
         return this;
@@ -55,9 +57,11 @@ module.exports = {
                     ignoreAttrs: true
                 })).Data.Rec;
 
+                console.log(rows);
                 return rows;
             }
             catch (e) {
+                console.log(e);
                 self.logger.error(e.message);
             }
         }).catch(self.ctx.coOnError);
