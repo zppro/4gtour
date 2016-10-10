@@ -1,0 +1,71 @@
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        <!--景区id-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUID') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUid}}
+                    fieldset: .form-group
+                        <!--景区名称-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUTITLE') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUtitle}}
+                    fieldset: .form-group
+                        <!--显示名称-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUTITLE') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUshow}}
+                    fieldset: .form-group
+                        <!--景区缩略图-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUIMGPATH') | translate}}:
+                        .col-md-10
+                            img(ng-src="{{vm.model.UUimgpath}}",style="max-width:500px;")
+                    fieldset: .form-group
+                        <!--景区联系电话-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUTEL') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUtel}}
+                    fieldset: .form-group
+                        <!--景区联系传真-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUFAX') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUfax}}
+                    fieldset: .form-group
+                        <!--景区级别-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUJTYPE') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUjtype}}
+                    fieldset: .form-group
+                        <!--景区营业时间-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UURUNTIME') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUruntime}}
+                    fieldset: .form-group
+                        <!--景区详细地址-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUADDRESS') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUaddress}}
+                    fieldset: .form-group
+                        <!--景区相关提示-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUJQTS') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUjqts}}
+                    fieldset: .form-group
+                        <!--交通指南-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUJTZN') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUjtzn}}
+                    fieldset: .form-group
+                        <!--景点介绍-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUBHJQ') | translate}}:
+                        .col-md-10
+                            .form-readable(ng-bind-html='vm.model.UUbhjq | unescapeHTML')
+    .text-right.mt-lg
+        button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}

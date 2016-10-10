@@ -235,7 +235,8 @@
             vtab: vtab,
             vinput: vinput,
             isPhone: isPhone,
-            changeProperyName: changeProperyName
+            changeProperyName: changeProperyName,
+            unescapeHTML: unescapeHTML
         };
 
         function now(){
@@ -282,6 +283,12 @@
                     }
                 }
             });
+        }
+
+        function unescapeHTML(str){
+            if(!str)
+                return '';
+            return str.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'\"').replace(/&amp;#39;/g,'\'').replace(/&amp;/g,'&');
         }
 
     }

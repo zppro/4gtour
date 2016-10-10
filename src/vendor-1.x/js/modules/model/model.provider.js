@@ -420,14 +420,14 @@
             $get: ['$http', function ($http) {
 
                 return {
-                    PFT$fetchScenicSpot: PFT$fetchScenicSpot,
+                    PFT$fetchScenicSpotList: PFT$fetchScenicSpotList,
                     PFT$fetchTicket: PFT$fetchTicket,
                     PFT$syncScenicSpot: PFT$syncScenicSpot,
                     PFT$syncTicket: PFT$syncTicket
                 };
 
-                function PFT$fetchScenicSpot() {
-                    return $http.get(baseUrl + 'PFT$fetchScenicSpot');
+                function PFT$fetchScenicSpotList() {
+                    return $http.get(baseUrl + 'PFT$fetchScenicSpotList');
                 }
 
                 function PFT$fetchTicket(scenicSpotId){

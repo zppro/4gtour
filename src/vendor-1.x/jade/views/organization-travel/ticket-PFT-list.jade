@@ -34,13 +34,10 @@
                         td.text-left.td-nowrap(title="{{::row.UUtitle}}") {{::row.UUtitle}}
                         td.text-left.td-nowrap(title="{{::row.UUgetaddr}}") {{::row.UUgetaddr}}
                         td {{::row.UUstatus|formatter:'UUstatus':vm.columns}}
-                        td.text-left {{::row.UUstartplace}}
-                        td.text-left {{::row.UUendplace}}
                         td {{::row.UUtourist_info|formatter:'UUtourist_info':vm.columns}}
-                        td.text-left {{::row.UUass_station}}
                         td.text-right {{::row.UUtprice|currency}}
                         td {{::row.UUpay|formatter:'UUpay':vm.columns}}
-                        td {{::row.UUbuy_limit_low}} - {{::row.UUbuy_limit_up}}
+                        td {{::row.UUbuy_limit_low}} - {{::row.UUbuy_limit_up == 0 ? '不限': row.UUbuy_limit_up}}
                         td {{::row.UUrefund_audit|boolFilter}}
                         td.text-left.td-nowrap(title="{{::row.UUnotes}}") {{::row.UUnotes}}
                         td

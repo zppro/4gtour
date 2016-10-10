@@ -9,6 +9,7 @@
     angular
         .module('subsystem.organization-travel.scenic-spot',[])
         .controller('PFT_ScenicSpotGridController', PFT_ScenicSpotGridController)
+        .controller('PFT_ScenicSpotDetailsController', PFT_ScenicSpotDetailsController)
     ;
 
 
@@ -47,6 +48,44 @@
                 });
             });
         }
+    }
+
+    PFT_ScenicSpotDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
+
+    function PFT_ScenicSpotDetailsController($scope, ngDialog, vmh, vm) {
+
+        var vm = $scope.vm = vm;
+        $scope.utils = vmh.utils.v;
+
+
+        init();
+
+        function init() {
+
+            vm.init({removeDialog: ngDialog});
+
+
+            vm.doSubmit = doSubmit;
+            vm.tab1 = {cid: 'contentTab1'};
+
+            vm.load();
+
+        }
+
+
+        function doSubmit() {
+
+            if ($scope.theForm.$valid) {
+                vm.save();
+            }
+            else {
+                if ($scope.utils.vtab(vm.tab1.cid)) {
+                    vm.tab1.active = true;
+                }
+            }
+        }
+
+
     }
     
 })();

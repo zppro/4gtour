@@ -33,12 +33,15 @@
                                     i.glyphicon.glyphicon-eye-open
                         td.text-left {{::row.UUtitle}}
                         td {{::row.UUaddtime|date:'yyyy-MM-dd'}}
-                        td.text-left {{::row.UUarea}}
+                        //td.text-left {{::row.UUarea}}
                         td {{::row.UUp_type|formatter:'UUp_type':vm.columns}}
                         td
                             .btn-group
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row.id)")
                                     i.glyphicon.glyphicon-pencil
+                            .btn-group
+                                a.btn.btn-primary.btn-xs(title="{{ vm.viewTranslatePath('TICKET') | translate}}",ng-click="vm.edit(row.id)")
+                                    i.glyphicon.glyphicon-qrcode
                     tr(ng-if="vm.paged.length==0")
                         td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}
             .panel-footer
@@ -55,4 +58,4 @@
                     .col-md-8
                         pagination.pagination-sm.pull-right(total-items="vm.page.totals",ng-model="vm.page.no",max-size="5",items-per-page="vm.page.size",boundary-links="true" ,ng-change="vm.paging()")
 script(type='text/ng-template', id="TP-UUimgpath.html")
-    img(ng-src="{{row.UUimgpath}}")
+    img(ng-src="{{row.UUimgpath}}",style="max-width:200px;")

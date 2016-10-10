@@ -97,13 +97,13 @@
                                 width: 60,
                                 sortable: true
                             },
-                            {
-                                label: '所在地区',
-                                name: 'UUarea',
-                                type: 'string',
-                                width: 120,
-                                sortable: true
-                            },
+                            // {
+                            //     label: '所在地区',
+                            //     name: 'UUarea',
+                            //     type: 'string',
+                            //     width: 120,
+                            //     sortable: true
+                            // },
                             {
                                 label: '产品类型',
                                 name: 'UUp_type',
@@ -118,6 +118,18 @@
                                 width: 60
                             }
                         ]
+                    })
+                }
+            })
+            .state('app.organization-travel.scenic-spot.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath('organization-travel/scenic-spot-PFT-details.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'PFT_ScenicSpotDetailsController',
+                resolve: {
+                    entityVM: helper.buildEntityVM('app.organization-travel.scenic-spot.details', {
+                        modelName: 'idc-scenicSpot_PFT',
+                        blockUI: true
                     })
                 }
             })
@@ -137,7 +149,7 @@
                                 label: '名称',
                                 name: 'UUtitle',
                                 type: 'string',
-                                width: 80,
+                                width: 120,
                                 sortable: true
                             },
                             {
@@ -155,32 +167,11 @@
                                 formatter: 'dictionary-local:{"0":"在售"}'
                             },
                             {
-                                label: '出发地',
-                                name: 'UUstartplace',
-                                type: 'string',
-                                width: 60,
-                                sortable: true
-                            },
-                            {
-                                label: '目的地',
-                                name: 'UUendplace',
-                                type: 'string',
-                                width: 60,
-                                sortable: true
-                            },
-                            {
                                 label: '游客信息',
                                 name: 'UUtourist_info',
                                 type: 'string',
                                 width: 80,
-                                formatter: 'dictionary-local:{"0":"不需要填写","1":"只需填写一位游客信息","2":"需要填写每位游客信息"}'
-                            },
-                            {
-                                label: '集合地点',
-                                name: 'UUass_station',
-                                type: 'string',
-                                width: 120,
-                                sortable: true
+                                formatter: 'dictionary-local:{"0":"不需要填写","1":"只填一位游客信息","2":"填每位游客信息"}'
                             },
                             {
                                 label: '门市价',
@@ -197,10 +188,10 @@
                                 formatter: 'dictionary-local:{"0":"现场支付","1":"在线支付"}'
                             },
                             {
-                                label: '限购',
+                                label: '限(最少-最多)',
                                 name: '$UUbuy_limit',
                                 type: 'string',
-                                width: 60
+                                width: 70
                             },
                             {
                                 label: '需退审',

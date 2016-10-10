@@ -44,13 +44,13 @@ module.exports = {
                 }
             },
             {
-                method: 'PFT$fetchScenicSpot',
+                method: 'PFT$fetchScenicSpotList',
                 verb: 'get',
-                url: this.service_url_prefix + "/PFT$fetchScenicSpot",
+                url: this.service_url_prefix + "/PFT$fetchScenicSpotList",
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var rows =  yield app.pft.fetchScenicSpot(self.logger,1000);
+                            var rows =  yield app.pft.fetchScenicSpotList(self.logger,1000);
 
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {

@@ -31,18 +31,23 @@
     "scenic-spot": {
       "list": {
         "TITLE": "商户-产品管理-景区-列表",
-        "SYNC-INTERFACE-SCENIC-SPOT-ALL": "同步景区数据"
+        "SYNC-INTERFACE-SCENIC-SPOT-ALL": "同步景区数据",
+        "TICKET": "门票"
       },
       "details": {
-        "TITLE": "机构养老云-老人管理-入院-详情",
-        "HEAD-LABEL-CODE":"入院登记号",
-        "HEAD-PLACEHOLDER-CODE":"自动生成",
-        "HEAD-LABEL-ENTER_ON":"入院日期",
-        "TAB1": "老人信息",
-        "TAB1-LABEL-ELDERLY-NAME": "老人姓名",
-        "TAB1-PLACEHOLDER-ELDERLY-NAME": "张三",
-        "TAB1-LABEL-ELDERLY-ID_NO": "身份证号",
-        "TAB1-LABEL-ELDERLY-SEX": "性别"
+        "TITLE": "商户-产品管理-景区-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-UUID": "景区编号",
+        "TAB1-LABEL-UUTITLE": "景区名称",
+        "TAB1-LABEL-UUIMGPATH": "缩略图",
+        "TAB1-LABEL-UUTEL": "联系电话",
+        "TAB1-LABEL-UUFAX": "联系传真",
+        "TAB1-LABEL-UUJTYPE": "景区级别",
+        "TAB1-LABEL-UURUNTIME": "营业时间",
+        "TAB1-LABEL-UUADDRESS": "详细地址",
+        "TAB1-LABEL-UUJQTS": "相关提示",
+        "TAB1-LABEL-UUJTZN": "交通指南",
+        "TAB1-LABEL-UUBHJQ": "景点介绍"
       }
     },
     "ticket":{

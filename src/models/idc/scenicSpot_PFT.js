@@ -18,6 +18,8 @@ module.exports = function(ctx,name) {
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
             sync_flag: {type: Boolean, default: false},//同步标志
+            show_name: {type: String},//显示名称 -由平台定义而非来自接口
+            introduction_url: {type: String},//介绍文章地址 -由平台定义而非来自接口
             UUid: {type: Number, required: true},//景区id
             UUtitle: {type: String, required: true},//景区名称
             UUaddtime: {type: Date},//景区添加时间
@@ -28,9 +30,9 @@ module.exports = function(ctx,name) {
             UUtel: {type: String},//景区联系电话
             UUfax: {type: String},//景区联系传真
             UUstatus: {type: Number},//景区在售状态 1 在售,2 下架,3 删除
-            UUjtype: {type: String},//景区联系电话
-            UUopentime: {type: Date},//景区开业时间
-            UUruntime: {type: Date},//景区营业时间
+            UUjtype: {type: String},//景区级别
+            UUopentime: {type: String},//景区开业时间
+            UUruntime: {type: String},//景区营业时间
             UUaddress: {type: String},//景区详细地址
             UUjqts: {type: String},//景区相关提示
             UUjtzn: {type: String},//交通指南
@@ -49,9 +51,9 @@ module.exports = function(ctx,name) {
             next();
         });
 
-        scenicSpot_PFT_Schema.virtual('name').get(function () {
-            return this.UUtitle;
-        });
+        // scenicSpot_PFT_Schema.virtual('name').get(function () {
+        //     return this.UUtitle;
+        // });
 
         return mongoose.model(name, scenicSpot_PFT_Schema, name);
     }
