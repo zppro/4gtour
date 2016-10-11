@@ -168,7 +168,7 @@
                         columns: [
                             {
                                 label: '名称',
-                                name: 'UUtitle',
+                                name: 'show_name',
                                 type: 'string',
                                 width: 120,
                                 sortable: true

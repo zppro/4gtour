@@ -31,7 +31,7 @@
                                 label
                                     input(type='checkbox' data="trBubble" ng-model="row.checked" )
                                     span.fa.fa-check(data="trBubble")
-                        td.text-left.td-nowrap(title="{{::row.UUtitle}}") {{::row.UUtitle}}
+                        td.text-left.td-nowrap(title="{{::row.show_name}}") {{::row.show_name}}
                         td.text-left.td-nowrap(title="{{::row.UUgetaddr}}") {{::row.UUgetaddr}}
                         td {{::row.UUstatus|formatter:'UUstatus':vm.columns}}
                         td {{::row.UUtourist_info|formatter:'UUtourist_info':vm.columns}}
