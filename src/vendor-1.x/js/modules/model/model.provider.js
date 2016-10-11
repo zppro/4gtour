@@ -9,6 +9,7 @@
         .provider('modelNode', ModelNode)
         .provider('shareNode', ShareNode)
         .provider('extensionNode', ExtensionNode)
+        .provider('extOfOrganizationOfTravelNode',ExtOfOrganizationOfTravelNode)
         .provider('idtNode',IDTNode)
         .provider('extensionOfDashboardOfTenantNode',ExtensionOfDashboardOfTenantNode)
         .provider('qiniuNode',QiniuNode)
@@ -441,6 +442,44 @@
                 function PFT$syncTicket(scenicSpotId) {
                     var params = scenicSpotId ? '/' + scenicSpotId : '';
                     return $http.post(baseUrl + 'PFT$syncTicket' + params);
+                }
+
+            }]
+        };
+
+        function setBaseUrl(url) {
+            baseUrl = url;
+        }
+    }
+
+    function ExtOfOrganizationOfTravelNode(){
+        var baseUrl;
+        return {
+            // provider access level
+            setBaseUrl: setBaseUrl,
+
+            // controller access level
+            $get: ['$http', function ($http) {
+
+                return {
+                    saveIDCConfigItem: saveIDCConfigItem,
+                    saveIDCConfigItems: saveIDCConfigItems
+                };
+
+                function saveIDCConfigItem(idc_name, primary_key, primary_value, config_key, config_value) {
+                    return $http.post(baseUrl + 'saveIDCConfigInfo', [{
+                        where: {
+                            idc_name: idc_name,
+                            primary_key: primary_key,
+                            primary_value: primary_value,
+                            config_key: config_key
+                        }, value: config_value
+                    }]);
+                }
+
+                //items=>[{where:{idc_name: '...',primary_key: '...',primary_value: '...',config_key: '...'},value:'...'},{where:{...},value:''}]
+                function saveIDCConfigItems(items) {
+                    return $http.post(baseUrl + 'saveIDCConfigInfo', items);
                 }
 
             }]

@@ -18,11 +18,6 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         .col-md-10
                             .form-readable {{vm.model.UUtitle}}
                     fieldset: .form-group
-                        <!--显示名称-->
-                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUTITLE') | translate}}:
-                        .col-md-10
-                            .form-readable {{vm.model.UUshow}}
-                    fieldset: .form-group
                         <!--景区缩略图-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUIMGPATH') | translate}}:
                         .col-md-10
@@ -67,5 +62,23 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUBHJQ') | translate}}:
                         .col-md-10
                             .form-readable(ng-bind-html='vm.model.UUbhjq | unescapeHTML')
+            tab(active="vm.tab2.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB2') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab2')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab2
+                    fieldset: .form-group
+                        <!--显示名称-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-SHOW_NAME') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='show_name',ng-model='vm.model.show_name',placeholder='{{vm.viewTranslatePath("TAB2-PLACEHOLDER-SHOW_NAME")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'show_name','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        <!--景点介绍文章地址-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-INTRODUCTION_URL') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='introduction_url',ng-model='vm.model.introduction_url',placeholder='{{vm.viewTranslatePath("TAB2-PLACEHOLDER-INTRODUCTION_URL")|translate}}')
     .text-right.mt-lg
         button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(type="submit") {{'button.SAVE'|translate}}

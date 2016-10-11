@@ -64,10 +64,9 @@
 
             vm.init({removeDialog: ngDialog});
 
-
             vm.doSubmit = doSubmit;
             vm.tab1 = {cid: 'contentTab1'};
-
+            vm.tab2 = {cid: 'contentTab2',active:true};
             vm.load();
 
         }
@@ -76,16 +75,36 @@
         function doSubmit() {
 
             if ($scope.theForm.$valid) {
-                vm.save();
+                vm.save(false, vmh.extOfOrganizationOfTravelService.saveIDCConfigItems([
+                    {
+                        where: {
+                            idc_name: 'idc_scenicSpot_PFT',
+                            primary_key: 'UUid',
+                            primary_value: vm.model.UUid,
+                            config_key: 'show_name'
+                        },
+                        value: vm.model.show_name
+                    },
+                    {
+                        where: {
+                            idc_name: 'idc_scenicSpot_PFT',
+                            primary_key: 'UUid',
+                            primary_value: vm.model.UUid,
+                            config_key: 'introduction_url'
+                        },
+                        value: vm.model.introduction_url
+                    }
+                ]));
             }
             else {
                 if ($scope.utils.vtab(vm.tab1.cid)) {
                     vm.tab1.active = true;
                 }
+                if ($scope.utils.vtab(vm.tab2.cid)) {
+                    vm.tab2.active = true;
+                }
             }
-        }
-
-
+        } 
     }
     
 })();

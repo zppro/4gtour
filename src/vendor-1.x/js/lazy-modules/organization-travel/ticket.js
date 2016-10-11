@@ -9,6 +9,7 @@
     angular
         .module('subsystem.organization-travel.ticket',[])
         .controller('PFT_TicketGridController', PFT_TicketGridController)
+        .controller('PFT_TicketDetailsController', PFT_TicketDetailsController)
     ;
 
 
@@ -27,13 +28,16 @@
             vm.syncInterfaceTicket = syncInterfaceTicket;
 
             if (vm.switches.leftTree) {
+                vm.searchForm['scenicSpotId'] = undefined;
                 vm.treeFilterObject['tenantId'] = undefined;
-                vm.treeDataPromise = vmh.shareService.tmp('T3001/idc-scenicSpot_PFT', 'UUid UUtitle name', vm.treeFilterObject);
+                vm.UUid = $scope.$stateParams.scenicSpotId;
+                console.log(vm.UUid);
+                vm.treeDataPromise = vmh.shareService.tmp('T3001/idc-scenicSpot_PFT', 'UUid show_name name', vm.treeFilterObject);
 
                 $scope.$on('tree:node:select', function ($event, node) {
 
                     vm.UUid = vm.searchForm['UUlid'] = node.UUid;
-
+                    console.log(vm.UUid);
                     vm.query();
                     // if ($scope.$stateParams.scenicSpotId != selectNodeId) {
                     //     //timeout跳出事件监听
@@ -62,6 +66,44 @@
                     vm.blocker.stop();
                 });
             });
+        }
+    }
+
+    PFT_TicketDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
+
+    function PFT_TicketDetailsController($scope, ngDialog, vmh, vm) {
+
+        var vm = $scope.vm = vm;
+        $scope.utils = vmh.utils.v;
+
+
+        init();
+
+        function init() {
+
+            vm.init({removeDialog: ngDialog});
+
+            vm.doSubmit = doSubmit;
+            vm.tab1 = {cid: 'contentTab1'};
+            vm.tab2 = {cid: 'contentTab2',active:true};
+            vm.load();
+
+        }
+
+
+        function doSubmit() {
+
+            if ($scope.theForm.$valid) {
+                vm.save();
+            }
+            else {
+                if ($scope.utils.vtab(vm.tab1.cid)) {
+                    vm.tab1.active = true;
+                }
+                if ($scope.utils.vtab(vm.tab2.cid)) {
+                    vm.tab2.active = true;
+                }
+            }
         }
     }
     

@@ -143,7 +143,7 @@
 
         function buildVMHelper() {
 
-            return ['$timeout', '$q', '$translate', '$http', 'Browser', 'blockUI', 'cfpLoadingBar', 'shareNode', 'extensionNode','idtNode', 'debugNode', 'clientData', 'treeFactory', 'Notify', 'GridUtils', 'ViewUtils', function ($timeout, $q, $translate, $http, Browser, blockUI, cfpLoadingBar, shareNode, extensionNode,idtNode, debugNode, clientData, treeFactory, Notify, GridUtils, ViewUtils) {
+            return ['$timeout', '$q', '$translate', '$http', 'Browser', 'blockUI', 'cfpLoadingBar', 'shareNode', 'extensionNode','extOfOrganizationOfTravelNode','idtNode', 'debugNode', 'clientData', 'treeFactory', 'Notify', 'GridUtils', 'ViewUtils', function ($timeout, $q, $translate, $http, Browser, blockUI, cfpLoadingBar, shareNode, extensionNode,extOfOrganizationOfTravelNode,idtNode, debugNode, clientData, treeFactory, Notify, GridUtils, ViewUtils) {
 
                 function promiseWrapper() {
                     if (arguments.length > 0) {
@@ -232,6 +232,7 @@
                     parallel: parallel,
                     shareService: shareNode,
                     extensionService: extensionNode,
+                    extOfOrganizationOfTravelService:extOfOrganizationOfTravelNode,
                     idtService: idtNode,
                     debugService: debugNode,
                     clientData: clientData,
@@ -739,7 +740,7 @@
                     }
                 }
 
-                function save(manuallyTransfer) {
+                function save(manuallyTransfer,parallelPromise) {
                     var promise;
                     var self = this;
                     console.log('save model...');
@@ -773,14 +774,18 @@
                         }, 1000);
 
                     }
+
+                    var promises = [$translate('notification.SAVE-SUCCESS'), promise];
+                    parallelPromise && promises.push(parallelPromise);
+
                     if (self.blocker) {
                         self.blocker.start();
                     }
 
-                    return $q.all([$translate('notification.SAVE-SUCCESS'), promise]).then(function (ret) {
+                    return $q.all(promises).then(function (ret) {
                         Notify.alert('<div class="text-center"><em class="fa fa-check"></em> ' + ret[0] + '</div>', 'success');
                         //$state.go(self.moduleRoute('list'), self.toListParams);
-                        if(!manuallyTransfer) {
+                        if (!manuallyTransfer) {
                             self.returnBack();
                         }
 

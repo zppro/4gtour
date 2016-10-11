@@ -31,7 +31,7 @@
                             .btn-group(ng-if="row.UUimgpath.indexOf('http://') != -1 || row.UUimgpath.indexOf('https://')!=-1")
                                 a.btn.btn-primary.btn-xs(popover-template=" 'TP-UUimgpath.html' " popover-title="{{::row.UUtitle}}",popover-placement="right",popover-trigger="mouseenter")
                                     i.glyphicon.glyphicon-eye-open
-                        td.text-left {{::row.UUtitle}}
+                        td.text-left {{::row.show_name}}
                         td {{::row.UUaddtime|date:'yyyy-MM-dd'}}
                         //td.text-left {{::row.UUarea}}
                         td {{::row.UUp_type|formatter:'UUp_type':vm.columns}}
@@ -40,7 +40,7 @@
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row.id)")
                                     i.glyphicon.glyphicon-pencil
                             .btn-group
-                                a.btn.btn-primary.btn-xs(title="{{ vm.viewTranslatePath('TICKET') | translate}}",ng-click="vm.edit(row.id)")
+                                a.btn.btn-primary.btn-xs(title="{{ vm.viewTranslatePath('TICKET') | translate}}",ng-click="$state.go(vm.transTo.ticket,{scenicSpotId:row._id})")
                                     i.glyphicon.glyphicon-qrcode
                     tr(ng-if="vm.paged.length==0")
                         td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}

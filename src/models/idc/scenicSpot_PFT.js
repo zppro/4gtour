@@ -51,9 +51,9 @@ module.exports = function(ctx,name) {
             next();
         });
 
-        // scenicSpot_PFT_Schema.virtual('name').get(function () {
-        //     return this.UUtitle;
-        // });
+        scenicSpot_PFT_Schema.virtual('name').get(function () { 
+            return this.show_name;
+        });
 
         return mongoose.model(name, scenicSpot_PFT_Schema, name);
     }

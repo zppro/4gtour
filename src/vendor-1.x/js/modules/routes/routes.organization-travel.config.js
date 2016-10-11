@@ -74,6 +74,9 @@
                     entryVM: helper.buildEntryVM('app.organization-travel.scenic-spot.list', {
                         modelName: 'idc-scenicSpot_PFT',
                         searchForm: {"status": 1},
+                        transTo: {
+                            "ticket": 'app.organization-travel.ticket.list',
+                        },
                         serverPaging: true,
                         blockUI: true,
                         columns: [
@@ -84,8 +87,8 @@
                                 width:  30
                             },
                             {
-                                label: '名称',
-                                name: 'UUtitle',
+                                label: '显示名称',
+                                name: 'show_name',
                                 type: 'string',
                                 width: 240,
                                 sortable: true
@@ -133,8 +136,26 @@
                     })
                 }
             })
+            .state('app.organization-travel.ticket', {
+                url: '/ticket',
+                title: '票务',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath('partials/organization-travel/module-header.html'),
+                        controller: 'ModuleHeaderForTenantController'
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id:'menu.organization-travel.TICKET'//业务系统使用
+                }
+                , resolve: helper.resolveFor('subsystem.organization-travel.ticket.js')
+            })
             .state('app.organization-travel.ticket.list', {
-                url: '/list/:action',
+                url: '/list/:action/:scenicSpotId',
                 templateUrl: helper.basepath('organization-travel/ticket-PFT-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'PFT_TicketGridController',
@@ -217,23 +238,17 @@
                     })
                 }
             })
-            .state('app.organization-travel.ticket', {
-                url: '/ticket',
-                title: '票务',
-                abstract: true,
-                views: {
-                    "module-header": {
-                        templateUrl: helper.basepath('partials/organization-travel/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
-                    },
-                    "module-content": {
-                        template: '<div class="data-ui-view"></div>'
-                    }
-                },
-                data:{
-                    func_id:'menu.organization-travel.TICKET'//业务系统使用
+            .state('app.organization-travel.ticket.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath('organization-travel/ticket-PFT-details.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'PFT_TicketDetailsController',
+                resolve: {
+                    entityVM: helper.buildEntityVM('app.organization-travel.ticket.details', {
+                        modelName: 'idc-ticket_PFT',
+                        blockUI: true
+                    })
                 }
-                , resolve: helper.resolveFor('subsystem.organization-travel.ticket.js')
             })
             .state('app.organization-travel.financial-org-receipts-and-disbursements-details', {
                 url: '/financial-org-receipts-and-disbursements-details',

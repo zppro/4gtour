@@ -1,0 +1,151 @@
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        <!--景区id-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UULID') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUlid}}
+                    fieldset: .form-group
+                        <!--门票id-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUID') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUid}}
+                    fieldset: .form-group
+                        <!--门票名称-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUTITLE') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUtitle}}
+                    fieldset: .form-group
+                        <!--产品id-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUPID') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUpid}}
+                    fieldset: .form-group
+                        <!--供应商id-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUAID') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUaid}}
+                    fieldset: .form-group
+                        <!--取票信息-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUGETADDR') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUgetaddr}}
+                    fieldset: .form-group
+                        <!--门票状态-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUSTATUS') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUstatus}}
+                    fieldset: .form-group
+                        <!--允许推迟游玩的天数-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUDELAYDAYS') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUdelaydays}}
+                    fieldset: .form-group
+                        <!--提前预定天数-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUDDAYS') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUddays}}
+                    fieldset: .form-group
+                        <!--提前下单截止日具体时-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUDHOUR') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUdhour}}
+                    fieldset: .form-group
+                        <!--出发城市或地区-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUSTARTPLACE') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUstartplace}}
+                    fieldset: .form-group
+                        <!--目的地-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUENDPLACE') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUendplace}}
+                    fieldset: .form-group
+                        <!--游客信息-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUTOURIST_INFO') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUtourist_info}}
+                    fieldset: .form-group
+                        <!--支付方式-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUPAY') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUpay}}
+                    fieldset: .form-group
+                        <!--购买上下限-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUBUY_LIMIT') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUbuy_limit_low}} - {{vm.model.UUbuy_limit_up}}
+                    fieldset: .form-group
+                        <!--限购类型-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-BUY_LIMIT') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.buy_limit}}
+                    fieldset: .form-group
+                        <!--限购方式-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-BUY_LIMIT_DATE') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.buy_limit_date}}
+                    fieldset: .form-group
+                        <!--限购张数-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-BUY_LIMIT_NUM') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.buy_limit_num}}
+                    fieldset: .form-group
+                        <!--退款手续费-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUREB') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUreb}}
+                    fieldset: .form-group
+                        <!--是否需要退款审核-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUREFUND_AUDIT') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUrefund_audit}}
+                    fieldset: .form-group
+                        <!--退款类型-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUREB_TYPE') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUreb_type}}
+                    fieldset: .form-group
+                        <!--集合地点-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUASS_STATION') | translate}}:
+                        .col-md-10
+                            .form-readable(ng-bind-html='vm.model.UUass_station | unescapeHTML')
+                    fieldset: .form-group
+                        <!--产品说明-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UUNOTES') | translate}}:
+                        .col-md-10
+                            .form-readable(ng-bind-html='vm.model.UUnotes | unescapeHTML')
+            tab(active="vm.tab2.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB2') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab2')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab2
+                    fieldset: .form-group
+                        <!--门市价-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-UUTPRICE') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.UUtprice}}
+                    fieldset: .form-group
+                        <!--销售价-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-SALE_PRICE') | translate}}:
+                        .col-md-10
+                            input.form-control(type='number', name='sale_price',ng-model='vm.model.sale_price',placeholder='{{vm.viewTranslatePath("TAB2-PLACEHOLDER-SALE_PRICE")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'sale_price','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'sale_price','number')") {{ "validator.NUMBER" | translate}}
+                    fieldset: .form-group
+                        <!--显示名称-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-SHOW_NAME') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='show_name',ng-model='vm.model.show_name',placeholder='{{vm.viewTranslatePath("TAB2-PLACEHOLDER-SHOW_NAME")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'show_name','required')") {{ "validator.REQUIRED" | translate}}
+    .text-right.mt-lg
+        button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(type="submit") {{'button.SAVE'|translate}}

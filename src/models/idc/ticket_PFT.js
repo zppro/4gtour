@@ -18,6 +18,8 @@ module.exports = function(ctx,name) {
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
             sync_flag: {type: Boolean, default: false},//同步标志
+            show_name: {type: String},//显示名称 -由平台定义而非来自接口
+            sale_price: {type: Number},//实际销售价 单位元
             UUlid: {type: Number, required: true},//景区id
             UUid: {type: Number, required: true},//门票id
             UUtitle: {type: String, required: true},//门票名称
@@ -44,6 +46,13 @@ module.exports = function(ctx,name) {
             buy_limit: {type: Number},//限购类型
             buy_limit_date: {type: Number},//限购方式
             buy_limit_num: {type: Number}//限购张数
+        }, {
+            toObject: {
+                virtuals: true
+            }
+            , toJSON: {
+                virtuals: true
+            }
         });
 
         ticket_PFT_Schema.pre('update', function (next) {

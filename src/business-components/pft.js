@@ -96,8 +96,7 @@ module.exports = {
                     explicitArray: false,
                     ignoreAttrs: true
                 })).Data.Rec;
-
-                console.log(row);
+                
                 return row;
             }
             catch (e) {
@@ -162,16 +161,67 @@ module.exports = {
                     //详细格式接口获取数据
                     var savedRows = yield self.ctx.modelFactory().model_query(self.ctx.models['idc_scenicSpot_PFT'], {
                         where: {status: 1},
-                        select: 'UUid'
+                        select: 'UUid show_name introduction_url'
                     });
                     for (var i = 0; i < savedRows.length; i++) {
                         var scenicSpotId = savedRows[i].UUid;
                         var row = yield self.fetchScenicSpotInfo(outerLogger, savedRows[i].UUid);
-                    
                         if (row) {
                             yield self.ctx.modelFactory().model_update(self.ctx.models['idc_scenicSpot_PFT'], savedRows[i]._id, row);
                         }
                         console.log('complete syncScenicSpotInfo :' + i);
+
+                        var needSave = false;
+                        var show_name_of_scenicSpot_config = yield self.ctx.modelFactory().model_one(self.ctx.models['trv_idc_config'], {
+                            where: {
+                                idc_name: 'idc_scenicSpot_PFT',
+                                primary_key: 'UUid',
+                                primary_value: scenicSpotId,
+                                config_key: 'show_name'
+                            },
+                            select: 'config_value'
+                        });
+                        if (show_name_of_scenicSpot_config) {
+                            savedRows[i].show_name = show_name_of_scenicSpot_config.config_value;
+                            needSave = true;
+                        }
+                        else{
+                            yield self.ctx.modelFactory().model_create(self.ctx.models['trv_idc_config'], {
+                                idc_name: 'idc_scenicSpot_PFT',
+                                primary_key: 'UUid',
+                                primary_value: scenicSpotId,
+                                config_key: 'show_name',
+                                config_value: savedRows[i].show_name
+                            });
+                        }
+
+                        var introduction_url_of_scenicSpot_config = yield self.ctx.modelFactory().model_one(self.ctx.models['trv_idc_config'], {
+                            where: {
+                                idc_name: 'idc_scenicSpot_PFT',
+                                primary_key: 'UUid',
+                                primary_value: scenicSpotId,
+                                config_key: 'introduction_url'
+                            },
+                            select: 'config_value'
+                        });
+                        if (introduction_url_of_scenicSpot_config) {
+                            savedRows[i].introduction_url = introduction_url_of_scenicSpot_config.config_value;
+                            needSave = true;
+                        }
+                        else{
+                            yield self.ctx.modelFactory().model_create(self.ctx.models['trv_idc_config'], {
+                                idc_name: 'idc_scenicSpot_PFT',
+                                primary_key: 'UUid',
+                                primary_value: scenicSpotId,
+                                config_key: 'introduction_url',
+                                config_value: savedRows[i].introduction_url
+                            });
+                        }
+
+                        console.log('needSave:', needSave);
+                        needSave && (yield savedRows[i].save());
+
+                        console.log('complete idc_Config of idc_scenicSpot_PFT :' + i);
 
                     }
                 }
@@ -206,7 +256,7 @@ module.exports = {
         var self = this;
         return co(function *() {
             try {
-
+                var savedRows;
                 if(!theScenicSpotId){
                     var scenicSpot_rows = yield self.ctx.modelFactory().model_query(self.ctx.models['idc_scenicSpot_PFT'],{select:'UUid -_id',where:{status:1}});
  
@@ -215,18 +265,30 @@ module.exports = {
                         var rows = yield self.fetchTicket(outerLogger, scenicSpotId);
 
                         if (rows.length > 0) {
+
+                            for (var j = 0; j < rows.length; j++) {
+                                rows[j].show_name = rows[j].UUtitle;
+                                rows[j].sale_price = rows[j].UUtprice;
+                            }
                             yield self.ctx.modelFactory().model_bulkInsert(self.ctx.models['idc_ticket_PFT'], {
                                 removeWhere: {UUlid: scenicSpotId},
                                 rows: rows
                             });
                         }
                     }
+
+                    savedRows = yield self.ctx.modelFactory().model_query(self.ctx.models['idc_ticket_PFT'], {
+                        where: {status: 1},
+                        select: 'UUid show_name sale_price'
+                    });
                 }
                 else {
                     var rows = yield self.fetchTicket(outerLogger, theScenicSpotId);
-                    console.log(rows);
-                    console.log('theScenicSpotId:' + theScenicSpotId);
                     if (rows.length > 0) {
+                        for (var j = 0; j < rows.length; j++) {
+                            rows[j].show_name = rows[j].UUtitle;
+                            rows[j].sale_price = rows[j].UUtprice;
+                        }
 
                         yield self.ctx.modelFactory().model_bulkInsert(self.ctx.models['idc_ticket_PFT'], {
                             removeWhere: {UUlid: theScenicSpotId},
@@ -234,7 +296,69 @@ module.exports = {
                         });
                     }
 
+                    savedRows = yield self.ctx.modelFactory().model_query(self.ctx.models['idc_ticket_PFT'], {
+                        where: {status: 1,UUlid:theScenicSpotId},
+                        select: 'UUid show_name sale_price'
+                    });
                 }
+
+                
+                for (var i = 0; i < savedRows.length; i++) {
+                    var ticketId = savedRows[i].UUid;
+                    var needSave = false;
+                    var show_name_of_ticket_config = yield self.ctx.modelFactory().model_one(self.ctx.models['trv_idc_config'], {
+                        where: {
+                            idc_name: 'idc_ticket_PFT',
+                            primary_key: 'UUid',
+                            primary_value: ticketId,
+                            config_key: 'show_name'
+                        },
+                        select: 'config_value'
+                    });
+                    if (show_name_of_ticket_config) {
+                        savedRows[i].show_name = show_name_of_ticket_config.config_value;
+                        needSave = true;
+                    }
+                    else{
+                        yield self.ctx.modelFactory().model_create(self.ctx.models['trv_idc_config'], {
+                            idc_name: 'idc_ticket_PFT',
+                            primary_key: 'UUid',
+                            primary_value: ticketId,
+                            config_key: 'show_name',
+                            config_value: savedRows[i].show_name
+                        });
+                    }
+
+                    var sale_price_of_scenicSpot_config = yield self.ctx.modelFactory().model_one(self.ctx.models['trv_idc_config'], {
+                        where: {
+                            idc_name: 'idc_ticket_PFT',
+                            primary_key: 'UUid',
+                            primary_value: ticketId,
+                            config_key: 'sale_price'
+                        },
+                        select: 'config_value'
+                    });
+                    if (sale_price_of_scenicSpot_config) {
+                        savedRows[i].sale_price = sale_price_of_scenicSpot_config.config_value;
+                        needSave = true;
+                    }
+                    else{
+                        yield self.ctx.modelFactory().model_create(self.ctx.models['trv_idc_config'], {
+                            idc_name: 'idc_ticket_PFT',
+                            primary_key: 'UUid',
+                            primary_value: ticketId,
+                            config_key: 'sale_price',
+                            config_value: savedRows[i].sale_price
+                        });
+                    }
+
+                    console.log('needSave:', needSave);
+                    needSave && (yield savedRows[i].save());
+
+                    console.log('complete idc_Config of idc_ticket_PFT:' + i);
+
+                }
+                
                 return true;
             }
             catch (e) {
