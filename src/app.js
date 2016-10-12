@@ -20,6 +20,7 @@ var thunkify = require('thunkify');
 var rfcore = require('rfcore');
 var mongoose = require('mongoose');
 var auth = require('./nws/auth.js');
+var crossDomainInterceptor = require('./nws/crossDomainInterceptor.js');
 
 var app = koa();
 app.conf = {
@@ -28,6 +29,7 @@ app.conf = {
         root: __dirname,
         log: path.join(__dirname, 'logs'),
         service: path.join(__dirname, 'services'),
+        meServices: path.join(__dirname, 'me-services'),
         debugServices: path.join(__dirname, 'debug-services'),
         scheduleJobs: path.join(__dirname, 'jobs'),
         sequenceDefs: path.join(__dirname, 'sequences'),
@@ -36,7 +38,11 @@ app.conf = {
         static_production: '../pub-client-production/'
     },
     auth: {
+        toPaths:['/services'],
         ignorePaths: ['/services/share/login','/services/idt/PFT$Callback']
+    },
+    crossDomainInterceptor:{
+        toPaths:['/me-services']
     },
     db: {
         //mssql数据库配置
@@ -212,6 +218,10 @@ co(function*() {
     app.conf.serviceNames = _.map((yield app.wrapper.cb(fs.readdir)(app.conf.dir.service)), function (o) {
         return o.substr(0, o.indexOf('.'))
     });
+    app.conf.meServiceNames = _.map((yield app.wrapper.cb(fs.readdir)(app.conf.dir.meServices)), function (o) {
+        return o.substr(0, o.indexOf('.'))
+    });
+
 
     if(!app.conf.isProduction){
         app.conf.debugServiceNames = _.map((yield app.wrapper.cb(fs.readdir)(app.conf.dir.debugServices)), function (o) {
@@ -231,7 +241,18 @@ co(function*() {
                 alwaysIncludePattern: true,
                 category: logName
             };
-        }),_.map(app.conf.businessComponentNames, function (o) {
+        }),
+        _.map(app.conf.meServiceNames, function (o) {
+            var logName = 'mesvc_' + o+ '.js';
+            return {
+                type: 'dateFile',
+                filename: path.join(app.conf.dir.log, logName),
+                pattern: '-yyyy-MM-dd.log',
+                alwaysIncludePattern: true,
+                category: logName
+            };
+        }),
+        _.map(app.conf.businessComponentNames, function (o) {
             var logName = 'bc_' + o + '.js';
             return {
                 type: 'dateFile',
@@ -288,13 +309,17 @@ co(function*() {
     console.log('register router...');
     //注册服务路由
     _.each(app.conf.serviceNames, function (o) {
-
         var service_module = require('./services/' + o);
         _.each(service_module.actions, function (action) {
             Router.prototype[action.verb].apply(router, [service_module.name + "_" + action.method, action.url, action.handler(app)]);
         });
     });
-
+    _.each(app.conf.meServiceNames, function (o) {
+        var service_module = require('./me-services/' + o);
+        _.each(service_module.actions, function (action) {
+            Router.prototype[action.verb].apply(router, [service_module.name + "_" + action.method, action.url, action.handler(app)]);
+        });
+    });
     if(!app.conf.isProduction){
         _.each(app.conf.debugServiceNames, function (o) {
             var service_module = require('./debug-services/' + o);
@@ -323,7 +348,14 @@ co(function*() {
 
     //注意router.use的middleware有顺序
     router.use(koaBody);
-    router.use('/services', auth(app));
+    
+    //中间件
+    _.each(app.conf.auth.toPaths,function(o){
+        router.use(o, auth(app));
+    });
+    _.each(app.conf.crossDomainInterceptor.toPaths,function(o){
+        router.use(o, crossDomainInterceptor(app));
+    });
 
     app.use(router.routes())
         .use(router.allowedMethods());
