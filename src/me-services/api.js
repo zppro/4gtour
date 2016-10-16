@@ -24,6 +24,63 @@ module.exports = {
 
         this.actions = [
             {
+                method: 'scenicSpots',
+                verb: 'get',
+                url: this.service_url_prefix + "/scenicSpots",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+
+                            var lowPriceTicketsPerScenicSpot = yield app.modelFactory().model_aggregate(app.models['idc_ticket_PFT'], [
+                                // {
+                                //     $match: {
+                                //         status: 1
+                                //     }
+                                // },
+                                {
+                                    $group: {
+                                        _id: '$UUlid',
+                                        price: {$min: '$sale_price'}
+                                    }
+                                },
+                                {$sort: {"price": 1}},
+                                {
+                                    $project: {
+                                        scenicSpotId: '$_id.UUlid',
+                                        price: '$price',
+                                        _id: 0
+                                    }
+                                }
+                            ]);
+
+                            console.log(lowPriceTicketsPerScenicSpot)
+                            
+                            this.body = app.wrapper.res.ret(lowPriceTicketsPerScenicSpot);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'auth',
+                verb: 'get',
+                url: this.service_url_prefix + "/auth",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'hb',
                 verb: 'get',
                 url: this.service_url_prefix + "/hb",

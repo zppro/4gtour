@@ -21,6 +21,7 @@ var rfcore = require('rfcore');
 var mongoose = require('mongoose');
 var auth = require('./nws/auth.js');
 var crossDomainInterceptor = require('./nws/crossDomainInterceptor.js');
+var authApp = require('./nws/authApp.js');
 
 var app = koa();
 app.conf = {
@@ -40,6 +41,10 @@ app.conf = {
     auth: {
         toPaths:['/services'],
         ignorePaths: ['/services/share/login','/services/idt/PFT$Callback']
+    },
+    authApp: {
+        toPaths:['/me-services'],
+        ignorePaths: ['/me-services/api/auth']
     },
     crossDomainInterceptor:{
         toPaths:['/me-services']
@@ -318,6 +323,9 @@ co(function*() {
         var service_module = require('./me-services/' + o);
         _.each(service_module.actions, function (action) {
             Router.prototype[action.verb].apply(router, [service_module.name + "_" + action.method, action.url, action.handler(app)]);
+
+            //support options for CORS
+            Router.prototype['options'].apply(router, [action.url]);
         });
     });
     if(!app.conf.isProduction){
@@ -355,6 +363,9 @@ co(function*() {
     });
     _.each(app.conf.crossDomainInterceptor.toPaths,function(o){
         router.use(o, crossDomainInterceptor(app));
+    });
+    _.each(app.conf.authApp.toPaths,function(o){
+        router.use(o, authApp(app));
     });
 
     app.use(router.routes())
