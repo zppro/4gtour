@@ -34,16 +34,15 @@ module.exports = function (app){
                     this.status = 401;
                     return;
                 }
-
-
+                
                 try {
                     token = token.substr('Bearer '.length)
 
                     var timestamp = this.get('X-Custom-TS');
 
-                    this.member = jwt.verify(token, app.conf.secure.authSecret + ':' + timestamp);
+                    this.payload = jwt.verify(token, app.conf.secure.authSecret + ':' + timestamp);
 
-                    console.log(this.member);
+                    console.log(this.payload);
                 }catch(e){
                     console.log(e);
                     this.status = 401;

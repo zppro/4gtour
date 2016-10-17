@@ -28,6 +28,19 @@
     ]
   },
   {
+    "_id": "menu.organization-travel.SALE-MANAGE",
+    "name": "销售管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.organization-travel.ORDER",
+        "name": "订单",
+        "sref": "app.organization-travel.order.list"
+      }
+    ]
+  },
+  {
     "_id": "menu.organization-travel.FINANCIAL-MANAGE",
     "name": "财务管理",
     "sref": "#",

@@ -95,18 +95,15 @@
         "TAB2-PLACEHOLDER-SHOW_NAME": "门票的显示名称.."
       }
     },
-    "exit-manage": {
+    "order": {
       "list": {
-        "TITLE": "机构养老云-老人管理-出院-列表",
-        "SUBMIT-EXIT-PRE-FLOW-AUDIT": "提交部门流转审核",
-        "AUDIT-ITEM_RETURN":"归还物品检查",
-        "AUDIT-SETTLEMENT":"出院结算",
-        "COMPLETE-EXIT": "确认完成出院",
-        "COMPLETE-EXIT-CONFIRM-MESSAGE":"老人将最终完成出院，确定要继续么？"
+        "TITLE": "商户-销售管理-订单-列表",
+        "SUBMIT-PFT": "提交到票付通",
+        "SUBMIT-PFT-CONFIRM-MESSAGE":"当前订单将提交到票付通接口，确定要继续么？"
       },
       "details": {
         "NONE":"",
-        "TITLE": "机构养老云-老人管理-出院-详情",
+        "TITLE": "商户-销售管理-订单-详情",
         "HEAD-LABEL-ELDERLY_NAME":"出院老人",
         "HEAD-LABEL-APPLICATION_DATE":"申请日期",
         "TAB1": "基本信息",

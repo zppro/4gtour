@@ -1,31 +1,30 @@
 /**
  * Created by zppro on 16-9-21.
- * Target:票付通接口数据 门票
+ * Target:票付通接口数据 订单
  */
 
 (function() {
     'use strict';
 
     angular
-        .module('subsystem.organization-travel.ticket',[])
-        .controller('PFT_TicketGridController', PFT_TicketGridController)
-        .controller('PFT_TicketDetailsController', PFT_TicketDetailsController)
+        .module('subsystem.organization-travel.order',[])
+        .controller('PFT_OrderGridController', PFT_OrderGridController)
+        .controller('PFT_OrderDetailsController', PFT_OrderDetailsController)
     ;
 
 
-    PFT_TicketGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
+    PFT_OrderGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
 
-    function PFT_TicketGridController($scope, ngDialog, vmh, vm) {
+    function PFT_OrderGridController($scope, ngDialog, vmh, vm) {
         $scope.vm = vm;
         $scope.utils = vmh.utils.g; 
 
         init();
 
-
         function init() {
             vm.init({removeDialog: ngDialog});
 
-            vm.syncInterfaceTicket = syncInterfaceTicket;
+            vm.submitOrder = submitOrder;
 
             if (vm.switches.leftTree) {
                 vm.searchForm['scenicSpotId'] = undefined;
@@ -39,39 +38,29 @@
                     vm.UUid = vm.searchForm['UUlid'] = node.UUid;
                     console.log(vm.UUid);
                     vm.query();
-                    // if ($scope.$stateParams.scenicSpotId != selectNodeId) {
-                    //     //timeout跳出事件监听
-                    //     vmh.timeout(function(){
-                    //         $scope.$state.go(vm.viewRoute(), {scenicSpotId: selectNodeId});
-                    //     })
-                    // }
                 });
             }
             vm.searchForm['tenantId'] = undefined;
             vm.query();
         }
 
-        function syncInterfaceTicket(scenicSpotId) {
+        function submitOrder(scenicSpotId) {
 
             ngDialog.openConfirm({
-                template: 'normalConfirmDialog.html',
+                template: 'customConfirmDialog.html',
                 className: 'ngdialog-theme-default',
-                scope: $scope
+                controller: ['$scope', function ($scopeConfirm) {
+                    $scopeConfirm.message = vm.viewTranslatePath('SUBMIT-PFT-CONFIRM-MESSAGE')
+                }]
             }).then(function () {
-                vm.blocker.start();
-                vmh.idtService.PFT$syncTicket(scenicSpotId).then(function(){
-                    vm.query();
-                    vmh.alertSuccess();
-                }).finally(function(){
-                    vm.blocker.stop();
-                });
-            });
+                //...
+            }); 
         }
     }
 
-    PFT_TicketDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
+    PFT_OrderDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
 
-    function PFT_TicketDetailsController($scope, ngDialog, vmh, vm) {
+    function PFT_OrderDetailsController($scope, ngDialog, vmh, vm) {
 
         var vm = $scope.vm = vm;
         $scope.utils = vmh.utils.v;

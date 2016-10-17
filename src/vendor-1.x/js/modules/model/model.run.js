@@ -13,7 +13,7 @@
         //商户机构
         modelNode.factory('idc-scenicSpot_PFT');
         modelNode.factory('idc-ticket_PFT');
-        // modelNode.factory('pfta-leave');
+        modelNode.factory('idc-order_PFT');
         // modelNode.factory('pfta-room');
         // modelNode.factory('pfta-district');
         // modelNode.factory('pfta-roomOccupancyChangeHistory');

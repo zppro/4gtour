@@ -250,6 +250,100 @@
                     })
                 }
             })
+            .state('app.organization-travel.order', {
+                url: '/order',
+                title: '订单',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath('partials/organization-travel/module-header.html'),
+                        controller: 'ModuleHeaderForTenantController'
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id:'menu.organization-travel.ORDER'//业务系统使用
+                }
+                , resolve: helper.resolveFor('subsystem.organization-travel.order.js')
+            })
+            .state('app.organization-travel.order.list', {
+                url: '/list/:action/:scenicSpotId',
+                templateUrl: helper.basepath('organization-travel/order-PFT-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'PFT_OrderGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM('app.organization-travel.order.list', {
+                        modelName: 'idc-order_PFT',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        blockUI: true,
+                        columns: [
+                            {
+                                label: '本地订单号',
+                                name: 'code',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '产品名称',
+                                name: 'p_name',
+                                type: 'string',
+                                width: 120
+                            },
+                            {
+                                label: '订单金额',
+                                name: 'amount',
+                                type: 'number',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '本地下单',
+                                name: 'check_in_time',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '远端下单',
+                                name: 'UUdtime',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '状态',
+                                name: 'UUstatus',
+                                type: 'string',
+                                width: 80,
+                                formatter: 'dictionary-local:{"0":"未使用","1":"已使用","2":"已过期","3":"被取消","4":"凭证码被替代","5":"被终端修改","6":"被终端撤销","7":"部分使用"}'
+                            },
+                            {
+                                label: '联系人',
+                                name: 'link_man',
+                                type: 'string',
+                                width: 40
+                            },
+                            {
+                                label: '联系电话',
+                                name: 'link_phone',
+                                type: 'string',
+                                width: 60
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 40
+                            }
+                        ],
+                        switches: {leftTree: true}
+                    })
+                }
+            })
             .state('app.organization-travel.financial-org-receipts-and-disbursements-details', {
                 url: '/financial-org-receipts-and-disbursements-details',
                 title: '收支明细',

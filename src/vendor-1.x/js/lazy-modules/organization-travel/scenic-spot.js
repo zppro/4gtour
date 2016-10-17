@@ -1,6 +1,6 @@
 /**
  * Created by zppro on 16-9-21.
- * Target:票付通接口数据
+ * Target:票付通接口数据 景点
  */
 
 (function() {

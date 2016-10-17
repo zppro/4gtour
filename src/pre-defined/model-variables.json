@@ -1,6 +1,7 @@
 {
   "SERVER_GEN": "server-gen",
   "SEQUENCE_DEFS": {
-    "TENANT_ACCOUNT": "pub_tenantJournalAccount$voucher_no"
+    "TENANT_ACCOUNT": "pub_tenantJournalAccount$voucher_no",
+    "ORDER_OF_PFT": "order_PFT$code"
   }
 }
