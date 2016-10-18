@@ -284,7 +284,7 @@
                                 label: '本地订单号',
                                 name: 'code',
                                 type: 'string',
-                                width: 60,
+                                width: 80,
                                 sortable: true
                             },
                             {
@@ -304,18 +304,25 @@
                                 label: '本地下单',
                                 name: 'check_in_time',
                                 type: 'date',
-                                width: 60,
+                                width: 80,
                                 sortable: true
+                            },
+                            {
+                                label: '本地状态',
+                                name: 'local_status',
+                                type: 'string',
+                                width: 60,
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/IDC01/object')
                             },
                             {
                                 label: '远端下单',
                                 name: 'UUdtime',
                                 type: 'date',
-                                width: 60,
+                                width: 80,
                                 sortable: true
                             },
                             {
-                                label: '状态',
+                                label: '远端状态',
                                 name: 'UUstatus',
                                 type: 'string',
                                 width: 80,

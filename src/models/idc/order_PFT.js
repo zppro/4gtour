@@ -19,7 +19,9 @@ module.exports = function(ctx,name) {
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
             sync_flag: {type: Boolean, default: false},//同步标志
-            code: {type: String, required: true, minlength: 14, maxlength: 14, index: {unique: true}},//本地订单编号 按照规则 'PFT'+8位年月日+3位序列
+            code: {type: String, required: true, minlength: 12, maxlength: 12, index: {unique: true}},//本地订单编号 按照规则 'PFT'+8位年月日+3位序列
+            local_status: {type: String, required: true, enum: ctx._.rest(ctx.dictionary.keys["IDC01"])},
+            transaction_sn: {type: String},//支付流水号
             amount: {type: Number, default: 0.00},//订单金额
             p_name: {type: String, required: true},//产品名称
             p_price: {type: Number, required: true},//下单单价 单位元
@@ -61,21 +63,14 @@ module.exports = function(ctx,name) {
         });
 
         order_PFT_Schema.pre('validate', function (next) {
-            if (this.code == ctx.modelVariables.SERVER_GEN) {
-                //考虑到并发几乎不可能发生，所以将订单编号设定为
-                //order.type+[年2月2日2]+6位随机数
-                var self = this;
-                if (this.tenantId) {
 
-                    ctx.sequenceFactory.getSequenceVal(ctx.modelVariables.SEQUENCE_DEFS.ORDER_OF_PFT).then(function(ret){
-                        console.log(ret);
-                        self.code = ret;
-                        next();
-                    });
-                }
-                else{
+            if (this.code == ctx.modelVariables.SERVER_GEN) {
+                var self = this;
+                ctx.sequenceFactory.getSequenceVal(ctx.modelVariables.SEQUENCE_DEFS.ORDER_OF_PFT).then(function(ret){
+                    console.log(ret);
+                    self.code = ret;
                     next();
-                }
+                });
             }
             else{
                 next();

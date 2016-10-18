@@ -122,6 +122,56 @@ module.exports = {
                 }
             },
             {
+                method: 'order',
+                verb: 'post',
+                url: this.service_url_prefix + "/order",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+
+                            var order = app._.extend({
+                                code: 'server-gen',
+                                local_status: 'A0001',
+                                sms_send: 1,
+                                deduction_type: 0,
+                                order_type: 0,
+                                UUstatus:0,
+                                UUpaystatus:2
+                            }, this.payload.member, this.request.body);
+                            order.amount = order.p_price * order.quantity;
+
+                            console.log(order);
+
+                            this.body = app.wrapper.res.ret(yield app.modelFactory().model_create(app.models['idc_order_PFT'], order));
+
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'order',
+                verb: 'put',
+                url: this.service_url_prefix + "/order/:id",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var ret = yield app.modelFactory().model_update(app.models['idc_order_PFT'], {local_status: 'A0003'});
+                            this.body = app.wrapper.res.ret(ret);
+
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'auth',
                 verb: 'get',
                 url: this.service_url_prefix + "/auth",
