@@ -202,6 +202,13 @@
                                 sortable: true
                             },
                             {
+                                label: '销售价',
+                                name: 'sale_price',
+                                type: 'currency',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
                                 label: '支付方式',
                                 name: 'UUpay',
                                 type: 'string',

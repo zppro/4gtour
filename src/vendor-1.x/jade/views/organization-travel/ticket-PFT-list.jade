@@ -36,6 +36,7 @@
                         td {{::row.UUstatus|formatter:'UUstatus':vm.columns}}
                         td {{::row.UUtourist_info|formatter:'UUtourist_info':vm.columns}}
                         td.text-right {{::row.UUtprice|currency}}
+                        td.text-right {{::row.sale_price|currency}}
                         td {{::row.UUpay|formatter:'UUpay':vm.columns}}
                         td {{::row.UUbuy_limit_low}} - {{::row.UUbuy_limit_up == 0 ? '不限': row.UUbuy_limit_up}}
                         td {{::row.UUrefund_audit|boolFilter}}
