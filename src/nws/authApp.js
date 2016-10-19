@@ -13,7 +13,7 @@ module.exports = function (app){
         var isIgnored = false;
         if(ignoreAuthPaths) { 
             _.each(ignoreAuthPaths, function (o) {
-                if (self.path.startsWith(o.replace(/\$/,'\\$'))) {
+                if (self.path.toLowerCase().startsWith(o.replace(/\$/,'\\$'))) {
                     isIgnored = true;
                     return false;
                 }

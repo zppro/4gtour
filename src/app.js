@@ -44,7 +44,7 @@ app.conf = {
     },
     authApp: {
         toPaths:['/me-services'],
-        ignorePaths: ['/me-services/api/auth']
+        ignorePaths: ['/me-services/api/orders']
     },
     crossDomainInterceptor:{
         toPaths:['/me-services']

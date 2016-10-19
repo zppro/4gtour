@@ -122,6 +122,25 @@ module.exports = {
                 }
             },
             {
+                method: 'orders',
+                verb: 'get',
+                url: this.service_url_prefix + "/orders/:memberId",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+
+                            var rows = yield app.modelFactory().model_query(app.models['idc_order_PFT'],{ where: { status:1, member_id:this.params.memberId}, select: 'p_name code check_in_time amount local_status'});
+
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'order',
                 verb: 'post',
                 url: this.service_url_prefix + "/order",
