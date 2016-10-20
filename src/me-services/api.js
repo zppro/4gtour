@@ -61,8 +61,7 @@ module.exports = {
                                 }).price;
                                 return {id:o.id, UUid: o.UUid, title: o.show_name, img: o.UUimgpath, price: price, description: o.UUaddress}
                             });
-
-                            console.log(rows);
+ 
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
@@ -111,7 +110,6 @@ module.exports = {
                                 ret.selected_ticket_bid_price = ticketWithMinSalePrice.UUtprice;
                                 ret.selected_ticket_name = ticketWithMinSalePrice.show_name;
                             }
-                            console.log(ret);
                             this.body = app.wrapper.res.ret(ret);
                         } catch (e) {
                             self.logger.error(e.message);
@@ -179,8 +177,8 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var ret = yield app.modelFactory().model_update(app.models['idc_order_PFT'], {local_status: 'A0003'});
-                            this.body = app.wrapper.res.ret(ret);
+                            var ret = yield app.modelFactory().model_update(app.models['idc_order_PFT'], this.params.id, {local_status: 'A0003'});
+                            this.body = app.wrapper.res.default();
 
                         } catch (e) {
                             self.logger.error(e.message);
