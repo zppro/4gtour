@@ -37,7 +37,7 @@
                         td {{::row.check_in_time|date:'yyyy-MM-dd'}}
                         td {{::row.local_status|formatter:'local_status':vm.columns}}
                         td {{::row.UUstatus|formatter:'UUstatus':vm.columns}}
-                        td {{::row.member_name}} ({{::row.member_id}})
+                        td.td-nowrap(title="{{::row.member_name}} ({{::row.member_id}})")  {{::row.member_name}} ({{::row.member_id}})
                         td.text-center {{::row.link_man}}
                         td.text-center {{::row.link_phone}}
                         td

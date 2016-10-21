@@ -177,7 +177,7 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var ret = yield app.modelFactory().model_update(app.models['idc_order_PFT'], this.params.id, {local_status: 'A0003'});
+                            var ret = yield app.modelFactory().model_update(app.models['idc_order_PFT'], this.params.id, this.request.body);
                             this.body = app.wrapper.res.default();
 
                         } catch (e) {
