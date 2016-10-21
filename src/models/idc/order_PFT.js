@@ -27,7 +27,7 @@ module.exports = function(ctx,name) {
             p_price: {type: Number, required: true},//下单单价 单位元
             quantity: {type: Number, required: true},//排序序号
             member_id: {type: String, required: true},//下单人Id
-            member_name: {type: String, required: true},//下单人名称
+            member_name: {type: String},//下单人名称
             link_man:  {type: String, required: true},//联系人
             link_man_id_no:  {type: String},//联系人身份证IDNo
             link_phone:  {type: String, required: true},//联系手机
