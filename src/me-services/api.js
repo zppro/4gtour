@@ -95,7 +95,8 @@ module.exports = {
                                 address: scenicSpot.UUaddress,
                                 runtime: scenicSpot.UUruntime,
                                 tip: scenicSpot.UUjqts,
-                                travel_guide: scenicSpot.UUjtzn
+                                travel_guide: scenicSpot.UUjtzn,
+                                introduction_url: scenicSpot.introduction_url
                             };
  
                             var ticketWithMinSalePrice = app._.min(ticketsOfScenicSpot,function(o) {
