@@ -298,7 +298,7 @@
                                 label: '产品名称',
                                 name: 'p_name',
                                 type: 'string',
-                                width: 120
+                                width: 100
                             },
                             {
                                 label: '订单金额',
@@ -322,18 +322,17 @@
                                 formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/IDC01/object')
                             },
                             {
-                                label: '远端下单',
-                                name: 'UUdtime',
-                                type: 'date',
-                                width: 80,
-                                sortable: true
-                            },
-                            {
                                 label: '远端状态',
                                 name: 'UUstatus',
                                 type: 'string',
-                                width: 80,
+                                width: 60,
                                 formatter: 'dictionary-local:{"0":"未使用","1":"已使用","2":"已过期","3":"被取消","4":"凭证码被替代","5":"被终端修改","6":"被终端撤销","7":"部分使用"}'
+                            },
+                            {
+                                label: '下单人',
+                                name: 'member',
+                                type: 'string',
+                                width: 80
                             },
                             {
                                 label: '联系人',
@@ -351,7 +350,7 @@
                                 label: '',
                                 name: 'actions',
                                 sortable: false,
-                                width: 40
+                                width: 60
                             }
                         ],
                         switches: {leftTree: true}

@@ -36,8 +36,8 @@
                         td.text-right {{::row.amount|currency}}
                         td {{::row.check_in_time|date:'yyyy-MM-dd'}}
                         td {{::row.local_status|formatter:'local_status':vm.columns}}
-                        td {{::row.UUdtime|date:'yyyy-MM-dd'}}
                         td {{::row.UUstatus|formatter:'UUstatus':vm.columns}}
+                        td {{::row.member_name}} ({{::row.member_id}})
                         td.text-center {{::row.link_man}}
                         td.text-center {{::row.link_phone}}
                         td
