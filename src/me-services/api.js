@@ -79,8 +79,6 @@ module.exports = {
                     return function * (next) {
                         try {
                             var scenicSpotId = this.params.scenicSpotId;
-                            console.log(scenicSpotId)
-                            
 
                             var scenicSpot = yield app.modelFactory().model_read(app.models['idc_scenicSpot_PFT'],scenicSpotId);
                             var ticketsOfScenicSpot = yield app.modelFactory().model_query(app.models['idc_ticket_PFT'],{ where: { status:1,UUlid: scenicSpot.UUid }, select: 'UUlid UUid show_name sale_price UUtprice'});
@@ -112,6 +110,44 @@ module.exports = {
                                 ret.selected_ticket_name = ticketWithMinSalePrice.show_name;
                             }
                             this.body = app.wrapper.res.ret(ret);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'tickets',
+                verb: 'get',
+                url: this.service_url_prefix + "/tickets/:scenicSpotId",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var scenicSpot = yield app.modelFactory().model_read(app.models['idc_scenicSpot_PFT'],this.params.scenicSpotId);
+
+                            var ticketsOfScenicSpot = yield app.modelFactory().model_aggregate(app.models['idc_ticket_PFT'], [
+                                {
+                                    $match: {
+                                        status: 1,
+                                        UUlid: scenicSpot.UUid
+                                    }
+                                },
+                                {$sort: {"sale_price": 1}},
+                                {
+                                    $project: {
+                                        ticket_id: '$_id',
+                                        ticket_uulid: '$UUlid',
+                                        ticket_uuid: '$UUid',
+                                        ticket_price: '$sale_price',
+                                        ticket_bid_price: '$UUtprice',
+                                        ticket_name: '$show_name'
+                                    }
+                                }
+                            ]);
+
+                            this.body = app.wrapper.res.rows(ticketsOfScenicSpot);
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
