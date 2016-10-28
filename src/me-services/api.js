@@ -72,6 +72,65 @@ module.exports = {
                 }
             },
             {
+                method: 'scenicSpots',
+                verb: 'post',
+                url: this.service_url_prefix + "/scenicSpots",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+
+                            var lowPriceTicketsPerScenicSpot = yield app.modelFactory().model_aggregate(app.models['idc_ticket_PFT'], [
+                                {
+                                    $match: {
+                                        status: 1
+                                    }
+                                },
+                                {
+                                    $group: {
+                                        _id: {UUlid: '$UUlid'},
+                                        price: {$min: '$sale_price'}
+                                    }
+                                },
+                                {$sort: {"price": 1}},
+                                {
+                                    $project: {
+                                        scenicSpotId: '$_id.UUlid',
+                                        price: '$price',
+                                        _id: 0
+                                    }
+                                }
+                            ]);
+
+                            var rows_ScenicSpot = yield app.modelFactory().model_query(app.models['idc_scenicSpot_PFT'], {
+                                    where: {status: 1},
+                                    select: 'UUid show_name UUimgpath UUaddress'
+                                },
+                                {limit: this.request.body.page.size, skip: this.request.body.page.skip});
+
+                            var rows = app._.map(rows_ScenicSpot, function (o) {
+                                var price = app._.find(lowPriceTicketsPerScenicSpot, function (item) {
+                                    return item.scenicSpotId == o.UUid
+                                }).price;
+                                return {
+                                    id: o.id,
+                                    UUid: o.UUid,
+                                    title: o.show_name,
+                                    img: o.UUimgpath,
+                                    price: price,
+                                    description: o.UUaddress
+                                }
+                            });
+                            
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'scenicSpot',
                 verb: 'get',
                 url: this.service_url_prefix + "/scenicSpot/:scenicSpotId",
