@@ -3,7 +3,7 @@
  */
 
 module.exports = function (app) {
-    var allowOrigins = ['http://m2.okertrip.com', 'http://192.168.255.111:8080','http://192.168.255.111','http://192.168.255.108:8000', 'http://192.168.101.3:8080', 'http://localhost', 'http://localhost:8080'];
+    var allowOrigins = ['http://m2.okertrip.com', 'http://192.168.255.100:8080','http://192.168.255.100','http://192.168.255.108:8000', 'http://192.168.101.3:8080', 'http://localhost', 'http://localhost:8080'];
     return function *(next) {
         console.log('crossDomain');
         var self = this;
