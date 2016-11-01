@@ -2,7 +2,6 @@
  * idt Created by zppro on 16-9-20.
  * Target:与第三方进行接口数据交换
  */
-var qiniu = require('qiniu');
 
 module.exports = {
     init: function (option) {

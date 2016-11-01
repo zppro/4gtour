@@ -40,7 +40,7 @@ app.conf = {
     },
     auth: {
         toPaths:['/services'],
-        ignorePaths: ['/services/share/login','/services/idt/PFT$Callback']
+        ignorePaths: ['/services/share/login','/services/robot/sendTestMail']
     },
     authApp: {
         toPaths:['/me-services'],

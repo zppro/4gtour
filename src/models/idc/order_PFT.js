@@ -21,6 +21,8 @@ module.exports = function(ctx,name) {
             sync_flag: {type: Boolean, default: false},//同步标志
             code: {type: String, required: true, minlength: 12, maxlength: 12, index: {unique: true}},//本地订单编号 按照规则 'PFT'+8位年月日+3位序列
             local_status: {type: String, required: true, enum: ctx._.rest(ctx.dictionary.keys["IDC01"])},
+            pay_type: {type: String, enum: ctx._.rest(ctx.dictionary.keys["IDC02"])},//订单支付方式
+            pay_time: {type: Date},//订单支付时间
             transaction_sn: {type: String},//支付流水号
             amount: {type: Number, default: 0.00},//订单金额
             p_name: {type: String, required: true},//产品名称

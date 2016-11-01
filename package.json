@@ -1,6 +1,6 @@
 {
   "name": "4gtour",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "",
   "main": "src/app.js",
   "scripts": {
@@ -68,6 +68,7 @@
     "moment": "^2.13.0",
     "mongoose": "^4.6.1",
     "node-schedule": "^1.1.1",
+    "nodemailer": "^2.6.4",
     "qiniu": "^6.1.11",
     "rand-token": "0.2.1",
     "rfcore": "^0.1.10",

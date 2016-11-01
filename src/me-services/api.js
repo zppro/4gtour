@@ -253,8 +253,6 @@ module.exports = {
                             }, this.payload.member, this.request.body);
                             order.amount = order.p_price * order.quantity;
 
-                            console.log(order);
-
                             this.body = app.wrapper.res.ret(yield app.modelFactory().model_create(app.models['idc_order_PFT'], order));
 
                         } catch (e) {
@@ -273,9 +271,12 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var ret = yield app.modelFactory().model_update(app.models['idc_order_PFT'], this.params.id, this.request.body);
+                            // send
+                            var payload = app._.extend({pay_time: Date.now()}, this.request.body);
+                            var ret = yield app.modelFactory().model_update(app.models['idc_order_PFT'], this.params.id, payload);
+                            var theOrder = yield app.modelFactory().model_read(app.models['idc_order_PFT'], this.params.id);
+                            yield app.mail.send$PFTOrderPaySuccess(theOrder);
                             this.body = app.wrapper.res.default();
-
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
