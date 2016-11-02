@@ -235,6 +235,34 @@ module.exports = {
                 }
             },
             {
+                method: 'orders',
+                verb: 'post',
+                url: this.service_url_prefix + "/orders",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+
+                            var member_id = this.payload.member.member_id;
+                            if(member_id == 'anonymity')
+                                member_id = 'everyone';
+                            console.log('member_id:' + member_id);
+                            var rows = yield app.modelFactory().model_query(app.models['idc_order_PFT'], {
+                                    where: {
+                                        status: 1,
+                                        member_id: member_id
+                                    }, select: 'p_name code check_in_time amount local_status local_status_name'
+                                },
+                                {limit: this.request.body.page.size, skip: this.request.body.page.skip});
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'order',
                 verb: 'post',
                 url: this.service_url_prefix + "/order",

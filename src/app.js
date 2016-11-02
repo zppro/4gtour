@@ -43,8 +43,8 @@ app.conf = {
         ignorePaths: ['/services/share/login','/services/robot/sendTestMail']
     },
     authApp: {
-        toPaths:['/me-services'],
-        ignorePaths: ['/me-services/api/orders']
+        toPaths: ['/me-services'],
+        ignorePaths: [{path: '/me-services/api/orders', method: 'get'}]
     },
     crossDomainInterceptor:{
         toPaths:['/me-services']

@@ -12,9 +12,18 @@ module.exports = function (app){
         var isIgnored = false;
         if(ignoreAuthPaths) { 
             _.each(ignoreAuthPaths, function (o) {
-                if (self.path.toLowerCase().startsWith(o.toLowerCase().replace(/\$/,'\\$'))) {
-                    isIgnored = true;
-                    return false;
+                if(app._.isString(o)) {
+                    if (self.path.toLowerCase().startsWith(o.toLowerCase().replace(/\$/, '\\$'))) {
+                        isIgnored = true;
+                        return false;
+                    }
+                }
+                else if(app._.isObject(o)) {
+                    if (self.path.toLowerCase().startsWith(o.path.toLowerCase().replace(/\$/, '\\$'))
+                        && self.method.toLowerCase() == o.method.toLowerCase()) {
+                        isIgnored = true;
+                        return false;
+                    }
                 }
             });
         }

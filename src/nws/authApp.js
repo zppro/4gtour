@@ -13,9 +13,18 @@ module.exports = function (app){
         var isIgnored = false;
         if(ignoreAuthPaths) { 
             _.each(ignoreAuthPaths, function (o) {
-                if (self.path.toLowerCase().startsWith(o.replace(/\$/,'\\$'))) {
-                    isIgnored = true;
-                    return false;
+                if(app._.isString(o)) {
+                    if (self.path.toLowerCase().startsWith(o.toLowerCase().replace(/\$/, '\\$'))) {
+                        isIgnored = true;
+                        return false;
+                    }
+                }
+                else if(app._.isObject(o)) {
+                    if (self.path.toLowerCase().startsWith(o.path.toLowerCase().replace(/\$/, '\\$'))
+                        && self.method.toLowerCase() == o.method.toLowerCase()) {
+                        isIgnored = true;
+                        return false;
+                    }
                 }
             });
         }
@@ -37,9 +46,7 @@ module.exports = function (app){
                 
                 try {
                     token = token.substr('Bearer '.length)
-
                     var timestamp = this.get('X-Custom-TS');
-
                     this.payload = jwt.verify(token, app.conf.secure.authSecret + ':' + timestamp);
 
                     console.log(this.payload);

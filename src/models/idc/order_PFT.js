@@ -3,6 +3,7 @@
  * 接口数据存储 票付通 订单实体
  */
 var mongoose = require('mongoose');
+var IDC01 = require('../../pre-defined/dictionary.json')['IDC01'];
 module.isloaded = false;
 
 
@@ -83,6 +84,11 @@ module.exports = function(ctx,name) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();
         });
+
+        order_PFT_Schema.virtual('local_status_name').get(function () {
+            return IDC01[this.local_status].name;
+        });
+
 
         return mongoose.model(name, order_PFT_Schema, name);
     }
