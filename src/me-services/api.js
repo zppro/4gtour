@@ -3,6 +3,7 @@
  * api for mobile web app
  */
 
+
 module.exports = {
     init: function (option) {
         var self = this;
@@ -314,12 +315,22 @@ module.exports = {
                 }
             },
             {
-                method: 'auth',
-                verb: 'get',
-                url: this.service_url_prefix + "/auth",
+                method: 'proxyLogin',
+                verb: 'post',
+                url: this.service_url_prefix + "/proxyLogin",
                 handler: function (app, options) {
-                    return function * (next) {
+                    var request = require('request');
+                    return function *(next) {
                         try {
+                            console.log(this.request.body)
+                            request.post('http://im.okertrip.com/api/login/index.html', {json: this.request.body},
+                                function (error, response, body) {
+                                    console.log(error)
+                                    if (!error && response.statusCode == 200) {
+                                        console.log(body) // Show the HTML for the Google homepage.
+                                    }
+                                }
+                            )
                             this.body = app.wrapper.res.default();
                         } catch (e) {
                             self.logger.error(e.message);
