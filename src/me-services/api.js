@@ -2,7 +2,7 @@
  * Created by zppro on 16-10-12.
  * api for mobile web app
  */
-
+var rp = require('request-promise-native');
 
 module.exports = {
     init: function (option) {
@@ -319,20 +319,51 @@ module.exports = {
                 verb: 'post',
                 url: this.service_url_prefix + "/proxyLogin",
                 handler: function (app, options) {
-                    var request = require('request');
                     return function *(next) {
                         try {
-                            console.log(this.request.body)
-                            request.post('http://im.okertrip.com/api/login/index.html', {json: this.request.body},
-                                function (error, response, body) {
-                                    console.log(error)
-                                    if (!error && response.statusCode == 200) {
-                                        console.log(body) // Show the HTML for the Google homepage.
-                                    }
+                            var ret1 = yield rp({method: 'POST', url: 'http://im.okertrip.com/api/login/index.html', form: this.request.body, json: true});
+                            if (ret1.err_code == '0') {
+                                var token = ret1.info.token;
+                                var ret2 = yield rp({url: 'http://im.okertrip.com/api/personal/info.html?token=' + token, json: true});
+                                if (ret2.err_code == '0') {
+                                    console.log(ret2)
+                                    this.body = app.wrapper.res.ret({memberInfo: {member_id: ret2.info.u_id, member_name: ret2.info.u_nickname, head_portrait: ret2.info.u_headpic, member_description: ret2.info.u_description}, token: token});
                                 }
-                            )
-                            this.body = app.wrapper.res.default();
+                                else {
+                                    this.body = app.wrapper.res.error({code: ret2.err_code, message: ret2.message});
+                                }
+                            }
+                            else {
+                                this.body = app.wrapper.res.error({code: ret1.err_code, message: ret1.message});
+                            }
                         } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'proxyLoginByToken',
+                verb: 'post',
+                url: this.service_url_prefix + "/proxyLoginByToken",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var token = this.request.body.token;
+                            console.log(token)
+                            var ret2 = yield rp({url: 'http://im.okertrip.com/api/personal/info.html?token=' + token, json: true});
+                            if (ret2.err_code == '0') {
+                                console.log(ret2)
+                                this.body = app.wrapper.res.ret({memberInfo: {member_id: ret2.info.u_id, member_name: ret2.info.u_nickname, head_portrait: ret2.info.u_headpic, member_description: ret2.info.u_description}, token: token});
+                            }
+                            else {
+                                this.body = app.wrapper.res.error({code: ret2.err_code, message: ret2.message});
+                            }
+                        } catch (e) {
+                            console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
                         }

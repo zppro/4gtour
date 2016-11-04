@@ -44,7 +44,7 @@ app.conf = {
     },
     authApp: {
         toPaths: ['/me-services'],
-        ignorePaths: [{path: '/me-services/api/orders', method: 'get'}, '/me-services/api/proxyLogin']
+        ignorePaths: [{path: '/me-services/api/orders', method: 'get'}, '/me-services/api/proxyLogin', '/me-services/api/proxyLoginByToken']
     },
     crossDomainInterceptor:{
         toPaths:['/me-services']

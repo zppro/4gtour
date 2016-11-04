@@ -1,6 +1,6 @@
 {
   "name": "4gtour",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "",
   "main": "src/app.js",
   "scripts": {
@@ -72,6 +72,7 @@
     "qiniu": "^6.1.11",
     "rand-token": "0.2.1",
     "request": "^2.76.0",
+    "request-promise-native": "^1.0.3",
     "rfcore": "^0.1.10",
     "soap": "^0.17.0",
     "thunkify": "^2.1.2",
