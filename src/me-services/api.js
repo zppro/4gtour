@@ -380,6 +380,7 @@ module.exports = {
                     return function * (next) {
                         try {
 
+                            console.log(this.host)
                             var config = yield app.weixin.createWXConfig(this.host);
                             console.log(config)
                             this.body = app.wrapper.res.ret(config);

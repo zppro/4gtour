@@ -44,7 +44,7 @@ app.conf = {
     },
     authApp: {
         toPaths: ['/me-services'],
-        ignorePaths: [{path: '/me-services/api/orders', method: 'get'}, '/me-services/api/proxyLogin', '/me-services/api/proxyLoginByToken']
+        ignorePaths: [{path: '/me-services/api/orders', method: 'get'}, '/me-services/api/proxyLogin', '/me-services/api/proxyLoginByToken', '/me-services/api/getWeiXinConfig']
     },
     crossDomainInterceptor:{
         toPaths:['/me-services']
@@ -200,7 +200,7 @@ co(function*() {
         console.error(err);
     });
     mongoose.Promise =  global.Promise;
- 
+
     console.log('configure models...');
     app.modelsDirStructure = yield app.util.readDictionaryStructure(path.resolve('models'),'.js');
     var ModelFactory = require('./libs/ModelFactory');

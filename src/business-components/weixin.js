@@ -102,16 +102,31 @@ module.exports = {
         return shaObj.getHash("HEX");
     },
     createWXConfig: function(url) {
-        var config = this.ctx.cache.get(this.CACHE_MODULE + this.CACHE_ITEM_CONFIG + '@' + url);
-        if (!config) {
-            var access_token = this.ctx.cache.get(this.CACHE_MODULE + this.CACHE_ITEM_ACCESS_TOKEN);
-            var jsapi_ticket = this.createTicket(access_token);
-            var noncestr = this.createNonceStr();
-            var timestamp = this.createTimeStamp();
-            var jsapi_signature = this.createSignature(jsapi_ticket, noncestr, timestamp, url);
+        var self = this;
+        return co(function *() {
+            try {
+                console.log(self.ctx.cache);
+                var access_token = self.ctx.cache.get(this.CACHE_MODULE + this.CACHE_ITEM_ACCESS_TOKEN);
+                if(!access_token)
+                    yield this.refreshAccessToken();
 
-            config = {appId: weixin.appid, noncestr: noncestr, timestamp: timestamp, signature: jsapi_signature}
-        }
-        return config;
+                var config = self.ctx.cache.get(this.CACHE_MODULE + this.CACHE_ITEM_CONFIG + '@' + url);
+
+                if (!config) {
+                    access_token = self.ctx.cache.get(this.CACHE_MODULE + this.CACHE_ITEM_ACCESS_TOKEN);
+                    var jsapi_ticket = this.createTicket(access_token);
+                    var noncestr = this.createNonceStr();
+                    var timestamp = this.createTimeStamp();
+                    var jsapi_signature = this.createSignature(jsapi_ticket, noncestr, timestamp, url);
+
+                    config = {appId: weixin.appid, noncestr: noncestr, timestamp: timestamp, signature: jsapi_signature}
+                }
+                return config;
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+            }
+        }).catch(self.ctx.coOnError);
     }
 };
