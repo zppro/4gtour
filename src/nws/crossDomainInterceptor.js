@@ -3,7 +3,7 @@
  */
 
 module.exports = function (app) {
-    var allowOrigins = ['http://m2.okertrip.com', 'http://weixin.okertrip.com', 'http://ios-apicloud.okertrip.com', 'http://android-apicloud.okertrip.com', 'http://192.168.255.100:8080','http://192.168.255.100', 'http://192.168.101.3:8080', 'http://localhost', 'http://localhost:8080'];
+    var allowOrigins = ['http://m2.okertrip.com', 'http://weixin.okertrip.com', 'http://ios-apicloud.okertrip.com', 'http://android-apicloud.okertrip.com', 'http://192.168.255.100:8080','http://192.168.255.105', 'http://192.168.101.3:8080', 'http://localhost', 'http://localhost:8080'];
     return function *(next) {
         console.log('crossDomain');
         var self = this;

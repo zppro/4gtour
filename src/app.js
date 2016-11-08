@@ -110,6 +110,11 @@ app.wrapper = {
     }
 };
 
+//memory-Cache
+console.log(app.cache);
+app.cache = require('memory-cache');
+console.log(app.cache);
+
 //load dictionary
 app.dictionary = rfcore.factory('dictionary');
 
@@ -195,8 +200,7 @@ co(function*() {
         console.error(err);
     });
     mongoose.Promise =  global.Promise;
-
-
+ 
     console.log('configure models...');
     app.modelsDirStructure = yield app.util.readDictionaryStructure(path.resolve('models'),'.js');
     var ModelFactory = require('./libs/ModelFactory');

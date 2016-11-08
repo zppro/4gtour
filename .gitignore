@@ -41,3 +41,6 @@ dataT
 #pub
 pub-client-develop
 pub-client-production
+
+#config
+weixin-config.json

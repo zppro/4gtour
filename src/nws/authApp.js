@@ -47,6 +47,7 @@ module.exports = function (app){
                 try {
                     token = token.substr('Bearer '.length)
                     var timestamp = this.get('X-Custom-TS');
+                    this.request_timestamp = timestamp;
                     this.payload = jwt.verify(token, app.conf.secure.authSecret + ':' + timestamp);
 
                     console.log(this.payload);

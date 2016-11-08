@@ -67,6 +67,7 @@ module.exports = {
         var self = this;
         return co(function *() {
             try {
+                // 将来考虑配置化
                 var user = 'service@carrycheng.com';
                 if (!self.transporters[user]) {
                     self.transporters[user] = nodemailer.createTransport({

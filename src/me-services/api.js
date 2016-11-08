@@ -2,7 +2,8 @@
  * Created by zppro on 16-10-12.
  * api for mobile web app
  */
-var rp = require('request-promise-native');
+var rp = require('request-promise-native'); 
+var weixin = require('../pre-defined/weixin-config.json');
 
 module.exports = {
     init: function (option) {
@@ -364,6 +365,25 @@ module.exports = {
                             }
                         } catch (e) {
                             console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'getWeiXinConfig',
+                verb: 'get',
+                url: this.service_url_prefix + "/getWeiXinConfig",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+
+                            var config = yield app.weixin.createWXConfig(this.host);
+                            console.log(config)
+                            this.body = app.wrapper.res.ret(config);
+                        } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
                         }
