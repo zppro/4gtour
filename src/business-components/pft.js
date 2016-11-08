@@ -5,6 +5,7 @@
 var co = require('co');
 var soap = require('soap');
 var xml2js = require('xml2js');
+var pftConfig = require('../pre-defined/pft-config.json');
 
 module.exports = {
     init: function (ctx) {
@@ -23,15 +24,13 @@ module.exports = {
         }
         this.dl$xml2js = this.ctx.wrapper.cb(xml2js.parseString);
 
-        //120cc 13003673092  密码gxr888
-        //正式账号：536075 密码：c40077a84036c3f708e47fb775d2471d
-        //测试账号 100019 密码jjl4yk11f82ce6c0f33a5c003f2fec56
+
         var isProduction = ctx.conf.isProduction;
         isProduction = true;//使用正式接口
-        var url = isProduction ? 'http://open.12301.cc/openService/MXSE.wsdl':'http://open.12301dev.com/openService/MXSE_beta.wsdl';
+        var url = isProduction ? pftConfig.production.url:pftConfig.develop.url;
         this.logger.info('url:'+url);
-        var account = isProduction ? '536075':'100019';
-        var password = isProduction ? 'c40077a84036c3f708e47fb775d2471d':'jjl4yk11f82ce6c0f33a5c003f2fec56';
+        var account = isProduction ? pftConfig.production.account:pftConfig.develop.account;
+        var password = isProduction ? pftConfig.production.password : pftConfig.develop.password;
         this.logger.info('account:'+account+' password:'+password);
 
         this.parseWSDL(null,url,account,password).then(function(){
