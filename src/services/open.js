@@ -39,8 +39,9 @@ module.exports = {
 
                             self.logger.info(ret);
                             self.logger.info('------------------------------------------------end weixin connect------------------------------------------------');
-                            console.log(ret)
-                            this.body = 'success'
+                            // console.log(ret)
+                            this.type = 'text/html';
+                            this.body = ret;
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = e.message;
