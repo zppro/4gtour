@@ -28,9 +28,9 @@
         button.btn.btn-block.btn-primary.mt-lg(type='submit') {{ 'page.login.LOGIN' | translate}}
       
       .alert.alert-danger.text-center(ng-show='login.authMsg') {{login.authMsg}}
-      p.pt-lg.text-center {{ 'page.login.NEED-SIGN-UP' | translate}}?
       a(ui-sref="page.register").btn.btn-block.btn-default {{ 'page.login.SIGN-UP-NOW' | translate}}
-      a.iconfont.icon-weichat(style="font-size:32px" title="微信" href="https://open.weixin.qq.com/connect/qrconnect?appid=wx1c6c736837b3a396&redirect_uri=http://sh.okertrip.com/services/open/WeiXin$ConnectCallback&response_type=code&scope=snsapi_login&state=test#wechat_redirect")
+      .pt-lg.text-center
+        a.iconfont.icon-weichat(style="color:#00C70C;font-size:32px;text-decoration:none;" title="微信" href="https://open.weixin.qq.com/connect/qrconnect?appid=[APPID]&redirect_uri=http://sh.okertrip.com/services/open/WeiXin$ConnectCallback&response_type=code&scope=snsapi_login&state=test#wechat_redirect")
   // END panel
   .p-lg.text-center
     span &copy; 

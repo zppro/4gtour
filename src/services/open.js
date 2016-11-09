@@ -26,7 +26,7 @@ module.exports = {
 
         this.actions = [
             {
-                method: 'WeiXin$Connect',
+                method: 'WeiXin$Connect',//该方法可以在页面上通过链接来请求qr，但是必须保证redirect_uri处于微信开放平台中的回调域名
                 verb: 'get',
                 url: this.service_url_prefix + "/WeiXin$Connect",
                 handler: function (app, options) {

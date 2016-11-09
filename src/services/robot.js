@@ -25,9 +25,9 @@ module.exports = {
 
         this.actions = [
             {
-                method: 'sendTest',
+                method: 'sendTestMail',
                 verb: 'get',
-                url: this.service_url_prefix + "/sendTest",
+                url: this.service_url_prefix + "/sendTestMail",
                 handler: function (app, options) {
                     return function *(next) {
                         try {

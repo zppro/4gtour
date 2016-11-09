@@ -215,7 +215,8 @@
       "NEED-SIGN-UP": "需要注册",
       "SIGN-UP-NOW": "立即注册",
       "PLACEHOLDER-CODE": "手机/邮箱",
-      "PLACEHOLDER-PASSWORD": "密码"
+      "PLACEHOLDER-PASSWORD": "密码",
+      "OTHER-LOGIN-TYPE": "其他方式登录"
     },
     "register": {
       "TITLE": "注册",
