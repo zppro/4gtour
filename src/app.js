@@ -111,9 +111,7 @@ app.wrapper = {
 };
 
 //memory-Cache
-console.log(app.cache);
 app.cache = require('memory-cache');
-console.log(app.cache);
 
 //load dictionary
 app.dictionary = rfcore.factory('dictionary');

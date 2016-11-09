@@ -2,8 +2,7 @@
  * Created by zppro on 16-10-12.
  * api for mobile web app
  */
-var rp = require('request-promise-native'); 
-var weixin = require('../pre-defined/weixin-config.json');
+var rp = require('request-promise-native');
 
 module.exports = {
     init: function (option) {

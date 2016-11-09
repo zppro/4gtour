@@ -3,7 +3,7 @@
  */
 var co = require('co');
 var rp = require('request-promise-native');
-var weixin = require('../pre-defined/weixin-config.json');
+var weixinConfig = require('../pre-defined/weixin-config.json');
 
 
 module.exports = {
@@ -40,7 +40,7 @@ module.exports = {
             try {
                 var _access_token;
                 var ret = yield rp({
-                    url: 'https://api.weixin.qq.com/cgi-bin/token?grant_type=' + weixin.access_token.grant_type + '&appid=' + weixin.appid + '&secret=' + weixin.secret,
+                    url: 'https://api.weixin.qq.com/cgi-bin/token?grant_type=' + weixinConfig.access_token.grant_type + '&appid=' + weixinConfig.appid + '&secret=' + weixinConfig.secret,
                     json: true
                 });
 
@@ -119,7 +119,7 @@ module.exports = {
                     var timestamp = this.createTimeStamp();
                     var jsapi_signature = this.createSignature(jsapi_ticket, noncestr, timestamp, url);
 
-                    config = {appId: weixin.appid, noncestr: noncestr, timestamp: timestamp, signature: jsapi_signature}
+                    config = {appId: weixinConfig.appid, noncestr: noncestr, timestamp: timestamp, signature: jsapi_signature}
                 }
                 return config;
             }

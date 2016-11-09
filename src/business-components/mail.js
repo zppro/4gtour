@@ -23,18 +23,50 @@ module.exports = {
         else {
             this.logger.info(this.file + " loaded!");
         }
-        
+
+        this.transporters['QQex-tester'] = nodemailer.createTransport({
+            aliases: ['QQ Enterprise'],
+            domains: ['exmail.qq.com'],
+            host: 'smtp.exmail.qq.com',
+            port: 465,
+            secure: true, // use SSL
+            auth: {
+                user: mailConfig.test.user,
+                pass: mailConfig.test.pass
+            }
+        });
         console.log(this.filename + ' ready... ');
 
 
         return this;
+    },
+    sendTest: function (subject, content) {
+        var self = this;
+        return co(function *() {
+            try {
+                var transporter = self.transporters['QQex-tester']
+                var mailOptions = {
+                    from: '"测试zhongping" <zhongp@carrycheng.com>', // sender address
+                    to: 'zhongp@carrycheng.com', // list of receivers
+                    subject: '[测试] '+ subject, // Subject line
+                    text: content// plaintext body
+                };
+                // send mail with defined transport object
+                var ret = yield transporter.sendMail(mailOptions);
+                return ret;
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+            }
+        }).catch(self.ctx.coOnError);
     },
     send$PFTOrderPaySuccess: function (info) {
         var self = this;
         return co(function *() {
             try {
                 // 将来考虑配置化
-                var user = mailConfig.user;
+                var user = mailConfig.orderPaySuccess.user;
                 if (!self.transporters[user]) {
                     self.transporters[user] = nodemailer.createTransport({
                         aliases: ['QQ Enterprise'],
@@ -44,7 +76,7 @@ module.exports = {
                         secure: true, // use SSL
                         auth: {
                             user: user,
-                            pass: mailConfig.pass
+                            pass: mailConfig.orderPaySuccess.pass
                         }
                     });
                 }
