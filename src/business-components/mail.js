@@ -46,7 +46,7 @@ module.exports = {
             try {
                 var transporter = self.transporters['QQex-tester']
                 var mailOptions = {
-                    from: '"测试zhongping" <zhongp@carrycheng.com>', // sender address
+                    from: '"测试A" <' + mailConfig.test.user + '>', // sender address
                     to: 'zhongp@carrycheng.com', // list of receivers
                     subject: '[测试] '+ subject, // Subject line
                     text: content// plaintext body

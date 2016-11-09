@@ -37,7 +37,7 @@ module.exports = {
                                 url: 'https://open.weixin.qq.com/connect/qrconnect?appid=' + openConfig.weixin.appid + '&redirect_uri=' + openConfig.weixin.redirect_uri + '&response_type=code&scope=snsapi_login&state=test#wechat_redirect'
                             });
 
-                            self.logger.info(ret);
+                            self.logger.info(url);
                             self.logger.info('------------------------------------------------end weixin connect------------------------------------------------');
                             // console.log(ret)
                             this.type = 'text/html';
