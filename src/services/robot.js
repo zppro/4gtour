@@ -31,7 +31,7 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var ret = yield app.mail.sendTest();
+                            var ret = yield app.mail.sendTest('robot', 'this is a test mail!');
                             this.body = app.wrapper.res.ret(ret);
                         } catch (e) {
                             self.logger.error(e.message);

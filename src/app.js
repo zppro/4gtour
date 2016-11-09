@@ -40,7 +40,7 @@ app.conf = {
     },
     auth: {
         toPaths:['/services'],
-        ignorePaths: ['/services/share/login','/services/robot/sendTestMail']
+        ignorePaths: ['/services/share/login', '/services/robot/sendTestMail', '/services/open/WeiXin$Connect']
     },
     authApp: {
         toPaths: ['/me-services'],
