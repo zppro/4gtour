@@ -44,3 +44,5 @@ pub-client-production
 
 #config
 weixin-config.json
+mail-config.json
+pft-config.json
