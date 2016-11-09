@@ -33,8 +33,9 @@ module.exports = {
                     return function *(next) {
                         try {
                             var ret = yield rp({
-                                url: 'https://open.weixin.qq.com/connect/qrconnect?appid=' + openConfig.weixin.appid + '&redirect_uri=' + openConfig.weixin.redirect_uri + '&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect'
+                                url: 'https://open.weixin.qq.com/connect/qrconnect?appid=' + openConfig.weixin.appid + '&redirect_uri=' + openConfig.weixin.redirect_uri + '&response_type=code&scope=snsapi_login&state=test#wechat_redirect'
                             });
+                            self.logger.info(ret);
                             console.log(ret)
                             this.body = 'success'
                         } catch (e) {
