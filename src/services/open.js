@@ -3,7 +3,7 @@
  * Target:使用第三方登录
  */
 var rp = require('request-promise-native');
-var openConfig = require('../pre-defined/open-config.json');
+var weixinConfig = require('../pre-defined/weixin-config.json');
 
 module.exports = {
     init: function (option) {
@@ -26,6 +26,25 @@ module.exports = {
 
         this.actions = [
             {
+                method: 'getWeiXinConfig',
+                verb: 'get',
+                url: this.service_url_prefix + "/getWeiXinConfig",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            console.log(this.host)
+                            var config = yield app.pc_site_weixin.createWXConfig(this.host);
+                            console.log(config)
+                            this.body = app.wrapper.res.ret(config);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'WeiXin$Connect',//该方法可以在页面上通过链接来请求qr，但是必须保证redirect_uri处于微信开放平台中的回调域名
                 verb: 'get',
                 url: this.service_url_prefix + "/WeiXin$Connect",
@@ -34,7 +53,7 @@ module.exports = {
                         try {
                             self.logger.info('------------------------------------------------begin weixin connect------------------------------------------------');
                             var ret = yield rp({
-                                url: 'https://open.weixin.qq.com/connect/qrconnect?appid=' + openConfig.weixin.appid + '&redirect_uri=' + openConfig.weixin.redirect_uri + '&response_type=code&scope=snsapi_login&state=test#wechat_redirect'
+                                url: 'https://open.weixin.qq.com/connect/qrconnect?appid=' + weixinConfig.open_web_site.appid + '&redirect_uri=' + weixinConfig.open_web_site.redirect_uri + '&response_type=code&scope=snsapi_login&state=test#wechat_redirect'
                             });
 
                             self.logger.info(url);
@@ -62,7 +81,6 @@ module.exports = {
                             var msg = JSON.stringify(this.query);
                             self.logger.info(msg);
 
-                            yield app.mail.sendTest('微信网页授权结果', msg);
                             this.body = 'success'
                         } catch (e) {
                             self.logger.error(e.message);

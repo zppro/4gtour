@@ -372,15 +372,33 @@ module.exports = {
                 }
             },
             {
-                method: 'getWeiXinConfig',
+                method: 'getMPWeiXinConfig',
                 verb: 'get',
-                url: this.service_url_prefix + "/getWeiXinConfig",
+                url: this.service_url_prefix + "/getMPWeiXinConfig",
                 handler: function (app, options) {
                     return function * (next) {
                         try {
-
                             console.log(this.host)
-                            var config = yield app.weixin.createWXConfig(this.host);
+                            var config = yield app.mp_weixin.createWXConfig(this.host);
+                            console.log(config)
+                            this.body = app.wrapper.res.ret(config);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'getMobileSiteWeixinUserInfo',
+                verb: 'get',
+                url: this.service_url_prefix + "/getMobileSiteWeixinUserInfo/:code",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            console.log('code:'+this.params.code);
+                            var config = yield app.mobile_site_weixin.getUserInfo(this.params.code);
                             console.log(config)
                             this.body = app.wrapper.res.ret(config);
                         } catch (e) {

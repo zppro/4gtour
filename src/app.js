@@ -44,7 +44,7 @@ app.conf = {
     },
     authApp: {
         toPaths: ['/me-services'],
-        ignorePaths: [{path: '/me-services/api/orders', method: 'get'}, '/me-services/api/proxyLogin', '/me-services/api/proxyLoginByToken', '/me-services/api/getWeiXinConfig']
+        ignorePaths: [{path: '/me-services/api/orders', method: 'get'}, '/me-services/api/proxyLogin', '/me-services/api/proxyLoginByToken', '/me-services/api/getMobileSiteWeixinUserInfo']
     },
     crossDomainInterceptor:{
         toPaths:['/me-services']
