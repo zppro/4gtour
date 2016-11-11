@@ -4,7 +4,7 @@
 var co = require('co');
 var rp = require('request-promise-native');
 var weixinConfig = require('../pre-defined/weixin-config.json');
-
+var utils = require('../libs/Utils')
 
 module.exports = {
     transporters : {},
@@ -23,36 +23,26 @@ module.exports = {
             this.logger.info(this.file + " loaded!");
         }
 
-        this.CACHE_MODULE = 'WX-MOBILE-SITE';
-        this.CACHE_ITEM_ACCESS_TOKEN_DATA = 'access_token_data';
-        this.CACHE_ITEM_CONFIG = 'UserInfo';
-
         console.log(this.filename + ' ready... ');
 
         return this;
     },
-    getAccessToken : function (code) {
+    requestAccessToken : function (code) {
         var self = this;
         return co(function *() {
             try {
+                var success = true;
                 var ret = yield rp({
-                    url: 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + weixinConfig.open_mobile_site.appid + '&secret=' + weixinConfig.open_mobile_site.secret+'&code=' + code + '&grant_type=authorization_code',
+                    url: 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + weixinConfig.open_mobile_site.appid + '&secret=' + weixinConfig.open_mobile_site.secret + '&code=' + code + '&grant_type=authorization_code',
                     json: true
                 });
-                console.log('getAccessToken:');
+                console.log('getAccessTokenData:');
                 console.log(ret);
-                if (ret.access_token) {
-                    self.accessTokenData = ret;
-                    self.ctx.cache.put(self.CACHE_MODULE + self.CACHE_ITEM_ACCESS_TOKEN_DATA, self.accessTokenData, self.accessTokenData.expires_in - 59, function (key, value) {
-                        self.refreshAccessToken()
-                    });
-                } else {
-                    self.accessTokenData = null;
-                    self.ctx.cache.del(self.CACHE_MODULE + self.CACHE_ITEM_ACCESS_TOKEN_DATA);
-                    self.logger.error(JSON.stringify(ret));
+                if (!ret.access_token) {
+                    success = false;
+                    self.logger.error(ret);
                 }
-
-                return this.accessTokenData;
+                return {success: success, data: utils.formatWeiXinResult(ret)};
             }
             catch (e) {
                 console.log(e);
@@ -60,29 +50,22 @@ module.exports = {
             }
         }).catch(self.ctx.coOnError);
     },
-    refreshAccessToken: function () {
+    refreshAccessToken: function (refresh_token) {
         var self = this;
         return co(function *() {
             try {
-                if(self.accessTokenData && self.accessTokenData.refresh_token){
-                    var ret = yield rp({
-                        url: 'https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=' + weixinConfig.open_mobile_site.appid + '&refresh_token=' + this.accessTokenData.refresh_token + '&grant_type=refresh_token',
-                        json: true
-                    });
-                    console.log('refreshAccessToken:');
-                    console.log(ret);
-                    if (ret.access_token) {
-                        self.accessTokenData = ret;
-                        self.ctx.cache.put(self.CACHE_MODULE + self.CACHE_ITEM_ACCESS_TOKEN_DATA, self.accessTokenData.access_token , self.accessTokenData.expires_in - 59, function (key, value) {
-                            self.refreshAccessToken()
-                        });
-                    } else {
-                        self.accessTokenData = null;
-                        self.ctx.cache.del(self.CACHE_MODULE + self.CACHE_ITEM_ACCESS_TOKEN_DATA);
-                        self.logger.error(JSON.stringify(ret));
-                    }
+                var success = true;
+                var ret = yield rp({
+                    url: 'https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=' + weixinConfig.open_mobile_site.appid + '&refresh_token=' + refresh_token + '&grant_type=refresh_token',
+                    json: true
+                });
+                console.log('refreshAccessTokenData:');
+                console.log(ret);
+                if (!ret.access_token) {
+                    success = false;
+                    self.logger.error(ret);
                 }
-                return self.accessTokenData;
+                return {success: success, data: utils.formatWeiXinResult(ret)};
             }
             catch (e) {
                 console.log(e);
@@ -90,34 +73,23 @@ module.exports = {
             }
         }).catch(self.ctx.coOnError);
     },
-    getUserInfo: function () {
+    getUserInfoByAuthCode: function (access_token, openid) {
         var self = this;
         return co(function *() {
             try {
-                var userInfo;
-                if(!self.accessTokenData){
-                    self.accessTokenData = self.ctx.cache.get(self.CACHE_MODULE + self.CACHE_ITEM_ACCESS_TOKEN_DATA);
-                }
-                if(!this.accessTokenData){
-                    console.log(self.getAccessToken)
-                    yield self.getAccessToken();
-                }
-                if(self.accessTokenData && self.accessTokenData.scope == 'snsapi_userinfo') {
-                    var ret = yield rp({
-                        url: 'https://api.weixin.qq.com/sns/userinfo?access_token=' + self.accessTokenData.access_token + '&openid=' + self.accessTokenData.openid,
-                        json: true
-                    });
+                var success = true;
+                var ret = yield rp({
+                    url: 'https://api.weixin.qq.com/sns/userinfo?access_token=' + access_token + '&openid=' + openid,
+                    json: true
+                });
 
-                    console.log('refreshAccessToken:');
-                    console.log(ret);
-                    if (ret.openid) {
-                        userInfo = ret;
-                    }
-                    else {
-                        self.logger.error(ret);
-                    }
+                console.log('refreshAccessToken:');
+                console.log(ret);
+                if (!ret.openid) {
+                    success = false;
+                    self.logger.error(ret);
                 }
-                return userInfo;
+                return {success: success, data: utils.formatWeiXinResult(ret)};
             }
             catch (e) {
                 console.log(e);

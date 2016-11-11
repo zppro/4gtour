@@ -24,6 +24,7 @@ module.exports = {
         }
 
         this.actions = [
+            /************************票付通相关*****************************/
             {
                 method: 'scenicSpots',
                 verb: 'get',
@@ -216,6 +217,7 @@ module.exports = {
                     };
                 }
             },
+            /************************本地订单相关*****************************/
             {
                 method: 'orders',
                 verb: 'get',
@@ -314,6 +316,7 @@ module.exports = {
                     };
                 }
             },
+            /************************代理登录相关*****************************/
             {
                 method: 'proxyLogin',
                 verb: 'post',
@@ -371,6 +374,7 @@ module.exports = {
                     };
                 }
             },
+            /************************微信相关*****************************/
             {
                 method: 'getMPWeiXinConfig',
                 verb: 'get',
@@ -389,60 +393,8 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
-                method: 'getMobileSiteWeixinUserInfo',
-                verb: 'get',
-                url: this.service_url_prefix + "/getMobileSiteWeixinUserInfo/:code",
-                handler: function (app, options) {
-                    return function * (next) {
-                        try {
-                            console.log('code:'+this.params.code);
-                            var config = yield app.mobile_site_weixin.getUserInfo(this.params.code);
-                            console.log(config)
-                            this.body = app.wrapper.res.ret(config);
-                        } catch (e) {
-                            self.logger.error(e.message);
-                            this.body = app.wrapper.res.error(e);
-                        }
-                        yield next;
-                    };
-                }
-            },
-            {
-                method: 'hb',
-                verb: 'get',
-                url: this.service_url_prefix + "/hb",
-                handler: function (app, options) {
-                    return function * (next) {
-                        try {
-                            this.body = app.wrapper.res.default();
-                        } catch (e) {
-                            self.logger.error(e.message);
-                            this.body = app.wrapper.res.error(e);
-                        }
-                        yield next;
-                    };
-                }
-            },
-            {
-                method: 'tpost',
-                verb: 'post',
-                url: this.service_url_prefix + "/tpost",
-                handler: function (app, options) {
-                    return function * (next) {
-                        try {
-
-                            console.log(this.request.body);
-                            this.body = app.wrapper.res.ret(this.request.body);
-                        } catch (e) {
-                            self.logger.error(e.message);
-                            this.body = app.wrapper.res.error(e);
-                        }
-                        yield next;
-                    };
-                }
             }
+            /************************???相关*****************************/
         ];
 
         return this;
