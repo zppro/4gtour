@@ -374,6 +374,49 @@ module.exports = {
                     };
                 }
             },
+            {
+                method: 'proxyLoginByWeiXinOpenIdSyncToAPICloud',
+                verb: 'post',
+                url: this.service_url_prefix + "/proxyLoginByWeiXinOpenIdSyncToAPICloud",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var ret1 = yield rp({method: 'POST', url: 'http://im.okertrip.com/api/login/index.html', form: {
+                                category : 1,
+                                wxopenid : this.request.body.openid,
+                                wxunionid : this.request.body.unionid,
+                                nickname : this.request.body.nickname,
+                                gender: this.request.body.sex,
+                                language : '',
+                                country : this.request.body.country,
+                                province : this.request.body.province,
+                                city : this.request.body.city,
+                                headpic : this.request.body.headimgurl,
+                                uuid : this.request.body.apiUUID
+                            }, json: true});
+                            if (ret1.err_code == '0') {
+                                var token = ret1.info.token;
+                                var ret2 = yield rp({url: 'http://im.okertrip.com/api/personal/info.html?token=' + token, json: true});
+                                if (ret2.err_code == '0') {
+                                    console.log(ret2)
+                                    this.body = app.wrapper.res.ret({memberInfo: {member_id: ret2.info.u_id, member_name: ret2.info.u_nickname, head_portrait: ret2.info.u_headpic, member_description: ret2.info.u_description}, token: token});
+                                }
+                                else {
+                                    this.body = app.wrapper.res.error({code: ret2.err_code, message: ret2.message});
+                                }
+                            }
+                            else {
+                                this.body = app.wrapper.res.error({code: ret1.err_code, message: ret1.message});
+                            }
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
             /************************微信相关*****************************/
             {
                 method: 'getMPWeiXinConfig',
