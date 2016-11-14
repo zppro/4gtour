@@ -3,8 +3,8 @@
   "http://weixin.okertrip.com",
   "http://ios-apicloud.okertrip.com",
   "http://android-apicloud.okertrip.com",
-  "http://192.168.255.104:8080",
-  "http://192.168.255.104",
+  "http://192.168.255.*:8080",
+  "http://192.168.255.*",
   "http://192.168.101.3:8080",
   "http://localhost",
   "http://localhost:8080"
