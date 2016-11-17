@@ -424,7 +424,8 @@
                     PFT$fetchScenicSpotList: PFT$fetchScenicSpotList,
                     PFT$fetchTicket: PFT$fetchTicket,
                     PFT$syncScenicSpot: PFT$syncScenicSpot,
-                    PFT$syncTicket: PFT$syncTicket
+                    PFT$syncTicket: PFT$syncTicket,
+                    PFT$issueTicket: PFT$issueTicket
                 };
 
                 function PFT$fetchScenicSpotList() {
@@ -442,6 +443,10 @@
                 function PFT$syncTicket(scenicSpotId) {
                     var params = scenicSpotId ? '/' + scenicSpotId : '';
                     return $http.post(baseUrl + 'PFT$syncTicket' + params);
+                }
+
+                function PFT$issueTicket(orderId) {
+                    return $http.post(baseUrl + 'PFT$issueTicket/' + orderId);
                 }
 
             }]

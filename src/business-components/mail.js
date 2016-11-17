@@ -89,6 +89,8 @@ module.exports = {
                     subject: '【付款通知】 订单号<' + info.code + '>已支付', // Subject line
                     text: '订单号：' + info.code + '\r\n金额:￥' + info.amount + '\r\n支付方式:'+ pay_type + '\r\n付款时间：' + pay_time +' \r\n【自动发送,请勿回复】'// plaintext body
                 };
+                console.log(mailOptions)
+                self.logger.info(mailOptions);
                 // send mail with defined transport object
                 var ret = yield transporter.sendMail(mailOptions);
                 return ret;

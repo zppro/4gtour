@@ -38,12 +38,12 @@ module.exports = {
             self.dl$Get_ScenicSpot_List = self.ctx.wrapper.cb(self.soapClient.Get_ScenicSpot_List);
             self.dl$Get_ScenicSpot_Info = self.ctx.wrapper.cb(self.soapClient.Get_ScenicSpot_Info);
             self.dl$Get_Ticket_List = self.ctx.wrapper.cb(self.soapClient.Get_Ticket_List);
+            self.dl$Dynamic_Price_And_Storage = self.ctx.wrapper.cb(self.soapClient.Dynamic_Price_And_Storage);
+            self.dl$PFT_Order_Submit = self.ctx.wrapper.cb(self.soapClient.PFT_Order_Submit);
+            self.dl$Order_Globle_Search = self.ctx.wrapper.cb(self.soapClient.Order_Globle_Search);
         }).then(function(){
             console.log('parseWSDL done... ');
         });
-
-
-
 
         return this;
     },
@@ -364,6 +364,180 @@ module.exports = {
                 console.log(e);
                 self.logger.error(e.message);
                 return false;
+            }
+        }).catch(self.ctx.coOnError);
+    },
+    getDynamicPriceAndStorageByTicket: function (outerLogger, theTicketId, theDate) {
+        var self = this;
+        return co(function *() {
+            try {
+                var ticket = yield self.ctx.modelFactory().model_read(self.ctx.models['idc_ticket_PFT'],theTicketId);
+                var param = self.ctx._.extend({
+                    pid: ticket.UUpid,
+                    date: self.ctx.moment(theDate).format('YYYY-MM-DD'),
+                    mode: '1', // [1 单个价格 2有效时间内的最低价],3 返回时间段价格(模式为 3 时,参数 7,8 必填)
+                    ptype: '0', // 类型[0 供应价 1 零售价])
+                    get_storage: '0', // 是否返回库存上限 默认0 不1是
+                    m: ticket.UUaid, // 供应商id
+                    sdate: null, // 有效开始时间 格式 2013-11-11
+                    edate: null // 有效结束时间 格式 2013-11-11
+                }, self.authObject);
+                console.log(param)
+                var rets = yield self.dl$Dynamic_Price_And_Storage(param);
+                console.log(rets)
+                var ret = rets[0].Dynamic_Price_And_Storage.$value;
+                console.log(ret)
+                return ret;
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+                return null;
+            }
+        }).catch(self.ctx.coOnError);
+    },
+    issueTicket: function (outerLogger, theOrderId) {
+        var self = this;
+        return co(function *() {
+            try {
+                var order = yield self.ctx.modelFactory().model_read(self.ctx.models['idc_order_PFT'], theOrderId);
+
+                //获取结算价格
+                var price = yield self.getDynamicPriceAndStorageByTicket(outerLogger, order.ticketId, order.travel_date);
+                console.log('price1:')
+                console.log(price)
+                !price && (price = order.UUtprice)
+                console.log('price2:')
+                console.log(price)
+
+                var param = self.ctx._.extend({
+                    lid: order.UUlid, // 景区id
+                    tid: order.UUid, // 门票id
+                    remotenum: order.code, // 远端订单号
+                    tprice: price, // 结算单价
+                    tnum: order.quantity, // 数量
+                    playtime: self.ctx.moment(order.travel_date).format('YYYY-MM-DD'), // 游玩时间
+                    ordername: order.link_man, // 取票人姓名
+                    ordertel: order.link_phone, // 取票人手机
+                    contactTEL: order.link_phone, // 联系人手机
+                    smsSend: order.sms_send, // 是否需要发送短信 int (0 发送 1 不发送 注:发短信只会返回双方订单号,不发短信才会将凭 证信息返回)
+                    paymode: 2, // 扣款方式 int (0使用账户余额 2使用供应商处余额 4现场支付 注:余额不足返回错误 122)
+                    ordermode: 0, // 下单方式 int (0正常下单 1 手机用户下单 注:如无特殊请使用正常下单)
+                    assembly: '', // 集合地点 (线路时需要,可为空)
+                    series: '', // 团号 (线路时需要,可为空)(场次信息必填参数 格式:json_encode(array((int)场馆 id,(int)场次 id,(string)分区 id));)
+                    concatID: 0, // 联票ID (未开放,请填0)
+                    pCode: 0, // 套票ID (未开放,请填0)
+                    m: order.UUaid, // (注:2.1&门票接口的 UUaid)
+                    personID: order.tourist_id_no // 身份证号码
+                }, self.authObject);
+                console.log(param);
+                var rets = yield self.dl$PFT_Order_Submit(param);
+                var ret = (yield self.dl$xml2js(rets[0].PFT_Order_Submit.$value, {
+                    explicitArray: false,
+                    ignoreAttrs: true
+                })).Data.Rec;
+
+                console.log(ret);
+                if (ret.UUerrorcode > 0) {
+                    order.local_status = 'A0007'
+                    order.UUstatus = 2;
+                    return self.ctx.wrapper.res.error({code: ret.UUerrorcode, message: ret.UUerrorinfo});
+                }
+                else {
+                    order.local_status = 'A0005'
+                    order.UUstatus = 1;
+                }
+                console.log(price)
+                console.log('/ 100.0 = ')
+                console.log(price / 100.0);
+                order.settlement_price = price / 100.0;
+                order.UUordernum = ret.UUordernum;
+                order.UUcode = ret.UUcode;
+                order.UUqrcodeURL = ret.UUqrcodeURL;
+                order.UUqrcodeIMG = ret.UUqrcodeIMG;
+                order.UUordertime = self.ctx.moment();
+
+                var pftOrderInfo = yield self.queryTicketOrder(outerLogger, order.code)
+                if(pftOrderInfo){
+                    order.UUgetaddr = pftOrderInfo.UUgetaddr; //取票信息
+                    order.UUbegintime = pftOrderInfo.UUbegintime;//有效开始时间
+                    order.UUordertime = pftOrderInfo.UUordertime;//票付通下单时间
+                    order.UUendtime = pftOrderInfo.UUendtime;//有效结束时间
+                    order.UUstatus = pftOrderInfo.UUstatus;//凭证号使用状态 0 未使用|1 已使用|2 已过期|3 被取消|4 凭证码被替代|5 被终端修改|6 被终端撤销|7 部分使用
+                    order.UUpaystatus = pftOrderInfo.UUpaystatus;//0 景区到付|1 已成功|2 未支付
+                    order.UUdtime = pftOrderInfo.UUdtime;//票付通下单时间
+                    order.UUremsg = pftOrderInfo.UUremsg;//短信发送次数
+                    order.UUsmserror = pftOrderInfo.UUsmserror;//短信是否发送成功 0 成功 1 失败
+                    order.UUctime = pftOrderInfo.UUctime;//票付通取消订单时间
+                    order.UUpmode = pftOrderInfo.UUpmode;//1 支付宝|2 使用分销余额|3 信用支付|4 到付
+                    order.UUpid = pftOrderInfo.UUpid;//产品id
+                    order.UUorigin = pftOrderInfo.UUorigin;//订单来源
+                }
+
+                yield order.save()
+
+
+                return self.ctx.wrapper.res.default();
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+                return self.ctx.wrapper.res.error(e);
+            }
+        }).catch(self.ctx.coOnError);
+    },
+    queryTicketOrder: function (outerLogger, orderCode) {
+        var self = this;
+        return co(function *() {
+            try {
+                var param = self.ctx._.extend({
+                    sid: '',
+                    mid: '',
+                    aid: '',
+                    tid: '',
+                    ltitle: '',
+                    ttitle: '',
+                    btime1: '',
+                    etime1: '',
+                    btime2: '',
+                    etime2: '',
+                    btime3: '',
+                    etime3: '',
+                    ordernum: '',
+                    remotenum: orderCode,
+                    oname: '',
+                    otel: '',
+                    status: '',
+                    pays: '',
+                    orderby: '',
+                    sort: '',
+                    rstart:'',
+                    n: '',
+                    c: '',
+                    contactTEL: '',
+                    payinfo: '',
+                    p_type: '',
+                    ordertype: '',
+                    concat: '',
+                    ifpack: '',
+                    code: '',
+                    personid: '',
+                    m: ''
+                }, self.authObject);
+                console.log(param)
+                var rets = yield self.dl$Order_Globle_Search(param);
+                console.log(rets)
+                var ret = (yield self.dl$xml2js(rets[0].Order_Globle_Search.$value, {
+                    explicitArray: false,
+                    ignoreAttrs: true
+                })).Data.Rec;
+                console.log(ret)
+                return ret;
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+                return null;
             }
         }).catch(self.ctx.coOnError);
     }

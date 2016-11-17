@@ -110,6 +110,23 @@ module.exports = {
                         yield next;
                     };
                 }
+            },
+            {
+                method: 'PFT$issueTicket',
+                verb: 'post',
+                url: this.service_url_prefix + "/PFT$issueTicket/:orderId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var wrapperRet = yield app.pft.issueTicket(self.logger,this.params.orderId);
+                            this.body = wrapperRet;
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
             }
         ];
 

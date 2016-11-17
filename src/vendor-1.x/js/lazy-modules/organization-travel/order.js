@@ -44,8 +44,7 @@
             vm.query();
         }
 
-        function submitOrder(scenicSpotId) {
-
+        function submitOrder(orderId) {
             ngDialog.openConfirm({
                 template: 'customConfirmDialog.html',
                 className: 'ngdialog-theme-default',
@@ -53,7 +52,13 @@
                     $scopeConfirm.message = vm.viewTranslatePath('SUBMIT-PFT-CONFIRM-MESSAGE')
                 }]
             }).then(function () {
-                //...
+                vm.blocker.start();
+                vmh.idtService.PFT$issueTicket(orderId).then(function(){
+                    vm.query();
+                    vmh.alertSuccess();
+                }).finally(function(){
+                    vm.blocker.stop();
+                });
             }); 
         }
     }

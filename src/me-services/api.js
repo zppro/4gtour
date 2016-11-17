@@ -142,7 +142,7 @@ module.exports = {
                             var scenicSpotId = this.params.scenicSpotId;
 
                             var scenicSpot = yield app.modelFactory().model_read(app.models['idc_scenicSpot_PFT'],scenicSpotId);
-                            var ticketsOfScenicSpot = yield app.modelFactory().model_query(app.models['idc_ticket_PFT'],{ where: { status:1,UUlid: scenicSpot.UUid }, select: 'UUlid UUid show_name sale_price UUtprice'});
+                            var ticketsOfScenicSpot = yield app.modelFactory().model_query(app.models['idc_ticket_PFT'],{ where: { status:1,UUlid: scenicSpot.UUid }, select: 'UUlid UUid show_name sale_price UUtprice UUdelaydays UUddays UUdhour UUbuy_limit_up UUbuy_limit_low UUtourist_info'});
 
                             var ret = {
                                 id: scenicSpot._id,
@@ -169,6 +169,12 @@ module.exports = {
                                 ret.selected_ticket_price = ticketWithMinSalePrice.sale_price;
                                 ret.selected_ticket_bid_price = ticketWithMinSalePrice.UUtprice;
                                 ret.selected_ticket_name = ticketWithMinSalePrice.show_name;
+                                ret.selected_ticket_delay_days = ticketWithMinSalePrice.UUdelaydays;
+                                ret.selected_ticket_buy_days_in_advance = ticketWithMinSalePrice.UUddays;
+                                ret.selected_ticket_buy_hour_in_advance = ticketWithMinSalePrice.UUdhour;
+                                ret.selected_ticket_buy_limit_up = ticketWithMinSalePrice.UUbuy_limit_up
+                                ret.selected_ticket_buy_limit_low = ticketWithMinSalePrice.UUbuy_limit_low
+                                ret.selected_ticket_tourist_IDNo_flag = ticketWithMinSalePrice.UUtourist_info
                             }
                             this.body = app.wrapper.res.ret(ret);
                         } catch (e) {
@@ -203,7 +209,13 @@ module.exports = {
                                         ticket_uuid: '$UUid',
                                         ticket_price: '$sale_price',
                                         ticket_bid_price: '$UUtprice',
-                                        ticket_name: '$show_name'
+                                        ticket_name: '$show_name',
+                                        ticket_delay_days: '$UUdelaydays',
+                                        ticket_buy_days_in_advance: '$UUddays',
+                                        ticket_buy_hour_in_advance: '$UUdhour',
+                                        ticket_buy_limit_up: '$UUbuy_limit_up',
+                                        ticket_buy_limit_low: '$UUbuy_limit_low',
+                                        ticket_tourist_IDNo_flag: '$UUtourist_info'
                                     }
                                 }
                             ]);
@@ -273,19 +285,31 @@ module.exports = {
                     return function *(next) {
                         try {
 
+                            console.log(this.request.body)
+                            var ticket = yield app.modelFactory().model_one(app.models['idc_ticket_PFT'], {
+                                where: {
+                                    UUlid: this.request.body.UUlid,
+                                    UUid: this.request.body.UUid
+                                }
+                            });
+                            if (!ticket) this.body = app.wrapper.res.error({code: 52001, message: '无效的门票编号'});
+
                             var order = app._.extend({
                                 code: 'server-gen',
                                 local_status: 'A0001',
-                                sms_send: 1,
+                                ticketId: ticket._id,
+                                UUtprice: ticket.UUtprice,
+                                UUaid: ticket.UUaid,
+                                sms_send: 0,
                                 deduction_type: 0,
                                 order_type: 0,
-                                UUstatus:0,
-                                UUpaystatus:2
+                                UUstatus: 0,
+                                UUpaystatus: 2
                             }, this.payload.member, this.request.body);
                             order.amount = order.p_price * order.quantity;
-
+                            console.log(order);
                             this.body = app.wrapper.res.ret(yield app.modelFactory().model_create(app.models['idc_order_PFT'], order));
-
+                            console.log(this.body);
                         } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);

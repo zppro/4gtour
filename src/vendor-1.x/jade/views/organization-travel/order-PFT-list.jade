@@ -44,8 +44,8 @@
                             .btn-group
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
                                     i.glyphicon.glyphicon-pencil
-                            .btn-group
-                                a.btn.btn-primary.btn-xs(title="{{ vm.viewTranslatePath('SUBMIT-PFT') | translate}}",ng-click="vm.submitOrder(row.UUlid)")
+                            .btn-group(ng-if="row.local_status == 'A0003'")
+                                a.btn.btn-primary.btn-xs(title="{{ vm.viewTranslatePath('SUBMIT-PFT') | translate}}",ng-click="vm.submitOrder(row._id)")
                                     i.glyphicon.glyphicon-send
                     tr(ng-if="vm.paged.length==0")
                         td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}
