@@ -40,7 +40,7 @@ module.exports = function(ctx,name) {
             UUpay: {type: Number},//支付方式 0 现场支付 1 在线支付
             UUbuy_limit_up: {type: Number},//一次最多购买的票数
             UUbuy_limit_low: {type: Number},//一次最少购买的票数
-            UUrefund_audit: {type: Number},//是否需要退款审核
+            UUrefund_audit: {type: Number},//是否需要退款审核 0 无需,1 需要
             UUnotes: {type: String},//产品说明
             UUddays: {type: Number},//提前预定天数
             buy_limit: {type: Number},//限购类型

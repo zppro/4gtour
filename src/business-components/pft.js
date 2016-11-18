@@ -41,9 +41,14 @@ module.exports = {
             self.dl$Dynamic_Price_And_Storage = self.ctx.wrapper.cb(self.soapClient.Dynamic_Price_And_Storage);
             self.dl$PFT_Order_Submit = self.ctx.wrapper.cb(self.soapClient.PFT_Order_Submit);
             self.dl$Order_Globle_Search = self.ctx.wrapper.cb(self.soapClient.Order_Globle_Search);
+            self.dl$Check_PersonID = self.ctx.wrapper.cb(self.soapClient.Check_PersonID);
+            self.dl$reSend_SMS_Global_PL = self.ctx.wrapper.cb(self.soapClient.reSend_SMS_Global_PL);
+            self.dl$Order_Change_Pro = self.ctx.wrapper.cb(self.soapClient.Order_Change_Pro);
         }).then(function(){
             console.log('parseWSDL done... ');
         });
+
+        this.UUdoneSucessCode = '100';
 
         return this;
     },
@@ -314,6 +319,7 @@ module.exports = {
                         },
                         select: 'config_value'
                     });
+                    console.log(show_name_of_ticket_config)
                     if (show_name_of_ticket_config) {
                         savedRows[i].show_name = show_name_of_ticket_config.config_value;
                         needSave = true;
@@ -385,9 +391,13 @@ module.exports = {
                 console.log(param)
                 var rets = yield self.dl$Dynamic_Price_And_Storage(param);
                 console.log(rets)
-                var ret = rets[0].Dynamic_Price_And_Storage.$value;
+                var ret = (yield self.dl$xml2js(rets[0].Dynamic_Price_And_Storage.$value, {
+                    explicitArray: false,
+                    ignoreAttrs: true
+                })).Data.Rec;
+                console.log('ret:-----------------------------------------------')
                 console.log(ret)
-                return ret;
+                return ret.UUsprice / 100.0;
             }
             catch (e) {
                 console.log(e);
@@ -401,14 +411,14 @@ module.exports = {
         return co(function *() {
             try {
                 var order = yield self.ctx.modelFactory().model_read(self.ctx.models['idc_order_PFT'], theOrderId);
-
+                console.log(theOrderId)
                 //获取结算价格
                 var price = yield self.getDynamicPriceAndStorageByTicket(outerLogger, order.ticketId, order.travel_date);
                 console.log('price1:')
-                console.log(price)
                 !price && (price = order.UUtprice)
-                console.log('price2:')
+
                 console.log(price)
+                console.log('price-------------------------------------------------------------')
 
                 var param = self.ctx._.extend({
                     lid: order.UUlid, // 景区id
@@ -440,17 +450,10 @@ module.exports = {
                 console.log(ret);
                 if (ret.UUerrorcode > 0) {
                     order.local_status = 'A0007'
-                    order.UUstatus = 2;
                     return self.ctx.wrapper.res.error({code: ret.UUerrorcode, message: ret.UUerrorinfo});
                 }
-                else {
-                    order.local_status = 'A0005'
-                    order.UUstatus = 1;
-                }
-                console.log(price)
-                console.log('/ 100.0 = ')
-                console.log(price / 100.0);
-                order.settlement_price = price / 100.0;
+
+                order.settlement_price = price;
                 order.UUordernum = ret.UUordernum;
                 order.UUcode = ret.UUcode;
                 order.UUqrcodeURL = ret.UUqrcodeURL;
@@ -465,19 +468,24 @@ module.exports = {
                     order.UUendtime = pftOrderInfo.UUendtime;//有效结束时间
                     order.UUstatus = pftOrderInfo.UUstatus;//凭证号使用状态 0 未使用|1 已使用|2 已过期|3 被取消|4 凭证码被替代|5 被终端修改|6 被终端撤销|7 部分使用
                     order.UUpaystatus = pftOrderInfo.UUpaystatus;//0 景区到付|1 已成功|2 未支付
-                    order.UUdtime = pftOrderInfo.UUdtime;//票付通下单时间
+                    pftOrderInfo.UUdtime != '0000-00-00 00:00:00' && (order.UUdtime = pftOrderInfo.UUdtime);//票付通订单完成时间
                     order.UUremsg = pftOrderInfo.UUremsg;//短信发送次数
                     order.UUsmserror = pftOrderInfo.UUsmserror;//短信是否发送成功 0 成功 1 失败
-                    order.UUctime = pftOrderInfo.UUctime;//票付通取消订单时间
+                    pftOrderInfo.UUctime != '0000-00-00 00:00:00' && (order.UUctime = pftOrderInfo.UUctime);//票付通取消订单时间
                     order.UUpmode = pftOrderInfo.UUpmode;//1 支付宝|2 使用分销余额|3 信用支付|4 到付
                     order.UUpid = pftOrderInfo.UUpid;//产品id
                     order.UUorigin = pftOrderInfo.UUorigin;//订单来源
+                    order.UUmemo = pftOrderInfo.UUmemo;//订单备注
+                    order.UUstartplace = pftOrderInfo.UUstartplace;//出发城市或地区 (线路)
+                    order.UUendplace = pftOrderInfo.UUendplace;//目的地 (线路)
+                }
+                if( order.UUpaystatus == 1){
+                    order.local_status = 'A0005'
                 }
 
-                yield order.save()
+                yield order.save();
 
-
-                return self.ctx.wrapper.res.default();
+                return self.ctx.wrapper.res.ret(order);
             }
             catch (e) {
                 console.log(e);
@@ -524,20 +532,192 @@ module.exports = {
                     personid: '',
                     m: ''
                 }, self.authObject);
-                console.log(param)
+                // console.log(param)
                 var rets = yield self.dl$Order_Globle_Search(param);
-                console.log(rets)
+                // console.log(rets)
                 var ret = (yield self.dl$xml2js(rets[0].Order_Globle_Search.$value, {
                     explicitArray: false,
                     ignoreAttrs: true
                 })).Data.Rec;
-                console.log(ret)
+                // console.log(ret)
                 return ret;
             }
             catch (e) {
                 console.log(e);
                 self.logger.error(e.message);
                 return null;
+            }
+        }).catch(self.ctx.coOnError);
+    },
+    checkIDNo: function (outerLogger, IDNo) {
+        var self = this;
+        return co(function *() {
+            try {
+                var param = self.ctx._.extend({
+                    personId: IDNo
+                }, self.authObject);
+                // console.log(param)
+                var rets = yield self.dl$Check_PersonID(param);
+                // console.log(rets)
+                var ret = (yield self.dl$xml2js(rets[0].Check_PersonID.$value, {
+                    explicitArray: false,
+                    ignoreAttrs: true
+                })).Data.Rec;
+                // console.log(ret)
+                return ret.UUdone == self.UUdoneSucessCode;
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+                return false;
+            }
+        }).catch(self.ctx.coOnError);
+    },
+    reSendSms: function (outerLogger, theOrderId) {
+        var self = this;
+        return co(function *() {
+            try {
+                var order = yield self.ctx.modelFactory().model_read(self.ctx.models['idc_order_PFT'], theOrderId);
+                var param = self.ctx._.extend({
+                    ordern: order.UUordernum
+                }, self.authObject);
+                // console.log(param)
+                var rets = yield self.dl$reSend_SMS_Global_PL(param);
+                // console.log(rets)
+                var ret = (yield self.dl$xml2js(rets[0].reSend_SMS_Global_PL.$value, {
+                    explicitArray: false,
+                    ignoreAttrs: true
+                })).Data.Rec;
+                // console.log(ret)
+                if (ret.UUdone == self.UUdoneSucessCode){
+                    var pftOrderInfo = yield self.queryTicketOrder(outerLogger, order.code);
+                    if(pftOrderInfo) {
+                        order.UUgetaddr = pftOrderInfo.UUgetaddr; //取票信息
+                        order.UUbegintime = pftOrderInfo.UUbegintime;//有效开始时间
+                        order.UUordertime = pftOrderInfo.UUordertime;//票付通下单时间
+                        order.UUendtime = pftOrderInfo.UUendtime;//有效结束时间
+                        order.UUstatus = pftOrderInfo.UUstatus;//凭证号使用状态 0 未使用|1 已使用|2 已过期|3 被取消|4 凭证码被替代|5 被终端修改|6 被终端撤销|7 部分使用
+                        order.UUpaystatus = pftOrderInfo.UUpaystatus;//0 景区到付|1 已成功|2 未支付
+                        pftOrderInfo.UUdtime != '0000-00-00 00:00:00' && (order.UUdtime = pftOrderInfo.UUdtime);//票付通订单完成时间
+                        order.UUremsg = pftOrderInfo.UUremsg;//短信发送次数
+                        order.UUsmserror = pftOrderInfo.UUsmserror;//短信是否发送成功 0 成功 1 失败
+                        pftOrderInfo.UUctime != '0000-00-00 00:00:00' && (order.UUctime = pftOrderInfo.UUctime);//票付通取消订单时间
+                        order.UUpmode = pftOrderInfo.UUpmode;//1 支付宝|2 使用分销余额|3 信用支付|4 到付
+                        order.UUpid = pftOrderInfo.UUpid;//产品id
+                        order.UUorigin = pftOrderInfo.UUorigin;//订单来源
+                        order.UUmemo = pftOrderInfo.UUmemo;//订单备注
+                        order.UUstartplace = pftOrderInfo.UUstartplace;//出发城市或地区 (线路)
+                        order.UUendplace = pftOrderInfo.UUendplace;//目的地 (线路)
+                        yield order.save();
+                    }
+                    return self.ctx.wrapper.res.ret(order);
+                }
+                else
+                    return self.ctx.wrapper.res.error({code: ret.UUdone, message: 'PFT重发短信错误'});
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+                return self.ctx.wrapper.res.error(e);
+            }
+        }).catch(self.ctx.coOnError);
+    },
+    refundForTicket: function (outerLogger, theOrderId) {
+        var self = this;
+        return co(function *() {
+            try {
+                var order = yield self.ctx.modelFactory().model_read(self.ctx.models['idc_order_PFT'], theOrderId);
+                var ticket = yield self.ctx.modelFactory().model_read(self.ctx.models['idc_ticket_PFT'],order.ticketId);
+                var param = self.ctx._.extend({
+                    ordern: order.UUordernum,
+                    num: '0'
+                }, self.authObject);
+                // console.log(param)
+                var rets = yield self.dl$Order_Change_Pro(param);
+                // console.log(rets)
+                var ret = (yield self.dl$xml2js(rets[0].Order_Change_Pro.$value, {
+                    explicitArray: false,
+                    ignoreAttrs: true
+                })).Data.Rec;
+                console.log('refundForTicket:')
+                console.log(ret)
+                var pftOrderInfo = yield self.queryTicketOrder(outerLogger, order.code);
+                if(pftOrderInfo) {
+                    order.UUgetaddr = pftOrderInfo.UUgetaddr; //取票信息
+                    order.UUbegintime = pftOrderInfo.UUbegintime;//有效开始时间
+                    order.UUordertime = pftOrderInfo.UUordertime;//票付通下单时间
+                    order.UUendtime = pftOrderInfo.UUendtime;//有效结束时间
+                    order.UUstatus = pftOrderInfo.UUstatus;//凭证号使用状态 0 未使用|1 已使用|2 已过期|3 被取消|4 凭证码被替代|5 被终端修改|6 被终端撤销|7 部分使用
+                    order.UUpaystatus = pftOrderInfo.UUpaystatus;//0 景区到付|1 已成功|2 未支付
+                    pftOrderInfo.UUdtime != '0000-00-00 00:00:00' && (order.UUdtime = pftOrderInfo.UUdtime);//票付通订单完成时间
+                    order.UUremsg = pftOrderInfo.UUremsg;//短信发送次数
+                    order.UUsmserror = pftOrderInfo.UUsmserror;//短信是否发送成功 0 成功 1 失败
+                    pftOrderInfo.UUctime != '0000-00-00 00:00:00' && (order.UUctime = pftOrderInfo.UUctime);//票付通取消订单时间
+                    order.UUpmode = pftOrderInfo.UUpmode;//1 支付宝|2 使用分销余额|3 信用支付|4 到付
+                    order.UUpid = pftOrderInfo.UUpid;//产品id
+                    order.UUorigin = pftOrderInfo.UUorigin;//订单来源
+                    order.UUmemo = pftOrderInfo.UUmemo;//订单备注
+                    order.UUstartplace = pftOrderInfo.UUstartplace;//出发城市或地区 (线路)
+                    order.UUendplace = pftOrderInfo.UUendplace;//目的地 (线路)
+                }
+                if(ticket.UUrefund_audit == 0) {
+                    if (ret.UUdone == self.UUdoneSucessCode){
+                        order.local_status = 'A0011';
+                        yield order.save();
+                        return self.ctx.wrapper.res.ret(order);
+                    } else
+                        return self.ctx.wrapper.res.error({code: ret.UUdone, message: 'PFT直接退款错误'});
+                } else {
+                    if (ret.UUdone == '1095'){
+                        order.local_status = 'A0009';
+                        yield order.save();
+                        return self.ctx.wrapper.res.ret(order);
+                    }
+                    else
+                        return self.ctx.wrapper.res.error({code: ret.UUdone, message: 'PFT申请退款错误'});
+                }
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+                return self.ctx.wrapper.res.error(e);
+            }
+        }).catch(self.ctx.coOnError);
+    },
+    refreshOrderInfo: function (outerLogger, theOrderId) {
+        var self = this;
+        return co(function *() {
+            try {
+                var order = yield self.ctx.modelFactory().model_read(self.ctx.models['idc_order_PFT'], theOrderId);
+                var pftOrderInfo = yield self.queryTicketOrder(outerLogger, order.code);
+                if(!pftOrderInfo) {
+                    return self.ctx.wrapper.res.error({code: '52101', message: '无法找到远端订单'});
+                } else{
+                    order.UUgetaddr = pftOrderInfo.UUgetaddr; //取票信息
+                    order.UUbegintime = pftOrderInfo.UUbegintime;//有效开始时间
+                    order.UUordertime = pftOrderInfo.UUordertime;//票付通下单时间
+                    order.UUendtime = pftOrderInfo.UUendtime;//有效结束时间
+                    order.UUstatus = pftOrderInfo.UUstatus;//凭证号使用状态 0 未使用|1 已使用|2 已过期|3 被取消|4 凭证码被替代|5 被终端修改|6 被终端撤销|7 部分使用
+                    order.UUpaystatus = pftOrderInfo.UUpaystatus;//0 景区到付|1 已成功|2 未支付
+                    pftOrderInfo.UUdtime != '0000-00-00 00:00:00' && (order.UUdtime = pftOrderInfo.UUdtime);//票付通订单完成时间
+                    order.UUremsg = pftOrderInfo.UUremsg;//短信发送次数
+                    order.UUsmserror = pftOrderInfo.UUsmserror;//短信是否发送成功 0 成功 1 失败
+                    pftOrderInfo.UUctime != '0000-00-00 00:00:00' && (order.UUctime = pftOrderInfo.UUctime);//票付通取消订单时间
+                    order.UUpmode = pftOrderInfo.UUpmode;//1 支付宝|2 使用分销余额|3 信用支付|4 到付
+                    order.UUpid = pftOrderInfo.UUpid;//产品id
+                    order.UUorigin = pftOrderInfo.UUorigin;//订单来源
+                    order.UUmemo = pftOrderInfo.UUmemo;//订单备注
+                    order.UUstartplace = pftOrderInfo.UUstartplace;//出发城市或地区 (线路)
+                    order.UUendplace = pftOrderInfo.UUendplace;//目的地 (线路)
+                }
+                yield order.save();
+
+                return self.ctx.wrapper.res.ret(order);
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+                return self.ctx.wrapper.res.error(e);
             }
         }).catch(self.ctx.coOnError);
     }

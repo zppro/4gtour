@@ -99,7 +99,12 @@
       "list": {
         "TITLE": "商户-销售管理-订单-列表",
         "SUBMIT-PFT": "提交到票付通",
-        "SUBMIT-PFT-CONFIRM-MESSAGE":"当前订单将提交到票付通接口，确定要继续么？"
+        "REFUND-PFT": "从票付通退票",
+        "REFRESH-PFT": "刷新票付通订单",
+        "RESEND-SMS-PFT": "重新发送订单短信",
+        "SUBMIT-PFT-CONFIRM-MESSAGE":"当前订单将提交到票付通接口，确定要继续么？",
+        "REFUND-PFT-CONFIRM-MESSAGE":"将申请远端退票，确定要继续么？",
+        "RESEND-SMS-PFT-CONFIRM-MESSAGE":"将重新发送订单短信，确定要继续么？"
       },
       "details": {
         "NONE":"",

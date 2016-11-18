@@ -31,22 +31,33 @@
                                 label
                                     input(type='checkbox' data="trBubble" ng-model="row.checked" )
                                     span.fa.fa-check(data="trBubble")
-                        td.text-center {{::row.code}}
+                        td {{::row.code}}
                         td.text-left.td-nowrap(title="{{::row.p_name}}") {{::row.p_name}}
                         td.text-right {{::row.amount|currency}}
                         td {{::row.check_in_time|date:'yyyy-MM-dd'}}
-                        td {{::row.local_status|formatter:'local_status':vm.columns}}
-                        td {{::row.UUstatus|formatter:'UUstatus':vm.columns}}
+                        td {{row.local_status|formatter:'local_status':vm.columns}}
+                        td {{row.UUpaystatus|formatter:'UUpaystatus':vm.columns}}
+                        td {{row.UUstatus|formatter:'UUstatus':vm.columns}}
+                        td {{row.UUcode}}
                         td.td-nowrap(title="{{::row.member_name}} ({{::row.member_id}})")  {{::row.member_name}} ({{::row.member_id}})
-                        td.text-center {{::row.link_man}}
-                        td.text-center {{::row.link_phone}}
-                        td
+                        td {{::row.link_man}}
+                        td {{::row.link_phone}}
+                        td.text-left
                             .btn-group
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
                                     i.glyphicon.glyphicon-pencil
                             .btn-group(ng-if="row.local_status == 'A0003'")
-                                a.btn.btn-primary.btn-xs(title="{{ vm.viewTranslatePath('SUBMIT-PFT') | translate}}",ng-click="vm.submitOrder(row._id)")
+                                a.btn.btn-primary.btn-xs(title="{{ vm.viewTranslatePath('SUBMIT-PFT') | translate}}",ng-click="vm.submitOrder(row)")
                                     i.glyphicon.glyphicon-send
+                            .btn-group(ng-if="row.local_status == 'A0005' || row.local_status == 'A0009' ")
+                                a.btn.btn-primary.btn-xs(title="{{ vm.viewTranslatePath('REFRESH-PFT') | translate}}",ng-click="vm.refreshOrder(row)")
+                                    i.glyphicon.glyphicon-refresh
+                            .btn-group(ng-if="row.local_status == 'A0005' &&  row.UUstatus == 0 && row.UUremsg < 3 ")
+                                a.btn.btn-warning.btn-xs(title="{{ vm.viewTranslatePath('RESEND-SMS-PFT') | translate}}",ng-click="vm.resendSmsForOrder(row)")
+                                    i.glyphicon.glyphicon-phone
+                            .btn-group(ng-if="row.local_status == 'A0005' && row.UUpaystatus == 1 && (row.UUstatus == 7 || row.UUstatus == 0)")
+                                a.btn.btn-danger.btn-xs(title="{{ vm.viewTranslatePath('REFUND-PFT') | translate}}",ng-click="vm.refuncForOrder(row)")
+                                    i.glyphicon.glyphicon-share-alt
                     tr(ng-if="vm.paged.length==0")
                         td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}
             .panel-footer

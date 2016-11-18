@@ -94,7 +94,26 @@
         function doSubmit() {
 
             if ($scope.theForm.$valid) {
-                vm.save();
+                vm.save(false, vmh.extOfOrganizationOfTravelService.saveIDCConfigItems([
+                    {
+                        where: {
+                            idc_name: 'idc_ticket_PFT',
+                            primary_key: 'UUid',
+                            primary_value: vm.model.UUid,
+                            config_key: 'show_name'
+                        },
+                        value: vm.model.show_name
+                    },
+                    {
+                        where: {
+                            idc_name: 'idc_ticket_PFT',
+                            primary_key: 'UUid',
+                            primary_value: vm.model.UUid,
+                            config_key: 'sale_price'
+                        },
+                        value: vm.model.sale_price
+                    }
+                ]));
             }
             else {
                 if ($scope.utils.vtab(vm.tab1.cid)) {

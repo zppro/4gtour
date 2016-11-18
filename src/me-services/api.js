@@ -292,8 +292,20 @@ module.exports = {
                                     UUid: this.request.body.UUid
                                 }
                             });
-                            if (!ticket) this.body = app.wrapper.res.error({code: 52001, message: '无效的门票编号'});
+                            if (!ticket) {
+                                this.body = app.wrapper.res.error({code: 52001, message: '无效的门票编号'});
+                                yield next;
+                            }
 
+                            if(ticket.UUtourist_info == 1){
+                                var IDNo = this.request.body.tourist_id_no;
+                                var isIDNo = yield app.pft.checkIDNo(self.logger,this.request.body.tourist_id_no);
+                                if (!isIDNo) {
+                                    this.body = app.wrapper.res.error({code: 52002, message: '无效的身份证号码'});
+                                    yield next;
+                                }
+                            }
+                            
                             var order = app._.extend({
                                 code: 'server-gen',
                                 local_status: 'A0001',

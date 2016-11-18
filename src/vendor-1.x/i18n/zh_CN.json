@@ -88,6 +88,7 @@
     "SAVE-SUCCESS": "保存成功",
     "REMOVE-SUCCESS": "删除成功",
     "NORMAL-SUCCESS": "操作成功",
+    "CUSTOM-SUCCESS": "{{customAction}}成功",
     "SELECT-NONE-WARNING": "没有选中任何记录",
     "BATCH-ADD-NONE-WARNING": "选中的批量添加记录都已经存在，请重新选择",
     "NO-CHANGE": "当前数据没有变化",

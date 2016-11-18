@@ -298,7 +298,7 @@
                                 label: '产品名称',
                                 name: 'p_name',
                                 type: 'string',
-                                width: 100
+                                width: 80
                             },
                             {
                                 label: '订单金额',
@@ -322,11 +322,24 @@
                                 formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/IDC01/object')
                             },
                             {
-                                label: '远端状态',
+                                label: '远端支付',
+                                name: 'UUpaystatus',
+                                type: 'string',
+                                width: 60,
+                                formatter: 'dictionary-local:{"0":"景区到付","1":"已成功","2":"未支付"}'
+                            },
+                            {
+                                label: '远端订单',
                                 name: 'UUstatus',
                                 type: 'string',
                                 width: 60,
                                 formatter: 'dictionary-local:{"0":"未使用","1":"已使用","2":"已过期","3":"被取消","4":"凭证码被替代","5":"被终端修改","6":"被终端撤销","7":"部分使用"}'
+                            },
+                            {
+                                label: '凭证号',
+                                name: 'UUcode',
+                                type: 'string',
+                                width: 60
                             },
                             {
                                 label: '下单人',
@@ -338,7 +351,7 @@
                                 label: '联系人',
                                 name: 'link_man',
                                 type: 'string',
-                                width: 40
+                                width: 60
                             },
                             {
                                 label: '联系电话',
@@ -350,7 +363,7 @@
                                 label: '',
                                 name: 'actions',
                                 sortable: false,
-                                width: 60
+                                width: 90
                             }
                         ],
                         switches: {leftTree: true}

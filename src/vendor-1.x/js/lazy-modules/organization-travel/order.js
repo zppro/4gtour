@@ -25,6 +25,9 @@
             vm.init({removeDialog: ngDialog});
 
             vm.submitOrder = submitOrder;
+            vm.refuncForOrder = refuncForOrder;
+            vm.refreshOrder = refreshOrder;
+            vm.resendSmsForOrder = resendSmsForOrder;
 
             if (vm.switches.leftTree) {
                 vm.searchForm['scenicSpotId'] = undefined;
@@ -44,7 +47,7 @@
             vm.query();
         }
 
-        function submitOrder(orderId) {
+        function submitOrder(row) {
             ngDialog.openConfirm({
                 template: 'customConfirmDialog.html',
                 className: 'ngdialog-theme-default',
@@ -53,13 +56,74 @@
                 }]
             }).then(function () {
                 vm.blocker.start();
-                vmh.idtService.PFT$issueTicket(orderId).then(function(){
-                    vm.query();
-                    vmh.alertSuccess();
+                console.log(row.id)
+                vmh.idtService.PFT$issueTicket(row.id).then(function(ret){
+                    row = _.extend(row, ret);
+                    vmh.translate('notification.CUSTOM-SUCCESS',{customAction:"提交"}).then(function (msg) {
+                        console.log(msg)
+                        vmh.alertSuccess(msg);
+                    })
                 }).finally(function(){
                     vm.blocker.stop();
                 });
             }); 
+        }
+
+        function refuncForOrder(row) {
+            ngDialog.openConfirm({
+                template: 'customConfirmDialog.html',
+                className: 'ngdialog-theme-default',
+                controller: ['$scope', function ($scopeConfirm) {
+                    $scopeConfirm.message = vm.viewTranslatePath('REFUND-PFT-CONFIRM-MESSAGE')
+                }]
+            }).then(function () {
+                vm.blocker.start();
+                console.log(row.id)
+                vmh.idtService.PFT$refundForTicket(row.id).then(function(ret){
+                    row = _.extend(row, ret);
+                    var customAction = row.UUrefund_audit == 0 ? '直接退款' : '申请退款';
+                    vmh.translate('notification.CUSTOM-SUCCESS',{customAction: customAction}).then(function (msg) {
+                        console.log(msg)
+                        vmh.alertSuccess(msg);
+                    })
+                }).finally(function(){
+                    vm.blocker.stop();
+                });
+            });
+        }
+
+        function refreshOrder(row) {
+            vm.blocker.start();
+            vmh.idtService.PFT$refreshOrderInfo(row.id).then(function(ret){
+                row = _.extend(row, ret);
+                vmh.translate('notification.CUSTOM-SUCCESS',{customAction:"刷新"}).then(function (msg) {
+                    console.log(msg)
+                    vmh.alertSuccess(msg);
+                })
+            }).finally(function(){
+                vm.blocker.stop();
+            });
+        }
+
+        function resendSmsForOrder(row) {
+            ngDialog.openConfirm({
+                template: 'customConfirmDialog.html',
+                className: 'ngdialog-theme-default',
+                controller: ['$scope', function ($scopeConfirm) {
+                    $scopeConfirm.message = vm.viewTranslatePath('RESEND-SMS-PFT-CONFIRM-MESSAGE')
+                }]
+            }).then(function () {
+                vm.blocker.start();
+
+                vmh.idtService.PFT$resendSmsForOrder(row.id).then(function(ret){
+                    row = _.extend(row, ret);
+                    vmh.translate('notification.CUSTOM-SUCCESS',{customAction: '重发订单短信'}).then(function (msg) {
+                        vmh.alertSuccess(msg);
+                    })
+                }).finally(function(){
+                    vm.blocker.stop();
+                });
+            });
         }
     }
 

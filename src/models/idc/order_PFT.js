@@ -54,7 +54,7 @@ module.exports = function(ctx,name) {
             UUendtime: {type: Date},//有效结束时间
             UUstatus: {type: Number},//凭证号使用状态 0 未使用|1 已使用|2 已过期|3 被取消|4 凭证码被替代|5 被终端修改|6 被终端撤销|7 部分使用
             UUpaystatus: {type: Number},//0 景区到付|1 已成功|2 未支付
-            UUdtime: {type: Date},//票付通下单时间
+            UUdtime: {type: Date},//票付通完成时间
             UUremsg: {type: Number},//短信发送次数
             UUsmserror: {type: Number},//短信是否发送成功 0 成功 1 失败
             UUctime: {type: Date},//票付通取消订单时间

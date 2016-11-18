@@ -425,7 +425,10 @@
                     PFT$fetchTicket: PFT$fetchTicket,
                     PFT$syncScenicSpot: PFT$syncScenicSpot,
                     PFT$syncTicket: PFT$syncTicket,
-                    PFT$issueTicket: PFT$issueTicket
+                    PFT$issueTicket: PFT$issueTicket,
+                    PFT$refundForTicket: PFT$refundForTicket,
+                    PFT$refreshOrderInfo: PFT$refreshOrderInfo,
+                    PFT$resendSmsForOrder: PFT$resendSmsForOrder
                 };
 
                 function PFT$fetchScenicSpotList() {
@@ -449,6 +452,17 @@
                     return $http.post(baseUrl + 'PFT$issueTicket/' + orderId);
                 }
 
+                function PFT$refundForTicket(orderId) {
+                    return $http.post(baseUrl + 'PFT$refundForTicket/' + orderId);
+                }
+
+                function PFT$refreshOrderInfo(orderId) {
+                    return $http.post(baseUrl + 'PFT$refreshOrderInfo/' + orderId);
+                }
+
+                function PFT$resendSmsForOrder(orderId) {
+                    return $http.post(baseUrl + 'PFT$resendSmsForOrder/' + orderId);
+                }
             }]
         };
 

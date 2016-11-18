@@ -127,6 +127,57 @@ module.exports = {
                         yield next;
                     };
                 }
+            },
+            {
+                method: 'PFT$refundForTicket',
+                verb: 'post',
+                url: this.service_url_prefix + "/PFT$refundForTicket/:orderId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var wrapperRet = yield app.pft.refundForTicket(self.logger,this.params.orderId);
+                            this.body = wrapperRet;
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'PFT$refreshOrderInfo',
+                verb: 'post',
+                url: this.service_url_prefix + "/PFT$refreshOrderInfo/:orderId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var wrapperRet = yield app.pft.refreshOrderInfo(self.logger,this.params.orderId);
+                            this.body = wrapperRet;
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'PFT$resendSmsForOrder',
+                verb: 'post',
+                url: this.service_url_prefix + "/PFT$resendSmsForOrder/:orderId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var wrapperRet = yield app.pft.reSendSms(self.logger,this.params.orderId);
+                            this.body = wrapperRet;
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
             }
         ];
 
