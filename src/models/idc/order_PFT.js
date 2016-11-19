@@ -20,7 +20,7 @@ module.exports = function(ctx,name) {
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
             sync_flag: {type: Boolean, default: false},//同步标志
-            code: {type: String, required: true, minlength: 12, maxlength: 12, index: {unique: true}},//本地订单编号 按照规则 'PFT'+8位年月日+3位序列
+            code: {type: String, required: true, minlength: 13, maxlength: 13, index: {unique: true}},//本地订单编号 按照规则 'PFT'+8位年月日+3位序列+ 'Suffix可以与可以无'
             local_status: {type: String, required: true, enum: ctx._.rest(ctx.dictionary.keys["IDC01"])},
             ticketId: {type: mongoose.Schema.Types.ObjectId, required: true},
             UUtprice: {type: Number},//门市价 单位元

@@ -22,5 +22,9 @@ module.exports = {
     min: min,
     max: max,
     step: step,
-    current: min
+    current: min,
+    init: function (ctx) {
+        this.ctx = ctx;
+        this.suffix = this.ctx.conf.isProduction ? 'P' : 'D';
+    }
 };

@@ -10,9 +10,10 @@ var assert = require('assert').ok;
 var seqence_defs = {};
 
 module.exports = {
-    init:function(modelFactory,sequence_model){
-        this.modelFactory = modelFactory;
-        this.sequence_model = sequence_model;
+    init:function(ctx){
+        this.ctx = ctx;
+        this.modelFactory = ctx.modelFactory();
+        this.sequence_model = ctx.models['pub_sequence'];
         return this;
     },
     factory: function (seq_id) {
@@ -20,6 +21,7 @@ module.exports = {
         if (!sequenceDef) {
             sequenceDef = require('../sequences/' + seq_id);
             if(!sequenceDef.disabled) {
+                sequenceDef.init && sequenceDef.init(this.ctx);
                 seqence_defs[seq_id] = sequenceDef;
                 console.log('create sequenceDef use ' + seq_id + '...');
             }
@@ -30,6 +32,7 @@ module.exports = {
         var self = this;
         return co(function *() {
             var sequenceDef = seqence_defs[seq_id];
+
             if (!sequenceDef) {
                 assert('cant find sequence def')
                 return null;
@@ -42,7 +45,6 @@ module.exports = {
                 date_period: moment().format(sequenceDef.date_period_format),
                 object_key: object_key_path ? (sequenceDef.object_key + '-' + object_key_path) : sequenceDef.object_key
             }, sequenceDef);
-
             var sequences = yield self.modelFactory.model_query(self.sequence_model, {
                 where: {
                     object_type: sequenceDefInstance.object_type,
@@ -50,10 +52,6 @@ module.exports = {
                     date_period: sequenceDefInstance.date_period
                 }
             });
-
-
-
-
             var sequence;
             if (sequences.length == 1) {
                 sequence = sequences[0];

@@ -3,6 +3,8 @@
  * api for mobile web app
  */
 var rp = require('request-promise-native');
+var IDC01 = require('../pre-defined/dictionary.json')['IDC01'];
+var IDC02 = require('../pre-defined/dictionary.json')['IDC02'];
 
 module.exports = {
     init: function (option) {
@@ -268,6 +270,7 @@ module.exports = {
                                     }, select: 'p_name code check_in_time amount local_status local_status_name'
                                 },
                                 {limit: this.request.body.page.size, skip: this.request.body.page.skip});
+                            console.log(rows);
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
@@ -324,6 +327,58 @@ module.exports = {
                             console.log(this.body);
                         } catch (e) {
                             console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'order-details',
+                verb: 'get',
+                url: this.service_url_prefix + "/order-details/:orderId",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+
+                            var order = yield app.modelFactory().model_read(app.models['idc_order_PFT'],this.params.orderId);
+                            var scenicSpot = yield app.modelFactory().model_one(app.models['idc_scenicSpot_PFT'],{where: {UUid: order.UUlid}});
+                            var pay_type = order.pay_type;
+                            if(pay_type){
+                                pay_type = IDC02[order.pay_type].name;
+                            } else {
+                                pay_type = '';
+                            }
+                            var ret = {
+                                orderInfo: {
+                                    pay_type: pay_type,
+                                    status_name: IDC01[order.local_status].name,
+                                    pay_time: order.pay_time,
+                                    price: order.p_price,
+                                    quantity: order.quantity,
+                                    amount: order.amount,
+                                    link_man: order.link_man,
+                                    link_phone: order.link_phone,
+                                    travel_date: order.travel_date,
+                                    order_show: order.local_status != 'A0001',
+                                    qr_show: (order.local_status == 'A0005' || order.local_status == 'A0009' || order.local_status == 'A0011'),
+                                    validate_code: order.UUcode,//凭证号
+                                    qrcode_img: order.UUqrcodeIMG//二维码图片
+                                },
+                                scenicSpotInfo: {
+                                    name: scenicSpot.show_name,
+                                    ticket_name: order.p_name,
+                                    img: scenicSpot.UUimgpath,
+                                    level: scenicSpot.UUjtype,
+                                    tel: scenicSpot.UUtel,
+                                    runtime: scenicSpot.UUruntime,
+                                    address: scenicSpot.UUaddress,
+                                    tip: scenicSpot.UUjqts
+                                }
+                            }
+                            this.body = app.wrapper.res.ret(ret);
+                        } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
                         }
