@@ -267,10 +267,23 @@ module.exports = {
                                     where: {
                                         status: 1,
                                         member_id: member_id
-                                    }, select: 'p_name code check_in_time amount local_status local_status_name'
+                                    }, select: 'p_name code check_in_time amount local_status local_status_name travel_date UUid', sort: this.request.body.sort || {check_in_time: -1}
                                 },
                                 {limit: this.request.body.page.size, skip: this.request.body.page.skip});
-                            console.log(rows);
+                            for(var i=0;i< rows.length; i++) {
+                                rows[i] = rows[i].toObject();
+                                var ticket = yield app.modelFactory().model_one(app.models['idc_ticket_PFT'], {
+                                    where: {
+                                        UUid: rows[i].UUid
+                                    }, select: 'UUdhour -_id'
+                                });
+                                if(ticket && ticket.UUdhour) {
+                                    rows[i].last_pay_time = app.moment(rows[i].travel_date).format('YYYY-MM-DD') + ' '+ ticket.UUdhour;
+                                } else {
+                                    rows[i].last_pay_time = app.moment(rows[i].travel_date).format('YYYY-MM-DD') + ' 23:59:59';
+                                }
+                            }
+                            //console.log(rows)
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
@@ -343,17 +356,25 @@ module.exports = {
                         try {
 
                             var order = yield app.modelFactory().model_read(app.models['idc_order_PFT'],this.params.orderId);
+                            var ticket = yield app.modelFactory().model_one(app.models['idc_ticket_PFT'], {where: {UUid: order.UUid}});
                             var scenicSpot = yield app.modelFactory().model_one(app.models['idc_scenicSpot_PFT'],{where: {UUid: order.UUlid}});
+
                             var pay_type = order.pay_type;
                             if(pay_type){
                                 pay_type = IDC02[order.pay_type].name;
                             } else {
                                 pay_type = '';
                             }
+                            console.log(order.id)
+                            var last_pay_time = app.moment(app.moment(order.travel_date).format('YYYY-MM-DD') + ' '+ ticket.UUdhour).toDate();
                             var ret = {
                                 orderInfo: {
+                                    orderId: order.id,
                                     pay_type: pay_type,
+                                    status: order.local_status,
                                     status_name: IDC01[order.local_status].name,
+                                    code: order.code,
+                                    check_in_time: order.check_in_time,
                                     pay_time: order.pay_time,
                                     price: order.p_price,
                                     quantity: order.quantity,
@@ -361,7 +382,7 @@ module.exports = {
                                     link_man: order.link_man,
                                     link_phone: order.link_phone,
                                     travel_date: order.travel_date,
-                                    order_show: order.local_status != 'A0001',
+                                    validate_code_status: order.UUstatus || 0,
                                     qr_show: (order.local_status == 'A0005' || order.local_status == 'A0009' || order.local_status == 'A0011'),
                                     validate_code: order.UUcode,//凭证号
                                     qrcode_img: order.UUqrcodeIMG//二维码图片
@@ -369,6 +390,7 @@ module.exports = {
                                 scenicSpotInfo: {
                                     name: scenicSpot.show_name,
                                     ticket_name: order.p_name,
+                                    last_pay_time: last_pay_time,//最迟下单时间
                                     img: scenicSpot.UUimgpath,
                                     level: scenicSpot.UUjtype,
                                     tel: scenicSpot.UUtel,

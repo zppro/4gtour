@@ -373,11 +373,10 @@ module.exports = {
             }
         }).catch(self.ctx.coOnError);
     },
-    getDynamicPriceAndStorageByTicket: function (outerLogger, theTicketId, theDate) {
+    getDynamicPriceAndStorageByTicket: function (outerLogger, ticket, theDate) {
         var self = this;
         return co(function *() {
             try {
-                var ticket = yield self.ctx.modelFactory().model_read(self.ctx.models['idc_ticket_PFT'],theTicketId);
                 var param = self.ctx._.extend({
                     pid: ticket.UUpid,
                     date: self.ctx.moment(theDate).format('YYYY-MM-DD'),
@@ -411,6 +410,7 @@ module.exports = {
         return co(function *() {
             try {
                 var order = yield self.ctx.modelFactory().model_read(self.ctx.models['idc_order_PFT'], theOrderId);
+                var ticket = yield self.ctx.modelFactory().model_one(self.ctx.models['idc_ticket_PFT'], {where: {UUid: order.UUid}});
                 console.log(theOrderId)
                 //获取结算价格
                 var price = yield self.getDynamicPriceAndStorageByTicket(outerLogger, order.ticketId, order.travel_date);
@@ -627,7 +627,8 @@ module.exports = {
         return co(function *() {
             try {
                 var order = yield self.ctx.modelFactory().model_read(self.ctx.models['idc_order_PFT'], theOrderId);
-                var ticket = yield self.ctx.modelFactory().model_read(self.ctx.models['idc_ticket_PFT'],order.ticketId);
+                var ticket = yield self.ctx.modelFactory().model_one(self.ctx.models['idc_ticket_PFT'], {where: {UUid: order.UUid}});
+                // var ticket = yield self.ctx.modelFactory().model_read(self.ctx.models['idc_ticket_PFT'],order.ticketId); 因为随着同步ticketId会变化而UUid不会变
                 var param = self.ctx._.extend({
                     ordern: order.UUordernum,
                     num: '0'
