@@ -49,10 +49,8 @@
             vm.tab1 = {cid: 'contentTab1',active:true};
             vm.tab2 = {cid: 'contentTab2'};
 
-
             vm.treeDataPromise = vmh.shareService.t('district').then(function(nodes){
                 vm.load();
-                console.log(nodes)
                 return nodes;
             });
 

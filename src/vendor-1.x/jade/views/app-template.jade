@@ -30,7 +30,7 @@ script(type='text/ng-template', id="tree-directive-default-renderer.html")
         ul
             li(ng-repeat='node in $tree.treeData',ng-include="'tree-directive-default-node-renderer.html'",ng-init="nIndex = $index;")
 script(type='text/ng-template', id="tree-directive-default-node-renderer.html")
-    .tree-node.no-select(s-tree-node)
+    .tree-node(s-tree-node)
         i(ng-if="node.children",class="fa",ng-class="{'fa-caret-right':!$tree.isExpanded(nIndex),'fa-caret-down':$tree.isExpanded(nIndex)}",ng-click="$tree.toggle(nIndex,$event)")
         i(ng-if="!node.children",class="fa",ng-class="{'fa-caret-right':$tree.mode=='grid'}")
         .checkbox.c-checkbox(ng-if="$tree.mode=='check'")

@@ -228,7 +228,7 @@
                             $tree.select(node, angular.element(element).find('.' + node.attrs.index));
                             $tree.expand(node.attrs.index);
                             if ($tree.layout == 'dropdown') {
-                                scope._onDropdownSelect(selectedNode);
+                                scope._onDropdownSelect(node);
                             }
                         }
                     }

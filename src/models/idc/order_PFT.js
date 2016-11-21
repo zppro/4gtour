@@ -74,11 +74,10 @@ module.exports = function(ctx,name) {
         });
 
         order_PFT_Schema.pre('validate', function (next) {
-
             if (this.code == ctx.modelVariables.SERVER_GEN) {
                 var self = this;
                 ctx.sequenceFactory.getSequenceVal(ctx.modelVariables.SEQUENCE_DEFS.ORDER_OF_PFT).then(function(ret){
-                    console.log(ret);
+                    console.log('order_PFT$code:'+ret);
                     self.code = ret;
                     next();
                 });

@@ -40,9 +40,6 @@
                             .btn-group
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row.id)")
                                     i.glyphicon.glyphicon-pencil
-                            .btn-group
-                                a.btn.btn-primary.btn-xs(title="{{ vm.viewTranslatePath('TICKET') | translate}}",ng-click="$state.go(vm.transTo.ticket,{scenicSpotId:row._id})")
-                                    i.glyphicon.glyphicon-qrcode
                     tr(ng-if="vm.paged.length==0")
                         td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}
             .panel-footer

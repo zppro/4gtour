@@ -40,6 +40,21 @@ module.exports = function(ctx,name) {
             }
         });
 
+        scenerySpot_Schema.pre('validate', function (next) {
+            if (this.code == ctx.modelVariables.SERVER_GEN) {
+                var self = this;
+                console.log('set scenerySpot$code'+self.area)
+                ctx.sequenceFactory.getSequenceVal(ctx.modelVariables.SEQUENCE_DEFS.SCENICSPOT,self.area).then(function(ret){
+                    console.log('scenerySpot$code:'+ret);
+                    self.code = ret;
+                    next();
+                });
+            }
+            else{
+                next();
+            }
+        });
+
         scenerySpot_Schema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();

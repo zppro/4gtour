@@ -141,7 +141,7 @@
                             level: 'AAAAA'
                         },
                         blockUI: true
-                    })
+                    }), deps: helper.resolveFor2('qiniu','qiniu-ng')
                 }
             })
             .state('app.organization-travel.scenic-spot', {

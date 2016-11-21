@@ -127,7 +127,6 @@
                         if (forceRefresh || angular.isUndefined(this.shareTree[cacheKey])) {
                             var self = this;
                             promise = $http.get(baseUrl + 'tree/T/' + id).then(function (nodes) {
-                                console.log(nodes)
                                 self.shareTree[cacheKey] = nodes;
                                 return self.shareTree[cacheKey];
                             });

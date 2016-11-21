@@ -27,12 +27,16 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         <!--缩略图-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-IMG') | translate}}:
                         .col-md-10
-                            img(ng-src="{{vm.model.UUimgpath}}",style="max-width:500px;")
+                            input.form-control(type='hidden', name='img',ng-model='vm.model.img')
+                            .img-border
+                                .img-loader(ng-if="vm.model.img")
+                                    img(ng-src="{{vm.model.img}}")
+                                .uploader-area(qiniu-uploader, button-text="选择图片" bucket='4gimg',user='vm.tenantId',ng-uploaded-url="vm.model.img")
                     fieldset: .form-group
                         <!--所在地区-->
-                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-AREA') | translate}}:
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-AREA') | translate}}:{{vm.model.area}}
                         .col-md-10
-                            .tree.tree-dropdown(s-tree,s-tree-data="vm.treeDataPromise",s-tree-height="vm.size.h-60", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',layout:'dropdown',readonly:false}", ng-model="vm.model.area")
+                            .tree.tree-dropdown(s-tree,s-tree-data="vm.treeDataPromise",s-tree-height="300", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{layout:'dropdown',readonly:false}", ng-model="vm.model.area")
                     fieldset: .form-group
                         <!--联系电话-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-TEL') | translate}}:

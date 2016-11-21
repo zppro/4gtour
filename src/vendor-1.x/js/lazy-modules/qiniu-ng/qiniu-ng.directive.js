@@ -27,7 +27,7 @@
             scope.buttonId = attrs.buttonId || scope.containerId + '-button';
             scope.buttonText = attrs.buttonText || 'Select files';
 
-            scope.ngUploadedUrl = 'xyz';
+            scope.ngUploadedUrl = '';
 
             var templateUrl = attrs.qiniuUploaderTemplateUrl || 'qiniu-uploader-default.html';
             $templateRequest(templateUrl).then(function(htmlStr){
