@@ -11,6 +11,8 @@
     modelRun.$inject = ['modelNode'];
     function modelRun(modelNode) {
         //商户机构
+        modelNode.factory('trv-scenerySpot');
+
         modelNode.factory('idc-scenicSpot_PFT');
         modelNode.factory('idc-ticket_PFT');
         modelNode.factory('idc-order_PFT');

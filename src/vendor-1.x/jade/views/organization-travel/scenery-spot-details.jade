@@ -1,0 +1,87 @@
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-CODE') | translate}}:
+                        .col-md-10
+                            input.form-control(disabled, type='text', name='code',ng-model='vm.model.code',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-CODE")|translate}}')
+                    fieldset: .form-group
+                        <!--名称-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-SHOW_NAME') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='name',ng-model='vm.model.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-NAME")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'name','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        <!--显示名称-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-SHOW_NAME') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='show_name',ng-model='vm.model.show_name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-SHOW_NAME")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'show_name','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        <!--缩略图-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-IMG') | translate}}:
+                        .col-md-10
+                            img(ng-src="{{vm.model.UUimgpath}}",style="max-width:500px;")
+                    fieldset: .form-group
+                        <!--所在地区-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-AREA') | translate}}:
+                        .col-md-10
+                            .tree.tree-dropdown(s-tree,s-tree-data="vm.treeDataPromise",s-tree-height="vm.size.h-60", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',layout:'dropdown',readonly:false}", ng-model="vm.model.area")
+                    fieldset: .form-group
+                        <!--联系电话-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-TEL') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='tel',ng-model='vm.model.tel',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-TEL")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'tel','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        <!--景区级别-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-LEVEL') | translate}}:
+                        .col-md-10
+                            .btn-group
+                                .btn.btn-primary(name='level',ng-repeat='item in ["AAAAA","AAAA","AAA"]',ng-model='vm.model.level',btn-radio="item",required='') {{item}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'level','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        <!--营业时间-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-RUNTIME') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='runtime',ng-model='vm.model.runtime',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-RUNTIME")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'runtime','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        <!--详细地址-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ADDRESS') | translate}}:
+                        .col-md-10
+                            input.form-control(name='address',ng-model='vm.model.address',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-ADDRESS")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'address','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        <!--相关提示-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-TIP') | translate}}:
+                        .col-md-10
+                            textarea.form-control(name='tip',ng-model='vm.model.tip',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-TIP")|translate}}' )
+                    fieldset: .form-group
+                        <!--交通指南-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-TRAFFIC') | translate}}:
+                        .col-md-10
+                            textarea.form-control(name='traffic',ng-model='vm.model.traffic',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-TRAFFIC")|translate}}' )
+                    fieldset: .form-group
+                        <!--景点介绍-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-INTRODUCTION_SIMPLE') | translate}}:
+                        .col-md-10
+                            textarea.form-control(name='introduction_simple',ng-model='vm.model.introduction_simple',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-INTRODUCTION_SIMPLE")|translate}}')
+                    fieldset: .form-group
+                        <!--文章地址-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-INTRODUCTION_URL') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='introduction_url',ng-model='vm.model.introduction_url',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-INTRODUCTION_URL")|translate}}')
+            tab(active="vm.tab2.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB2') | translate}}
+                div#contentTab2
+    .text-right.mt-lg
+        button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(type="submit") {{'button.SAVE'|translate}}

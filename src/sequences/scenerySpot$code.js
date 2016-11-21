@@ -1,13 +1,13 @@
 /**
- * order_PFT$code Created by zppro on 16-10-18.
- * Target:order_PFT中code使用序列的定义
+ * scenerySpot$code Created by zppro on 16-11-21.
+ * Target:scenicSpot中code使用序列的定义
  */
 
-var object_type = 'order_PFT';
+var object_type = 'scenerySpot';
 var object_key = 'code';
-var prefix = 'PFT';
+var prefix = 'JD0';
 var suffix = undefined;
-var date_area_period_format = 'YYMMDD';
+var date_area_period_format = 'PPCCAA';
 var min = 1;
 var max = 999;
 var step = 1;

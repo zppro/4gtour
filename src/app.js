@@ -296,6 +296,12 @@ co(function*() {
         app.sequenceFactory.factory(o);
     });
 
+    //test the sequence
+    // var code = yield app.sequenceFactory.getSequenceVal(app.modelVariables.SEQUENCE_DEFS.ORDER_OF_PFT);
+    // console.log(code);
+    // var code2 = yield app.sequenceFactory.getSequenceVal(app.modelVariables.SEQUENCE_DEFS.SCENICSPOT,'010101');
+    // console.log(code2);
+
     console.log('configure business-components... ');
     //app.CarryOverManager = require('./business-components/CarryOverManager').init(app);
     //初始化业务组件
@@ -378,6 +384,9 @@ co(function*() {
     app.listen(app.conf.port);
 
     console.log('listening...');
+    
+
+    
 
 }).catch(app.coOnError);
 

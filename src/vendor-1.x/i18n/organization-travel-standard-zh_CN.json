@@ -28,6 +28,40 @@
       "DOMITORY-ROOM": "多人间",
       "CHART-TITLE-ROOM-CATAGORY-OF-MANTIME-Monthly":"近期入住房型情况"
     },
+    "scenery-spot": {
+      "list": {
+        "TITLE": "商户-社交网络-景点-列表"
+      },
+      "details": {
+        "TITLE": "商户-社交网络-景点-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-CODE": "景点编码",
+        "TAB1-LABEL-NAME": "景点名称",
+        "TAB1-PLACEHOLDER-NAME": "XX山",
+        "TAB1-LABEL-SHOW_NAME": "显示名称",
+        "TAB1-PLACEHOLDER-SHOW_NAME": "XX湖",
+        "TAB1-LABEL-IMG": "缩略图",
+        "TAB1-LABEL-AREA": "所在地区",
+        "TAB1-PLACEHOLDER-AREA": "XX省XX市XXX区/县",
+        "TAB1-LABEL-TEL": "联系电话",
+        "TAB1-PLACEHOLDER-TEL": "18668001380",
+        "TAB1-LABEL-LEVEL": "景区级别",
+        "TAB1-PLACEHOLDER-LEVEL": "景区评级AAA-AAAA-AAAA",
+        "TAB1-LABEL-RUNTIME": "营业时间",
+        "TAB1-PLACEHOLDER-RUNTIME": "几点到几点开放",
+        "TAB1-LABEL-ADDRESS": "详细地址",
+        "TAB1-PLACEHOLDER-ADDRESS": "XX路XX号东门..",
+        "TAB1-LABEL-TIP": "相关提示",
+        "TAB1-PLACEHOLDER-TIP": "与景点游玩相关的一些重要提示信息..",
+        "TAB1-LABEL-TRAFFIC": "交通指南",
+        "TAB1-PLACEHOLDER-TRAFFIC": "到达景点的公交线路等..",
+        "TAB1-LABEL-INTRODUCTION_SIMPLE": "景点介绍",
+        "TAB1-PLACEHOLDER-INTRODUCTION_SIMPLE": "景点简单的介绍文字..",
+        "TAB1-LABEL-INTRODUCTION_URL": "文章链接",
+        "TAB1-PLACEHOLDER-INTRODUCTION_URL": "景点介绍文章的链接地址(微信图文消息分享地址)..",
+        "TAB2": "套图"
+      }
+    },
     "scenic-spot": {
       "list": {
         "TITLE": "商户-产品管理-景区-列表",

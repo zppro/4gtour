@@ -16,8 +16,8 @@ module.exports = {
     object_type: object_type,
     object_key: object_key,
     prefix: prefix,
-    date_period_format: date_period_format,
-    //date_period: ctx.moment().format(date_period_format),因为是动态的
+    date_area_period_format: date_period_format,
+    //date_area_period: ctx.moment().format(date_area_period_format),因为是动态的
     suffix: suffix,
     min: min,
     max: max,

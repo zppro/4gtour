@@ -132,6 +132,8 @@
   },
   "menu":{
     "organization-travel": {
+      "SNS": "社交网络",
+      "SCENERY-SPOT": "景点",
       "PRODUCT-MANAGE": "产品管理",
       "SCENIC-SPOT": "景区",
       "TICKET": "票务",

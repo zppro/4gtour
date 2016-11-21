@@ -1,5 +1,18 @@
 [
   {
+    "_id": "menu.organization-travel.SNS",
+    "name": "社交网络",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.organization-travel.SCENERY-SPOT",
+        "name": "景点",
+        "sref": "app.organization-travel.scenery-spot.list"
+      }
+    ]
+  },
+  {
     "_id": "menu.organization-travel.PRODUCT-MANAGE",
     "name": "产品管理",
     "sref": "#",

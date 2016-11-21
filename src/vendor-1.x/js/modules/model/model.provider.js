@@ -121,6 +121,40 @@
                         }
                         return promise;
                     },
+                    t: function (id, where, forceRefresh) {//tmg 本地过滤
+                        var promise;
+                        var cacheKey = 'get-'+id
+                        if (forceRefresh || angular.isUndefined(this.shareTree[cacheKey])) {
+                            var self = this;
+                            promise = $http.get(baseUrl + 'tree/T/' + id).then(function (nodes) {
+                                console.log(nodes)
+                                self.shareTree[cacheKey] = nodes;
+                                return self.shareTree[cacheKey];
+                            });
+                        }
+                        else {
+                            promise = $q.when(this.shareTree[cacheKey]);
+                        }
+
+                        return where ? promise.then(function (nodes) {
+                            var clone = angular.copy(nodes);
+                            for (var key in where) {
+                                treeFactory.filter(clone, function (node) {
+                                    if (node[key]) {
+                                        var filterData = where[key];
+                                        if (_.isString(filterData)) {
+                                            return node[key] == filterData;
+                                        }
+                                        else if (_.isArray(filterData)) {
+                                            return _.contains(filterData, node[key]);
+                                        }
+                                    }
+                                    return true;
+                                });
+                            }
+                            return clone;
+                        }) : promise;
+                    },
                     tmg: function (id, select, where, forceRefresh) {//tmg 本地过滤
                         var promise;
                         var cacheKey = 'get-'+id

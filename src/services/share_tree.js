@@ -24,6 +24,23 @@ module.exports = {
 
         this.actions = [
             {
+                method: 'fetch-T',
+                verb: 'get',
+                url: this.service_url_prefix + "/T/:id",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var districts = require('../pre-defined/' + this.params.id + '.json');
+                            this.body = app.wrapper.res.rows(districts);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'fetch-T1001',//针对比较少的节点，客户端过滤
                 verb: 'get',
                 url: this.service_url_prefix + "/T1001/:model/:select",

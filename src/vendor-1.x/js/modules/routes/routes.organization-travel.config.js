@@ -47,6 +47,103 @@
                 }
                 , resolve: helper.resolveFor('echarts.common','echarts-ng','classyloader')
             })
+            .state('app.organization-travel.scenery-spot', {
+                url: '/scenery-spot',
+                title: '景点',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath('partials/organization-travel/module-header.html'),
+                        controller: 'ModuleHeaderForTenantController'
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id:'menu.organization-travel.SCENERY-SPOT'//业务系统使用
+                }
+                , resolve: helper.resolveFor('subsystem.organization-travel.scenery-spot.js')
+            })
+            .state('app.organization-travel.scenery-spot.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath('organization-travel/scenery-spot-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'ScenerySpotGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM('app.organization-travel.scenery-spot.list', {
+                        modelName: 'trv-scenerySpot',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        blockUI: true,
+                        columns: [
+                            {
+                                label: '预览',
+                                name: 'preview',
+                                sortable: false,
+                                width:  30
+                            },
+                            {
+                                label: '编码',
+                                name: 'code',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '名称',
+                                name: 'name',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '显示名称',
+                                name: 'show_name',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '所在地区',
+                                name: 'area',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '景点级别',
+                                name: 'level',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 60
+                            }
+                        ]
+                    })
+                }
+            })
+            .state('app.organization-travel.scenery-spot.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath('organization-travel/scenery-spot-details.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'ScenerySpotDetailsController',
+                resolve: {
+                    entityVM: helper.buildEntityVM('app.organization-travel.scenery-spot.details', {
+                        modelName: 'trv-scenerySpot',
+                        model: {
+                            code: MODEL_VARIABLES.PRE_DEFINED.SERVER_GEN,
+                            level: 'AAAAA'
+                        },
+                        blockUI: true
+                    })
+                }
+            })
             .state('app.organization-travel.scenic-spot', {
                 url: '/scenic-spot',
                 title: '景区',

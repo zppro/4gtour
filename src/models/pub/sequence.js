@@ -13,13 +13,13 @@ module.exports = function(ctx,name) {
     else {
         module.isloaded = true;
 
-        //定位唯一=object_type+object_key+date_period
+        //定位唯一=object_type+object_key+date_area_period
         var sequenceSchema = new mongoose.Schema({
             object_type: {type: String, required: true},//booking
             object_key: {type: String, required: true},//combine/in/out + _id,针对booking个体需要区分时使用
             prefix: {type: String},//T,BAC
             date_period_format:{type: String},//yyyyMM,yyyy-MM-dd
-            date_period:{type: String},//1606,201606,160630
+            date_area_period:{type: String},//1606,201606,160630| 01,0101,010101
             suffix: {type: String},//A,BB
             min: {type: Number, required: true},
             max: {type: Number, required: true},
