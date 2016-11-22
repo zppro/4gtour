@@ -176,7 +176,7 @@ module.exports = {
                         console.log('complete syncScenicSpotInfo :' + i);
 
                         var needSave = false;
-                        var show_name_of_scenicSpot_config = yield self.ctx.modelFactory().model_one(self.ctx.models['trv_idc_config'], {
+                        var show_name_of_scenicSpot_config = yield self.ctx.modelFactory().model_one(self.ctx.models['idc_config'], {
                             where: {
                                 idc_name: 'idc_scenicSpot_PFT',
                                 primary_key: 'UUid',
@@ -190,7 +190,7 @@ module.exports = {
                             needSave = true;
                         }
                         else{
-                            yield self.ctx.modelFactory().model_create(self.ctx.models['trv_idc_config'], {
+                            yield self.ctx.modelFactory().model_create(self.ctx.models['idc_config'], {
                                 idc_name: 'idc_scenicSpot_PFT',
                                 primary_key: 'UUid',
                                 primary_value: scenicSpotId,
@@ -199,7 +199,7 @@ module.exports = {
                             });
                         }
 
-                        var introduction_url_of_scenicSpot_config = yield self.ctx.modelFactory().model_one(self.ctx.models['trv_idc_config'], {
+                        var introduction_url_of_scenicSpot_config = yield self.ctx.modelFactory().model_one(self.ctx.models['idc_config'], {
                             where: {
                                 idc_name: 'idc_scenicSpot_PFT',
                                 primary_key: 'UUid',
@@ -213,7 +213,7 @@ module.exports = {
                             needSave = true;
                         }
                         else{
-                            yield self.ctx.modelFactory().model_create(self.ctx.models['trv_idc_config'], {
+                            yield self.ctx.modelFactory().model_create(self.ctx.models['idc_config'], {
                                 idc_name: 'idc_scenicSpot_PFT',
                                 primary_key: 'UUid',
                                 primary_value: scenicSpotId,
@@ -310,7 +310,7 @@ module.exports = {
                 for (var i = 0; i < savedRows.length; i++) {
                     var ticketId = savedRows[i].UUid;
                     var needSave = false;
-                    var show_name_of_ticket_config = yield self.ctx.modelFactory().model_one(self.ctx.models['trv_idc_config'], {
+                    var show_name_of_ticket_config = yield self.ctx.modelFactory().model_one(self.ctx.models['idc_config'], {
                         where: {
                             idc_name: 'idc_ticket_PFT',
                             primary_key: 'UUid',
@@ -325,7 +325,7 @@ module.exports = {
                         needSave = true;
                     }
                     else{
-                        yield self.ctx.modelFactory().model_create(self.ctx.models['trv_idc_config'], {
+                        yield self.ctx.modelFactory().model_create(self.ctx.models['idc_config'], {
                             idc_name: 'idc_ticket_PFT',
                             primary_key: 'UUid',
                             primary_value: ticketId,
@@ -334,7 +334,7 @@ module.exports = {
                         });
                     }
 
-                    var sale_price_of_scenicSpot_config = yield self.ctx.modelFactory().model_one(self.ctx.models['trv_idc_config'], {
+                    var sale_price_of_scenicSpot_config = yield self.ctx.modelFactory().model_one(self.ctx.models['idc_config'], {
                         where: {
                             idc_name: 'idc_ticket_PFT',
                             primary_key: 'UUid',
@@ -348,7 +348,7 @@ module.exports = {
                         needSave = true;
                     }
                     else{
-                        yield self.ctx.modelFactory().model_create(self.ctx.models['trv_idc_config'], {
+                        yield self.ctx.modelFactory().model_create(self.ctx.models['idc_config'], {
                             idc_name: 'idc_ticket_PFT',
                             primary_key: 'UUid',
                             primary_value: ticketId,

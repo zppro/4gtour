@@ -34,7 +34,7 @@ module.exports = {
                             console.log(rows);
 
                             for(var i= 0;i< rows.length;i++) {
-                                var scenicSpot_config = yield app.modelFactory().model_one(app.models['trv_idc_config'], {
+                                var scenicSpot_config = yield app.modelFactory().model_one(app.models['idc_config'], {
                                     where: rows[i].where
                                 });
 
@@ -43,7 +43,7 @@ module.exports = {
                                     yield scenicSpot_config.save();
                                 }
                                 else {
-                                    yield app.modelFactory().model_create(app.models['trv_idc_config'], app._.extend({}, rows[i].where, {config_value: rows[i].value}));
+                                    yield app.modelFactory().model_create(app.models['idc_config'], app._.extend({}, rows[i].where, {config_value: rows[i].value}));
                                 }
                             }
 

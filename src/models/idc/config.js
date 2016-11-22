@@ -13,7 +13,7 @@ module.exports = function(ctx,name) {
     else {
         module.isloaded = true;
 
-        var scenicSpot_config_Schema = new mongoose.Schema({
+        var idc_config_Schema = new mongoose.Schema({
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             idc_name: {type: String, required: true},//idc 表名称 例如：idc目录下的scenicSpot_PFT
@@ -30,12 +30,12 @@ module.exports = function(ctx,name) {
             }
         });
 
-        scenicSpot_config_Schema.pre('update', function (next) {
+        idc_config_Schema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();
         });
 
 
-        return mongoose.model(name, scenicSpot_config_Schema, name);
+        return mongoose.model(name, idc_config_Schema, name);
     }
 }
