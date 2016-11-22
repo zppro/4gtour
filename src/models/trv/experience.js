@@ -25,9 +25,9 @@ module.exports = function(ctx,name) {
             cancel_flag: {type: Number, min: 0, max: 1, default: 0}, //撤销标记 违法信息时设置为1
             member_id: {type: String, required: true},//下单人Id
             member_name: {type: String}, //下单人名称
-            like: {type: Number, default:0}, //赞数
-            fav: {type: Number, default:0}, //收藏数
-            retweet: {type: Number, default:0}, //转发数
+            likes: {type: Number, default:0}, //赞数
+            stars: {type: Number, default:0}, //收藏数
+            retweets: {type: Number, default:0}, //转发数
             retweet_reason: {type: String}, //转发理由
             retweet_flag: {type: Number, min: 0, max: 1, default: 0}, //转发标记此见闻是转发的而非原创的
             retweet_root: {
@@ -61,6 +61,10 @@ module.exports = function(ctx,name) {
         experience_Schema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();
+        });
+
+        experience_Schema.virtual('time_description').get(function () {
+            return ctx.moment(this.check_in_time).fromNow();
         });
 
         return mongoose.model(name, experience_Schema, name);
