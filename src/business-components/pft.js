@@ -147,6 +147,8 @@ module.exports = {
 
                 var rows =  yield self.fetchScenicSpotList(outerLogger,1000);
 
+                console.log('pft syncScenicSpot.length:' + rows.length);
+
                 if(rows.length>0) {
                     //简单格式化接口获取到的数据
                     for (var i = 0; i < rows.length; i++) {

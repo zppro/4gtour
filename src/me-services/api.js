@@ -82,7 +82,6 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-
                             var lowPriceTicketsPerScenicSpot = yield app.modelFactory().model_aggregate(app.models['idc_ticket_PFT'], [
                                 {
                                     $match: {
@@ -104,6 +103,7 @@ module.exports = {
                                     }
                                 }
                             ]);
+                            console.log(lowPriceTicketsPerScenicSpot)
 
                             var rows_ScenicSpot = yield app.modelFactory().model_query(app.models['idc_scenicSpot_PFT'], {
                                     where: {status: 1},
@@ -111,20 +111,28 @@ module.exports = {
                                 },
                                 {limit: this.request.body.page.size, skip: this.request.body.page.skip});
 
-                            var rows = app._.map(rows_ScenicSpot, function (o) {
-                                var price = app._.find(lowPriceTicketsPerScenicSpot, function (item) {
+
+
+                            var rows = [];
+
+                            app._.each(rows_ScenicSpot, function (o) {
+                                console.log(o.UUid)
+                                var scenicSpot = app._.find(lowPriceTicketsPerScenicSpot, function (item) {
                                     return item.scenicSpotId == o.UUid
-                                }).price;
-                                return {
-                                    id: o.id,
-                                    UUid: o.UUid,
-                                    title: o.show_name,
-                                    img: o.UUimgpath,
-                                    price: price,
-                                    description: o.UUaddress
+                                });
+
+                                if (scenicSpot) {
+                                    rows.push({
+                                        id: o.id,
+                                        UUid: o.UUid,
+                                        title: o.show_name,
+                                        img: o.UUimgpath,
+                                        price: scenicSpot.price,
+                                        description: o.UUaddress
+                                    });
                                 }
                             });
-                            
+
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);

@@ -27,9 +27,9 @@ module.exports = {
 
         this.actions = [
             {
-                method: 'experienceByLikeForEver',
+                method: 'experiencesHot',
                 verb: 'post',
-                url: this.service_url_prefix + "/experienceByLikeForEver",
+                url: this.service_url_prefix + "/experiencesHot",
                 handler: function (app, options) {
                     return function *(next) {
                         try {
@@ -50,9 +50,9 @@ module.exports = {
                 }
             },
             {
-                method: 'experienceByMyTweeted',
+                method: 'experiencesMyTweeted',
                 verb: 'post',
-                url: this.service_url_prefix + "/experienceByMyTweeted",
+                url: this.service_url_prefix + "/experiencesMyTweeted",
                 handler: function (app, options) {
                     return function *(next) {
                         try {
@@ -74,9 +74,9 @@ module.exports = {
                 }
             },
             {
-                method: 'experienceByMyStared',
+                method: 'experiencesMyStared',
                 verb: 'post',
-                url: this.service_url_prefix + "/experienceByMyStared",
+                url: this.service_url_prefix + "/experiencesMyStared",
                 handler: function (app, options) {
                     return function *(next) {
                         try {
