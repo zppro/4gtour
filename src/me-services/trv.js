@@ -172,9 +172,29 @@ module.exports = {
                                     match: {status: 1, cancel_flag: 0}
                                 });
 
-                            var rows = _.map(actions, function(action){
+                            var rows = app._.map(actions, function(action){
                                 return action.object_id
                             });
+
+                            if (rows.length==0) {
+                                rows.push({
+                                    id: 'test5',
+                                    check_in_time: app.moment(),
+                                    category: 'A0001',
+                                    content: '待到山花烂原野，成就最好的自己。昨晚很荣幸与大师合作，希望美妙的音乐能给大家带来欢乐！',
+                                    imgs: ['http://img2.okertrip.com/190x190-1-@2x.jpg','http://img2.okertrip.com/190x190-2-@2x.jpg',
+                                        'http://img2.okertrip.com/190x190-3-@2x.jpg','http://img2.okertrip.com/190x190-4-@2x.jpg',
+                                        'http://img2.okertrip.com/190x190-5-@2x.jpg','http://img2.okertrip.com/190x190-6-@2x.jpg'],
+                                    location: '杭州',
+                                    time_description: '5分钟前',
+                                    member_id: 'sjygw',
+                                    member_name: '四季游官网',
+                                    member_head_portrait: 'http://img2.okertrip.com/70x70-1-@2x.jpg',
+                                    likes:124,
+                                    stars:233,
+                                    retweets:35
+                                });
+                            }
 
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
