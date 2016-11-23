@@ -23,7 +23,7 @@ module.exports = {
             this.logger.info(this.file + " loaded!");
         }
         
-        this.experienceSelect = 'content imgs location member_id,member_name,likes,stars,retweets,check_in_time,time_description';
+        this.experienceSelect = 'category content imgs location member_id,member_name,likes,stars,retweets,check_in_time,time_description';
 
         this.actions = [
             {
@@ -39,6 +39,43 @@ module.exports = {
                                     sort: {likes: -1}
                                 },
                                 {limit: this.request.body.page.size, skip: this.request.body.page.skip});
+
+                            if (rows.length==0) {
+                                rows.push({
+                                    id: 'test2',
+                                    check_in_time: app.moment(),
+                                    category: 'A0001',
+                                    content: '待到山花烂原野，成就最好的自己。昨晚很荣幸与大师合作，希望美妙的音乐能给大家带来欢乐！',
+                                    imgs: ['http://img2.okertrip.com/190x190-1-@2x.jpg','http://img2.okertrip.com/190x190-2-@2x.jpg',
+                                        'http://img2.okertrip.com/190x190-3-@2x.jpg','http://img2.okertrip.com/190x190-4-@2x.jpg',
+                                        'http://img2.okertrip.com/190x190-5-@2x.jpg','http://img2.okertrip.com/190x190-6-@2x.jpg'],
+                                    location: '杭州',
+                                    time_description: '1小时前',
+                                    member_id: 'sjygw',
+                                    member_name: '四季游官网',
+                                    member_head_portrait: 'http://img2.okertrip.com/70x70-1-@2x.jpg',
+                                    likes:24,
+                                    stars:10,
+                                    retweets:0
+                                });
+                                rows.push({
+                                    id: 'test1',
+                                    check_in_time: app.moment(),
+                                    category: 'A0002',
+                                    content: '待到山花烂原野，成就最好的自己。昨晚很荣幸与大师合作，希望美妙的音乐能给大家带来欢乐！',
+                                    imgs: ['http://img2.okertrip.com/190x190-1-@2x.jpg','http://img2.okertrip.com/190x190-2-@2x.jpg',
+                                        'http://img2.okertrip.com/190x190-3-@2x.jpg','http://img2.okertrip.com/190x190-4-@2x.jpg',
+                                        'http://img2.okertrip.com/190x190-5-@2x.jpg','http://img2.okertrip.com/190x190-6-@2x.jpg'],
+                                    location: '杭州',
+                                    time_description: '2小时前',
+                                    member_id: 'sjygw',
+                                    member_name: '四季游官网',
+                                    member_head_portrait: 'http://img2.okertrip.com/70x70-2-@2x.jpg',
+                                    likes:33,
+                                    stars:5,
+                                    retweets:12
+                                })
+                            }
 
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
@@ -64,6 +101,42 @@ module.exports = {
                                 },
                                 {limit: this.request.body.page.size, skip: this.request.body.page.skip});
 
+                            if (rows.length==0) {
+                                rows.push({
+                                    id: 'test4',
+                                    check_in_time: app.moment(),
+                                    category: 'A0001',
+                                    content: '待到山花烂原野，成就最好的自己。昨晚很荣幸与大师合作，希望美妙的音乐能给大家带来欢乐！',
+                                    imgs: ['http://img2.okertrip.com/190x190-1-@2x.jpg','http://img2.okertrip.com/190x190-2-@2x.jpg',
+                                        'http://img2.okertrip.com/190x190-3-@2x.jpg','http://img2.okertrip.com/190x190-4-@2x.jpg',
+                                        'http://img2.okertrip.com/190x190-5-@2x.jpg','http://img2.okertrip.com/190x190-6-@2x.jpg'],
+                                    location: '杭州',
+                                    time_description: '5分钟前',
+                                    member_id: 'sjygw',
+                                    member_name: '四季游官网',
+                                    member_head_portrait: 'http://img2.okertrip.com/70x70-1-@2x.jpg',
+                                    likes:24,
+                                    stars:10,
+                                    retweets:0
+                                });
+                                rows.push({
+                                    id: 'test3',
+                                    check_in_time: app.moment(),
+                                    category: 'A0002',
+                                    content: '待到山花烂原野，成就最好的自己。昨晚很荣幸与大师合作，希望美妙的音乐能给大家带来欢乐！',
+                                    imgs: ['http://img2.okertrip.com/190x190-1-@2x.jpg','http://img2.okertrip.com/190x190-2-@2x.jpg',
+                                        'http://img2.okertrip.com/190x190-3-@2x.jpg','http://img2.okertrip.com/190x190-4-@2x.jpg',
+                                        'http://img2.okertrip.com/190x190-5-@2x.jpg','http://img2.okertrip.com/190x190-6-@2x.jpg'],
+                                    location: '杭州',
+                                    time_description: '2分钟前',
+                                    member_id: 'sjygw',
+                                    member_name: '四季游官网',
+                                    member_head_portrait: 'http://img2.okertrip.com/70x70-2-@2x.jpg',
+                                    likes:33,
+                                    stars:5,
+                                    retweets:12
+                                })
+                            }
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
