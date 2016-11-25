@@ -3,7 +3,7 @@
  * travel related
  */
 var rp = require('request-promise-native');
-
+var TRV03 = require('../pre-defined/dictionary.json')['TRV03'];
 module.exports = {
     init: function (option) {
         var self = this;
@@ -43,7 +43,7 @@ module.exports = {
 
                             if (rows.length==0) {
                                 rows.push({
-                                    id: 'test2',
+                                    id: '5837d4a530452737c6710983',
                                     check_in_time: app.moment(),
                                     category: 'A0003',
                                     content: '宋城——>六和塔',
@@ -60,7 +60,7 @@ module.exports = {
                                     retweets:0
                                 });
                                 rows.push({
-                                    id: 'test1',
+                                    id: '5837d4a530452737c6710982',
                                     check_in_time: app.moment(),
                                     category: 'A0001',
                                     content: '待到山花烂原野，成就最好的自己。昨晚很荣幸与大师合作，希望美妙的音乐能给大家带来欢乐！',
@@ -76,7 +76,7 @@ module.exports = {
                                     retweets:12
                                 })
                                 rows.push({
-                                    id: 'test0',
+                                    id: '5837d4a530452737c6710981',
                                     check_in_time: app.moment(),
                                     category: 'A0001',
                                     content: '待到山花烂原野，成就最好的自己。昨晚很荣幸与大师合作，希望美妙的音乐能给大家带来欢乐！',
@@ -118,7 +118,7 @@ module.exports = {
 
                             if (rows.length==0) {
                                 rows.push({
-                                    id: 'test4',
+                                    id: '5837d4a530452737c6710985',
                                     check_in_time: app.moment(),
                                     category: 'A0001',
                                     content: '待到山花烂原野，成就最好的自己。昨晚很荣幸与大师合作，希望美妙的音乐能给大家带来欢乐！',
@@ -135,7 +135,7 @@ module.exports = {
                                     retweets:0
                                 });
                                 rows.push({
-                                    id: 'test3',
+                                    id: '5837d4a530452737c6710986',
                                     check_in_time: app.moment(),
                                     category: 'A0003',
                                     content: '六和塔——>宋城',
@@ -193,7 +193,7 @@ module.exports = {
 
                             if (rows.length==0) {
                                 rows.push({
-                                    id: 'test5',
+                                    id: '5837d4a530452737c6710987',
                                     check_in_time: app.moment(),
                                     category: 'A0001',
                                     content: '待到山花烂原野，成就最好的自己。昨晚很荣幸与大师合作，希望美妙的音乐能给大家带来欢乐！',
@@ -234,29 +234,30 @@ module.exports = {
                                 routes = experience.route;
                             } else {
                                 routes = [];
-                                var scenerySpot1 = yield app.modelFactory().model_one(app.models['trv_scenerySpot'], { where:{_id:'5837d46d30452737c6710981'},select: self.scenerySpotSelectInExperienceRoute});
+                                var scenerySpot1 = yield app.modelFactory().model_one(app.models['trv_scenerySpot'], { where:{_id:'5837d214bf551b671e3d8897'},select: self.scenerySpotSelectInExperienceRoute});
                                 routes.push({
                                     type: 'A0001',
                                     imgs: ['http://img2.okertrip.com/190x190-1-raw.jpg','http://img2.okertrip.com/190x190-2-raw.jpg','http://img2.okertrip.com/190x190-3-raw.jpg'],
                                     content: ' 90年代在六和塔近旁新建“中华古塔博览苑”，将中国各地著名的塔缩微雕刻而成，集中展示了古代汉族建筑文化的成就。',
                                     time_consuming: 'A0007',
                                     order_no: 1,
-                                    scenerySpotInfo: scenerySpot1
+                                    scenerySpotInfo: scenerySpot1 || {}
                                 });
                                 routes.push({
                                     type: 'A0003',
                                     content: '乘坐公交Y2线，从X站上车，途径3站到Y站下车，步行500米',
                                     time_consuming: 'A0005',
-                                    order_no: 2
+                                    order_no: 1.5,
+                                    scenerySpotInfo:{}
                                 });
-                                var scenerySpot2 = yield app.modelFactory().model_one(app.models['trv_scenerySpot'], { where:{_id:'5837d4a530452737c6710983'},select: self.scenerySpotSelectInExperienceRoute});
+                                var scenerySpot2 = yield app.modelFactory().model_one(app.models['trv_scenerySpot'], { where:{_id:'5837d3e0bf551b671e3d8899'},select: self.scenerySpotSelectInExperienceRoute});
                                 routes.push({
                                     type: 'A0001',
                                     imgs: ['http://img2.okertrip.com/190x190-4-raw.jpg','http://img2.okertrip.com/190x190-5-raw.jpg','http://img2.okertrip.com/190x190-6-raw.jpg'],
                                     content: '大型歌舞宋城千古情演出、瓦子勾栏百戏、七十二行老作坊、失落古城、两大鬼屋、江南第一怪街等项目',
                                     time_consuming: 'A0009',
-                                    order_no: 3,
-                                    scenerySpotInfo: scenerySpot2
+                                    order_no: 2,
+                                    scenerySpotInfo: scenerySpot2 || {}
                                 });
                                 experienceInfo = {
                                     id: 'testxxx',
@@ -265,6 +266,10 @@ module.exports = {
                                     routes: routes
                                 }
                             }
+
+                            app._.each(experienceInfo.routes,function(o){
+                               o.time_consuming = TRV03[o.time_consuming].name;
+                            });
 
                             this.body = app.wrapper.res.ret(experienceInfo);
                         } catch (e) {
