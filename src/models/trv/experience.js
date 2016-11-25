@@ -19,7 +19,7 @@ module.exports = function(ctx,name) {
             status: {type: Number, min: 0, max: 1, default: 1},
             category: {type: String, required: true, enum: ctx._.rest(ctx.dictionary.keys["TRV00"])},//见闻类别
             content: {type: String, max: 200, required: true}, //内容
-            imgs: [{type: String}],//套图
+            imgs: [{type: String}],//感想套图
             location: {type: String},// 位置
             who_can_see: {type: String, required: true, enum: ctx._.rest(ctx.dictionary.keys["TRV01"])},//信息查看等级
             cancel_flag: {type: Number, min: 0, max: 1, default: 0}, //撤销标记 违法信息时设置为1
@@ -43,7 +43,7 @@ module.exports = function(ctx,name) {
             /**** 以下是category==route的扩展信息*****/
             route:[{
                 type: {type: String, enum: ctx._.rest(ctx.dictionary.keys["TRV02"])},
-                imgs: [{type: String}],//套图
+                imgs: [{type: String}],//景点套图
                 scenerySpotId: {type: mongoose.Schema.Types.ObjectId, ref: 'trv_scenerySpot'}, // type==景点时使用，其他为空
                 time_consuming: {type: String, enum: ctx._.rest(ctx.dictionary.keys["TRV03"])}, //type==景点时使用为游览时间，其他为耗时 
                 content: {type: String}, //感受 说明

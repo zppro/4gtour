@@ -20,7 +20,7 @@ module.exports = function(ctx,name) {
             code: {type: String, required: true,  min: 13, max: 13,index: {unique: true}}, //scenicSpot$code.js内定义
             name: {type: String, required: true}, //标准名称
             show_name: {type: String},//显示名称 -由平台定义而非来自接口
-            img: {type: String},//景区默认图
+            img: {type: String},//景区套图
             area: {type: String},//所在地区
             tel: {type: String},//景区联系电话
             level: {type: String},//景区级别
