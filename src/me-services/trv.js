@@ -37,7 +37,7 @@ module.exports = {
                             var rows = yield app.modelFactory().model_query(app.models['trv_experience'], {
                                     where: {status: 1, cancel_flag: 0, who_can_see: 'A0001'},
                                     select: self.experienceSelect,
-                                    sort: {likes: -1}
+                                    sort: {likes: -1, check_in_time: -1}
                                 },
                                 {limit: this.request.body.page.size, skip: this.request.body.page.skip});
 
