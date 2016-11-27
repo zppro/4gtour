@@ -23,7 +23,7 @@ module.exports = {
             this.logger.info(this.file + " loaded!");
         }
         
-        this.experienceSelect = 'category content imgs location member_id,member_name,likes,stars,retweets,check_in_time,time_description';
+        this.experienceSelect = 'category content imgs location member_id member_name likes stars retweets check_in_time time_description';
         this.scenerySpotSelectInExperienceRoute = 'show_name level runtime address tel tip traffic introduction_simple';
 
         this.actions = [
@@ -273,6 +273,49 @@ module.exports = {
 
                             this.body = app.wrapper.res.ret(experienceInfo);
                         } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'experience',
+                verb: 'post',
+                url: this.service_url_prefix + "/experience",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            console.log(this.request.body)
+                            var experience = app._.extend({
+                                who_can_see: 'A0001'
+                            }, this.payload.member, this.request.body);
+                            console.log(experience);
+                            this.body = app.wrapper.res.ret(yield app.modelFactory().model_create(app.models['trv_experience'], experience));
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'experience',
+                verb: 'put',
+                url: this.service_url_prefix + "/experience/:id",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var payload = app._.extend({pay_time: Date.now()}, this.request.body);
+                            var ret = yield app.modelFactory().model_update(app.models['trv_experience'], this.params.id, this.request.body);
+                            console.log(ret)
+                            var experience = yield app.modelFactory().model_read(app.models['trv_experience'], this.params.id);
+                            this.body = app.wrapper.res.ret(experience);
+                        } catch (e) {
+                            console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
                         }

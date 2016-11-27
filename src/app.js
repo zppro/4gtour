@@ -6,6 +6,7 @@
 
 var _ = require('underscore');
 var moment = require("moment");
+moment.locale('zh-cn');
 var log4js = require('log4js');
 var koa = require('koa');
 var Router = require('koa-router');
