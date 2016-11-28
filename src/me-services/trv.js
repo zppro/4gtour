@@ -182,7 +182,9 @@ module.exports = {
                             var experienceInfo;
                             var routes;
                             if (experience) {
-                                routes = experience.route;
+                                experienceInfo = experience.toObject();
+                                routes = experienceInfo.route;
+
                             } else {
                                 routes = [];
                                 var scenerySpot1 = yield app.modelFactory().model_one(app.models['trv_scenerySpot'], { where:{_id:'5837d214bf551b671e3d8897'},select: self.scenerySpotSelectInExperienceRoute});
@@ -218,9 +220,11 @@ module.exports = {
                                 }
                             }
 
-                            app._.each(experienceInfo.routes,function(o){
+                            app._.each(routes,function(o){
                                o.time_consuming = TRV03[o.time_consuming].name;
                             });
+
+                            console.log(experienceInfo)
 
                             this.body = app.wrapper.res.ret(experienceInfo);
                         } catch (e) {
