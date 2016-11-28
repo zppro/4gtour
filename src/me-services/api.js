@@ -450,7 +450,6 @@ module.exports = {
                                 var token = ret1.info.token;
                                 var ret2 = yield rp({url: 'http://im.okertrip.com/api/personal/info.html?token=' + token, json: true});
                                 if (ret2.err_code == '0') {
-                                    console.log(ret2)
                                     this.body = app.wrapper.res.ret({memberInfo: {member_id: ret2.info.u_id, member_name: ret2.info.u_nickname, head_portrait: ret2.info.u_headpic, member_description: ret2.info.u_description}, token: token});
                                 }
                                 else {
@@ -477,10 +476,8 @@ module.exports = {
                     return function *(next) {
                         try {
                             var token = this.request.body.token;
-                            console.log(token)
                             var ret2 = yield rp({url: 'http://im.okertrip.com/api/personal/info.html?token=' + token, json: true});
                             if (ret2.err_code == '0') {
-                                console.log(ret2)
                                 this.body = app.wrapper.res.ret({memberInfo: {member_id: ret2.info.u_id, member_name: ret2.info.u_nickname, head_portrait: ret2.info.u_headpic, member_description: ret2.info.u_description}, token: token});
                             }
                             else {

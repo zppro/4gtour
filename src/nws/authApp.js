@@ -8,7 +8,7 @@ var jwt = require('jsonwebtoken');
 module.exports = function (app){
     var ignoreAuthPaths = app.conf.authApp.ignorePaths;
     return function * (next) {
-        console.log('authApp');
+        // console.log('authApp');
         var self = this;
         var isIgnored = false;
         if(ignoreAuthPaths) { 
@@ -50,7 +50,7 @@ module.exports = function (app){
                     this.request_timestamp = timestamp;
                     this.payload = jwt.verify(token, app.conf.secure.authSecret + ':' + timestamp);
 
-                    console.log(this.payload);
+                    // console.log(this.payload);
                 }catch(e){
                     console.log(e);
                     this.status = 401;

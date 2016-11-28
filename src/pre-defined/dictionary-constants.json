@@ -1,0 +1,36 @@
+{
+  "TRV00": {
+    "FEELING": "A0001",
+    "ROUTE": "A0003"
+  },
+  "TRV01": {
+    "OPEN": "A0001",
+    "PRIVACY": "A0003",
+    "FOLLOWED": "A0005"
+  },
+  "TRV02": {
+    "SCENERY_SPOT": "A0001",
+    "TRAFFIC_BETWEEN_SCENERY_SPOTS": "A0003"
+  },
+  "TRV03": {
+    "LESS_THAN_A_QUARTER": "A0001",
+    "ONE_OR_TWO_QUARTERS": "A0003",
+    "HALF_OR_ONE_HOUR": "A0005",
+    "ONE_OR_TWO_HOURS": "A0007",
+    "HALF_DAY": "A0009",
+    "ONE_DAY": "A0011"
+  },
+  "TRV04": {
+    "MEMBER": "A0001",
+    "EXPERIENCE": "A0003"
+  },
+  "TRV05": {
+    "FOLLOW": "A0001",
+    "UNFOLLOW": "A0002",
+    "LIKE": "A0003",
+    "UNLIKE": "A0004",
+    "STAR": "A0005",
+    "UNSTAR": "A0006",
+    "RETWEET": "A0007"
+  }
+}

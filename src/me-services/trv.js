@@ -4,6 +4,7 @@
  */
 var rp = require('request-promise-native');
 var TRV03 = require('../pre-defined/dictionary.json')['TRV03'];
+var DIC = require('../pre-defined/dictionary-constants.json');
 module.exports = {
     init: function (option) {
         var self = this;
@@ -34,64 +35,34 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var rows = yield app.modelFactory().model_query(app.models['trv_experience'], {
-                                    where: {status: 1, cancel_flag: 0, who_can_see: 'A0001'},
+                            var member_id = this.payload.member.member_id;
+                            var rawRows = yield app.modelFactory().model_query(app.models['trv_experience'], {
+                                    where: {status: 1, cancel_flag: 0, who_can_see: DIC.TRV01.OPEN},
                                     select: self.experienceSelect,
                                     sort: {likes: -1, check_in_time: -1}
                                 },
                                 {limit: this.request.body.page.size, skip: this.request.body.page.skip});
 
-                            if (rows.length==0) {
-                                rows.push({
-                                    id: '5837d4a530452737c6710983',
-                                    check_in_time: app.moment(),
-                                    category: 'A0003',
-                                    content: '宋城——>六和塔',
-                                    imgs: ['http://img2.okertrip.com/190x190-1-@2x.jpg','http://img2.okertrip.com/190x190-2-@2x.jpg',
-                                        'http://img2.okertrip.com/190x190-3-@2x.jpg','http://img2.okertrip.com/190x190-4-@2x.jpg',
-                                        'http://img2.okertrip.com/190x190-5-@2x.jpg','http://img2.okertrip.com/190x190-6-@2x.jpg'],
-                                    location: '杭州',
-                                    time_description: '1小时前',
-                                    member_id: 'sjygw',
-                                    member_name: '四季游官网',
-                                    member_head_portrait: 'http://img2.okertrip.com/70x70-1-@2x.jpg',
-                                    likes:24,
-                                    stars:10,
-                                    retweets:0
-                                });
-                                rows.push({
-                                    id: '5837d4a530452737c6710982',
-                                    check_in_time: app.moment(),
-                                    category: 'A0001',
-                                    content: '待到山花烂原野，成就最好的自己。昨晚很荣幸与大师合作，希望美妙的音乐能给大家带来欢乐！',
-                                    imgs: ['http://img2.okertrip.com/190x190-1-@2x.jpg','http://img2.okertrip.com/190x190-2-@2x.jpg',
-                                        'http://img2.okertrip.com/190x190-3-@2x.jpg','http://img2.okertrip.com/190x190-4-@2x.jpg'],
-                                    location: '杭州',
-                                    time_description: '2小时前',
-                                    member_id: 'sjygw',
-                                    member_name: '四季游官网',
-                                    member_head_portrait: 'http://img2.okertrip.com/70x70-2-@2x.jpg',
-                                    likes:33,
-                                    stars:5,
-                                    retweets:12
-                                })
-                                rows.push({
-                                    id: '5837d4a530452737c6710981',
-                                    check_in_time: app.moment(),
-                                    category: 'A0001',
-                                    content: '待到山花烂原野，成就最好的自己。昨晚很荣幸与大师合作，希望美妙的音乐能给大家带来欢乐！',
-                                    imgs: ['http://img2.okertrip.com/190x190-1-@2x.jpg'],
-                                    location: '杭州',
-                                    time_description: '2小时前',
-                                    member_id: 'sjygw',
-                                    member_name: '四季游官网',
-                                    member_head_portrait: 'http://img2.okertrip.com/70x70-2-@2x.jpg',
-                                    likes:33,
-                                    stars:5,
-                                    retweets:12
-                                })
-                            }
+                            var rows = [];
+                            if (rawRows.length > 0) {
+                                var row_ids = app._.map(rawRows,function(o){return o.id});
 
+                                var theActions = yield app.modelFactory().model_query(app.models['trv_action'],
+                                    {
+                                        where:{subject_type:DIC.TRV04.MEMBER, object_type: DIC.TRV04.EXPERIENCE, object_id:{$in: row_ids }},
+                                        select:'object_id action_type subject_id'
+                                    });
+                                app._.each(rawRows,function(rawRow) {
+                                    var row = rawRow.toObject();
+                                    row.liked = app._.some(theActions, function (action) {
+                                        return action.subject_id == member_id && action.action_type == DIC.TRV05.LIKE && action.object_id == row.id
+                                    });
+                                    row.stared = app._.some(theActions, function (action) {
+                                        return action.subject_id == member_id && action.action_type == DIC.TRV05.STAR && action.object_id == row.id
+                                    });
+                                    rows.push(row)
+                                });
+                            }
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
@@ -109,48 +80,31 @@ module.exports = {
                     return function *(next) {
                         try {
                             var member_id = this.payload.member.member_id;
-                            var rows = yield app.modelFactory().model_query(app.models['trv_experience'], {
+                            var rawRows = yield app.modelFactory().model_query(app.models['trv_experience'], {
                                     where: {status: 1, cancel_flag: 0, member_id: member_id},
                                     select: self.experienceSelect,
                                     sort: {check_in_time: -1}
                                 },
                                 {limit: this.request.body.page.size, skip: this.request.body.page.skip});
+                            var rows = [];
+                            if (rawRows.length > 0) {
+                                var row_ids = app._.map(rawRows,function(o){return o.id});
 
-                            if (rows.length==0) {
-                                rows.push({
-                                    id: '5837d4a530452737c6710985',
-                                    check_in_time: app.moment(),
-                                    category: 'A0001',
-                                    content: '待到山花烂原野，成就最好的自己。昨晚很荣幸与大师合作，希望美妙的音乐能给大家带来欢乐！',
-                                    imgs: ['http://img2.okertrip.com/190x190-1-@2x.jpg','http://img2.okertrip.com/190x190-2-@2x.jpg',
-                                        'http://img2.okertrip.com/190x190-3-@2x.jpg','http://img2.okertrip.com/190x190-4-@2x.jpg',
-                                        'http://img2.okertrip.com/190x190-5-@2x.jpg','http://img2.okertrip.com/190x190-6-@2x.jpg'],
-                                    location: '杭州',
-                                    time_description: '5分钟前',
-                                    member_id: 'sjygw',
-                                    member_name: '四季游官网',
-                                    member_head_portrait: 'http://img2.okertrip.com/70x70-1-@2x.jpg',
-                                    likes:24,
-                                    stars:10,
-                                    retweets:0
+                                var theActions = yield app.modelFactory().model_query(app.models['trv_action'],
+                                    {
+                                        where:{subject_type:DIC.TRV04.MEMBER, object_type: DIC.TRV04.EXPERIENCE, object_id:{$in: row_ids }},
+                                        select:'object_id action_type subject_id'
+                                    });
+                                app._.each(rawRows,function(rawRow) {
+                                    var row = rawRow.toObject();
+                                    row.liked = app._.some(theActions, function (action) {
+                                        return action.subject_id == member_id && action.action_type == DIC.TRV05.LIKE && action.object_id == row.id
+                                    });
+                                    row.stared = app._.some(theActions, function (action) {
+                                        return action.subject_id == member_id && action.action_type == DIC.TRV05.STAR && action.object_id == row.id
+                                    });
+                                    rows.push(row)
                                 });
-                                rows.push({
-                                    id: '5837d4a530452737c6710986',
-                                    check_in_time: app.moment(),
-                                    category: 'A0003',
-                                    content: '六和塔——>宋城',
-                                    imgs: ['http://img2.okertrip.com/190x190-1-@2x.jpg','http://img2.okertrip.com/190x190-2-@2x.jpg',
-                                        'http://img2.okertrip.com/190x190-3-@2x.jpg','http://img2.okertrip.com/190x190-4-@2x.jpg',
-                                        'http://img2.okertrip.com/190x190-5-@2x.jpg','http://img2.okertrip.com/190x190-6-@2x.jpg'],
-                                    location: '杭州',
-                                    time_description: '2分钟前',
-                                    member_id: 'sjygw',
-                                    member_name: '四季游官网',
-                                    member_head_portrait: 'http://img2.okertrip.com/70x70-2-@2x.jpg',
-                                    likes:33,
-                                    stars:5,
-                                    retweets:12
-                                })
                             }
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
@@ -171,44 +125,41 @@ module.exports = {
                             var member_id = this.payload.member.member_id;
                             var actions = yield app.modelFactory().model_query(app.models['trv_action'], {
                                     where: {
-                                        subject_type: 'A0003',
+                                        subject_type: DIC.TRV04.MEMBER,
                                         subject_id: member_id,
-                                        action_type: 'A0005',
-                                        object_type: 'A0002'
+                                        action_type: DIC.TRV05.STAR,
+                                        object_type: DIC.TRV04.EXPERIENCE
                                     },
                                     select: 'object_id',
                                     sort: {check_in_time: -1}
                                 },
-                                {limit: this.request.body.page.size, skip: this.request.body.page.skip})
-                                .populate({
-                                    path: 'object_id',
-                                    select: self.experienceSelect,
-                                    model: 'trv_experience',
-                                    match: {status: 1, cancel_flag: 0}
-                                });
+                                {limit: this.request.body.page.size, skip: this.request.body.page.skip});
+                            var rows = [];
+                            if (actions.length > 0) {
+                                var object_ids = app._.map(actions,function(o){return o.object_id});
+                                rawRows = yield app.modelFactory().model_query(app.models['trv_experience'],
+                                    {
+                                        where:{status: 1, cancel_flag: 0, _id:{$in: object_ids }},
+                                        select:self.experienceSelect,
+                                        sort: {check_in_time: -1}
+                                    });
+                                if (rawRows.length > 0) {
+                                    var row_ids = app._.map(rawRows,function(o){return o.id});
 
-                            var rows = app._.map(actions, function(action){
-                                return action.object_id
-                            });
-
-                            if (rows.length==0) {
-                                rows.push({
-                                    id: '5837d4a530452737c6710987',
-                                    check_in_time: app.moment(),
-                                    category: 'A0001',
-                                    content: '待到山花烂原野，成就最好的自己。昨晚很荣幸与大师合作，希望美妙的音乐能给大家带来欢乐！',
-                                    imgs: ['http://img2.okertrip.com/190x190-1-@2x.jpg','http://img2.okertrip.com/190x190-2-@2x.jpg',
-                                        'http://img2.okertrip.com/190x190-3-@2x.jpg','http://img2.okertrip.com/190x190-4-@2x.jpg',
-                                        'http://img2.okertrip.com/190x190-5-@2x.jpg','http://img2.okertrip.com/190x190-6-@2x.jpg'],
-                                    location: '杭州',
-                                    time_description: '5分钟前',
-                                    member_id: 'sjygw',
-                                    member_name: '四季游官网',
-                                    member_head_portrait: 'http://img2.okertrip.com/70x70-1-@2x.jpg',
-                                    likes:124,
-                                    stars:233,
-                                    retweets:35
-                                });
+                                    var theActions = yield app.modelFactory().model_query(app.models['trv_action'],
+                                        {
+                                            where:{subject_type:DIC.TRV04.MEMBER, action_type: DIC.TRV05.LIKE,object_type: DIC.TRV04.EXPERIENCE, object_id:{$in: row_ids }},
+                                            select:'object_id action_type subject_id'
+                                        });
+                                    app._.each(rawRows,function(rawRow) {
+                                        var row = rawRow.toObject();
+                                        row.liked = app._.some(theActions, function (action) {
+                                            return action.subject_id == member_id && action.object_id == row.id
+                                        });
+                                        row.stared = true;
+                                        rows.push(row)
+                                    });
+                                }
                             }
 
                             this.body = app.wrapper.res.rows(rows);
@@ -305,15 +256,159 @@ module.exports = {
             {
                 method: 'experience',
                 verb: 'put',
-                url: this.service_url_prefix + "/experience/:id",
+                url: this.service_url_prefix + "/experience/:experienceId",
                 handler: function (app, options) {
                     return function *(next) {
                         try {
                             var payload = app._.extend({pay_time: Date.now()}, this.request.body);
-                            var ret = yield app.modelFactory().model_update(app.models['trv_experience'], this.params.id, this.request.body);
+                            var ret = yield app.modelFactory().model_update(app.models['trv_experience'], this.params.experienceId, this.request.body);
                             console.log(ret)
-                            var experience = yield app.modelFactory().model_read(app.models['trv_experience'], this.params.id);
+                            var experience = yield app.modelFactory().model_read(app.models['trv_experience'], this.params.experienceId);
                             this.body = app.wrapper.res.ret(experience);
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'experienceLike',
+                verb: 'post',
+                url: this.service_url_prefix + "/experienceLike/:experienceId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var experience = yield app.modelFactory().model_read(app.models['trv_experience'], this.params.experienceId);
+                            if (!experience) {
+                                this.body = app.wrapper.res.error({code: 51001, message: 'invalid experience'});
+                                yield next;
+                                return;
+                            }
+                            var member_id = this.payload.member.member_id;
+                            yield app.modelFactory().model_create(app.models['trv_action'], {
+                                subject_type: DIC.TRV04.MEMBER,
+                                subject_id: member_id,
+                                action_type: DIC.TRV05.LIKE,
+                                object_type: DIC.TRV04.EXPERIENCE,
+                                object_id: this.params.experienceId
+                            });
+                            experience.likes += 1;
+                            yield experience.save();
+                            this.body = app.wrapper.res.ret({id: experience._id, likes: experience.likes, liked: true});
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'experienceUnLike',
+                verb: 'post',
+                url: this.service_url_prefix + "/experienceUnLike/:experienceId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var experience = yield app.modelFactory().model_read(app.models['trv_experience'], this.params.experienceId);
+                            if (!experience) {
+                                this.body = app.wrapper.res.error({code: 51001, message: 'invalid experience'});
+                                yield next;
+                                return;
+                            }
+                            var member_id = this.payload.member.member_id;
+                            var actions = yield app.modelFactory().model_query(app.models['trv_action'], {
+                                where: {
+                                    subject_type: DIC.TRV04.MEMBER,
+                                    subject_id: member_id,
+                                    action_type: DIC.TRV05.LIKE,
+                                    object_type: DIC.TRV04.EXPERIENCE,
+                                    object_id: this.params.experienceId
+                                }
+                            });
+                            var length = actions.length;
+                            for (var i = 0; i < length; i++) {
+                                actions[i].remove();
+                            }
+                            experience.likes -= length;
+                            yield experience.save();
+                            this.body = app.wrapper.res.ret({id: experience._id, likes: experience.likes, liked: false});
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'experienceStar',
+                verb: 'post',
+                url: this.service_url_prefix + "/experienceStar/:experienceId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var experience = yield app.modelFactory().model_read(app.models['trv_experience'], this.params.experienceId);
+                            if (!experience) {
+                                this.body = app.wrapper.res.error({code: 51001, message: 'invalid experience'});
+                                yield next;
+                                return;
+                            }
+                            var member_id = this.payload.member.member_id;
+                            yield app.modelFactory().model_create(app.models['trv_action'], {
+                                subject_type: DIC.TRV04.MEMBER,
+                                subject_id: member_id,
+                                action_type: DIC.TRV05.STAR,
+                                object_type: DIC.TRV04.EXPERIENCE,
+                                object_id: this.params.experienceId
+                            });
+                            experience.stars += 1;
+                            yield experience.save();
+                            this.body = app.wrapper.res.ret({id: experience._id, stars: experience.stars, stared: true});
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'experienceUnStar',
+                verb: 'post',
+                url: this.service_url_prefix + "/experienceUnStar/:experienceId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var experience = yield app.modelFactory().model_read(app.models['trv_experience'], this.params.experienceId);
+                            if (!experience) {
+                                this.body = app.wrapper.res.error({code: 51001, message: 'invalid experience'});
+                                yield next;
+                                return;
+                            }
+                            var member_id = this.payload.member.member_id;
+                            var actions = yield app.modelFactory().model_query(app.models['trv_action'], {
+                                where: {
+                                    subject_type: DIC.TRV04.MEMBER,
+                                    subject_id: member_id,
+                                    action_type: DIC.TRV05.STAR,
+                                    object_type: DIC.TRV04.EXPERIENCE,
+                                    object_id: this.params.experienceId
+                                }
+                            });
+                            var length = actions.length;
+                            for (var i = 0; i < length; i++) {
+                                actions[i].remove();
+                            }
+                            experience.stars -= length;
+                            yield experience.save();
+                            this.body = app.wrapper.res.ret({id: experience._id, stars: experience.stars, stared: false});
                         } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
