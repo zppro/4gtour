@@ -28,7 +28,7 @@ module.exports = function(ctx,name) {
             likes: {type: Number, default:0}, //赞数
             stars: {type: Number, default:0}, //收藏数
             retweets: {type: Number, default:0}, //转发数
-            retweet_flag: {type: Number, min: 0, max: 1, default: 0}, //转发标记此见闻是转发的而非原创的
+            retweet_flag: {type: Boolean, default: false},
             retweet_from: {
                 item_id: {type: mongoose.Schema.Types.ObjectId, ref: 'experience'},
                 member_id: {type: String},//人Id
