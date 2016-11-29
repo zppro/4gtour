@@ -18,7 +18,7 @@ module.exports = function(ctx,name) {
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
             category: {type: String, required: true, enum: ctx._.rest(ctx.dictionary.keys["TRV00"])},//见闻类别
-            content: {type: String, max: 200, required: true}, //内容
+            content: {type: String, required: true}, //内容
             imgs: [{type: String}],//感想套图
             location: {type: String},// 位置
             who_can_see: {type: String, required: true, enum: ctx._.rest(ctx.dictionary.keys["TRV01"])},//信息查看等级
@@ -28,18 +28,19 @@ module.exports = function(ctx,name) {
             likes: {type: Number, default:0}, //赞数
             stars: {type: Number, default:0}, //收藏数
             retweets: {type: Number, default:0}, //转发数
-            retweet_reason: {type: String}, //转发理由
             retweet_flag: {type: Number, min: 0, max: 1, default: 0}, //转发标记此见闻是转发的而非原创的
-            retweet_root: {
-                item_id: {type: mongoose.Schema.Types.ObjectId, ref: 'experience'},
-                member_id: {type: String},//人Id
-                member_name: {type: String}, //人名称
-            }, //转发的原创文章 理解为祖先
             retweet_from: {
                 item_id: {type: mongoose.Schema.Types.ObjectId, ref: 'experience'},
                 member_id: {type: String},//人Id
                 member_name: {type: String}, //人名称
             },//转发的来源文章 理解为父辈
+            retweet_root: {
+                item_id: {type: mongoose.Schema.Types.ObjectId, ref: 'experience'},
+                member_id: {type: String},//人Id
+                member_name: {type: String}, //人名称
+            }, //转发的原创文章 理解为祖先
+            pure_content: {type: String, max: 200}, //retweet_flag=true时 存储带//@的文本，而content则转化为带链接的
+            retweet_chains: [String],
             /**** 以下是category==route的扩展信息*****/
             route:[{
                 type: {type: String, enum: ctx._.rest(ctx.dictionary.keys["TRV02"])},

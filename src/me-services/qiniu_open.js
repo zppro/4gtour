@@ -46,7 +46,6 @@ module.exports = {
                                 expire: app.moment().add(1, 'day'),
                                 endUser: member
                             };
-                            console.log(pubPolicyObj)
                             var pubPolicy = new qiniu.rs.PutPolicy2(pubPolicyObj);
 
                             this.set("Cache-Control", "max-age=0, private, must-revalidate");

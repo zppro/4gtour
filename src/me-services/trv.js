@@ -242,11 +242,31 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            console.log(this.request.body)
                             var experience = app._.extend({
                                 who_can_see: 'A0001'
                             }, this.payload.member, this.request.body);
-                            console.log(experience);
+                            if (experience.retweet_flag) {
+                                //转发的
+                                var content = experience.content.replace(/\s*/gi,'');
+                                experience.pure_content = content;
+                                experience.content = yield app.member_service.addHrefToName(content);
+
+                                for(var i=0;i< experience.retweet_chains.length;i++){
+                                    var retweet_experience_id = experience.retweet_chains[i];
+                                    var retweet_experience = yield app.modelFactory().model_read(app.models['trv_experience'], retweet_experience_id);
+                                    if (retweet_experience) {
+                                        yield app.modelFactory().model_create(app.models['trv_action'], {
+                                            subject_type: DIC.TRV04.MEMBER,
+                                            subject_id: experience.member_id,
+                                            action_type: DIC.TRV05.RETWEET,
+                                            object_type: DIC.TRV04.EXPERIENCE,
+                                            object_id: retweet_experience_id
+                                        });
+                                        retweet_experience.retweets += 1;
+                                        yield retweet_experience.save();
+                                    }
+                                }
+                            }
                             this.body = app.wrapper.res.ret(yield app.modelFactory().model_create(app.models['trv_experience'], experience));
                         } catch (e) {
                             console.log(e);
@@ -264,7 +284,6 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var payload = app._.extend({pay_time: Date.now()}, this.request.body);
                             var ret = yield app.modelFactory().model_update(app.models['trv_experience'], this.params.experienceId, this.request.body);
                             console.log(ret)
                             var experience = yield app.modelFactory().model_read(app.models['trv_experience'], this.params.experienceId);

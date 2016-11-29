@@ -451,6 +451,8 @@ module.exports = {
                                 var ret2 = yield rp({url: 'http://im.okertrip.com/api/personal/info.html?token=' + token, json: true});
                                 if (ret2.err_code == '0') {
                                     this.body = app.wrapper.res.ret({memberInfo: {member_id: ret2.info.u_id, member_name: ret2.info.u_nickname, head_portrait: ret2.info.u_headpic, member_description: ret2.info.u_description}, token: token});
+                                    //会员服务
+                                    yield app.member_service.checkIn(ret2.info.u_id, ret2.info.u_nickname, ret2.info.u_headpic);
                                 }
                                 else {
                                     this.body = app.wrapper.res.error({code: ret2.err_code, message: ret2.message});
@@ -479,6 +481,8 @@ module.exports = {
                             var ret2 = yield rp({url: 'http://im.okertrip.com/api/personal/info.html?token=' + token, json: true});
                             if (ret2.err_code == '0') {
                                 this.body = app.wrapper.res.ret({memberInfo: {member_id: ret2.info.u_id, member_name: ret2.info.u_nickname, head_portrait: ret2.info.u_headpic, member_description: ret2.info.u_description}, token: token});
+                                //会员服务
+                                yield app.member_service.checkIn(ret2.info.u_id, ret2.info.u_nickname, ret2.info.u_headpic);
                             }
                             else {
                                 this.body = app.wrapper.res.error({code: ret2.err_code, message: ret2.message});
@@ -518,6 +522,8 @@ module.exports = {
                                 if (ret2.err_code == '0') {
                                     console.log(ret2)
                                     this.body = app.wrapper.res.ret({memberInfo: {member_id: ret2.info.u_id, member_name: ret2.info.u_nickname, head_portrait: ret2.info.u_headpic, member_description: ret2.info.u_description}, token: token});
+                                    //会员服务
+                                    yield app.member_service.checkIn(ret2.info.u_id, ret2.info.u_nickname, ret2.info.u_headpic);
                                 }
                                 else {
                                     this.body = app.wrapper.res.error({code: ret2.err_code, message: ret2.message});
