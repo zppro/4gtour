@@ -110,6 +110,9 @@ module.exports = {
                                         return action.subject_id == member_id && action.action_type == DIC.TRV05.STAR && action.object_id == row.id
                                     });
                                     row.member_head_portrait = yield app.member_service.getHeadPortrait(row.member_id);
+                                    if(app._.isObject(row.retweet_root)){
+                                        row.retweet_root.member_head_portrait = yield app.member_service.getHeadPortrait(row.retweet_root.member_id)
+                                    }
                                     rows.push(row)
                                 }
                             }
@@ -166,6 +169,9 @@ module.exports = {
                                         });
                                         row.stared = true;
                                         row.member_head_portrait = yield app.member_service.getHeadPortrait(row.member_id);
+                                        if(app._.isObject(row.retweet_root)){
+                                            row.retweet_root.member_head_portrait = yield app.member_service.getHeadPortrait(row.retweet_root.member_id)
+                                        }
                                         rows.push(row)
                                     }
                                 }
