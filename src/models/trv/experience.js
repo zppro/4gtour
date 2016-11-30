@@ -29,16 +29,8 @@ module.exports = function(ctx,name) {
             stars: {type: Number, default:0}, //收藏数
             retweets: {type: Number, default:0}, //转发数
             retweet_flag: {type: Boolean, default: false},
-            retweet_from: {
-                item_id: {type: mongoose.Schema.Types.ObjectId, ref: 'experience'},
-                member_id: {type: String},//人Id
-                member_name: {type: String}, //人名称
-            },//转发的来源文章 理解为父辈
-            retweet_root: {
-                item_id: {type: mongoose.Schema.Types.ObjectId, ref: 'experience'},
-                member_id: {type: String},//人Id
-                member_name: {type: String}, //人名称
-            }, //转发的原创文章 理解为祖先
+            retweet_from: {type: mongoose.Schema.Types.ObjectId, ref: 'trv_experience'},//转发的来源文章 理解为父辈
+            retweet_root: {type: mongoose.Schema.Types.ObjectId, ref: 'trv_experience'}, //转发的原创文章 理解为祖先
             pure_content: {type: String, max: 200}, //retweet_flag=true时 存储带//@的文本，而content则转化为带链接的
             retweet_chains: [String],
             /**** 以下是category==route的扩展信息*****/

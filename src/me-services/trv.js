@@ -24,7 +24,7 @@ module.exports = {
             this.logger.info(this.file + " loaded!");
         }
         
-        this.experienceSelect = 'category content imgs location member_id member_name likes stars retweets check_in_time time_description';
+        this.experienceSelect = 'category content imgs location member_id member_name likes stars retweets check_in_time time_description retweet_flag retweet_root';
         this.scenerySpotSelectInExperienceRoute = 'show_name level runtime address tel tip traffic introduction_simple';
 
         this.actions = [
@@ -41,7 +41,8 @@ module.exports = {
                                     select: self.experienceSelect,
                                     sort: {likes: -1, check_in_time: -1}
                                 },
-                                {limit: this.request.body.page.size, skip: this.request.body.page.skip});
+                                {limit: this.request.body.page.size, skip: this.request.body.page.skip})
+                                .populate('retweet_root');
 
                             var rows = [];
                             if (rawRows.length > 0) {
@@ -52,16 +53,17 @@ module.exports = {
                                         where:{subject_type:DIC.TRV04.MEMBER, object_type: DIC.TRV04.EXPERIENCE, object_id:{$in: row_ids }},
                                         select:'object_id action_type subject_id'
                                     });
-                                app._.each(rawRows,function(rawRow) {
-                                    var row = rawRow.toObject();
+                                for(var i=0;i<rawRows.length;i++){
+                                    var row = rawRows[i].toObject();
                                     row.liked = app._.some(theActions, function (action) {
                                         return action.subject_id == member_id && action.action_type == DIC.TRV05.LIKE && action.object_id == row.id
                                     });
                                     row.stared = app._.some(theActions, function (action) {
                                         return action.subject_id == member_id && action.action_type == DIC.TRV05.STAR && action.object_id == row.id
                                     });
+                                    row.member_head_portrait = yield app.member_service.getHeadPortrait(row.member_id);
                                     rows.push(row)
-                                });
+                                }
                             }
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
@@ -85,7 +87,8 @@ module.exports = {
                                     select: self.experienceSelect,
                                     sort: {check_in_time: -1}
                                 },
-                                {limit: this.request.body.page.size, skip: this.request.body.page.skip});
+                                {limit: this.request.body.page.size, skip: this.request.body.page.skip})
+                                .populate('retweet_root');;
                             var rows = [];
                             if (rawRows.length > 0) {
                                 var row_ids = app._.map(rawRows,function(o){return o.id});
@@ -95,16 +98,17 @@ module.exports = {
                                         where:{subject_type:DIC.TRV04.MEMBER, object_type: DIC.TRV04.EXPERIENCE, object_id:{$in: row_ids }},
                                         select:'object_id action_type subject_id'
                                     });
-                                app._.each(rawRows,function(rawRow) {
-                                    var row = rawRow.toObject();
+                                for(var i=0;i<rawRows.length;i++){
+                                    var row = rawRows[i].toObject();
                                     row.liked = app._.some(theActions, function (action) {
                                         return action.subject_id == member_id && action.action_type == DIC.TRV05.LIKE && action.object_id == row.id
                                     });
                                     row.stared = app._.some(theActions, function (action) {
                                         return action.subject_id == member_id && action.action_type == DIC.TRV05.STAR && action.object_id == row.id
                                     });
+                                    row.member_head_portrait = yield app.member_service.getHeadPortrait(row.member_id);
                                     rows.push(row)
-                                });
+                                }
                             }
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
@@ -142,7 +146,7 @@ module.exports = {
                                         where:{status: 1, cancel_flag: 0, _id:{$in: object_ids }},
                                         select:self.experienceSelect,
                                         sort: {check_in_time: -1}
-                                    });
+                                    }).populate('retweet_root');
                                 if (rawRows.length > 0) {
                                     var row_ids = app._.map(rawRows,function(o){return o.id});
 
@@ -151,14 +155,16 @@ module.exports = {
                                             where:{subject_type:DIC.TRV04.MEMBER, action_type: DIC.TRV05.LIKE,object_type: DIC.TRV04.EXPERIENCE, object_id:{$in: row_ids }},
                                             select:'object_id action_type subject_id'
                                         });
-                                    app._.each(rawRows,function(rawRow) {
-                                        var row = rawRow.toObject();
+
+                                    for(var i=0;i<rawRows.length;i++){
+                                        var row = rawRows[i].toObject();
                                         row.liked = app._.some(theActions, function (action) {
                                             return action.subject_id == member_id && action.object_id == row.id
                                         });
                                         row.stared = true;
+                                        row.member_head_portrait = yield app.member_service.getHeadPortrait(row.member_id);
                                         rows.push(row)
-                                    });
+                                    }
                                 }
                             }
 
@@ -250,8 +256,11 @@ module.exports = {
                                 var content = experience.content.replace(/\s*/gi,'');
                                 experience.pure_content = content;
                                 experience.content = yield app.member_service.addHrefToName(content);
+                            }
+                            this.body = app.wrapper.res.ret(yield app.modelFactory().model_create(app.models['trv_experience'], experience));
 
-                                for(var i=0;i< experience.retweet_chains.length;i++){
+                            if (experience.retweet_flag) {
+                                for (var i = 0; i < experience.retweet_chains.length; i++) {
                                     var retweet_experience_id = experience.retweet_chains[i];
                                     var retweet_experience = yield app.modelFactory().model_read(app.models['trv_experience'], retweet_experience_id);
                                     if (retweet_experience) {
@@ -267,7 +276,7 @@ module.exports = {
                                     }
                                 }
                             }
-                            this.body = app.wrapper.res.ret(yield app.modelFactory().model_create(app.models['trv_experience'], experience));
+
                         } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);

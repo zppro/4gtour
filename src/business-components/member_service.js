@@ -22,6 +22,8 @@ module.exports = {
 
         console.log(this.filename + ' ready... ');
 
+        this.cacheHeadPortrait = {};
+
         return this;
     },
     checkIn : function (member_id, member_name, member_head_portrait) {
@@ -31,6 +33,9 @@ module.exports = {
                 var member = yield self.ctx.modelFactory().model_one(self.ctx.models['trv_member'], {where:{code: member_id}})
                 if (member) {
                     member.name = member_name;
+                    if(member.head_portrait != member_head_portrait && self.cacheHeadPortrait[member_id]) {
+                        self.cacheHeadPortrait[member_id] = member_head_portrait;
+                    }
                     member.head_portrait = member_head_portrait;
                     member.check_status = 1;
                     yield member.save()
@@ -83,6 +88,25 @@ module.exports = {
                     }
                 }
                 return content;
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+            }
+        }).catch(self.ctx.coOnError);
+    },
+    getHeadPortrait: function (member_id) {
+        var self = this;
+        return co(function *() {
+            try {
+                if(!member_id) return '';
+                var headPortrait = self.cacheHeadPortrait[member_id];
+                if (!headPortrait) {
+                    var member = yield self.ctx.modelFactory().model_one(self.ctx.models['trv_member'], {where:{code: member_id},select: 'head_portrait'});
+                    headPortrait = member.head_portrait;
+                    self.cacheHeadPortrait[member_id] = headPortrait;
+                }
+                return headPortrait;
             }
             catch (e) {
                 console.log(e);
