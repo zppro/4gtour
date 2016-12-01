@@ -116,7 +116,6 @@ module.exports = {
                             var rows = [];
 
                             app._.each(rows_ScenicSpot, function (o) {
-                                console.log(o.UUid)
                                 var scenicSpot = app._.find(lowPriceTicketsPerScenicSpot, function (item) {
                                     return item.scenicSpotId == o.UUid
                                 });
@@ -132,7 +131,6 @@ module.exports = {
                                     });
                                 }
                             });
-
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);

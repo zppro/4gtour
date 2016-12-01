@@ -2,7 +2,7 @@
  * Created by zppro on 16-11-8.
  */
 var co = require('co');
-
+var DIC = require('../pre-defined/dictionary-constants.json');
 module.exports = {
     transporters : {},
     init: function (ctx) {
@@ -23,6 +23,7 @@ module.exports = {
         console.log(this.filename + ' ready... ');
 
         this.cacheHeadPortrait = {};
+        this.experienceSelect = 'category content imgs location member_id member_name likes stars retweets check_in_time time_description retweet_flag retweet_root';
 
         return this;
     },
@@ -83,7 +84,7 @@ module.exports = {
                         var member_name = matches[i][0];
                         var theOne = self.ctx._.find(members,function(o){ return o.name == member_name;});
                         if(theOne){
-                            content = content.replace('//@' + member_name + ':', '//<a class="member-name-link" href="/member-profile/' + theOne.code + '">@' + member_name + '</a>:')
+                            content = content.replace('//@' + member_name + ':', '//<a class="member-name-link" href="/ta/' + theOne.code + '/details">@' + member_name + '</a>:')
                         }
                     }
                 }
@@ -111,6 +112,106 @@ module.exports = {
             catch (e) {
                 console.log(e);
                 self.logger.error(e.message);
+            }
+        }).catch(self.ctx.coOnError);
+    },
+    getExperienceTweeted: function (member_id, page) {
+        var self = this;
+        return co(function *() {
+            try {
+                var rawRows = yield self.ctx.modelFactory().model_query(self.ctx.models['trv_experience'], {
+                        where: {status: 1, cancel_flag: 0, member_id: member_id},
+                        select: self.experienceSelect,
+                        sort: {check_in_time: -1}
+                    },
+                    {limit: page.size, skip: page.skip})
+                    .populate('retweet_root');
+                var rows = [];
+                if (rawRows.length > 0) {
+                    var row_ids = self.ctx._.map(rawRows,function(o){return o.id});
+
+                    var theActions = yield self.ctx.modelFactory().model_query(self.ctx.models['trv_action'],
+                        {
+                            where:{subject_type:DIC.TRV04.MEMBER, object_type: DIC.TRV04.EXPERIENCE, object_id:{$in: row_ids }},
+                            select:'object_id action_type subject_id'
+                        });
+                    for(var i=0;i<rawRows.length;i++){
+                        var row = rawRows[i].toObject();
+                        row.liked = self.ctx._.some(theActions, function (action) {
+                            return action.subject_id == member_id && action.action_type == DIC.TRV05.LIKE && action.object_id == row.id
+                        });
+                        row.stared = self.ctx._.some(theActions, function (action) {
+                            return action.subject_id == member_id && action.action_type == DIC.TRV05.STAR && action.object_id == row.id
+                        });
+                        row.member_head_portrait = yield self.getHeadPortrait(row.member_id);
+                        if(self.ctx._.isObject(row.retweet_root)){
+                            row.retweet_root.member_head_portrait = yield self.getHeadPortrait(row.retweet_root.member_id)
+                        }
+                        rows.push(row)
+                    }
+                }
+                return rows;
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+                throw e;
+            }
+        }).catch(self.ctx.coOnError);
+    },
+    getExperienceStared: function (member_id, page) {
+        var self = this;
+        return co(function *() {
+            try {
+                var actions = yield self.ctx.modelFactory().model_query(self.ctx.models['trv_action'], {
+                        where: {
+                            subject_type: DIC.TRV04.MEMBER,
+                            subject_id: member_id,
+                            action_type: DIC.TRV05.STAR,
+                            object_type: DIC.TRV04.EXPERIENCE
+                        },
+                        select: 'object_id',
+                        sort: {check_in_time: -1}
+                    },
+                    {limit: page.size, skip: page.skip});
+                var rows = [];
+                if (actions.length > 0) {
+                    var object_ids = self.ctx._.map(actions,function(o){return o.object_id});
+                    var rawRows = yield self.ctx.modelFactory().model_query(self.ctx.models['trv_experience'],
+                        {
+                            where:{status: 1, cancel_flag: 0, _id:{$in: object_ids }},
+                            select:self.experienceSelect,
+                            sort: {check_in_time: -1}
+                        }).populate('retweet_root');
+                    if (rawRows.length > 0) {
+                        var row_ids = self.ctx._.map(rawRows,function(o){return o.id});
+
+                        var theActions = yield self.ctx.modelFactory().model_query(self.ctx.models['trv_action'],
+                            {
+                                where:{subject_type:DIC.TRV04.MEMBER, action_type: DIC.TRV05.LIKE,object_type: DIC.TRV04.EXPERIENCE, object_id:{$in: row_ids }},
+                                select:'object_id action_type subject_id'
+                            });
+
+                        for(var i=0;i<rawRows.length;i++){
+                            var row = rawRows[i].toObject();
+                            row.liked = self.ctx._.some(theActions, function (action) {
+                                return action.subject_id == member_id && action.object_id == row.id
+                            });
+                            row.stared = true;
+                            row.member_head_portrait = yield self.ctx.member_service.getHeadPortrait(row.member_id);
+                            if(self.ctx._.isObject(row.retweet_root)){
+                                row.retweet_root.member_head_portrait = yield self.getHeadPortrait(row.retweet_root.member_id)
+                            }
+                            rows.push(row)
+                        }
+                    }
+                }
+                return rows;
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+                throw e;
             }
         }).catch(self.ctx.coOnError);
     }

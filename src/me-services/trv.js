@@ -147,7 +147,7 @@ module.exports = {
                             var rows = [];
                             if (actions.length > 0) {
                                 var object_ids = app._.map(actions,function(o){return o.object_id});
-                                rawRows = yield app.modelFactory().model_query(app.models['trv_experience'],
+                                var rawRows = yield app.modelFactory().model_query(app.models['trv_experience'],
                                     {
                                         where:{status: 1, cancel_flag: 0, _id:{$in: object_ids }},
                                         select:self.experienceSelect,
@@ -177,6 +177,42 @@ module.exports = {
                                 }
                             }
 
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'experiencesTaTweeted',
+                verb: 'post',
+                url: this.service_url_prefix + "/experiencesTaTweeted/:member_id",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var member_id = this.params.member_id;
+                            var rows = yield app.member_service.getExperienceTweeted(member_id, this.request.body.page);
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'experiencesTaStared',
+                verb: 'post',
+                url: this.service_url_prefix + "/experiencesTaStared/:member_id",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var member_id = this.params.member_id;
+                            var rows = yield app.member_service.getExperienceStared(member_id, this.request.body.page);
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
@@ -238,8 +274,6 @@ module.exports = {
                             app._.each(routes,function(o){
                                o.time_consuming = TRV03[o.time_consuming].name;
                             });
-
-                            console.log(experienceInfo)
 
                             this.body = app.wrapper.res.ret(experienceInfo);
                         } catch (e) {
@@ -303,7 +337,6 @@ module.exports = {
                     return function *(next) {
                         try {
                             var ret = yield app.modelFactory().model_update(app.models['trv_experience'], this.params.experienceId, this.request.body);
-                            console.log(ret)
                             var experience = yield app.modelFactory().model_read(app.models['trv_experience'], this.params.experienceId);
                             this.body = app.wrapper.res.ret(experience);
                         } catch (e) {
@@ -452,6 +485,28 @@ module.exports = {
                             this.body = app.wrapper.res.ret({id: experience._id, stars: experience.stars, stared: false});
                         } catch (e) {
                             console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'member',
+                verb: 'get',
+                url: this.service_url_prefix + "/member/:memberId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var member = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: this.params.memberId}, select: 'code name head_portrait'});
+                            if (!member) {
+                                this.body = app.wrapper.res.error({code: 51002, message: 'invalid member'});
+                                yield next;
+                                return;
+                            }
+                            this.body = app.wrapper.res.ret(member);
+                        } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
                         }
