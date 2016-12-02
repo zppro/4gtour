@@ -1,6 +1,6 @@
 /**
- * dashboard Created by zppro on 16-7-22.
- * Target:机构养老云中系统管理员以上看的数据面板（俯瞰图）
+ * dashboard Created by zppro on 16-12-2.
+ * Target:系统管理员以上看的数据面板（俯瞰图）
  */
 (function() {
     'use strict';
@@ -21,17 +21,17 @@
         function init() {
 
             vm.init();
-
-            liveinAndAccountAndBedInfo();
-            elderlyAgeGroups();
-            roomVacancyRateMonthly();
-            roomCatagoryOfManTime();
-            roomCatagoryOfManTimeMonthly();
+            getDeviceStatInfo();
+            // elderlyAgeGroups();
+            // roomVacancyRateMonthly();
+            // roomCatagoryOfManTime();
+            // roomCatagoryOfManTimeMonthly();
         }
 
-        function liveinAndAccountAndBedInfo(){
-            extensionOfDashboardOfTenantNode.liveinAndAccountAndBedInfo(vm.tenantId).then(function(ret){
-                vm.liveinAndAccountAndBedInfo = ret;
+        function getDeviceStatInfo(){
+            extensionOfDashboardOfTenantNode.getDeviceStatInfo().then(function(ret){
+                console.log(ret);
+                vm.deviceStatInfo = ret;
             });
         }
 

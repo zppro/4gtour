@@ -17,7 +17,7 @@ module.exports = function (app) {
             this.set('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
         }
         else{
-            console.log('not allowed')
+            console.log('api invoke')
         }
 
         yield next;

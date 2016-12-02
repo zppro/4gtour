@@ -2,9 +2,9 @@
   "organization-travel": {
     "dashboard": {
       "TITLE": "商户-数据面板",
-      "LIVE-IN":"入住总人数",
-      "LIVE-IN-ON-CURRENTMONTH":"本月新增",
-      "LIVE-IN-MAN-TIME":"入住总人次",
+      "DEVICE-QUANTITY":"设备总数",
+      "DEVICE-QUANTITY-CURRENT-MONTH":"本月新增",
+      "DEVICE-ACCESS-TIMES":"设备访问总次数",
       "SUBSIDIARY_LEDGER-SELF":"主账户",
       "SUBSIDIARY_LEDGER-GOV_SUBSIDY":"政府补助账户",
       "SUBSIDIARY_LEDGER-SOCIAL_DONATION":"社会捐赠账户",

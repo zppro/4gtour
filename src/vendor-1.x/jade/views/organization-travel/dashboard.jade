@@ -5,19 +5,19 @@
       .panel.widget.bg-primary
          .row.row-table
             .col-xs-4.text-center.bg-primary-dark.pv-lg
-               em.icon-user.fa-3x
+               em.icon-screen-smartphone.fa-3x
             .col-xs-8.pv-lg
-               .h2.mt0 {{vm.liveinAndAccountAndBedInfo.liveIn}}
-               | {{ vm.moduleTranslatePath('LIVE-IN') | translate}}
+               .h2.mt0 {{vm.deviceStatInfo.device_quantity}}
+               | {{ vm.moduleTranslatePath('DEVICE-QUANTITY') | translate}}
    .col-lg-3.col-sm-6
       // START widget
       .panel.widget.bg-purple
          .row.row-table
             .col-xs-4.text-center.bg-purple-dark.pv-lg
-               em.icon-user-follow.fa-3x
+               em.icon-screen-smartphone.fa-3x
             .col-xs-8.pv-lg
-               .h2.mt0 {{vm.liveinAndAccountAndBedInfo.liveInOnCurrentMonth}}
-               | {{ vm.moduleTranslatePath('LIVE-IN-ON-CURRENTMONTH') | translate}}
+               .h2.mt0 {{vm.deviceStatInfo.device_quantity_current_month}}
+               | {{ vm.moduleTranslatePath('DEVICE-QUANTITY-CURRENT-MONTH') | translate}}
    .col-lg-3.col-md-6.col-sm-12
       // START widget
       .panel.widget.bg-green
@@ -25,8 +25,8 @@
             .col-xs-4.text-center.bg-green-dark.pv-lg
                em.icon-users.fa-3x
             .col-xs-8.pv-lg
-               .h2.mt0 {{vm.liveinAndAccountAndBedInfo.liveInManTime}}
-               | {{ vm.moduleTranslatePath('LIVE-IN-MAN-TIME') | translate}}
+               .h2.mt0 {{vm.deviceStatInfo.device_access_times}}
+               | {{ vm.moduleTranslatePath('DEVICE-ACCESS-TIMES') | translate}}
    .col-lg-3.col-md-6.col-sm-12
       // START date widget
       .panel.widget
@@ -45,7 +45,7 @@
 // END widgets box
 
 // START widgets 2
-.row
+.row(ng-if="false")
    .col-lg-6
       .panel.widget
          .row.row-table.text-center

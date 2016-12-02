@@ -552,9 +552,7 @@
             $get: ['$http', function ($http) {
 
                 return {
-                    liveIn: liveIn,
-                    liveInOnCurrentMonth: liveInOnCurrentMonth,
-                    liveInManTime: liveInManTime,
+                    getDeviceStatInfo: getDeviceStatInfo,
                     tenantAccountInfo: tenantAccountInfo,
                     bedInfo: bedInfo,
                     liveinAndAccountAndBedInfo:liveinAndAccountAndBedInfo,
@@ -564,18 +562,9 @@
                     roomCatagoryOfManTimeMonthly: roomCatagoryOfManTimeMonthly
                 };
 
-                function liveIn(tenantId) {
-                    return $http.get(baseUrl + 'liveIn/' + tenantId);
+                function getDeviceStatInfo() {
+                    return $http.get(baseUrl + 'deviceStatInfo');
                 }
-
-                function liveInOnCurrentMonth(tenantId){
-                    return $http.get(baseUrl + 'liveInOnCurrentMonth/' + tenantId);
-                }
-
-                function liveInManTime(tenantId){
-                    return $http.get(baseUrl + 'liveInManTime/' + tenantId);
-                }
-
                 function tenantAccountInfo(tenantId){
                     return $http.get(baseUrl + 'tenantAccountInfo/' + tenantId);
                 }

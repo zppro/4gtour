@@ -41,15 +41,16 @@ module.exports = {
                                 where: {app_id: DIC.D0102.FourSeasonTour, uuid: payload.uuid}
                             });
                             if (deviceAccess) {
+                                deviceAccess.access_times += 1;
                                 yield deviceAccess.save();
                             } else {
                                 deviceAccess = yield app.modelFactory().model_create(app.models['pub_deviceAccess'], payload);
                             }
-                            
+
                             var appUpdateHistorys = yield app.modelFactory().model_query(app.models['pub_appServerSideUpdateHistory'], {
                                 where: {app_id: DIC.D0102.FourSeasonTour},
                                 sort: {ver: -1, check_in_time: -1}
-                            },{limit: 1});
+                            }, {limit: 1});
                             
                             var hash = "0";
                             if (appUpdateHistorys.length > 0) {
@@ -141,7 +142,6 @@ module.exports = {
                                     }
                                 }
                             ]);
-                            console.log(lowPriceTicketsPerScenicSpot)
 
                             var rows_ScenicSpot = yield app.modelFactory().model_query(app.models['idc_scenicSpot_PFT'], {
                                     where: {status: 1},
@@ -306,7 +306,6 @@ module.exports = {
                             var member_id = this.payload.member.member_id;
                             if(member_id == 'anonymity')
                                 member_id = 'everyone';
-                            console.log('member_id:' + member_id);
                             var rows = yield app.modelFactory().model_query(app.models['idc_order_PFT'], {
                                     where: {
                                         status: 1,
@@ -381,7 +380,6 @@ module.exports = {
                             order.amount = order.p_price * order.quantity;
                             console.log(order);
                             this.body = app.wrapper.res.ret(yield app.modelFactory().model_create(app.models['idc_order_PFT'], order));
-                            console.log(this.body);
                         } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);

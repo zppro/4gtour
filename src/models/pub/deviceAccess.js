@@ -22,7 +22,8 @@ module.exports = function(ctx,name) {
             platform: {type: String, enum: ctx._.rest(ctx.dictionary.keys["D0100"])},
             os: {type: String, enum: ctx._.rest(ctx.dictionary.keys["D0101"])},
             ver: {type: String},
-            uuid: {type: String}
+            uuid: {type: String},
+            access_times: {type: Number, default: 1},//访问次数
         });
         deviceAccessSchema.pre('update', function (next) {
             this.update({}, {$set: {access_on: new Date()}});
