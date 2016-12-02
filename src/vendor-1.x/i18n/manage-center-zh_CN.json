@@ -206,6 +206,11 @@
         "TAB1-LABEL-VER": "版本",
         "TAB1-PLACEHOLDER-VER": "0.3.7"
       }
+    },
+    "device-access": {
+      "list": {
+        "TITLE": "管理中心-app与设备-设备访问-列表"
+      }
     }
   }
 }

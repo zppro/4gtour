@@ -1056,7 +1056,7 @@
                 views: {
                     "module-header": {
                         templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        controller: 'ModuleHeaderController'
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -1088,7 +1088,7 @@
                                 type: 'string',
                                 sortable: true,
                                 width: 120,
-                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D0100/object')
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D0102/object')
                             },
                             {
                                 label: '更新时间',
@@ -1126,6 +1126,86 @@
                         blockUI: true
                     })
                     //, deps: helper.resolveFor2('ui.select')
+                }
+            })
+            .state('app.manage-center.device-access', {
+                url: '/device-access',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
+                        controller: 'ModuleHeaderController'
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                }
+                // , resolve: helper.resolveFor('subsystem.manage-center.device-access.js')
+            })
+            .state('app.manage-center.device-access.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath('manage-center/device-access-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.ADMIN,
+                controller: 'GridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM('app.manage-center.device-access.list', {
+                        modelName: 'pub-deviceAccess',
+                        //切换客户端还是服务端分页
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '设备编号',
+                                name: 'uuid',
+                                type: 'string',
+                                width: 120,
+                                sortable: false
+                            },
+                            {
+                                label: 'App编号',
+                                name: 'app_id',
+                                type: 'string',
+                                sortable: true,
+                                width: 120,
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D0102/object')
+                            },
+                            {
+                                label: '访问时间',
+                                name: 'access_on',
+                                type: 'date',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '平台',
+                                name: 'platform',
+                                type: 'string',
+                                sortable: true,
+                                width: 120,
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D0100/object')
+                            },
+                            {
+                                label: '系统',
+                                name: 'os',
+                                type: 'string',
+                                sortable: true,
+                                width: 120,
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D0101/object')
+                            },
+                            {
+                                label: '版本',
+                                name: 'ver',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 60
+                            }
+                        ]
+                    })
                 }
             })
             .state('app.manage-center.metadata-dictionary-manage', {
