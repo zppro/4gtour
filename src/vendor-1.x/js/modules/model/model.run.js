@@ -27,7 +27,7 @@
         modelNode.factory('pub-user');
         modelNode.factory('pub-func');
         modelNode.factory('pub-order');
-
+        modelNode.factory('pub-appServerSideUpdateHistory');
     }
 
 })();

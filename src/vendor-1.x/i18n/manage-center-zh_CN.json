@@ -193,6 +193,19 @@
       "list": {
         "TITLE": "管理中心-平台-退款确认订单-列表"
       }
+    },
+    "app-serverside-update": {
+      "list": {
+        "TITLE": "管理中心-app与设备-服务端更新-列表"
+      },
+      "details": {
+        "TITLE": "管理中心-app与设备-服务端更新-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-APP_ID": "App",
+        "TAB1-PLACEHOLDER-APP_ID": "四季游",
+        "TAB1-LABEL-VER": "版本",
+        "TAB1-PLACEHOLDER-VER": "0.3.7"
+      }
     }
   }
 }

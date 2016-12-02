@@ -1,4 +1,11 @@
 {
+  "D0100": {
+    "MOBILE": "A0001",
+    "PC": "A0003"
+  },
+  "D0102": {
+    "FourSeasonTour": "A0001"
+  },
   "TRV00": {
     "FEELING": "A0001",
     "ROUTE": "A0003"

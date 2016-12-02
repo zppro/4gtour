@@ -46,6 +46,7 @@
                 {name:'subsystem.manage-center.func.js',files:['app/js/lazy-modules/manage-center/func.js']},
                 {name:'subsystem.manage-center.order-receipt-confirmation.js',files:['app/js/lazy-modules/manage-center/order-receipt-confirmation.js']},
                 {name:'subsystem.manage-center.order-refund-confirmation.js',files:['app/js/lazy-modules/manage-center/order-refund-confirmation.js']},
+                {name:'subsystem.manage-center.app-serverside-update.js',files:['app/js/lazy-modules/manage-center/app-serverside-update.js']},
                 {name:'subsystem.organization-travel',files:['app/js/lazy-modules/organization-travel-share.js','app/css/organization-travel.css']},
                 {name:'subsystem.organization-travel.dashboard.js',files:['app/js/lazy-modules/organization-travel/dashboard.js']},
                 {name:'subsystem.organization-travel.scenery-spot.js',files:['app/js/lazy-modules/organization-travel/scenery-spot.js']},

@@ -85,37 +85,7 @@ module.exports = {
                     return function *(next) {
                         try {
                             var member_id = this.payload.member.member_id;
-                            var rawRows = yield app.modelFactory().model_query(app.models['trv_experience'], {
-                                    where: {status: 1, cancel_flag: 0, member_id: member_id},
-                                    select: self.experienceSelect,
-                                    sort: {check_in_time: -1}
-                                },
-                                {limit: this.request.body.page.size, skip: this.request.body.page.skip})
-                                .populate('retweet_root');;
-                            var rows = [];
-                            if (rawRows.length > 0) {
-                                var row_ids = app._.map(rawRows,function(o){return o.id});
-
-                                var theActions = yield app.modelFactory().model_query(app.models['trv_action'],
-                                    {
-                                        where:{subject_type:DIC.TRV04.MEMBER, object_type: DIC.TRV04.EXPERIENCE, object_id:{$in: row_ids }},
-                                        select:'object_id action_type subject_id'
-                                    });
-                                for(var i=0;i<rawRows.length;i++){
-                                    var row = rawRows[i].toObject();
-                                    row.liked = app._.some(theActions, function (action) {
-                                        return action.subject_id == member_id && action.action_type == DIC.TRV05.LIKE && action.object_id == row.id
-                                    });
-                                    row.stared = app._.some(theActions, function (action) {
-                                        return action.subject_id == member_id && action.action_type == DIC.TRV05.STAR && action.object_id == row.id
-                                    });
-                                    row.member_head_portrait = yield app.member_service.getHeadPortrait(row.member_id);
-                                    if(app._.isObject(row.retweet_root)){
-                                        row.retweet_root.member_head_portrait = yield app.member_service.getHeadPortrait(row.retweet_root.member_id)
-                                    }
-                                    rows.push(row)
-                                }
-                            }
+                            var rows = yield app.member_service.getExperienceTweeted(member_id, this.request.body.page);
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
@@ -133,50 +103,7 @@ module.exports = {
                     return function *(next) {
                         try {
                             var member_id = this.payload.member.member_id;
-                            var actions = yield app.modelFactory().model_query(app.models['trv_action'], {
-                                    where: {
-                                        subject_type: DIC.TRV04.MEMBER,
-                                        subject_id: member_id,
-                                        action_type: DIC.TRV05.STAR,
-                                        object_type: DIC.TRV04.EXPERIENCE
-                                    },
-                                    select: 'object_id',
-                                    sort: {check_in_time: -1}
-                                },
-                                {limit: this.request.body.page.size, skip: this.request.body.page.skip});
-                            var rows = [];
-                            if (actions.length > 0) {
-                                var object_ids = app._.map(actions,function(o){return o.object_id});
-                                var rawRows = yield app.modelFactory().model_query(app.models['trv_experience'],
-                                    {
-                                        where:{status: 1, cancel_flag: 0, _id:{$in: object_ids }},
-                                        select:self.experienceSelect,
-                                        sort: {check_in_time: -1}
-                                    }).populate('retweet_root');
-                                if (rawRows.length > 0) {
-                                    var row_ids = app._.map(rawRows,function(o){return o.id});
-
-                                    var theActions = yield app.modelFactory().model_query(app.models['trv_action'],
-                                        {
-                                            where:{subject_type:DIC.TRV04.MEMBER, action_type: DIC.TRV05.LIKE,object_type: DIC.TRV04.EXPERIENCE, object_id:{$in: row_ids }},
-                                            select:'object_id action_type subject_id'
-                                        });
-
-                                    for(var i=0;i<rawRows.length;i++){
-                                        var row = rawRows[i].toObject();
-                                        row.liked = app._.some(theActions, function (action) {
-                                            return action.subject_id == member_id && action.object_id == row.id
-                                        });
-                                        row.stared = true;
-                                        row.member_head_portrait = yield app.member_service.getHeadPortrait(row.member_id);
-                                        if(app._.isObject(row.retweet_root)){
-                                            row.retweet_root.member_head_portrait = yield app.member_service.getHeadPortrait(row.retweet_root.member_id)
-                                        }
-                                        rows.push(row)
-                                    }
-                                }
-                            }
-
+                            var rows = yield app.member_service.getExperienceStared(member_id, this.request.body.page);
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);

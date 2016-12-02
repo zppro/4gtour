@@ -5,6 +5,7 @@
 var rp = require('request-promise-native');
 var IDC01 = require('../pre-defined/dictionary.json')['IDC01'];
 var IDC02 = require('../pre-defined/dictionary.json')['IDC02'];
+var DIC = require('../pre-defined/dictionary-constants.json');
 
 module.exports = {
     init: function (option) {
@@ -26,6 +27,43 @@ module.exports = {
         }
 
         this.actions = [
+            /************************设备相关*****************************/
+            {
+                method: 'FourSeasonTour',
+                verb: 'post',
+                url: this.service_url_prefix + "/FourSeasonTour",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            // send
+                            var payload = app._.extend({platform: DIC.D0100.MOBILE, app_id: DIC.D0102.FourSeasonTour}, this.request.body);
+                            var deviceAccess = yield app.modelFactory().model_one(app.models['pub_deviceAccess'], {
+                                where: {app_id: DIC.D0102.FourSeasonTour, uuid: payload.uuid}
+                            });
+                            if (deviceAccess) {
+                                yield deviceAccess.save();
+                            } else {
+                                deviceAccess = yield app.modelFactory().model_create(app.models['pub_deviceAccess'], payload);
+                            }
+                            
+                            var appUpdateHistorys = yield app.modelFactory().model_query(app.models['pub_appServerSideUpdateHistory'], {
+                                where: {app_id: DIC.D0102.FourSeasonTour},
+                                sort: {ver: -1, check_in_time: -1}
+                            },{limit: 1});
+                            
+                            var hash = "0";
+                            if (appUpdateHistorys.length > 0) {
+                                hash = appUpdateHistorys[0].id
+                            }
+                            this.body = app.wrapper.res.ret({hash: hash});
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
             /************************票付通相关*****************************/
             {
                 method: 'scenicSpots',

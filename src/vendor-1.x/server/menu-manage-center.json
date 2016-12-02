@@ -1,7 +1,7 @@
 [
   {
     "_id": "menu.manage-center.TRAVEL-AGENCY-MANAGE",
-    "name": "养老机构管理",
+    "name": "机构管理",
     "sref": "#",
     "icon": "icon-folder",
     "children": [
@@ -70,6 +70,24 @@
         "_id": "menu.manage-center.ORDER-REFUND-CONFIRMATION",
         "name": "退款确认",
         "sref": "app.manage-center.order-refund-confirmation.list"
+      }
+    ]
+  },
+  {
+    "_id": "menu.manage-center.APP-AND-DEVICE",
+    "name": "App与设备",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.manage-center.APP-SERVERSIDE-UPDATE",
+        "name": "app站点更新",
+        "sref": "app.manage-center.app-serverside-update.list"
+      },
+      {
+        "_id": "menu.manage-center.DEVICE-ACCESS",
+        "name": "访问设备",
+        "sref": "app.manage-center.device-access.list"
       }
     ]
   },

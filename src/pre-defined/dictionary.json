@@ -170,6 +170,47 @@
       "order": 7
     }
   },
+  "D0100": {
+    "name": "平台",
+    "A0001": {
+      "name": "移动平台",
+      "order": 1
+    },
+    "A0003": {
+      "name": "PC平台",
+      "order": 3
+    }
+  },
+  "D0101": {
+    "name": "OS",
+    "A0001": {
+      "name": "Android",
+      "order": 1
+    },
+    "A0003": {
+      "name": "IOS",
+      "order": 3
+    },
+    "A0005": {
+      "name": "Chrome",
+      "order": 5
+    },
+    "A0007": {
+      "name": "Firefox",
+      "order": 7
+    },
+    "A0009": {
+      "name": "IE/Edge",
+      "order": 9
+    }
+  },
+  "D0102": {
+    "name": "App",
+    "A0001": {
+      "name": "四季游",
+      "order": 1
+    }
+  },
   "D1000": {
     "name": "用户类型",
     "A0001": {
