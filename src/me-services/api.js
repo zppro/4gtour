@@ -65,6 +65,29 @@ module.exports = {
                     };
                 }
             },
+            {
+                method: 'updateContent',
+                verb: 'post',
+                url: this.service_url_prefix + "/updateContent",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            // send
+                           
+                            var rows = yield app.modelFactory().model_query(app.models['trv_experience'],{where: {status: 1, retweet_flag: true}})
+                            for(var i=0;i < rows.length;i++) {
+                                rows[i].pure_content && (rows[i].content = yield app.member_service.addHrefToName(rows[i].pure_content));
+                                yield rows[i].save(); 
+                            }
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
             /************************票付通相关*****************************/
             {
                 method: 'scenicSpots',
