@@ -84,7 +84,7 @@ module.exports = {
                         var member_name = matches[i][0];
                         var theOne = self.ctx._.find(members,function(o){ return o.name == member_name;});
                         if(theOne){
-                            content = content.replace('//@' + member_name + ':', '//<a class="member-name-link" href="/ta/' + theOne.code + '/details">@' + member_name + '</a>:')
+                            content = content.replace('//@' + member_name + ':', '//<a class="member-name-link" href="/#/ta/' + theOne.code + '/details">@' + member_name + '</a>:')
                         }
                     }
                 }
