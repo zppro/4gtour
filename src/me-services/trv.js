@@ -440,6 +440,48 @@ module.exports = {
                         yield next;
                     };
                 }
+            },
+            {
+                method: 'scenerySpotsAll',
+                verb: 'post',
+                url: this.service_url_prefix + "/scenerySpotsAll",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var rows = yield app.modelFactory().model_query(app.models['trv_scenerySpot'], {
+                                    where: {status: 1},
+                                    select: 'show_name img',
+                                    sort: {show_name: 1}
+                                });
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'scenerySpots',
+                verb: 'post',
+                url: this.service_url_prefix + "/scenerySpots",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var rows = yield app.modelFactory().model_query(app.models['trv_scenerySpot'], {
+                                    where: {status: 1},
+                                    sort: {show_name: 1}
+                                },
+                                {limit: this.request.body.page.size, skip: this.request.body.page.skip});
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
             }
         ];
 
