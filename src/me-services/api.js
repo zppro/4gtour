@@ -617,8 +617,30 @@ module.exports = {
                         yield next;
                     };
                 }
+            },
+            /************************字典相关*****************************/
+            {
+                method: 'd',
+                verb: 'get',
+                url: this.service_url_prefix + "/d/:key",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var rows = [];
+                            app._.each(app.dictionary.pairs[this.params.key.toUpperCase()],function(v,k) {
+                                if (k != 'name') {
+                                    rows.push({label: v.name, value: k})
+                                }
+                            })
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
             }
-            /************************???相关*****************************/
         ];
 
         return this;
