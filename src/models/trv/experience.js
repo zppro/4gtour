@@ -19,7 +19,7 @@ module.exports = function(ctx,name) {
             status: {type: Number, min: 0, max: 1, default: 1},
             category: {type: String, required: true, enum: ctx._.rest(ctx.dictionary.keys["TRV00"])},//见闻类别
             content: {type: String, required: true}, //内容
-            imgs: [{type: String}],//感想套图
+            imgs: [{type: String}],//套图
             location: {type: String},// 位置
             who_can_see: {type: String, required: true, enum: ctx._.rest(ctx.dictionary.keys["TRV01"])},//信息查看等级
             cancel_flag: {type: Number, min: 0, max: 1, default: 0}, //撤销标记 违法信息时设置为1

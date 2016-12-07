@@ -156,7 +156,7 @@ module.exports = {
                 handler: function (app, options) {
                     return function * (next) {
                         try {
-                            var experience = yield app.modelFactory().model_read(app.models['trv_experience'], this.params.experienceId);
+                            var experience = yield app.modelFactory().model_read(app.models['trv_experience'], this.params.experienceId).populate('route.scenerySpotId');
                             var experienceInfo;
                             var routes;
                             if (experience) {
@@ -194,13 +194,15 @@ module.exports = {
                                     id: 'testxxx',
                                     imgs: [],
                                     content: '这是一个路线',
-                                    routes: routes
+                                    route: route
                                 }
                             }
 
                             app._.each(routes,function(o){
-                               o.time_consuming = TRV03[o.time_consuming].name;
+                                o.time_consuming = TRV03[o.time_consuming].name;
+                                !o.scenerySpotId && (o.scenerySpotId = {})
                             });
+                            console.log(experienceInfo)
 
                             this.body = app.wrapper.res.ret(experienceInfo);
                         } catch (e) {
@@ -227,7 +229,14 @@ module.exports = {
                                 experience.pure_content = content;
                                 experience.content = yield app.member_service.addHrefToName(content);
                             }
-                            this.body = app.wrapper.res.ret(yield app.modelFactory().model_create(app.models['trv_experience'], experience));
+                            var created = yield app.modelFactory().model_create(app.models['trv_experience'], experience);
+
+                            var experienceInfo = yield app.modelFactory().model_read(app.models['trv_experience'], created.id).populate('route.scenerySpotId');
+                            app._.each(experienceInfo.route,function(o){
+                                o.time_consuming = TRV03[o.time_consuming].name;
+                                !o.scenerySpotId && (o.scenerySpotId = {})
+                            });
+                            this.body = app.wrapper.res.ret(experienceInfo);
 
                             if (experience.retweet_flag) {
                                 for (var i = 0; i < experience.retweet_chains.length; i++) {
