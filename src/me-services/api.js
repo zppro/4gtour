@@ -6,7 +6,7 @@ var rp = require('request-promise-native');
 var IDC01 = require('../pre-defined/dictionary.json')['IDC01'];
 var IDC02 = require('../pre-defined/dictionary.json')['IDC02'];
 var DIC = require('../pre-defined/dictionary-constants.json');
-
+var externalSystemConfig = require('../pre-defined/external-system-config.json');
 module.exports = {
     init: function (option) {
         var self = this;
@@ -502,10 +502,10 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var ret1 = yield rp({method: 'POST', url: 'http://im.okertrip.com/api/login/index.html', form: this.request.body, json: true});
+                            var ret1 = yield rp({method: 'POST', url: externalSystemConfig.member_repository_php.api_url + '/api/login/index.html', form: this.request.body, json: true});
                             if (ret1.err_code == '0') {
                                 var token = ret1.info.token;
-                                var ret2 = yield rp({url: 'http://im.okertrip.com/api/personal/info.html?token=' + token, json: true});
+                                var ret2 = yield rp({url: externalSystemConfig.member_repository_php.api_url + '/api/personal/info.html?token=' + token, json: true});
                                 if (ret2.err_code == '0') {
                                     this.body = app.wrapper.res.ret({memberInfo: {member_id: ret2.info.u_id, member_name: ret2.info.u_nickname, head_portrait: ret2.info.u_headpic, member_description: ret2.info.u_description}, token: token});
                                     //会员服务
@@ -535,7 +535,7 @@ module.exports = {
                     return function *(next) {
                         try {
                             var token = this.request.body.token;
-                            var ret2 = yield rp({url: 'http://im.okertrip.com/api/personal/info.html?token=' + token, json: true});
+                            var ret2 = yield rp({url: externalSystemConfig.member_repository_php.api_url + '/api/personal/info.html?token=' + token, json: true});
                             if (ret2.err_code == '0') {
                                 this.body = app.wrapper.res.ret({memberInfo: {member_id: ret2.info.u_id, member_name: ret2.info.u_nickname, head_portrait: ret2.info.u_headpic, member_description: ret2.info.u_description}, token: token});
                                 //会员服务
@@ -560,7 +560,7 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var ret1 = yield rp({method: 'POST', url: 'http://im.okertrip.com/api/login/index.html', form: {
+                            var ret1 = yield rp({method: 'POST', url: externalSystemConfig.member_repository_php.api_url + '/api/login/index.html', form: {
                                 category : 1,
                                 wxopenid : this.request.body.openid,
                                 wxunionid : this.request.body.unionid,
@@ -575,7 +575,7 @@ module.exports = {
                             }, json: true});
                             if (ret1.err_code == '0') {
                                 var token = ret1.info.token;
-                                var ret2 = yield rp({url: 'http://im.okertrip.com/api/personal/info.html?token=' + token, json: true});
+                                var ret2 = yield rp({url: externalSystemConfig.member_repository_php.api_url + '/api/personal/info.html?token=' + token, json: true});
                                 if (ret2.err_code == '0') {
                                     console.log(ret2)
                                     this.body = app.wrapper.res.ret({memberInfo: {member_id: ret2.info.u_id, member_name: ret2.info.u_nickname, head_portrait: ret2.info.u_headpic, member_description: ret2.info.u_description}, token: token});

@@ -5,6 +5,7 @@
 var rp = require('request-promise-native');
 var TRV03 = require('../pre-defined/dictionary.json')['TRV03'];
 var DIC = require('../pre-defined/dictionary-constants.json');
+var externalSystemConfig = require('../pre-defined/external-system-config.json');
 module.exports = {
     init: function (option) {
         var self = this;
@@ -163,39 +164,6 @@ module.exports = {
                                 experienceInfo = experience.toObject();
                                 routes = experienceInfo.route;
 
-                            } else {
-                                routes = [];
-                                var scenerySpot1 = yield app.modelFactory().model_one(app.models['trv_scenerySpot'], { where:{_id:'5837d214bf551b671e3d8897'},select: self.scenerySpotSelectInExperienceRoute});
-                                routes.push({
-                                    type: 'A0001',
-                                    imgs: ['http://img2.okertrip.com/190x190-1-raw.jpg','http://img2.okertrip.com/190x190-2-raw.jpg','http://img2.okertrip.com/190x190-3-raw.jpg'],
-                                    content: ' 90年代在六和塔近旁新建“中华古塔博览苑”，将中国各地著名的塔缩微雕刻而成，集中展示了古代汉族建筑文化的成就。',
-                                    time_consuming: 'A0007',
-                                    order_no: 1,
-                                    scenerySpotInfo: scenerySpot1 || {}
-                                });
-                                routes.push({
-                                    type: 'A0003',
-                                    content: '乘坐公交Y2线，从X站上车，途径3站到Y站下车，步行500米',
-                                    time_consuming: 'A0005',
-                                    order_no: 1.5,
-                                    scenerySpotInfo:{}
-                                });
-                                var scenerySpot2 = yield app.modelFactory().model_one(app.models['trv_scenerySpot'], { where:{_id:'5837d3e0bf551b671e3d8899'},select: self.scenerySpotSelectInExperienceRoute});
-                                routes.push({
-                                    type: 'A0001',
-                                    imgs: ['http://img2.okertrip.com/190x190-4-raw.jpg','http://img2.okertrip.com/190x190-5-raw.jpg','http://img2.okertrip.com/190x190-6-raw.jpg'],
-                                    content: '大型歌舞宋城千古情演出、瓦子勾栏百戏、七十二行老作坊、失落古城、两大鬼屋、江南第一怪街等项目',
-                                    time_consuming: 'A0009',
-                                    order_no: 2,
-                                    scenerySpotInfo: scenerySpot2 || {}
-                                });
-                                experienceInfo = {
-                                    id: 'testxxx',
-                                    imgs: [],
-                                    content: '这是一个路线',
-                                    route: route
-                                }
                             }
 
                             app._.each(routes,function(o){
@@ -435,14 +403,242 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var member = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: this.params.memberId}, select: 'code name head_portrait'});
+
+                            var member = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: this.params.memberId}, select: 'code name head_portrait following follower'});
                             if (!member) {
                                 this.body = app.wrapper.res.error({code: 51002, message: 'invalid member'});
                                 yield next;
                                 return;
                             }
-                            this.body = app.wrapper.res.ret(member);
+                            var memberInfo = member.toObject();
+
+                            if( this.payload.member.member_id == this.params.memberId){
+                                memberInfo.isFollowedByMe = false;
+                            } else {
+                                console.log(this.payload.member.member_id)
+                                console.log(this.params.memberId)
+                                var actionStatInfo = yield app.modelFactory().model_aggregate(app.models['trv_action'], [
+                                    {
+                                        $match: {
+                                            subject_type: DIC.TRV04.MEMBER,
+                                            subject_id: this.payload.member.member_id,
+                                            action_type: {$in: [DIC.TRV05.FOLLOW, DIC.TRV05.UNFOLLOW]},
+                                            object_type: DIC.TRV04.MEMBER,
+                                            object_id: this.params.memberId
+                                        }
+                                    },
+                                    {
+                                        $group: {
+                                            _id: '$action_type',
+                                            count: {$sum: 1}
+                                        }
+                                    },
+                                    {
+                                        $project: {
+                                            action_type: '$_id',
+                                            count: '$count'
+                                        }
+                                    }
+                                ]);
+
+                                console.log(actionStatInfo);
+
+                                if (actionStatInfo.length == 0) {
+                                    memberInfo.isFollowedByMe = false;
+                                } else {
+                                    memberInfo.isFollowedByMe = app._.where(actionStatInfo, {action_type: DIC.TRV05.FOLLOW}).length > app._.where(actionStatInfo, {action_type: DIC.TRV05.UNFOLLOW}).length;
+                                }
+                            }
+                            this.body = app.wrapper.res.ret(memberInfo);
                         } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'memberFollow',
+                verb: 'post',
+                url: this.service_url_prefix + "/memberFollow/:followedMemberId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+
+                            var followedMemberId = this.params.followedMemberId;
+                            var member_id = this.payload.member.member_id;
+                            console.log(member_id +' follow '+ followedMemberId)
+                            if( followedMemberId == member_id){
+                                this.body = app.wrapper.res.error({code: 52001, message: 'can not follow member self'});
+                                yield next;
+                                return;
+                            }
+
+                            var memberFollowed = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: followedMemberId}});
+                            if (!memberFollowed) {
+                                this.body = app.wrapper.res.error({code: 51002, message: 'invalid member'});
+                                yield next;
+                                return;
+                            }
+
+                            var memberFollower = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: member_id}});
+                            if (!memberFollower) {
+                                this.body = app.wrapper.res.error({code: 51002, message: 'invalid member'});
+                                yield next;
+                                return;
+                            }
+
+                            //更新外部会员库
+                            var formData = {memberId: member_id,  followingMemberId: followedMemberId };
+                            var ret = yield rp({method: 'POST', url: externalSystemConfig.member_repository_java.api_url + '/okertrip/api/follow/', form: formData, json: true});
+                            if (ret.rntCode != 'OK') {
+                                console.log(ret);
+                                self.logger.error(ret);
+                                this.body = app.wrapper.res.error({code: 59999 ,message: ret.rntMsg })
+                                yield next;
+                                return;
+                            }
+
+
+                            yield app.modelFactory().model_create(app.models['trv_action'], {
+                                subject_type: DIC.TRV04.MEMBER,
+                                subject_id: member_id,
+                                action_type: DIC.TRV05.FOLLOW,
+                                object_type: DIC.TRV04.MEMBER,
+                                object_id: followedMemberId
+                            });
+
+                            memberFollower.following += 1; // 粉丝的关注人数+1
+                            yield memberFollower.save();
+
+                            memberFollowed.follower += 1; // 被关注人的粉丝+1
+                            yield memberFollowed.save();
+
+                            this.body = app.wrapper.res.ret({isFollowedByMe: true, following: memberFollowed.following, follower: memberFollowed.follower});
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'memberUnFollow',
+                verb: 'post',
+                url: this.service_url_prefix + "/memberUnFollow/:unFollowedMemberId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+
+                            var unFollowedMemberId = this.params.unFollowedMemberId;
+                            var member_id = this.payload.member.member_id;
+                            console.log(member_id +' unfollow '+ followedMemberId)
+                            if( unFollowedMemberId == member_id){
+                                this.body = app.wrapper.res.error({code: 52001, message: 'can not unfollow member self'});
+                                yield next;
+                                return;
+                            }
+
+                            var memberFollowed = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: unFollowedMemberId}});
+                            if (!memberFollowed) {
+                                this.body = app.wrapper.res.error({code: 51002, message: 'invalid member'});
+                                yield next;
+                                return;
+                            }
+
+                            var memberFollower = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: member_id}});
+                            if (!memberFollower) {
+                                this.body = app.wrapper.res.error({code: 51002, message: 'invalid member'});
+                                yield next;
+                                return;
+                            }
+
+                            //更新外部会员库
+                            var formData = {memberId: member_id,  followingMemberId: unFollowedMemberId };
+                            var ret = yield rp({method: 'POST', url: externalSystemConfig.member_repository_java.api_url + '/okertrip/api/follow/delete', form: formData, json: true});
+                            if (ret.rntCode != 'OK') {
+                                console.log(ret);
+                                self.logger.error(ret);
+                                this.body = app.wrapper.res.error({code: 59999 ,message: ret.rntMsg })
+                                yield next;
+                                return;
+                            }
+
+                            yield app.modelFactory().model_create(app.models['trv_action'], {
+                                subject_type: DIC.TRV04.MEMBER,
+                                subject_id: member_id,
+                                action_type: DIC.TRV05.UNFOLLOW,
+                                object_type: DIC.TRV04.MEMBER,
+                                object_id: unFollowedMemberId
+                            });
+
+                            memberFollower.following -= 1; // 原粉丝的关注人数-1
+                            yield memberFollower.save();
+
+                            memberFollowed.follower -= 1; //被关注人的粉丝数-1
+                            yield memberFollowed.save();
+
+                            this.body = app.wrapper.res.ret({isFollowedByMe: false, following: memberFollowed.following, follower: memberFollowed.follower});
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'followings', //关注列表
+                verb: 'post',
+                url: this.service_url_prefix + "/followings/:memberId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var memberId = this.params.memberId;
+                            var formData = {memberId: memberId,  pageSize: this.request.body.page.size, curPage: this.request.body.page.skip / this.request.body.page.size };
+                            console.log(formData)
+                            var ret = yield rp({method: 'POST', url: externalSystemConfig.member_repository_java.api_url + '/okertrip/api/follow/following', form: formData, json: true});
+                            if (ret.rntCode == 'OK') {
+                                var rows = ret.responseParams.pageContent;
+                                this.body = app.wrapper.res.rows(rows);
+                            } else {
+                                console.log(ret);
+                                self.logger.error(ret);
+                                this.body = app.wrapper.res.error({code: 59999 ,message: ret.rntMsg })
+                            }
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'followers', //粉丝列表
+                verb: 'post',
+                url: this.service_url_prefix + "/followers/:memberId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var memberId = this.params.memberId;
+                            var formData = {memberId: memberId,  pageSize: this.request.body.page.size, curPage: this.request.body.page.skip / this.request.body.page.size };
+                            var ret = yield rp({method: 'POST', url: externalSystemConfig.member_repository_java.api_url + '/okertrip/api/follow/follower', form: formData, json: true});
+                            if (ret.rntCode == 'OK') {
+                                var rows = ret.responseParams.pageContent;
+                                this.body = app.wrapper.res.rows(rows);
+                            } else {
+                                console.log(ret);
+                                self.logger.error(ret);
+                                this.body = app.wrapper.res.error({code: 59999 ,message: ret.rntMsg })
+                            }
+                        } catch (e) {
+                            console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
                         }
