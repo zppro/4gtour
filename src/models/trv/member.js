@@ -20,6 +20,8 @@ module.exports = function(ctx,name) {
             head_portrait:  {type: String}, // 对外部的 member_head_portrait
             following: {type: Number, default:0}, // 当前用户的关注人数
             follower: {type: Number, default:0}, // 当前用户的粉丝人数
+            tweeted: {type: Number, default:0}, // 当前用户的发表的见闻数量
+            stared: {type: Number, default:0}, // 当前用户的收藏的见闻数量
             check_status: {type: Number}, // 0-离线 1-在线
         });
 

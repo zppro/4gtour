@@ -38,6 +38,7 @@
     "UNLIKE": "A0004",
     "STAR": "A0005",
     "UNSTAR": "A0006",
-    "RETWEET": "A0007"
+    "RETWEET": "A0007",
+    "TWEET": "A0008"
   }
 }

@@ -188,6 +188,12 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
+                            var member = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: this.payload.member.member_id}});
+                            if (!member) {
+                                this.body = app.wrapper.res.error({code: 51002, message: 'invalid member'});
+                                yield next;
+                                return;
+                            }
                             var experience = app._.extend({
                                 who_can_see: 'A0001'
                             }, this.payload.member, this.request.body);
@@ -204,6 +210,19 @@ module.exports = {
                                 o.time_consuming = TRV03[o.time_consuming].name;
                                 !o.scenerySpotId && (o.scenerySpotId = {})
                             });
+
+                            yield app.modelFactory().model_create(app.models['trv_action'], {
+                                subject_type: DIC.TRV04.MEMBER,
+                                subject_id: experience.member_id,
+                                action_type: DIC.TRV05.TWEET,
+                                object_type: DIC.TRV04.EXPERIENCE,
+                                object_id: created.id
+                            });
+                            
+                            //更新用户的发布见闻数量
+                            member.tweeted += 1;
+                            yield member.save();
+                            
                             this.body = app.wrapper.res.ret(experienceInfo);
 
                             if (experience.retweet_flag) {
@@ -331,13 +350,21 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
+                            var member_id = this.payload.member.member_id;
+                            var member = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: member_id}});
+                            if (!member) {
+                                this.body = app.wrapper.res.error({code: 51002, message: 'invalid member'});
+                                yield next;
+                                return;
+                            }
+                            
                             var experience = yield app.modelFactory().model_read(app.models['trv_experience'], this.params.experienceId);
                             if (!experience) {
                                 this.body = app.wrapper.res.error({code: 51001, message: 'invalid experience'});
                                 yield next;
                                 return;
                             }
-                            var member_id = this.payload.member.member_id;
+                            
                             yield app.modelFactory().model_create(app.models['trv_action'], {
                                 subject_type: DIC.TRV04.MEMBER,
                                 subject_id: member_id,
@@ -347,6 +374,11 @@ module.exports = {
                             });
                             experience.stars += 1;
                             yield experience.save();
+
+                            //更新用户的收藏的见闻数量
+                            member.stared += 1;
+                            yield member.save();
+                            
                             this.body = app.wrapper.res.ret({id: experience._id, stars: experience.stars, stared: true});
                         } catch (e) {
                             console.log(e);
@@ -364,13 +396,19 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
+                            var member_id = this.payload.member.member_id;
+                            var member = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: member_id}});
+                            if (!member) {
+                                this.body = app.wrapper.res.error({code: 51002, message: 'invalid member'});
+                                yield next;
+                                return;
+                            }
                             var experience = yield app.modelFactory().model_read(app.models['trv_experience'], this.params.experienceId);
                             if (!experience) {
                                 this.body = app.wrapper.res.error({code: 51001, message: 'invalid experience'});
                                 yield next;
                                 return;
                             }
-                            var member_id = this.payload.member.member_id;
                             var actions = yield app.modelFactory().model_query(app.models['trv_action'], {
                                 where: {
                                     subject_type: DIC.TRV04.MEMBER,
@@ -386,6 +424,10 @@ module.exports = {
                             }
                             experience.stars -= length;
                             yield experience.save();
+                            
+                            //更新用户的收藏的见闻数量
+                            member.stared -= 1;
+                            yield member.save();
                             this.body = app.wrapper.res.ret({id: experience._id, stars: experience.stars, stared: false});
                         } catch (e) {
                             console.log(e);
@@ -535,7 +577,7 @@ module.exports = {
 
                             var unFollowedMemberId = this.params.unFollowedMemberId;
                             var member_id = this.payload.member.member_id;
-                            console.log(member_id +' unfollow '+ followedMemberId)
+                            console.log(member_id +' unfollow '+ unFollowedMemberId)
                             if( unFollowedMemberId == member_id){
                                 this.body = app.wrapper.res.error({code: 52001, message: 'can not unfollow member self'});
                                 yield next;

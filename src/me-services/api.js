@@ -88,6 +88,29 @@ module.exports = {
                     };
                 }
             },
+            {
+                method: 'reStatMemberInfo',
+                verb: 'post',
+                url: this.service_url_prefix + "/reStatMemberInfo",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            // send
+
+                            var rows = yield app.modelFactory().model_query(app.models['trv_member'])
+                            for(var i=0;i < rows.length;i++) {
+                                console.log(rows[i].code)
+                                yield app.member_service.reStatInfo(rows[i].code)
+                            }
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
             /************************票付通相关*****************************/
             {
                 method: 'scenicSpots',
