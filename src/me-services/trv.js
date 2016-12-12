@@ -272,6 +272,57 @@ module.exports = {
                 }
             },
             {
+                method: 'experience',
+                verb: 'delete',
+                url: this.service_url_prefix + "/experience/:experienceId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var influenceToExperiencesRetweetChain = []
+                            var member = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: this.payload.member.member_id}});
+                            if (!member) {
+                                this.body = app.wrapper.res.error({code: 51002, message: 'invalid member'});
+                                yield next;
+                                return;
+                            }
+
+                            var experience = yield app.modelFactory().model_read(app.models['trv_experience'], this.params.experienceId);
+                            if (experience.retweet_chains.length > 0) {
+                                experiencesRetweetChain = yield app.modelFactory().model_query(app.models['trv_experience'], {
+                                    where : {_id: {$in: experience.retweet_chains}}
+                                });
+                                
+                                for (var i=0; i < experiencesRetweetChain.length; i++) {
+                                    experiencesRetweetChain[i].retweets -= 1;
+                                    yield experiencesRetweetChain[i].save()
+                                    influenceToExperiencesRetweetChain.push({id: experiencesRetweetChain[i].id, retweets: experiencesRetweetChain[i].retweets});
+                                }
+                            }
+                            yield app.modelFactory().model_update(app.models['trv_experience'], this.params.experienceId, {status: 0});
+
+                            yield app.modelFactory().model_create(app.models['trv_action'], {
+                                subject_type: DIC.TRV04.MEMBER,
+                                subject_id: experience.member_id,
+                                action_type: DIC.TRV05.REMOVE,
+                                object_type: DIC.TRV04.EXPERIENCE,
+                                object_id: this.params.experienceId
+                            });
+
+                            //更新用户的发布见闻数量
+                            member.tweeted -= 1;
+                            yield member.save();
+
+                            this.body = app.wrapper.res.rows(influenceToExperiencesRetweetChain);
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'experienceLike',
                 verb: 'post',
                 url: this.service_url_prefix + "/experienceLike/:experienceId",
