@@ -32,7 +32,8 @@
                         td.text-center {{::row.app_id|formatter:'app_id':vm.columns}}
                         td.text-center {{::row.os|formatter:'os':vm.columns}}
                         td.text-center
-                            a.download-url(href="{{::row.download_url || 'about:blank'}}") {{::row.ver}}
+                            a.download-url {{::row.ver}}
+                        td {{::row.ver_order}}
                         td {{::row.force_update_flag|boolFilter}}
                         td
                             .btn-group
@@ -49,5 +50,9 @@
                                     i.glyphicon.glyphicon-plus
                                 a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.remove()")
                                     i.glyphicon.glyphicon-minus
+                            .btn-group
+                                a.btn.btn-primary(ng-click="vm.upgrade('A0001')") {{ vm.viewTranslatePath('UPGRADE-ANDROID') | translate}}
+                            .btn-group
+                                a.btn.btn-primary(ng-click="vm.upgrade('A0003')") {{ vm.viewTranslatePath('UPGRADE-IOS') | translate}}
                     .col-md-8
                         pagination.pagination-sm.pull-right(total-items="vm.page.totals",ng-model="vm.page.no",max-size="5",items-per-page="vm.page.size",boundary-links="true" ,ng-change="vm.paging()")

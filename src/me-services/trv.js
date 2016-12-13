@@ -733,6 +733,7 @@ module.exports = {
                             var ret = yield rp({method: 'POST', url: externalSystemConfig.member_repository_java.api_url + '/okertrip/api/follow/follower', form: formData, json: true});
                             if (ret.rntCode == 'OK') {
                                 var rows = ret.responseParams.pageContent;
+                                console.log(rows)
                                 this.body = app.wrapper.res.rows(rows);
                             } else {
                                 console.log(ret);

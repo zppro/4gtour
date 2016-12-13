@@ -31,6 +31,7 @@
                         td.text-center {{::row.check_in_time|date:'yyyy-MM-dd HH:mm:ss'}}
                         td.text-center {{::row.app_id|formatter:'app_id':vm.columns}}
                         td.text-center {{::row.ver}}
+                        td {{::row.ver_order}}
                         td
                             .btn-group
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
@@ -46,5 +47,7 @@
                                     i.glyphicon.glyphicon-plus
                                 a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.remove()")
                                     i.glyphicon.glyphicon-minus
+                            .btn-group
+                                a.btn.btn-primary(ng-click="vm.upgrade()") {{ vm.viewTranslatePath('UPGRADE') | translate}}
                     .col-md-8
                         pagination.pagination-sm.pull-right(total-items="vm.page.totals",ng-model="vm.page.no",max-size="5",items-per-page="vm.page.size",boundary-links="true" ,ng-change="vm.paging()")

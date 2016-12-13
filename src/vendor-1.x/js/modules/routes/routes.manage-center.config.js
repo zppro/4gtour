@@ -1068,11 +1068,12 @@
                 url: '/list/:action',
                 templateUrl: helper.basepath('manage-center/app-serverside-update-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
-                controller: 'GridController',
+                controller: 'AppServerSideUpdateGridController',
                 resolve: {
                     entryVM: helper.buildEntryVM('app.manage-center.app-serverside-update.list', {
                         modelName: 'pub-appServerSideUpdateHistory',
                         searchForm: {app_id: 'A0001'},
+                        sortColumn: 'ver_order',
                         //切换客户端还是服务端分页
                         serverPaging: true,
                         columns: [
@@ -1103,6 +1104,13 @@
                                 name: 'ver',
                                 type: 'string',
                                 width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '版本排序',
+                                name: 'ver_order',
+                                type: 'number',
+                                width: 80,
                                 sortable: true
                             },
                             {
@@ -1147,11 +1155,12 @@
                 url: '/list/:action',
                 templateUrl: helper.basepath('manage-center/app-clientside-update-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
-                controller: 'GridController',
+                controller: 'AppClientSideUpdateGridController',
                 resolve: {
                     entryVM: helper.buildEntryVM('app.manage-center.app-clientside-update.list', {
                         modelName: 'pub-appClientSideUpdateHistory',
                         searchForm: {app_id: 'A0001'},
+                        sortColumn: 'ver_order',
                         //切换客户端还是服务端分页
                         serverPaging: true,
                         columns: [
@@ -1189,6 +1198,13 @@
                                 label: '版本',
                                 name: 'ver',
                                 type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '版本排序',
+                                name: 'ver_order',
+                                type: 'number',
                                 width: 60,
                                 sortable: true
                             },
@@ -1246,7 +1262,6 @@
                         modelName: 'pub-deviceAccess',
                         //切换客户端还是服务端分页
                         serverPaging: true,
-                        sortColumn: 'ver_order',
                         columns: [
                             {
                                 label: '设备编号',

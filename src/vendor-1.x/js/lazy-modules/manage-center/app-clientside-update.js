@@ -24,18 +24,19 @@
         function init() {
             vm.init({removeDialog: ngDialog});
 
-            vmc.upgrade = upgrade;
+            vm.upgrade = upgrade;
             
             vm.query();
         }
 
-        function upgrade(row) {
+        function upgrade(os) {
+            console.log(os);
             ngDialog.openConfirm({
                 template: 'normalConfirmDialog.html',
                 className: 'ngdialog-theme-default',
                 scope: $scope
             }).then(function () {
-                vmh.extensionService.upgradeAppClientSide(row.id).then(function(){
+                vmh.extensionService.upgradeAppClientSide('A0001', os).then(function(){
                     vm.query();
                     vmh.alertSuccess('notification.NORMAL-SUCCESS');
                 })
@@ -63,10 +64,16 @@
             vm.load();
         }
 
+        function genVerOrder(ver) {
+            var arr = ver.split('.');
+            return parseInt(arr[0]) * 10000 + parseInt(arr[1]) * 100 + parseInt(arr[2]);
+        }
+
         function doSubmit() {
 
             if ($scope.theForm.$valid) {
                 //console.log(vm.model);
+                vm.model.ver_order = genVerOrder(vm.model.ver);
                 vm.save();
             }
             else {

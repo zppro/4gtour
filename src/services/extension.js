@@ -192,48 +192,110 @@ module.exports = {
             },
             /*************************************************************/
             {
-                method: 'upgradeAppClientSide',//管理中心将复制一条客户端升级记录，并增加一位版本号
+                method: 'upgradeAppServerSide',//管理中心将复制一条服务端端升级记录，并增加一位版本号
                 verb: 'post',
-                url: this.service_url_prefix + "/upgradeAppClientSide/:_id",
+                url: this.service_url_prefix + "/upgradeAppServerSide/:appId",
                 handler: function (app, options) {
                     return function * (next) {
                         try {
-                            var updateHistory = yield app.modelFactory().model_one(app.models['pub_appClientSideUpdateHistory'], {
-                                    where: {
-                                        _id: this.params._id
-                                    },
-                                    select: 'app_id os ver force_update_flag'
-                                });
-                            if(!updateHistory){
-                                this.body = app.wrapper.res.error({message: '无效的版本更新记录!'});
+                            var updateHistories = yield app.modelFactory().model_query(app.models['pub_appServerSideUpdateHistory'], {
+                                where: { app_id: this.params.appId },
+                                select: 'app_id ver ver_order',
+                                sort: {ver_order: -1, check_in_time: -1}
+                            }, {limit: 1});
+                            if(updateHistories.length == 0){
+                                this.body = app.wrapper.res.error({message: '当前App在该操作系统下没有任何版本信息!'});
                                 yield next;
                                 return;
                             }
-                            var newUpdateHistory = updateHistory.toObject();
-                            newUpdateHistory._id = undefined;
-                            newUpdateHistory.id = undefined;
-
+                            var newUpdateHistory = updateHistories[0].toObject();
+                            delete newUpdateHistory._id;
+                            delete newUpdateHistory.id;
                             var arrVer = newUpdateHistory.ver.split('.');
-                            var scale = 10;
+                            var scale = 100;
                             var newVer;
                             var ver3 = parseInt(arrVer[2]);
+                            console.log(newUpdateHistory.ver)
                             if(++ver3 == scale){
                                 ver3 = 0;
-                                var ver2 = parseInt(arrVer[1])
-                                if(++ver2 == scale) {
+                                var ver2 = parseInt(arrVer[1]);
+                                ver2++;
+                                if(ver2 == scale) {
                                     ver2 = 0;
-                                    var ver1 = parseInt(arrVer[0])
-                                    if(++ver1 == scale) {
+                                    var ver1 = parseInt(arrVer[0]);
+                                    ver1++;
+                                    if(ver1 == scale) {
                                         ver1 = 0
                                     }
-                                    newVer = ['' + arrVer[0], '' + ver2, '' + ver3].join('.')
+                                    console.log(ver1)
+                                    newVer = ['' + ver1, '' + ver2, '' + ver3].join('.')
                                 } else {
                                     newVer = [arrVer[0], '' + ver2, '' + ver3].join('.')
                                 }
                             } else {
                                 newVer = [arrVer[0], arrVer[1], '' + ver3].join('.')
                             }
-                            
+                            newUpdateHistory.ver = newVer;
+                            newUpdateHistory.ver_order = self.genVerOrder(newUpdateHistory.ver);
+                            yield app.modelFactory().model_create(app.models['pub_appServerSideUpdateHistory'], newUpdateHistory);
+
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'upgradeAppClientSide',//管理中心将复制一条客户端升级记录，并增加一位版本号
+                verb: 'post',
+                url: this.service_url_prefix + "/upgradeAppClientSide/:appId,:os",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var updateHistories = yield app.modelFactory().model_query(app.models['pub_appClientSideUpdateHistory'], {
+                                    where: { app_id: this.params.appId, os: this.params.os },
+                                    select: 'app_id os ver ver_code force_update_flag download_url',
+                                    sort: {ver_order: -1, check_in_time: -1}
+                            }, {limit: 1});
+                            if(updateHistories.length == 0){
+                                this.body = app.wrapper.res.error({message: '当前App在该操作系统下没有任何版本信息!'});
+                                yield next;
+                                return;
+                            }
+                            var newUpdateHistory = updateHistories[0].toObject();
+                            delete newUpdateHistory._id;
+                            delete newUpdateHistory.id;
+                            var arrVer = newUpdateHistory.ver.split('.');
+                            var scale = 100;
+                            var newVer;
+                            var ver3 = parseInt(arrVer[2]);
+                            console.log(newUpdateHistory.ver)
+                            if(++ver3 == scale){
+                                ver3 = 0;
+                                var ver2 = parseInt(arrVer[1]);
+                                ver2++;
+                                if(ver2 == scale) {
+                                    ver2 = 0;
+                                    var ver1 = parseInt(arrVer[0]);
+                                    ver1++;
+                                    if(ver1 == scale) {
+                                        ver1 = 0
+                                    }
+                                    console.log(ver1)
+                                    newVer = ['' + ver1, '' + ver2, '' + ver3].join('.')
+                                } else {
+                                    newVer = [arrVer[0], '' + ver2, '' + ver3].join('.')
+                                }
+                            } else {
+                                newVer = [arrVer[0], arrVer[1], '' + ver3].join('.')
+                            }
+                            newUpdateHistory.ver = newVer;
+                            newUpdateHistory.ver_order = self.genVerOrder(newUpdateHistory.ver);
+                            yield app.modelFactory().model_create(app.models['pub_appClientSideUpdateHistory'], newUpdateHistory);
+
                             this.body = app.wrapper.res.default();
                         } catch (e) {
                             self.logger.error(e.message);
@@ -246,6 +308,10 @@ module.exports = {
         ];
 
         return this;
+    },
+    genVerOrder: function(ver) {
+        var arr = ver.split('.');
+        return parseInt(arr[0]) * 10000 + parseInt(arr[1]) * 100 + parseInt(arr[2]);
     }
 }.init();
 //.init(option);

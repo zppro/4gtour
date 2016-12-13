@@ -27,6 +27,11 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                             input.form-control(type='text', name='ver',ng-model='vm.model.ver',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-VER")|translate}}' ,required='')
                             span.text-danger(ng-show="utils.vinput(this.theForm,'ver','required')") {{ "validator.REQUIRED" | translate}}
                     fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-DOWNLOAD_URL') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='download_url',ng-model='vm.model.download_url',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-DOWNLOAD_URL")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'download_url','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-FLAG-COLLECTION') | translate}}:
                         .col-md-2
                             .checkbox.c-checkbox

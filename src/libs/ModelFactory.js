@@ -37,7 +37,7 @@ var ModelFactory = function(conn) {
         query: function (name, path, data,options) {
             return ModelFactory._query(ModelFactory.getModel(conn, name, path), data, options);
         },
-        model_query: function (model, data,options) {
+        model_query: function (model, data, options) {
             return ModelFactory._query(model, data, options);
         },
         totals: function (name, path, data) {

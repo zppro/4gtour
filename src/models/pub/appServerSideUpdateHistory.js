@@ -18,12 +18,17 @@ module.exports = function(ctx,name) {
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             app_id: {type: String, enum: ctx._.rest(ctx.dictionary.keys["D0102"])},
-            ver: {type: String}
+            ver: {type: String},
+            ver_order: {type: Number, default: 1}
         });
         appServerSideUpdateHistorySchema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();
         });
+        // appServerSideUpdateHistorySchema.virtual('ver_order').get(function () {
+        //     var arr = this.ver.split('.');
+        //     return parseInt(arr[0]) * 10000 + parseInt(arr[1]) * 100 + parseInt(arr[2])
+        // });
         return mongoose.model(name, appServerSideUpdateHistorySchema, name);
     }
 }

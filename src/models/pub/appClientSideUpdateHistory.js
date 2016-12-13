@@ -20,23 +20,13 @@ module.exports = function(ctx,name) {
             app_id: {type: String, enum: ctx._.rest(ctx.dictionary.keys["D0102"])},
             os: {type: String, enum: ctx._.rest(ctx.dictionary.keys["D0101"])},
             ver: {type: String, required: true}, //  1-2位.1-2位.1-2位
-            download_url: {type: String, required: true},
+            ver_order: {type: Number},
+            download_url: {type: String},
             force_update_flag: {type: Boolean, default: false}// 强制客户端更新
-        }, {
-            toObject: {
-                virtuals: true
-            }
-            , toJSON: {
-                virtuals: true
-            }
         });
         appClientSideUpdateHistorySchema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();
-        });
-        appClientSideUpdateHistorySchema.virtual('ver_order').get(function () {
-            var arr = this.ver.split('.');
-            return parseInt(arr[0]) * 10000 + parseInt(arr[1]) * 100 + parseInt(arr[2])
         });
         return mongoose.model(name, appClientSideUpdateHistorySchema, name);
     }

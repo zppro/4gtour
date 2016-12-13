@@ -47,16 +47,37 @@ module.exports = {
                                 deviceAccess = yield app.modelFactory().model_create(app.models['pub_deviceAccess'], payload);
                             }
 
-                            var appUpdateHistorys = yield app.modelFactory().model_query(app.models['pub_appServerSideUpdateHistory'], {
+                            var ret = {};
+                            var appServers = yield app.modelFactory().model_query(app.models['pub_appServerSideUpdateHistory'], {
                                 where: {app_id: DIC.D0102.FourSeasonTour},
-                                sort: {ver: -1, check_in_time: -1}
+                                sort: {ver_order: -1, check_in_time: -1}
                             }, {limit: 1});
-                            
-                            var hash = "0";
-                            if (appUpdateHistorys.length > 0) {
-                                hash = appUpdateHistorys[0].id
+                            console.log(appServers);
+                            if (appServers.length > 0) {
+                                ret.server_hash = appServers[0].id;
+                                ret.server_ver = appServers[0].ver;
+                            } else {
+                                ret.server_hash = "0";
+                                ret.server_ver = "0.0.1";
                             }
-                            this.body = app.wrapper.res.ret({hash: hash});
+
+                            var appClients = yield app.modelFactory().model_query(app.models['pub_appClientSideUpdateHistory'], {
+                                where: {app_id: DIC.D0102.FourSeasonTour, os: payload.os},
+                                sort: {ver_order: -1, check_in_time: -1}
+                            }, {limit: 1});
+                            console.log(appClients);
+                            if (appClients.length > 0) {
+                                ret.client_hash = appClients[0].id;
+                                ret.client_ver = appClients[0].ver;
+                                ret.client_force_update = appClients[0].force_update_flag;
+                                ret.client_download_url = appClients[0].download_url;
+                            } else {
+                                ret.client_hash = "0";
+                                ret.client_ver = "0.0.1";
+                                ret.client_force_update = false;
+                                ret.client_download_url = "";
+                            }
+                            this.body = app.wrapper.res.ret(ret);
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -322,25 +343,6 @@ module.exports = {
                 }
             },
             /************************本地订单相关*****************************/
-            {
-                method: 'orders',
-                verb: 'get',
-                url: this.service_url_prefix + "/orders/:memberId",
-                handler: function (app, options) {
-                    return function * (next) {
-                        try {
-
-                            var rows = yield app.modelFactory().model_query(app.models['idc_order_PFT'],{ where: { status:1, member_id:this.params.memberId}, select: 'p_name code check_in_time amount local_status'});
-
-                            this.body = app.wrapper.res.rows(rows);
-                        } catch (e) {
-                            self.logger.error(e.message);
-                            this.body = app.wrapper.res.error(e);
-                        }
-                        yield next;
-                    };
-                }
-            },
             {
                 method: 'orders',
                 verb: 'post',

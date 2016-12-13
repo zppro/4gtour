@@ -265,7 +265,9 @@
                     completeOrder: completeOrder,
                     refundOrder: refundOrder,
                     userChangePassword: userChangePassword,
-                    resetUserPassword: resetUserPassword
+                    resetUserPassword: resetUserPassword,
+                    upgradeAppServerSide: upgradeAppServerSide,
+                    upgradeAppClientSide: upgradeAppClientSide
                 };
 
                 function tenantInfo(tenantId,select) {
@@ -435,6 +437,14 @@
 
                 function resetUserPassword(userId) {
                     return $http.post(baseUrl + 'resetUserPassword/' + userId);
+                }
+
+                function upgradeAppServerSide(appId) {
+                    return $http.post(baseUrl + 'upgradeAppServerSide/' + appId);
+                }
+                
+                function upgradeAppClientSide(appId, os) {
+                    return $http.post(baseUrl + 'upgradeAppClientSide/' + appId + ',' + os);
                 }
             }]
         };
