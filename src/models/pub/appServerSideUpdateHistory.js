@@ -19,7 +19,7 @@ module.exports = function(ctx,name) {
             operated_on: {type: Date, default: Date.now},
             app_id: {type: String, enum: ctx._.rest(ctx.dictionary.keys["D0102"])},
             ver: {type: String},
-            ver_order: {type: Number, default: 1}
+            ver_order: {type: Number}
         });
         appServerSideUpdateHistorySchema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
