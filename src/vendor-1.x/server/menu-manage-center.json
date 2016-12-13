@@ -85,6 +85,11 @@
         "sref": "app.manage-center.app-serverside-update.list"
       },
       {
+        "_id": "menu.manage-center.APP-CLIENTSIDE-UPDATE",
+        "name": "app更新",
+        "sref": "app.manage-center.app-clientside-update.list"
+      },
+      {
         "_id": "menu.manage-center.DEVICE-ACCESS",
         "name": "访问设备",
         "sref": "app.manage-center.device-access.list"

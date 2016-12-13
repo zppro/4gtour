@@ -31,7 +31,7 @@ module.exports = function (app){
         if(!isIgnored){
             if(this.method != 'OPTIONS'){
                 var token = this.get("Authorization");
-                console.log(token)
+                // console.log(token)
                 if (token === undefined) {
                     this.status = 401;
                     return;

@@ -547,7 +547,7 @@
                     selectBinding: {},
                     selectFilterObject: {"common": {}},
                     sort: {
-                        column: option.columnPK || this.pk || '_id',
+                        column: option.sortColumn || this.pk || '_id',
                         direction: -1,
                         toggle: function (column) {
                             if (column.sortable) {

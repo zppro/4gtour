@@ -9,6 +9,7 @@
   { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/order-receipt-confirmation.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/order-refund-confirmation.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/app-serverside-update.js" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/app-clientside-update.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/organization-travel-share/" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/organization-travel/dashboard.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/organization-travel/scenery-spot.js" },

@@ -189,9 +189,60 @@ module.exports = {
                         yield next;
                     };
                 }
-            }
+            },
             /*************************************************************/
+            {
+                method: 'upgradeAppClientSide',//管理中心将复制一条客户端升级记录，并增加一位版本号
+                verb: 'post',
+                url: this.service_url_prefix + "/upgradeAppClientSide/:_id",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var updateHistory = yield app.modelFactory().model_one(app.models['pub_appClientSideUpdateHistory'], {
+                                    where: {
+                                        _id: this.params._id
+                                    },
+                                    select: 'app_id os ver force_update_flag'
+                                });
+                            if(!updateHistory){
+                                this.body = app.wrapper.res.error({message: '无效的版本更新记录!'});
+                                yield next;
+                                return;
+                            }
+                            var newUpdateHistory = updateHistory.toObject();
+                            newUpdateHistory._id = undefined;
+                            newUpdateHistory.id = undefined;
 
+                            var arrVer = newUpdateHistory.ver.split('.');
+                            var scale = 10;
+                            var newVer;
+                            var ver3 = parseInt(arrVer[2]);
+                            if(++ver3 == scale){
+                                ver3 = 0;
+                                var ver2 = parseInt(arrVer[1])
+                                if(++ver2 == scale) {
+                                    ver2 = 0;
+                                    var ver1 = parseInt(arrVer[0])
+                                    if(++ver1 == scale) {
+                                        ver1 = 0
+                                    }
+                                    newVer = ['' + arrVer[0], '' + ver2, '' + ver3].join('.')
+                                } else {
+                                    newVer = [arrVer[0], '' + ver2, '' + ver3].join('.')
+                                }
+                            } else {
+                                newVer = [arrVer[0], arrVer[1], '' + ver3].join('.')
+                            }
+                            
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            }
         ];
 
         return this;

@@ -692,11 +692,16 @@ module.exports = {
                     return function *(next) {
                         try {
                             var memberId = this.params.memberId;
-                            var formData = {memberId: memberId,  pageSize: this.request.body.page.size, curPage: this.request.body.page.skip / this.request.body.page.size };
+                            var myId = null;
+                            if (this.payload.member.member_id != 'anonymity') {
+                                myId = this.payload.member.member_id;
+                            }
+                            var formData = {memberId: memberId, myId: myId,  pageSize: this.request.body.page.size, curPage: this.request.body.page.skip / this.request.body.page.size };
                             console.log(formData)
                             var ret = yield rp({method: 'POST', url: externalSystemConfig.member_repository_java.api_url + '/okertrip/api/follow/following', form: formData, json: true});
                             if (ret.rntCode == 'OK') {
                                 var rows = ret.responseParams.pageContent;
+                                console.log(rows)
                                 this.body = app.wrapper.res.rows(rows);
                             } else {
                                 console.log(ret);
@@ -720,7 +725,11 @@ module.exports = {
                     return function *(next) {
                         try {
                             var memberId = this.params.memberId;
-                            var formData = {memberId: memberId,  pageSize: this.request.body.page.size, curPage: this.request.body.page.skip / this.request.body.page.size };
+                            var myId = null;
+                            if (this.payload.member.member_id != 'anonymity') {
+                                myId = this.payload.member.member_id;
+                            }
+                            var formData = {memberId: memberId, myId: myId, pageSize: this.request.body.page.size, curPage: this.request.body.page.skip / this.request.body.page.size };
                             var ret = yield rp({method: 'POST', url: externalSystemConfig.member_repository_java.api_url + '/okertrip/api/follow/follower', form: formData, json: true});
                             if (ret.rntCode == 'OK') {
                                 var rows = ret.responseParams.pageContent;

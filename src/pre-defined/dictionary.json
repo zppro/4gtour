@@ -193,23 +193,28 @@
     "name": "OS",
     "A0001": {
       "name": "Android",
-      "order": 1
+      "order": 1,
+      "platform": "A0001"
     },
     "A0003": {
       "name": "IOS",
-      "order": 3
+      "order": 3,
+      "platform": "A0001"
     },
     "A0005": {
       "name": "Chrome",
-      "order": 5
+      "order": 5,
+      "platform": "A0003"
     },
     "A0007": {
       "name": "Firefox",
-      "order": 7
+      "order": 7,
+      "platform": "A0003"
     },
     "A0009": {
       "name": "IE/Edge",
-      "order": 9
+      "order": 9,
+      "platform": "A0003"
     }
   },
   "D0102": {

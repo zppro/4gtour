@@ -1,6 +1,6 @@
 /**
  * Created by zppro on 16-12-2.
- * 管理中心 app更新历史
+ * 管理中心 app服务端更新历史
  */
 var mongoose = require('mongoose');
 module.isloaded = false;

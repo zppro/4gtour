@@ -1,5 +1,5 @@
 //
-   Created by zppro on 16-12-2.
+   Created by zppro on 16-12-13.
 .col-xs-12.text-center
     .row
         form.form-search
@@ -30,7 +30,10 @@
                         td.text-center {{::row._id}}
                         td.text-center {{::row.check_in_time|date:'yyyy-MM-dd HH:mm:ss'}}
                         td.text-center {{::row.app_id|formatter:'app_id':vm.columns}}
-                        td.text-center {{::row.ver}}
+                        td.text-center {{::row.os|formatter:'os':vm.columns}}
+                        td.text-center
+                            a.download-url(href="{{::row.download_url || 'about:blank'}}") {{::row.ver}}
+                        td {{::row.force_update_flag|boolFilter}}
                         td
                             .btn-group
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")

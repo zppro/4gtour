@@ -1080,28 +1080,29 @@
                                 label: 'App哈希',
                                 name: '_id',
                                 type: 'string',
+                                width: 120,
                                 sortable: false
+                            },
+                            {
+                                label: '更新时间',
+                                name: 'check_in_time',
+                                type: 'date',
+                                width: 120,
+                                sortable: true
                             },
                             {
                                 label: 'App编号',
                                 name: 'app_id',
                                 type: 'string',
                                 sortable: true,
-                                width: 120,
-                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D0102/object')
-                            },
-                            {
-                                label: '更新时间',
-                                name: 'check_in_time',
-                                type: 'date',
                                 width: 80,
-                                sortable: true
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D0102/object')
                             },
                             {
                                 label: '版本',
                                 name: 'ver',
                                 type: 'string',
-                                width: 120,
+                                width: 60,
                                 sortable: true
                             },
                             {
@@ -1122,6 +1123,99 @@
                 resolve: {
                     entityVM: helper.buildEntityVM('app.manage-center.app-serverside-update.details', {
                         modelName: 'pub-appServerSideUpdateHistory',
+                        model: {app_id: 'A0001'},
+                        blockUI: true
+                    })
+                    //, deps: helper.resolveFor2('ui.select')
+                }
+            })
+            .state('app.manage-center.app-clientside-update', {
+                url: '/app-clientside-update',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
+                        controller: 'ModuleHeaderController'
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                }
+                , resolve: helper.resolveFor('subsystem.manage-center.app-clientside-update.js')
+            })
+            .state('app.manage-center.app-clientside-update.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath('manage-center/app-clientside-update-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.ADMIN,
+                controller: 'GridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM('app.manage-center.app-clientside-update.list', {
+                        modelName: 'pub-appClientSideUpdateHistory',
+                        searchForm: {app_id: 'A0001'},
+                        //切换客户端还是服务端分页
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: 'App哈希',
+                                name: '_id',
+                                type: 'string',
+                                width: 120,
+                                sortable: false
+                            },
+                            {
+                                label: '更新时间',
+                                name: 'check_in_time',
+                                type: 'date',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: 'App编号',
+                                name: 'app_id',
+                                type: 'string',
+                                sortable: true,
+                                width: 80,
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D0102/object')
+                            },
+                            {
+                                label: '系统',
+                                name: 'os',
+                                type: 'string',
+                                sortable: true,
+                                width: 60,
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D0101/object')
+                            },
+                            {
+                                label: '版本',
+                                name: 'ver',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '强制更新',
+                                name: 'force_update_flag',
+                                type: 'bool',
+                                width: 60
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 60
+                            }
+                        ]
+                    })
+                }
+            })
+            .state('app.manage-center.app-clientside-update.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath('manage-center/app-clientside-update-details.html'),
+                controller: 'AppClientSideUpdateDetailsController',
+                access_level: AUTH_ACCESS_LEVELS.ADMIN,
+                resolve: {
+                    entityVM: helper.buildEntityVM('app.manage-center.app-clientside-update.details', {
+                        modelName: 'pub-appClientSideUpdateHistory',
                         model: {app_id: 'A0001'},
                         blockUI: true
                     })
@@ -1152,6 +1246,7 @@
                         modelName: 'pub-deviceAccess',
                         //切换客户端还是服务端分页
                         serverPaging: true,
+                        sortColumn: 'ver_order',
                         columns: [
                             {
                                 label: '设备编号',
