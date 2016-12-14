@@ -73,13 +73,39 @@ module.exports = {
                 var member = yield self.ctx.modelFactory().model_one(self.ctx.models['trv_member'], {where:{code: member_id}})
                 if (member) {
                     console.log('reStatInfo:'+member_id+ ' name:'+ member.name);
-                    var tweetedActions = yield self.ctx.modelFactory().model_totals(self.ctx.models['trv_action'],
-                        {
-                            where:{subject_type:DIC.TRV04.MEMBER, subject_id: member_id, action_type: DIC.TRV05.TWEET, object_type: DIC.TRV04.EXPERIENCE},
-                        });
-                    member.tweeted = tweetedActions.length;
 
-                    var actionStatStar = yield self.ctx.modelFactory().model_aggregate(self.ctx.models['trv_action'], [
+                    /*** 发文数 ***/
+                    var actionStatTweets = yield self.ctx.modelFactory().model_aggregate(self.ctx.models['trv_action'], [
+                        {
+                            $match: {
+                                subject_type: DIC.TRV04.MEMBER,
+                                subject_id: member_id,
+                                action_type: {$in: [DIC.TRV05.TWEET, DIC.TRV05.RETWEET, DIC.TRV05.REMOVE]},
+                                object_type: DIC.TRV04.EXPERIENCE
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: '$action_type',
+                                count: {$sum: {$cond: { if: { $eq: [ "$action_type", DIC.TRV05.REMOVE ] }, then: -1, else: 1 }}}
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: 'tweeted',
+                                count: {$sum: '$count'}
+                            }
+                        }
+                    ]);
+                    console.log(actionStatTweets)
+                    if(actionStatTweets.length > 0) {
+                        member.tweeted = actionStatTweets[0].count;
+                    } else {
+                        member.tweeted = 0;
+                    }
+
+                    /*** 收藏数 ***/
+                    var actionStatStars = yield self.ctx.modelFactory().model_aggregate(self.ctx.models['trv_action'], [
                         {
                             $match: {
                                 subject_type: DIC.TRV04.MEMBER,
@@ -90,82 +116,85 @@ module.exports = {
                         },
                         {
                             $group: {
-                                _id: {action_type: '$action_type', object_id: '$object_id'},
-                                count: {$sum: 1}
+                                _id: '$action_type',
+                                count: {$sum: {$cond: { if: { $eq: [ "$action_type", DIC.TRV05.UNSTAR ] }, then: -1, else: 1 }}}
                             }
                         },
                         {
-                            $project: {
-                                _id: '$_id',
-                                count: '$count'
+                            $group: {
+                                _id: 'stared',
+                                count: {$sum: '$count'}
                             }
                         }
                     ]);
-
-                    console.log(actionStatStar);
-                    if (actionStatStar.length == 0) {
-                        member.stared = 0;
+                    console.log(actionStatStars)
+                    if(actionStatStars.length > 0) {
+                        member.stared = actionStatStars[0].count;
                     } else {
-                        var grouped = self.ctx._.reduce(actionStatStar, function(prev, next){
-                            var v = (next._id.action_type == DIC.TRV05.STAR ? 1 : -1)
-                            if (prev[next._id.object_id]) {
-                                prev[next._id.object_id] += v
-                            } else {
-                                prev[next._id.object_id] = v
-                            }
-                        },{});
-
-                        member.stared = self.ctx._.reduce(self.ctx._.values(grouped), function(prev, next) {
-                            return prev + next
-                        },0);
+                        member.stared = 0;
                     }
 
-                    console.log(member)
+                    /*** 关注数 ***/
+                    var actionStatFollowings = yield self.ctx.modelFactory().model_aggregate(self.ctx.models['trv_action'], [
+                        {
+                            $match: {
+                                subject_type: DIC.TRV04.MEMBER,
+                                subject_id: member_id,
+                                action_type: {$in: [DIC.TRV05.FOLLOW, DIC.TRV05.UNFOLLOW]},
+                                object_type: DIC.TRV04.MEMBER
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: '$action_type',
+                                count: {$sum: {$cond: { if: { $eq: [ "$action_type", DIC.TRV05.UNFOLLOW ] }, then: -1, else: 1 }}}
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: 'following',
+                                count: {$sum: '$count'}
+                            }
+                        }
+                    ]);
+                    console.log(actionStatFollowings)
+                    if(actionStatFollowings.length > 0) {
+                        member.following = actionStatFollowings[0].count;
+                    } else {
+                        member.following = 0;
+                    }
 
-                    // var actionFollowInfo = yield self.ctx.modelFactory().model_aggregate(self.ctx.models['trv_action'], [
-                    //     {
-                    //         $match: {
-                    //             subject_type: DIC.TRV04.MEMBER,
-                    //             subject_id: member_id,
-                    //             action_type: {$in: [DIC.TRV05.UNFOLLOW, DIC.TRV05.UNFOLLOW]},
-                    //             object_type: DIC.TRV04.MEMBER
-                    //         }
-                    //     },
-                    //     {
-                    //         $group: {
-                    //             _id: {action_type: '$action_type', object_id: '$object_id'},
-                    //             action_type: '$action_type',
-                    //             object_id: '$object_id',
-                    //             count: {$sum: 1}
-                    //         }
-                    //     },
-                    //     {
-                    //         $project: {
-                    //             action_type: '$_id',
-                    //             count: '$count'
-                    //         }
-                    //     }
-                    // ]);
-                    //
-                    // console.log(actionFollowInfo);
-                    // if (actionFollowInfo.length == 0) {
-                    //     member.follow = 0;
-                    // } else {
-                    //     var grouped = self.ctx._.reduce(actionStatInfo, function(prev, next){
-                    //         var v = (next.action_type == DIC.TRV05.STAR ? 1 : -1)
-                    //         if (prev[next.object_id]) {
-                    //             prev[next.object_id] += v
-                    //         } else {
-                    //             prev[next.object_id] = v
-                    //         }
-                    //     },{});
-                    //
-                    //     member.stared = self.ctx._.reduce(self.ctx._.values(grouped), function(prev, next) {
-                    //         return prev + next
-                    //     },0);
-                    // }
-                    //
-                    // member.stared = 0;
+                    /*** 粉丝数 ***/
+                    var actionStatFollowers = yield self.ctx.modelFactory().model_aggregate(self.ctx.models['trv_action'], [
+                        {
+                            $match: {
+                                subject_type: DIC.TRV04.MEMBER,
+                                action_type: {$in: [DIC.TRV05.FOLLOW, DIC.TRV05.UNFOLLOW]},
+                                object_type: DIC.TRV04.MEMBER,
+                                object_id: member_id
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: '$action_type',
+                                count: {$sum: {$cond: { if: { $eq: [ "$action_type", DIC.TRV05.UNFOLLOW ] }, then: -1, else: 1 }}}
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: 'follower',
+                                count: {$sum: '$count'}
+                            }
+                        }
+                    ]);
+                    console.log(actionStatFollowers)
+                    if(actionStatFollowers.length > 0) {
+                        member.follower = actionStatFollowers[0].count;
+                    } else {
+                        member.follower = 0;
+                    }
+
+                    yield member.save();
                 }
             }
             catch (e) {

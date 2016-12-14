@@ -112,17 +112,21 @@ module.exports = {
             {
                 method: 'reStatMemberInfo',
                 verb: 'post',
-                url: this.service_url_prefix + "/reStatMemberInfo",
+                url: this.service_url_prefix + "/reStatMemberInfo/:memberId?",
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            // send
-
-                            var rows = yield app.modelFactory().model_query(app.models['trv_member'])
-                            for(var i=0;i < rows.length;i++) {
-                                console.log(rows[i].code)
-                                yield app.member_service.reStatInfo(rows[i].code)
+                            if(this.params.memberId) {
+                                console.log(this.params.memberId);
+                                yield app.member_service.reStatInfo(this.params.memberId)
+                            } else {
+                                var rows = yield app.modelFactory().model_query(app.models['trv_member'])
+                                for (var i = 0; i < rows.length; i++) {
+                                    console.log(rows[i].code)
+                                    yield app.member_service.reStatInfo(rows[i].code)
+                                }
                             }
+
                             this.body = app.wrapper.res.default();
                         } catch (e) {
                             self.logger.error(e.message);

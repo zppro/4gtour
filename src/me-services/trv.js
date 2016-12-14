@@ -497,7 +497,7 @@ module.exports = {
                     return function *(next) {
                         try {
 
-                            var member = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: this.params.memberId}, select: 'code name head_portrait following follower'});
+                            var member = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: this.params.memberId}, select: 'code name head_portrait following follower tweeted stared'});
                             if (!member) {
                                 this.body = app.wrapper.res.error({code: 51002, message: 'invalid member'});
                                 yield next;
