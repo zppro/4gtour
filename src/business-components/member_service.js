@@ -2,7 +2,9 @@
  * Created by zppro on 16-11-8.
  */
 var co = require('co');
+var rp = require('request-promise-native');
 var DIC = require('../pre-defined/dictionary-constants.json');
+var externalSystemConfig = require('../pre-defined/external-system-config.json');
 module.exports = {
     transporters : {},
     init: function (ctx) {
@@ -196,6 +198,71 @@ module.exports = {
 
                     yield member.save();
                 }
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+            }
+        }).catch(self.ctx.coOnError);
+    },
+    genFollowingTrendsGrouped: function (member_id, page) {
+        var self = this;
+        return co(function *() {
+            try {
+                var followingMemberIds = [];
+                var ret = yield rp({method: 'POST', url: externalSystemConfig.member_repository_java.api_url + '/okertrip/api/follow/followingId', form: {memberId: member_id}, json: true});
+                if (ret.rntCode == 'OK') {
+                    followingMemberIds = ret.responseParams;
+                } else {
+                    console.log(ret);
+                    self.logger.error(ret);
+                    return self.ctx.wrapper.res.error({code: 59999 ,message: ret.rntMsg })
+                }
+                var members = yield self.ctx.modelFactory().model_query(self.ctx.models['trv_member'], {
+                        where: {
+                            code:{$in: followingMemberIds}
+                        },
+                        select: 'code name'
+                    });
+                var actions = yield self.ctx.modelFactory().model_query(self.ctx.models['trv_action'], {
+                        where: {
+                            subject_type: DIC.TRV04.MEMBER,
+                            subject_id:{$in: followingMemberIds}
+                        },
+                        sort: {check_in_time: -1}
+                    },
+                    {limit: page.size, skip: page.skip});
+                var trends = [];
+                for(var i=0;i < actions.length; i++) {
+                    var trend = {};
+                    var subject = self.ctx._.find(members, function(o) { return o.code == actions[i].subject_id});
+                    if(subject){
+                        var action_type = actions[i].action_type;
+                        var object_type = actions[i].object_type;
+                        var object_id = actions[i].object_id;
+                        trend.check_in_date = self.ctx.moment(actions[i].check_in_time).format('YYYYMMDD');
+                        trend.check_in_hour_min = self.ctx.moment(actions[i].check_in_time).format('HH:mm');
+                        trend.subject_id = subject.code;
+                        trend.subject_name = subject.name;
+                        trend.action_name = self.ctx.dictionary.pairs['TRV05'][action_type].name;
+                        trend.object_id = object_id;
+                        if (object_type == DIC.TRV04.EXPERIENCE && action_type != DIC.TRV05.REMOVE) {
+                            var experience = yield self.ctx.modelFactory().model_read(self.ctx.models['trv_experience'], object_id);
+                            trend.imgs = experience.imgs;
+                            trend.imgTotal = experience.imgs.length;
+                            trend.content = experience.content;
+                        }
+                        trends.push(trend);
+                    }
+                }
+
+                var rows = [];
+                var trendsGroupedByDate = self.ctx._.groupBy(trends, 'check_in_date');
+                for(var key in trendsGroupedByDate){
+                    rows.push({group_key: key, group_value: trendsGroupedByDate[key]});
+                }
+                console.log(rows);
+                return self.ctx.wrapper.res.rows(rows)
             }
             catch (e) {
                 console.log(e);

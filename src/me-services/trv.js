@@ -790,7 +790,24 @@ module.exports = {
                         yield next;
                     };
                 }
+            },
+            {
+                method: 'followingTrends',
+                verb: 'post',
+                url: this.service_url_prefix + "/followingTrends",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            this.body = yield app.member_service.genFollowingTrendsGrouped(this.payload.member.member_id, this.request.body.page);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
             }
+
         ];
 
         return this;
