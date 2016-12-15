@@ -38,7 +38,7 @@
             }).then(function () {
                 vmh.extensionService.upgradeAppClientSide('A0001', os).then(function(){
                     vm.query();
-                    vmh.alertSuccess('notification.NORMAL-SUCCESS');
+                    vmh.alertSuccess('notification.NORMAL-SUCCESS', true);
                 })
             });
         }
