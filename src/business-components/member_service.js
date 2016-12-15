@@ -218,12 +218,13 @@ module.exports = {
                     self.logger.error(ret);
                     return self.ctx.wrapper.res.error({code: 59999 ,message: ret.rntMsg })
                 }
-                var members = yield self.ctx.modelFactory().model_query(self.ctx.models['trv_member'], {
+                var followingMembers = yield self.ctx.modelFactory().model_query(self.ctx.models['trv_member'], {
                         where: {
                             code:{$in: followingMemberIds}
                         },
                         select: 'code name'
                     });
+                console.log(followingMembers);
                 var actions = yield self.ctx.modelFactory().model_query(self.ctx.models['trv_action'], {
                         where: {
                             subject_type: DIC.TRV04.MEMBER,
@@ -235,7 +236,7 @@ module.exports = {
                 var trends = [];
                 for(var i=0;i < actions.length; i++) {
                     var trend = {};
-                    var subject = self.ctx._.find(members, function(o) { return o.code == actions[i].subject_id});
+                    var subject = self.ctx._.find(followingMembers, function(o) { return o.code == actions[i].subject_id});
                     if(subject){
                         var action_type = actions[i].action_type;
                         var object_type = actions[i].object_type;
@@ -246,11 +247,23 @@ module.exports = {
                         trend.subject_name = subject.name;
                         trend.action_name = self.ctx.dictionary.pairs['TRV05'][action_type].name;
                         trend.object_id = object_id;
-                        if (object_type == DIC.TRV04.EXPERIENCE && action_type != DIC.TRV05.REMOVE) {
+                        trend.object_type = object_type;
+                        trend.is_experience_route = false;
+                        trend.imgs = [];
+                        if (object_type == DIC.TRV04.EXPERIENCE) {
                             var experience = yield self.ctx.modelFactory().model_read(self.ctx.models['trv_experience'], object_id);
-                            trend.imgs = experience.imgs;
-                            trend.imgTotal = experience.imgs.length;
-                            trend.content = experience.content;
+                            if (action_type != DIC.TRV05.REMOVE) {
+                                trend.imgs = experience.imgs;
+                                trend.content = experience.content;
+                                trend.is_experience_route = experience.category == 'A0003';
+                            }
+                            trend.object_name =  self.ctx.dictionary.pairs['TRV00'][experience.category].name;
+                        } else {
+                            var member = yield self.ctx.modelFactory().model_one(self.ctx.models['trv_member'], {where: {code: object_id}})
+                            if (member) {
+                                trend.object_name = member.name;
+                            }
+
                         }
                         trends.push(trend);
                     }
@@ -261,6 +274,7 @@ module.exports = {
                 for(var key in trendsGroupedByDate){
                     rows.push({group_key: key, group_value: trendsGroupedByDate[key]});
                 }
+                rows.reverse();
                 console.log(rows);
                 return self.ctx.wrapper.res.rows(rows)
             }

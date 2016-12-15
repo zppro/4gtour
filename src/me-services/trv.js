@@ -211,13 +211,7 @@ module.exports = {
                                 !o.scenerySpotId && (o.scenerySpotId = {})
                             });
 
-                            yield app.modelFactory().model_create(app.models['trv_action'], {
-                                subject_type: DIC.TRV04.MEMBER,
-                                subject_id: experience.member_id,
-                                action_type: DIC.TRV05.TWEET,
-                                object_type: DIC.TRV04.EXPERIENCE,
-                                object_id: created.id
-                            });
+
                             
                             //更新用户的发布见闻数量
                             member.tweeted += 1;
@@ -241,6 +235,14 @@ module.exports = {
                                         yield retweet_experience.save();
                                     }
                                 }
+                            } else {
+                                yield app.modelFactory().model_create(app.models['trv_action'], {
+                                    subject_type: DIC.TRV04.MEMBER,
+                                    subject_id: experience.member_id,
+                                    action_type: DIC.TRV05.TWEET,
+                                    object_type: DIC.TRV04.EXPERIENCE,
+                                    object_id: created.id
+                                });
                             }
 
                         } catch (e) {
