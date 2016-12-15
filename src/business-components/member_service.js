@@ -245,6 +245,7 @@ module.exports = {
                         trend.check_in_hour_min = self.ctx.moment(actions[i].check_in_time).format('HH:mm');
                         trend.subject_id = subject.code;
                         trend.subject_name = subject.name;
+                        trend.action_type = action_type;
                         trend.action_name = self.ctx.dictionary.pairs['TRV05'][action_type].name;
                         trend.object_id = object_id;
                         trend.object_type = object_type;
