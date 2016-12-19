@@ -13,7 +13,7 @@ module.exports = function(ctx,name) {
     else {
         module.isloaded = true;
 
-        var experience_Schema = new mongoose.Schema({
+        var experienceSchema = new mongoose.Schema({
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
@@ -51,16 +51,16 @@ module.exports = function(ctx,name) {
             }
         });
 
-        experience_Schema.pre('update', function (next) {
+        experienceSchema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();
         });
 
-        experience_Schema.virtual('time_description').get(function () {
+        experienceSchema.virtual('time_description').get(function () {
             return ctx.moment(this.check_in_time).fromNow();
         });
 
 
-        return mongoose.model(name, experience_Schema, name);
+        return mongoose.model(name, experienceSchema, name);
     }
 }

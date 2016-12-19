@@ -13,7 +13,7 @@ module.exports = function(ctx,name) {
     else {
         module.isloaded = true;
 
-        var scenerySpot_Schema = new mongoose.Schema({
+        var scenerySpotSchema = new mongoose.Schema({
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
@@ -40,7 +40,7 @@ module.exports = function(ctx,name) {
             }
         });
 
-        scenerySpot_Schema.pre('validate', function (next) {
+        scenerySpotSchema.pre('validate', function (next) {
             if (this.code == ctx.modelVariables.SERVER_GEN) {
                 var self = this;
                 console.log('set scenerySpot$code'+self.area)
@@ -55,11 +55,11 @@ module.exports = function(ctx,name) {
             }
         });
 
-        scenerySpot_Schema.pre('update', function (next) {
+        scenerySpotSchema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();
         });
 
-        return mongoose.model(name, scenerySpot_Schema, name);
+        return mongoose.model(name, scenerySpotSchema, name);
     }
 }

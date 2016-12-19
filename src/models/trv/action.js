@@ -13,7 +13,7 @@ module.exports = function(ctx,name) {
     else {
         module.isloaded = true;
 
-        var action_Schema = new mongoose.Schema({
+        var actionSchema = new mongoose.Schema({
             check_in_time: {type: Date, default: Date.now},
             subject_type: {type: String, required: true, enum: ctx._.rest(ctx.dictionary.keys["TRV04"])},
             subject_id:{type: String, required: true},
@@ -29,6 +29,6 @@ module.exports = function(ctx,name) {
             }
         });
 
-        return mongoose.model(name, action_Schema, name);
+        return mongoose.model(name, actionSchema, name);
     }
 }
