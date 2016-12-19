@@ -7,7 +7,6 @@ var weixinConfig = require('../pre-defined/weixin-config.json');
 var utils = require('../libs/Utils')
 
 module.exports = {
-    transporters : {},
     init: function (ctx) {
         console.log('init weixin... ');
         var self = this;

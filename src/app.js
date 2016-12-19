@@ -383,7 +383,10 @@ co(function*() {
 
 
 
-    app.listen(app.conf.port);
+    var svr = app.listen(app.conf.port);
+    app.socket_service.addMemberNamespace(svr);
+
+    //var io = require('socket.io').listen( app.listen(3000) );
 
     console.log('listening...');
     

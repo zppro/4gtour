@@ -6,7 +6,6 @@ var rp = require('request-promise-native');
 var DIC = require('../pre-defined/dictionary-constants.json');
 var externalSystemConfig = require('../pre-defined/external-system-config.json');
 module.exports = {
-    transporters : {},
     init: function (ctx) {
         console.log('init member service... ');
         var self = this;
