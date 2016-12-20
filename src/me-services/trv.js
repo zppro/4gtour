@@ -808,8 +808,85 @@ module.exports = {
                         yield next;
                     };
                 }
+            },
+            {
+                method: 'latestGroupParticipated',
+                verb: 'post',
+                url: this.service_url_prefix + "/latestGroupParticipated",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var member_id = this.payload.member.member_id;
+                            var selectGroup = 'name group_status member_id member_name imgs leader assembing_time deadline participate_min participate_max participants';
+                            // 当前参与的最近一条旅行团信息
+                            var myLatest = yield app.modelFactory().model_query(app.models['trv_group'], {
+                                    where: {
+                                        status: 1,
+                                        cancel_flag: 0,
+                                        group_status: {$in: [DIC.TRV07.SIGN_UP, DIC.TRV07.WAITING_TRAVEL, DIC.TRV07.TRAVELLING]},
+                                        participants: {$elemMatch: {"participant_id": member_id}}
+                                    },
+                                    select: selectGroup,
+                                    sort: {assembing_time: 1}
+                                },
+                                {limit: 1});
+                            this.body = app.wrapper.res.ret(myLatest);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'groups',
+                verb: 'post',
+                url: this.service_url_prefix + "/groups",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var member_id = this.payload.member.member_id;
+                            var latestParticipated = this.request.body.latestParticipated
+                            var selectGroup = 'name group_status member_id member_name imgs leader assembing_time deadline participate_min participate_max participants';
+                            var whereBase = {status: 1, cancel_flag: 0, group_status: {$in:[DIC.TRV07.SIGN_UP, DIC.TRV07.WAITING_TRAVEL, DIC.TRV07.TRAVELLING]}};
+                            var where = whereBase;
+                            if(latestParticipated){
+                                where = app._.extend({_id: { "$ne" : latestParticipated }},whereBase);
+                            }
+                            var rows = yield app.modelFactory().model_query(app.models['trv_group'], {
+                                    where: where,
+                                    select: selectGroup,
+                                    sort: {assembing_time: 1}
+                                },
+                                {limit: this.request.body.page.size, skip: this.request.body.page.skip});
+ 
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'group',
+                verb: 'get',
+                url: this.service_url_prefix + "/group/:groupId",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var group = yield app.modelFactory().model_read(app.models['trv_group'], this.params.groupId);
+                            this.body = app.wrapper.res.ret(group);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
             }
-
         ];
 
         return this;

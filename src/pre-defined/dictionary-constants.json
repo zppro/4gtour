@@ -41,5 +41,13 @@
     "RETWEET": "A0007",
     "TWEET": "A0008",
     "REMOVE": "A0009"
+  },
+  "TRV07": {
+    "WAITING_SIGN_UP": "A0001",
+    "SIGN_UP": "A0003",
+    "WAITING_TRAVEL": "A0005",
+    "INTERRUPTED": "A0007",
+    "TRAVELLING": "A0009",
+    "FINISH": "A0011"
   }
 }
