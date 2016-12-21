@@ -811,7 +811,7 @@ module.exports = {
             },
             {
                 method: 'latestGroupParticipated',
-                verb: 'post',
+                verb: 'get',
                 url: this.service_url_prefix + "/latestGroupParticipated",
                 handler: function (app, options) {
                     return function *(next) {
@@ -819,7 +819,7 @@ module.exports = {
                             var member_id = this.payload.member.member_id;
                             var selectGroup = 'name group_status member_id member_name imgs leader assembing_time deadline participate_min participate_max participants';
                             // 当前参与的最近一条旅行团信息
-                            var myLatest = yield app.modelFactory().model_query(app.models['trv_group'], {
+                            var myLatests = yield app.modelFactory().model_query(app.models['trv_group'], {
                                     where: {
                                         status: 1,
                                         cancel_flag: 0,
@@ -830,7 +830,9 @@ module.exports = {
                                     sort: {assembing_time: 1}
                                 },
                                 {limit: 1});
-                            this.body = app.wrapper.res.ret(myLatest);
+                            var latest;
+                            myLatests.length == 1 && (latest = myLatests[0]);
+                            this.body = app.wrapper.res.ret(latest);
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -880,6 +882,53 @@ module.exports = {
                             var group = yield app.modelFactory().model_read(app.models['trv_group'], this.params.groupId);
                             this.body = app.wrapper.res.ret(group);
                         } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'group-create',
+                verb: 'post',
+                url: this.service_url_prefix + "/group",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var member = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: this.payload.member.member_id}});
+                            if (!member) {
+                                this.body = app.wrapper.res.error({code: 51002, message: 'invalid member'});
+                                yield next;
+                                return;
+                            }
+                            var group = app._.extend({
+                                group_status: DIC.TRV07.SIGN_UP,
+                                participants: [{participant_id: member.code, name:member.name, head_pic: member.head_portrait, position_in_group: DIC.TRV06.LEADER }]
+                            }, this.payload.member, this.request.body);
+                            var created = yield app.modelFactory().model_create(app.models['trv_group'], group);
+                            this.body = app.wrapper.res.ret(created);
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'group-update',
+                verb: 'put',
+                url: this.service_url_prefix + "/group/:groupId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var ret = yield app.modelFactory().model_update(app.models['trv_group'], this.params.groupId, this.request.body);
+                            var group = yield app.modelFactory().model_read(app.models['trv_experience'], this.params.groupId);
+                            this.body = app.wrapper.res.ret(group);
+                        } catch (e) {
+                            console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
                         }

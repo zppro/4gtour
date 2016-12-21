@@ -36,7 +36,7 @@ module.exports = function(ctx,name) {
             participate_max:{type: Number, min:2, required: true}, // 参团最大人数
             participants:[{
                 participant_id: {type: String},
-                name: {type: Date},
+                name: {type: String},
                 head_pic: {type: String},
                 position_in_group: {type: String, enum: ctx._.rest(ctx.dictionary.keys["TRV06"])},
             }]

@@ -42,6 +42,10 @@
     "TWEET": "A0008",
     "REMOVE": "A0009"
   },
+  "TRV06": {
+    "LEADER": "A0001",
+    "MEMBER": "A0003"
+  },
   "TRV07": {
     "WAITING_SIGN_UP": "A0001",
     "SIGN_UP": "A0003",
