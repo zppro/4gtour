@@ -29,7 +29,11 @@ module.exports = function(ctx,name) {
                 nick_name: {type: String},
                 phone: {type: String}
             },
-            assembling_place: {type: String},
+            assembling_place:{
+                location_text: {type: String},
+                lon: {type: String},
+                lat: {type: String}
+            },
             assembling_time: {type: Date},
             deadline:  {type: Date, required: true}, // 报名截止时间
             participate_min:{type: Number, min:2, required: true}, // 成团人数
@@ -39,6 +43,7 @@ module.exports = function(ctx,name) {
                 name: {type: String},
                 head_pic: {type: String},
                 position_in_group: {type: String, enum: ctx._.rest(ctx.dictionary.keys["TRV06"])},
+                phone: {type: String}
             }]
         }, {
             toObject: {
@@ -60,6 +65,12 @@ module.exports = function(ctx,name) {
 
         groupSchema.virtual('participant_number').get(function () {
             return this.participants.length;
+        });
+
+        groupSchema.virtual('participanter_ids').get(function () {
+            return this.participants.map(function(o){
+                return o.participant_id
+            });
         });
 
         return mongoose.model(name, groupSchema, name);
