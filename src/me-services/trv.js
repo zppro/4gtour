@@ -817,7 +817,7 @@ module.exports = {
                     return function *(next) {
                         try {
                             var member_id = this.payload.member.member_id;
-                            var selectGroup = 'name group_status member_id member_name imgs leader assembing_time deadline participate_min participate_max participants';
+                            var selectGroup = 'name group_status member_id member_name imgs leader assembling_time deadline participate_min participate_max participants';
                             // 当前参与的最近一条旅行团信息
                             var myLatests = yield app.modelFactory().model_query(app.models['trv_group'], {
                                     where: {
@@ -827,7 +827,7 @@ module.exports = {
                                         participants: {$elemMatch: {"participant_id": member_id}}
                                     },
                                     select: selectGroup,
-                                    sort: {assembing_time: 1}
+                                    sort: {assembling_time: 1}
                                 },
                                 {limit: 1});
                             var latest;
@@ -850,7 +850,7 @@ module.exports = {
                         try {
                             var member_id = this.payload.member.member_id;
                             var latestParticipated = this.request.body.latestParticipated
-                            var selectGroup = 'name group_status member_id member_name imgs leader assembing_time deadline participate_min participate_max participants';
+                            var selectGroup = 'name group_status member_id member_name imgs leader assembling_time deadline participate_min participate_max participants';
                             var whereBase = {status: 1, cancel_flag: 0, group_status: {$in:[DIC.TRV07.SIGN_UP, DIC.TRV07.WAITING_TRAVEL, DIC.TRV07.TRAVELLING]}};
                             var where = whereBase;
                             if(latestParticipated){
@@ -859,7 +859,7 @@ module.exports = {
                             var rows = yield app.modelFactory().model_query(app.models['trv_group'], {
                                     where: where,
                                     select: selectGroup,
-                                    sort: {assembing_time: 1}
+                                    sort: {assembling_time: 1}
                                 },
                                 {limit: this.request.body.page.size, skip: this.request.body.page.skip});
  
@@ -925,7 +925,7 @@ module.exports = {
                     return function *(next) {
                         try {
                             var ret = yield app.modelFactory().model_update(app.models['trv_group'], this.params.groupId, this.request.body);
-                            var group = yield app.modelFactory().model_read(app.models['trv_experience'], this.params.groupId);
+                            var group = yield app.modelFactory().model_read(app.models['trv_group'], this.params.groupId);
                             this.body = app.wrapper.res.ret(group);
                         } catch (e) {
                             console.log(e);
