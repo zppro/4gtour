@@ -34,8 +34,8 @@ module.exports = function(ctx,name) {
                 lon: {type: String},
                 lat: {type: String}
             },
-            assembling_time: {type: Date},
-            deadline:  {type: Date, required: true}, // 报名截止时间
+            assembling_time: {type: Date, required: true},
+            deadline: {type: Date}, // 报名截止时间
             participate_min:{type: Number, min:2, required: true}, // 成团人数
             participate_max:{type: Number, min:2, required: true}, // 参团最大人数
             participants:[{
