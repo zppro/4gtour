@@ -384,8 +384,9 @@ co(function*() {
 
 
     var svr = app.listen(app.conf.port);
-    app.socket_service.addMemberNamespace(svr);
-    app.socket_service.addGroupNamespace(svr);
+    app.socket_service.mountServer(svr);
+    app.socket_service.addMemberNamespace();
+    app.socket_service.addGroupNamespace();
     //var io = require('socket.io').listen( app.listen(3000) );
     app.group_service.joinMonitoring();
 

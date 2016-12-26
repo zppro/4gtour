@@ -7,8 +7,9 @@ var io = require('socket.io');
 var externalSystemConfig = require('../pre-defined/external-system-config.json');
 var socketServerEvents = require('../pre-defined/socket-server-events.json');
 var socketClientEvents = require('../pre-defined/socket-client-events.json');
+var DIC = require('../pre-defined/dictionary-constants.json');
 module.exports = {
-    init: function (ctx, server) {
+    init: function (ctx) {
         console.log('init socket service... ');
         var self = this;
         this.file = __filename;
@@ -27,11 +28,13 @@ module.exports = {
  
         return this;
     },
-    addMemberNamespace: function(server) {
+    mountServer: function (server) {
+        this.ioSocket = io.listen(server);
+    },
+    addMemberNamespace: function() {
         this.socketClientsOfMember = {};
         this.memberClientsOfMember = {};
-        this.ioSocketOfMember = io.listen(server);
-        this.nspOfMember = this.ioSocketOfMember.of('/member');
+        this.nspOfMember = this.ioSocket.of('/member');
         this.nspOfMember.on('connection', this.onMemberConnection.bind(this));
     },
     onMemberConnection: function (socket) {
@@ -89,10 +92,9 @@ module.exports = {
             }).catch(self.ctx.coOnError);
         });
     },
-    addGroupNamespace: function(server) {
+    addGroupNamespace: function() {
         this.socketClientsOfGroup = {};
-        this.ioSocketOfGroup = io.listen(server);
-        this.nspOfGroup = this.ioSocketOfGroup.of('/group');
+        this.nspOfGroup = this.ioSocket.of('/group');
         this.nspOfGroup.on('connection', this.onGroupConnection.bind(this));
     },
     sendGroupEvent: function (groupId, eventName, eventData) {
@@ -109,7 +111,7 @@ module.exports = {
         socket.on(socketClientEvents.GROUP.SHAKE_HAND, function(data) {
             return co(function *() {
                 try {
-                    console.log(socketClientEvents.GROUP.SHAKE_HAND + + ':' + socket.id + '  => data  ' +  stringify(data));
+                    console.log(socketClientEvents.GROUP.SHAKE_HAND + ':' + socket.id + '  => data  ' +  JSON.stringify(data));
                     var member_id = data;
                     var memberParticipatedGroups = yield self.ctx.modelFactory().model_query(self.ctx.models['trv_group'], {
                             where: {
@@ -123,6 +125,7 @@ module.exports = {
                     for (var i=0;i<memberParticipatedGroups.length;i++) {
                         socket.join('group_' + memberParticipatedGroups[i].id);
                     }
+                    console.log('finished shake hand')
                 }
                 catch (e) {
                     console.log(e);
@@ -133,7 +136,7 @@ module.exports = {
         socket.on(socketClientEvents.GROUP.PUBLISHING, function(data) {
             return co(function *() {
                 try {
-                    console.log(socketClientEvents.GROUP.PUBLISHING + + ':' + socket.id + '  => data  ' +  stringify(data));
+                    console.log(socketClientEvents.GROUP.PUBLISHING + ':' + socket.id + '  => data  ' +  JSON.stringify(data));
                     var group_id = data;
                     socket.join('group_' + group_id);
 
@@ -156,7 +159,7 @@ module.exports = {
         socket.on(socketClientEvents.GROUP.PARTICIPATE, function(data) {
             return co(function *() {
                 try {
-                    console.log(socketClientEvents.GROUP.PARTICIPATE + + ':' + socket.id + '  => data  ' +  stringify(data));
+                    console.log(socketClientEvents.GROUP.PARTICIPATE + ':' + socket.id + '  => data  ' +  JSON.stringify(data));
                     var group_id = data;
                     socket.join('group_' + group_id);
                     var group = yield self.ctx.modelFactory().model_read(self.ctx.models['trv_group'], group_id);
@@ -171,7 +174,7 @@ module.exports = {
         socket.on(socketClientEvents.GROUP.EXIT, function(data) {
             return co(function *() {
                 try {
-                    console.log(socketClientEvents.GROUP.EXIT + + ':' + socket.id + '  => data  ' +  stringify(data));
+                    console.log(socketClientEvents.GROUP.EXIT + ':' + socket.id + '  => data  ' +  JSON.stringify(data));
                     var group_id = data;
                     socket.leave('group_' + group_id);
                     var group = yield self.ctx.modelFactory().model_read(self.ctx.models['trv_group'], group_id);
@@ -186,7 +189,7 @@ module.exports = {
         socket.on(socketClientEvents.GROUP.LOCATE, function(data) {
             return co(function *() {
                 try {
-                    console.log(socketClientEvents.GROUP.LOCATE + + ':' + socket.id + '  => data  ' + stringify(data));
+                    console.log(socketClientEvents.GROUP.LOCATE + ':' + socket.id + '  => data  ' + JSON.stringify(data));
                     var group_id = data.group_id;
                     socket.to('group_' + group_id).emit(socketClientEvents.GROUP.BROADCAST_LOCATION, data);
                 }
