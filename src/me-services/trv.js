@@ -955,18 +955,98 @@ module.exports = {
                                 yield next;
                                 return;
                             }
+                            var deadline = group.deadline || group.assembling_time;
+                            if (group.participant_number == group.participate_max) {
+                                this.body = app.wrapper.res.error({code: 51006, message: 'group is full'});
+                                yield next;
+                                return;
+                            } else if (app.moment(deadline).unix() - app.moment().unix() <= 0) {
+                                this.body = app.wrapper.res.error({code: 51007, message: 'time deadline'});
+                                yield next;
+                                return;
+                            }
 
                             var participated = group.participants.some(function(o){
                                 o.participant_id == member.code
                             });
 
+                            if (participated) {
+                                this.body = app.wrapper.res.error({code: 51008, message: 'already participated'});
+                                yield next;
+                                return;
+                            }
+
+                            console.log('groupParticipate participated:' + participated)
+
+                            group.participants.push({
+                                participant_id: member.code,
+                                name: member.name,
+                                head_pic: member.head_portrait,
+                                position_in_group: DIC.TRV06.MEMBER
+                            });
+
+                            yield group.save();
+                            this.body = app.wrapper.res.ret(group);
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'group-exit',
+                verb: 'post',
+                url: this.service_url_prefix + "/groupExit/:groupId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var member = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: this.payload.member.member_id}});
+                            if (!member) {
+                                this.body = app.wrapper.res.error({code: 51002, message: 'invalid member'});
+                                yield next;
+                                return;
+                            }
+                            var group = yield app.modelFactory().model_read(app.models['trv_group'], this.params.groupId);
+                            if (!group) {
+                                this.body = app.wrapper.res.error({code: 51005, message: 'invalid group'});
+                                yield next;
+                                return;
+                            }
+                            var deadline = group.deadline || group.assembling_time;
+                            if (app.moment(deadline).unix() - app.moment().unix() <= 0) {
+                                this.body = app.wrapper.res.error({code: 51007, message: 'time deadline'});
+                                yield next;
+                                return;
+                            }
+
+                            var participated = group.participants.some(function(o){
+                                o.participant_id == member.code
+                            });
                             if (!participated) {
-                                group.participants.push({
-                                    participant_id: member.code,
-                                    name: member.name,
-                                    head_pic: member.head_portrait,
-                                    position_in_group: DIC.TRV06.MEMBER
-                                })
+                                this.body = app.wrapper.res.error({code: 51009, message: 'not participated'});
+                                yield next;
+                                return;
+                            }
+                            var isLeader = group.participants.some(function(o){
+                                o.participant_id == member.code && o.position_in_group == DIC.TRV06.LEADER
+                            });
+                            if (isLeader) {
+                                this.body = app.wrapper.res.error({code: 51010, message: 'leader can not exit'});
+                                yield next;
+                                return;
+                            }
+
+                            var findIndex = -1;
+                            for (var i=0;i< group.participants;i++) {
+                                if (group.participants[i].participant_id == member.code) {
+                                    findIndex = i;
+                                }
+                            }
+                            if (findIndex != -1) {
+                                group.participants.splice(findIndex, 1);
                             }
                             yield group.save();
                             this.body = app.wrapper.res.ret(group);

@@ -103,7 +103,7 @@ module.exports = {
                             });
                         } else {
                             // 成团
-                            group.group_status = isDefineDeadline ? DIC.TRV07.WAITING_TRAVEL : DIC.TRV07.TRAVELLING;
+                            group.group_status = isDefineDeadline || (self.ctx.moment(group.assembling_time).unix() - self.ctx.moment().unix() > 0) ?  DIC.TRV07.WAITING_TRAVEL : DIC.TRV07.TRAVELLING;
                             yield group.save();
                             ctx.socket_service.sendGroupEvent(group_id, socketClientEvents.GROUP.BROADCAST_CHANGED, {
                                 reason: 'GROUP_STATUS_CHANGE_TO_' + (isDefineDeadline ? 'WAITING_TRAVEL' : 'TRAVELLING'),

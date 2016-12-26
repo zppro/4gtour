@@ -42,6 +42,7 @@ module.exports = function(ctx,name) {
                 participant_id: {type: String},
                 name: {type: String},
                 head_pic: {type: String},
+                participant_time: {type: Date, default: Date.now},
                 position_in_group: {type: String, enum: ctx._.rest(ctx.dictionary.keys["TRV06"])},
                 phone: {type: String}
             }]
