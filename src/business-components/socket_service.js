@@ -28,26 +28,26 @@ module.exports = {
         return this;
     },
     addMemberNamespace: function(server) {
-        this.socketClients = {};
-        this.memberClients = {};
-        this.socketIO = io.listen(server);
-        this.nspOfMember = this.socketIO.of('/member');
+        this.socketClientsOfMember = {};
+        this.memberClientsOfMember = {};
+        this.ioSocketOfMember = io.listen(server);
+        this.nspOfMember = this.ioSocketOfMember.of('/member');
         this.nspOfMember.on('connection', this.onMemberConnection.bind(this));
     },
     onMemberConnection: function (socket) {
         var self = this;
-        console.log('connection: ' + socket.id);
-        self.socketClients[socket.id] = socket;
+        console.log('nsp member connection: ' + socket.id);
+        self.socketClientsOfMember[socket.id] = socket;
         socket.on('disconnect', function() {
-            console.log('disconnect: ' + socket.id);
-            delete self.socketClients[socket.id];
+            console.log('nsp member disconnect: ' + socket.id);
+            delete self.socketClientsOfMember[socket.id];
         });
         socket.on(socketClientEvents.MEMBER.LOGIN, function(data) {
             return co(function *() {
                 try {
                     console.log(socketClientEvents.MEMBER.LOGIN + + ':' + socket.id + '  => data  ' + data);
                     var member_id = data;
-                    self.memberClients[member_id] = socket;
+                    self.memberClientsOfMember[member_id] = socket;
                     var followingIds = [];
                     var followerIds = [];
                     var ret = yield rp({method: 'POST', url: externalSystemConfig.member_repository_java.api_url + '/okertrip/api/follow/followId', form: {memberId: member_id}, json: true});
@@ -65,12 +65,12 @@ module.exports = {
                     console.log('followerIds...')
                     console.log(followerIds);
                     for (var i=0;i< followingIds.length; i++) {
-                        var followingSocket = self.memberClients[followingIds[i]];
+                        var followingSocket = self.memberClientsOfMember[followingIds[i]];
                         //加入所有在线的关注人
                         followingSocket && socket.join(followingSocket.id);
                     }
                     for (var i=0;i< followerIds.length; i++) {
-                        var followerSocket = self.memberClients[followerIds[i]];
+                        var followerSocket = self.memberClientsOfMember[followerIds[i]];
                         //所有在线粉丝加入当前会员所在频道
                         followerSocket && followerSocket.join(socket.id);
                     }
@@ -78,7 +78,7 @@ module.exports = {
                     socket.emit(socketServerEvents.MEMBER.YOUR_FOLLOWING_MEMBER_LOGIN_SUCCESS, member_id);
                     // socket.on(socketServerEvents.MEMBER.YOUR_FOLLOWING_LOGIN, function(followingMemberId) {
                     //     // 某个关注人登录上线
-                    //     var followingSocket = self.memberClients[followingMemberId];
+                    //     var followingSocket = self.memberClientsOfMember[followingMemberId];
                     //     followingSocket && socket.join(followingSocket.id);
                     // });
                 }
@@ -88,7 +88,102 @@ module.exports = {
                 }
             }).catch(self.ctx.coOnError);
         });
+    },
+    addGroupNamespace: function(server) {
+        this.socketClientsOfGroup = {};
+        this.ioSocketOfGroup = io.listen(server);
+        this.nspOfGroup = this.ioSocketOfGroup.of('/group');
+        this.nspOfGroup.on('connection', this.onGroupConnection.bind(this));
+    },
+    sendGroupEvent: function (groupId, eventName, eventData) {
+        this.nspOfGroup.to('group_' + groupId).emit(eventName, eventData);
+    },
+    onGroupConnection: function (socket) {
+        var self = this;
+        console.log('nsp group connection: ' + socket.id);
+        self.socketClientsOfGroup[socket.id] = socket;
+        socket.on('disconnect', function() {
+            console.log('nsp group disconnect: ' + socket.id);
+            delete self.socketClientsOfGroup[socket.id];
+        });
+        socket.on(socketClientEvents.GROUP.SHAKE_HAND, function(data) {
+            return co(function *() {
+                try {
+                    console.log(socketClientEvents.GROUP.PUBLISHING + + ':' + socket.id + '  => data  ' +  stringify(data));
+                    var member_id = data;
+                    var memberParticipatedGroups = yield self.ctx.modelFactory().model_query(self.ctx.models['trv_group'], {
+                            where: {
+                                status: 1,
+                                cancel_flag: 0,
+                                group_status: {$in: [DIC.TRV07.SIGN_UP, DIC.TRV07.WAITING_TRAVEL, DIC.TRV07.TRAVELLING]},
+                                participants: {$elemMatch: {"participant_id": member_id}}
+                            },
+                            select: 'name'
+                        });
 
-
+                    for (var i=0;i<memberParticipatedGroups.length;i++) {
+                        socket.join('group_' + memberParticipatedGroups[i].id);
+                    }
+                }
+                catch (e) {
+                    console.log(e);
+                    self.logger.error(e.message);
+                }
+            }).catch(self.ctx.coOnError);
+        });
+        socket.on(socketClientEvents.GROUP.PUBLISHING, function(data) {
+            return co(function *() {
+                try {
+                    console.log(socketClientEvents.GROUP.PUBLISHING + + ':' + socket.id + '  => data  ' +  stringify(data));
+                    var group_id = data;
+                    socket.join('group_' + group_id);
+                }
+                catch (e) {
+                    console.log(e);
+                    self.logger.error(e.message);
+                }
+            }).catch(self.ctx.coOnError);
+        });
+        socket.on(socketClientEvents.GROUP.PARTICIPATE, function(data) {
+            return co(function *() {
+                try {
+                    console.log(socketClientEvents.GROUP.PARTICIPATE + + ':' + socket.id + '  => data  ' +  stringify(data));
+                    var group_id = data;
+                    socket.join('group_' + group_id);
+                    socket.to('group_' + group_id).emit(socketClientEvents.GROUP.BROADCAST_PARTICIPATE, data);
+                }
+                catch (e) {
+                    console.log(e);
+                    self.logger.error(e.message);
+                }
+            }).catch(self.ctx.coOnError);
+        });
+        socket.on(socketClientEvents.GROUP.EXIT, function(data) {
+            return co(function *() {
+                try {
+                    console.log(socketClientEvents.GROUP.EXIT + + ':' + socket.id + '  => data  ' +  stringify(data));
+                    var group_id = data;
+                    socket.leave('group_' + group_id);
+                    socket.to('group_' + group_id).emit(socketClientEvents.GROUP.BROADCAST_EXIT, data);
+                }
+                catch (e) {
+                    console.log(e);
+                    self.logger.error(e.message);
+                }
+            }).catch(self.ctx.coOnError);
+        });
+        socket.on(socketClientEvents.GROUP.LOCATE, function(data) {
+            return co(function *() {
+                try {
+                    console.log(socketClientEvents.GROUP.LOCATE + + ':' + socket.id + '  => data  ' + stringify(data));
+                    var group_id = data.group_id;
+                    socket.to('group_' + group_id).emit(socketClientEvents.GROUP.BROADCAST_LOCATION, data);
+                }
+                catch (e) {
+                    console.log(e);
+                    self.logger.error(e.message);
+                }
+            }).catch(self.ctx.coOnError);
+        });
     }
 };
