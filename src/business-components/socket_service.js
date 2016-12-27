@@ -97,7 +97,15 @@ module.exports = {
         this.nspOfGroup = this.ioSocket.of('/group');
         this.nspOfGroup.on('connection', this.onGroupConnection.bind(this));
     },
+    sendGroupChannelEvent: function (eventName, eventData) {
+        console.log('sendGroupChannelEvent eventName: ' + eventName);
+        console.log('reason: ' + eventData.reason);
+        this.nspOfGroup.emit(eventName, eventData);
+    },
     sendGroupEvent: function (groupId, eventName, eventData) {
+        console.log('sendGroupEvent with room id: ' + 'group_' + groupId);
+        console.log('eventName: ' + eventName);
+        console.log('reason: ' + eventData.reason);
         this.nspOfGroup.to('group_' + groupId).emit(eventName, eventData);
     },
     onGroupConnection: function (socket) {
@@ -123,6 +131,7 @@ module.exports = {
                             select: 'name'
                         });
                     for (var i=0;i<memberParticipatedGroups.length;i++) {
+                        console.log('SHAKE_HAND room_name:' + memberParticipatedGroups[i].id)
                         socket.join('group_' + memberParticipatedGroups[i].id);
                     }
                     console.log('finished shake hand')
@@ -139,16 +148,18 @@ module.exports = {
                     console.log(socketClientEvents.GROUP.PUBLISHING + ':' + socket.id + '  => data  ' +  JSON.stringify(data));
                     var group_id = data;
                     socket.join('group_' + group_id);
+                    console.log('join room_name:' + 'group_' + group_id)
 
                     var group = yield self.ctx.modelFactory().model_read(self.ctx.models['trv_group'], group_id);
                     var deadline = group.deadline || group.assembling_time;
-                    if (!group.deadline || self.ctx.moment(group.deadline).unix() - self.ctx.moment(group.assembling_time).unix() >= 0) {
-                        // 为定义报名截止时间或者报名截止时间定义晚于集合时间
-                        ctx.group_service.addJobGroupDeadlineForRegistration(group.id, group.name, deadline);
-                    } else {
-                        ctx.group_service.addJobGroupDeadlineForRegistration(group.id, group.name, deadline);
-                        ctx.group_service.addJobGroupChangeToTravelling(group.id, group.name, group.assembling_time);
-                    }
+                    self.ctx.group_service.addJobGroupDeadlineForRegistration(group.id, group.name, deadline);
+                    // if (!group.deadline || self.ctx.moment(group.deadline).unix() - self.ctx.moment(group.assembling_time).unix() >= 0) {
+                    //     // 为定义报名截止时间或者报名截止时间定义晚于集合时间
+                    //     self.ctx.group_service.addJobGroupDeadlineForRegistration(group.id, group.name, deadline);
+                    // } else {
+                    //     self.ctx.group_service.addJobGroupDeadlineForRegistration(group.id, group.name, deadline);
+                    //     self.ctx.group_service.addJobGroupChangeToTravelling(group.id, group.name, group.assembling_time);
+                    // }
                 }
                 catch (e) {
                     console.log(e);
@@ -163,7 +174,8 @@ module.exports = {
                     var group_id = data;
                     socket.join('group_' + group_id);
                     var group = yield self.ctx.modelFactory().model_read(self.ctx.models['trv_group'], group_id);
-                    socket.to('group_' + group_id).emit(socketClientEvents.GROUP.BROADCAST_PARTICIPATE, {reason: 'PARTICIPATE', group: group });
+                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_PARTICIPATE, {reason: 'PARTICIPATE', group: group });
+                    console.log('send group participate event by socket to room other member')
                 }
                 catch (e) {
                     console.log(e);
@@ -178,7 +190,7 @@ module.exports = {
                     var group_id = data;
                     socket.leave('group_' + group_id);
                     var group = yield self.ctx.modelFactory().model_read(self.ctx.models['trv_group'], group_id);
-                    socket.to('group_' + group_id).emit(socketClientEvents.GROUP.BROADCAST_EXIT,  {reason: 'EXIT', group: group });
+                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_EXIT,  {reason: 'EXIT', group: group });
                 }
                 catch (e) {
                     console.log(e);
@@ -191,7 +203,7 @@ module.exports = {
                 try {
                     console.log(socketClientEvents.GROUP.LOCATE + ':' + socket.id + '  => data  ' + JSON.stringify(data));
                     var group_id = data.group_id;
-                    socket.to('group_' + group_id).emit(socketClientEvents.GROUP.BROADCAST_LOCATION, data);
+                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_LOCATION, data);
                 }
                 catch (e) {
                     console.log(e);
