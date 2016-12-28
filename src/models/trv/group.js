@@ -45,6 +45,10 @@ module.exports = function(ctx,name) {
                 participant_time: {type: Date, default: Date.now},
                 position_in_group: {type: String, enum: ctx._.rest(ctx.dictionary.keys["TRV06"])},
                 phone: {type: String}
+            }],
+            checkins: [{
+                    member_check_in_id: {type: String},
+                    member_check_in_time: {type: Date, default: Date.now}
             }]
         }, {
             toObject: {
@@ -72,6 +76,10 @@ module.exports = function(ctx,name) {
             return this.participants.map(function(o){
                 return o.participant_id
             });
+        });
+
+        groupSchema.virtual('check_in_number').get(function () {
+            return this.checkins.length;
         });
 
         return mongoose.model(name, groupSchema, name);

@@ -198,6 +198,19 @@ module.exports = {
                 }
             }).catch(self.ctx.coOnError);
         });
+        socket.on(socketClientEvents.GROUP.CHECK_IN, function(data) {
+            return co(function *() {
+                try {
+                    console.log(socketClientEvents.GROUP.LOCATE + ':' + socket.id + '  => data  ' + JSON.stringify(data));
+                    var group_id = data.group_id;
+                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_CHECK_IN,  {reason: 'CHECK_IN', checking_member: data.checking_member });
+                }
+                catch (e) {
+                    console.log(e);
+                    self.logger.error(e.message);
+                }
+            }).catch(self.ctx.coOnError);
+        });
         socket.on(socketClientEvents.GROUP.LOCATE, function(data) {
             return co(function *() {
                 try {
