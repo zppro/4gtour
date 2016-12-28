@@ -817,7 +817,7 @@ module.exports = {
                     return function *(next) {
                         try {
                             var member_id = this.payload.member.member_id;
-                            var selectGroup = 'name group_status member_id member_name imgs leader assembling_time deadline participate_min participate_max participants';
+                            var selectGroup = 'name group_status member_id member_name imgs leader assembling_time deadline participate_min participate_max participants checkins';
                             // 当前参与的最近一条旅行团信息
                             var myLatests = yield app.modelFactory().model_query(app.models['trv_group'], {
                                     where: {
@@ -850,7 +850,7 @@ module.exports = {
                         try {
                             var member_id = this.payload.member.member_id;
                             var latestParticipated = this.request.body.latestParticipated
-                            var selectGroup = 'name group_status member_id member_name imgs leader assembling_time deadline participate_min participate_max participants';
+                            var selectGroup = 'name group_status member_id member_name imgs leader assembling_time deadline participate_min participate_max participants checkins';
                             var whereBase = {status: 1, cancel_flag: 0, group_status: {$in:[DIC.TRV07.SIGN_UP, DIC.TRV07.WAITING_TRAVEL, DIC.TRV07.TRAVELLING]}};
                             var where = whereBase;
                             if(latestParticipated){
@@ -1023,7 +1023,7 @@ module.exports = {
                             }
 
                             var participated = group.participants.some(function(o){
-                                o.participant_id == member.code
+                                return o.participant_id == member.code
                             });
                             if (!participated) {
                                 this.body = app.wrapper.res.error({code: 51009, message: 'not participated'});
@@ -1049,6 +1049,66 @@ module.exports = {
                                 group.participants.splice(findIndex, 1);
                             }
                             yield group.save();
+                            this.body = app.wrapper.res.ret(group);
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'group-check-in',
+                verb: 'post',
+                url: this.service_url_prefix + "/groupCheckIn/:groupId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var member = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: this.payload.member.member_id}});
+                            if (!member) {
+                                this.body = app.wrapper.res.error({code: 51002, message: 'invalid member'});
+                                yield next;
+                                return;
+                            }
+                            var group = yield app.modelFactory().model_read(app.models['trv_group'], this.params.groupId);
+                            if (!group) {
+                                this.body = app.wrapper.res.error({code: 51005, message: 'invalid group'});
+                                yield next;
+                                return;
+                            }
+                            if (app.moment(group.assembling_time).unix() - app.moment().unix() > 30*60) {
+                                this.body = app.wrapper.res.error({code: 51011, message: 'not ready for check in'});
+                                yield next;
+                                return;
+                            }
+
+                            var participated = group.participants.some(function(o){
+                                return o.participant_id == member.code
+                            });
+
+                            console.log(participated);
+
+                            if (!participated) {
+                                this.body = app.wrapper.res.error({code: 51009, message: 'not participated'});
+                                yield next;
+                                return;
+                            }
+                            var isCheckIn = group.checkins.some(function(o){
+                                o.member_check_in_id == member.code
+                            });
+                            
+                            if (isCheckIn) {
+                                this.body = app.wrapper.res.error({code: 51012, message: 'already check in'});
+                                yield next;
+                                return;
+                            }
+
+                            group.checkins.push({ member_check_in_id: member.code });
+                            
+                            yield group.save();
+                            
                             this.body = app.wrapper.res.ret(group);
                         } catch (e) {
                             console.log(e);

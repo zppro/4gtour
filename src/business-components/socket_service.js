@@ -201,9 +201,10 @@ module.exports = {
         socket.on(socketClientEvents.GROUP.CHECK_IN, function(data) {
             return co(function *() {
                 try {
-                    console.log(socketClientEvents.GROUP.LOCATE + ':' + socket.id + '  => data  ' + JSON.stringify(data));
+                    console.log(socketClientEvents.GROUP.CHECK_IN + ':' + socket.id + '  => data  ' + JSON.stringify(data));
                     var group_id = data.group_id;
-                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_CHECK_IN,  {reason: 'CHECK_IN', checking_member: data.checking_member });
+                    var group = yield self.ctx.modelFactory().model_read(self.ctx.models['trv_group'], group_id);
+                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_CHECK_IN,  {reason: 'CHECK_IN', group: group, checking_member: data.checking_member });
                 }
                 catch (e) {
                     console.log(e);
@@ -216,7 +217,7 @@ module.exports = {
                 try {
                     console.log(socketClientEvents.GROUP.LOCATE + ':' + socket.id + '  => data  ' + JSON.stringify(data));
                     var group_id = data.group_id;
-                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_LOCATION, data);
+                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_LOCATION, {reason: 'LOCATE', locating_member: data.locating_member, location: data.location });
                 }
                 catch (e) {
                     console.log(e);
