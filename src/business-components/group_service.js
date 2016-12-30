@@ -54,7 +54,7 @@ module.exports = {
                                 var needWaiting = isDefineDeadline || (self.ctx.moment(group.assembling_time).unix() - self.ctx.moment().unix() > 0);
                                 group.group_status = needWaiting ? DIC.TRV07.WAITING_TRAVEL: DIC.TRV07.TRAVELLING;
                                 yield group.save();
-                                self.ctx.socket_service.sendGroupChannelEvent(socketServerEvents.GROUP.BROADCAST_CHANGED, {reason: 'GROUP_STATUS_CHANGE_TO_' + (isDefineDeadline ? 'WAITING_TRAVEL' : 'TRAVELLING') , group: group });
+                                self.ctx.socket_service.sendGroupChannelEvent(socketServerEvents.GROUP.BROADCAST_STATUS_CHANGED, {reason: 'GROUP_STATUS_CHANGE_TO_' + (isDefineDeadline ? 'WAITING_TRAVEL' : 'TRAVELLING') , group: group });
                                 if (needWaiting) {
                                     // 推迟更新
                                     self.addJobGroupChangeToTravelling(group.id, group.name, group.assembling_time);
@@ -70,7 +70,7 @@ module.exports = {
                             // 立即更新状态
                             group.group_status = DIC.TRV07.TRAVELLING;
                             yield group.save();
-                            self.ctx.socket_service.sendGroupChannelEvent(socketServerEvents.GROUP.BROADCAST_CHANGED, {reason: 'GROUP_STATUS_CHANGE_TO_TRAVELLING', group: group });
+                            self.ctx.socket_service.sendGroupChannelEvent(socketServerEvents.GROUP.BROADCAST_STATUS_CHANGED, {reason: 'GROUP_STATUS_CHANGE_TO_TRAVELLING', group: group });
                         } else {
                             // 推迟更新
                             self.addJobGroupChangeToTravelling(group.id, group.name, group.assembling_time);
@@ -110,7 +110,7 @@ module.exports = {
                             var needWaiting = isDefineDeadline || (self.ctx.moment(group.assembling_time).unix() - self.ctx.moment().unix() > 0);
                             group.group_status = needWaiting ?  DIC.TRV07.WAITING_TRAVEL : DIC.TRV07.TRAVELLING;
                             yield group.save();
-                            self.ctx.socket_service.sendGroupChannelEvent(socketServerEvents.GROUP.BROADCAST_CHANGED, {
+                            self.ctx.socket_service.sendGroupChannelEvent(socketServerEvents.GROUP.BROADCAST_STATUS_CHANGED, {
                                 reason: 'GROUP_STATUS_CHANGE_TO_' + (isDefineDeadline ? 'WAITING_TRAVEL' : 'TRAVELLING'),
                                 group: group
                             });
@@ -144,7 +144,7 @@ module.exports = {
                     if (group.group_status == DIC.TRV07.WAITING_TRAVEL) {
                         group.group_status = DIC.TRV07.TRAVELLING;
                         yield group.save();
-                        self.ctx.socket_service.sendGroupChannelEvent(socketServerEvents.GROUP.BROADCAST_CHANGED, {
+                        self.ctx.socket_service.sendGroupChannelEvent(socketServerEvents.GROUP.BROADCAST_STATUS_CHANGED, {
                             reason: 'GROUP_STATUS_CHANGE_TO_TRAVELLING',
                             group: group
                         });

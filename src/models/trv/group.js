@@ -47,8 +47,12 @@ module.exports = function(ctx,name) {
                 phone: {type: String}
             }],
             checkins: [{
-                    member_check_in_id: {type: String},
-                    member_check_in_time: {type: Date, default: Date.now}
+                member_id: {type: String},
+                member_check_in_time: {type: Date, default: Date.now}
+            }],
+            leave_outs:[{
+                member_id: {type: String},
+                leave_time: {type: Date, default: Date.now}
             }]
         }, {
             toObject: {

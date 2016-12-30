@@ -824,7 +824,8 @@ module.exports = {
                                         status: 1,
                                         cancel_flag: 0,
                                         group_status: {$in: [DIC.TRV07.SIGN_UP, DIC.TRV07.WAITING_TRAVEL, DIC.TRV07.TRAVELLING]},
-                                        participants: {$elemMatch: {"participant_id": member_id}}
+                                        participants: {$elemMatch: {"participant_id": member_id}},
+                                        leave_outs: { $not: {$elemMatch: {"member_id": member_id}}}
                                     },
                                     select: selectGroup,
                                     sort: {assembling_time: 1}
@@ -1031,20 +1032,24 @@ module.exports = {
                                 return;
                             }
                             var isLeader = group.participants.some(function(o){
-                                o.participant_id == member.code && o.position_in_group == DIC.TRV06.LEADER
+                                return o.participant_id == member.code && o.position_in_group == DIC.TRV06.LEADER
                             });
                             if (isLeader) {
-                                this.body = app.wrapper.res.error({code: 51010, message: 'leader can not exit'});
+                                this.body = app.wrapper.res.error({code: 51010, message: '团长不能退出报名'});
                                 yield next;
                                 return;
                             }
 
                             var findIndex = -1;
-                            for (var i=0;i< group.participants;i++) {
+                            for (var i=0;i< group.participants.length;i++) {
+                                console.log(group.participants[i].participant_id);
+                                console.log(member.code);
                                 if (group.participants[i].participant_id == member.code) {
                                     findIndex = i;
+                                    break;
                                 }
                             }
+                            console.log(findIndex);
                             if (findIndex != -1) {
                                 group.participants.splice(findIndex, 1);
                             }
@@ -1091,24 +1096,79 @@ module.exports = {
                             console.log(participated);
 
                             if (!participated) {
-                                this.body = app.wrapper.res.error({code: 51009, message: 'not participated'});
+                                this.body = app.wrapper.res.error({code: 51009, message: '没有参团'});
                                 yield next;
                                 return;
                             }
                             var isCheckIn = group.checkins.some(function(o){
-                                o.member_check_in_id == member.code
+                                o.member_id == member.code
                             });
                             
                             if (isCheckIn) {
-                                this.body = app.wrapper.res.error({code: 51012, message: 'already check in'});
+                                this.body = app.wrapper.res.error({code: 51012, message: '已经签到过'});
                                 yield next;
                                 return;
                             }
 
-                            group.checkins.push({ member_check_in_id: member.code });
+                            group.checkins.push({ member_id: member.code });
                             
                             yield group.save();
                             
+                            this.body = app.wrapper.res.ret(group);
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'group-leave-out',
+                verb: 'post',
+                url: this.service_url_prefix + "/groupLeaveOut/:groupId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var member = yield app.modelFactory().model_one(app.models['trv_member'], {where: {code: this.payload.member.member_id}});
+                            if (!member) {
+                                this.body = app.wrapper.res.error({code: 51002, message: 'invalid member'});
+                                yield next;
+                                return;
+                            }
+                            var group = yield app.modelFactory().model_read(app.models['trv_group'], this.params.groupId);
+                            if (!group) {
+                                this.body = app.wrapper.res.error({code: 51005, message: 'invalid group'});
+                                yield next;
+                                return;
+                            }
+
+                            var participated = group.participants.some(function(o){
+                                return o.participant_id == member.code
+                            });
+
+                            console.log(participated);
+
+                            if (!participated) {
+                                this.body = app.wrapper.res.error({code: 51009, message: '没有参团'});
+                                yield next;
+                                return;
+                            }
+                            var isLeaveOut = group.leave_outs.some(function(o){
+                                o.member_id == member.code
+                            });
+
+                            if (isLeaveOut) {
+                                this.body = app.wrapper.res.error({code: 51013, message: '已退团'});
+                                yield next;
+                                return;
+                            }
+
+                            group.leave_outs.push({ member_id: member.code });
+
+                            yield group.save();
+
                             this.body = app.wrapper.res.ret(group);
                         } catch (e) {
                             console.log(e);

@@ -174,8 +174,9 @@ module.exports = {
                     var group_id = data;
                     socket.join('group_' + group_id);
                     var group = yield self.ctx.modelFactory().model_read(self.ctx.models['trv_group'], group_id);
-                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_PARTICIPATE, {reason: 'PARTICIPATE', group: group });
-                    console.log('send group participate event by socket to room other member')
+                    //socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_PARTICIPATE, {reason: 'PARTICIPATE', group: group });
+                    self.sendGroupChannelEvent(socketServerEvents.GROUP.BROADCAST_PARTICIPATE, {reason: 'PARTICIPATE', group: group });
+                    console.log('send group participate event by socket to all socket in group namespace');
                 }
                 catch (e) {
                     console.log(e);
@@ -188,9 +189,12 @@ module.exports = {
                 try {
                     console.log(socketClientEvents.GROUP.EXIT + ':' + socket.id + '  => data  ' +  JSON.stringify(data));
                     var group_id = data;
-                    socket.leave('group_' + group_id);
                     var group = yield self.ctx.modelFactory().model_read(self.ctx.models['trv_group'], group_id);
-                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_EXIT,  {reason: 'EXIT', group: group });
+                    // socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_EXIT,  {reason: 'EXIT', group: group });
+                    // console.log('send group exit event by socket to room other member');
+                    socket.leave('group_' + group_id);
+                    self.sendGroupChannelEvent(socketServerEvents.GROUP.BROADCAST_EXIT, {reason: 'EXIT', group: group });
+                    console.log('send group exit event by socket to all socket in group namespace');
                 }
                 catch (e) {
                     console.log(e);
@@ -204,7 +208,21 @@ module.exports = {
                     console.log(socketClientEvents.GROUP.CHECK_IN + ':' + socket.id + '  => data  ' + JSON.stringify(data));
                     var group_id = data.group_id;
                     var group = yield self.ctx.modelFactory().model_read(self.ctx.models['trv_group'], group_id);
-                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_CHECK_IN,  {reason: 'CHECK_IN', group: group, checking_member: data.checking_member });
+                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_PARTICIPATE_CHECK_IN,  {reason: 'CHECK_IN', group: group, checking_member: data.checking_member });
+                }
+                catch (e) {
+                    console.log(e);
+                    self.logger.error(e.message);
+                }
+            }).catch(self.ctx.coOnError);
+        });
+        socket.on(socketClientEvents.GROUP.LEAVE_OUT, function(data) {
+            return co(function *() {
+                try {
+                    console.log(socketClientEvents.GROUP.LEAVE_OUT + ':' + socket.id + '  => data  ' + JSON.stringify(data));
+                    var group_id = data.group_id;
+                    var group = yield self.ctx.modelFactory().model_read(self.ctx.models['trv_group'], group_id);
+                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_PARTICIPATE_LEAVE_OUT,  {reason: 'LEAVE_OUT', group: group, leaving_member: data.leaving_member });
                 }
                 catch (e) {
                     console.log(e);
@@ -217,7 +235,7 @@ module.exports = {
                 try {
                     console.log(socketClientEvents.GROUP.LOCATE + ':' + socket.id + '  => data  ' + JSON.stringify(data));
                     var group_id = data.group_id;
-                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_LOCATION, {reason: 'LOCATE', locating_member: data.locating_member, location: data.location });
+                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_PARTICIPATE_LOCATION, {reason: 'LOCATE', locating_member: data.locating_member, location: data.location });
                 }
                 catch (e) {
                     console.log(e);

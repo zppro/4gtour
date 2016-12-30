@@ -8,6 +8,7 @@
     "PARTICIPATE": "CG003",
     "EXIT": "CG004",
     "CHECK_IN": "CG100",
+    "LEAVE_OUT": "CG101",
     "LOCATE": "CG102"
   }
 }
