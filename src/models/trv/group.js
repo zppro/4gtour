@@ -50,6 +50,7 @@ module.exports = function(ctx,name) {
                 member_id: {type: String},
                 member_check_in_time: {type: Date, default: Date.now}
             }],
+            dissolve_flag: {type: Boolean, default: false}, //解散标记， 当团长退团时设置true
             leave_outs:[{
                 member_id: {type: String},
                 leave_time: {type: Date, default: Date.now}

@@ -208,7 +208,7 @@ module.exports = {
                     console.log(socketClientEvents.GROUP.CHECK_IN + ':' + socket.id + '  => data  ' + JSON.stringify(data));
                     var group_id = data.group_id;
                     var group = yield self.ctx.modelFactory().model_read(self.ctx.models['trv_group'], group_id);
-                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_PARTICIPATE_CHECK_IN,  {reason: 'CHECK_IN', group: group, checking_member: data.checking_member });
+                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_PARTICIPATER_CHECK_IN,  {reason: 'CHECK_IN', group: group, checking_member: data.checking_member });
                 }
                 catch (e) {
                     console.log(e);
@@ -222,7 +222,23 @@ module.exports = {
                     console.log(socketClientEvents.GROUP.LEAVE_OUT + ':' + socket.id + '  => data  ' + JSON.stringify(data));
                     var group_id = data.group_id;
                     var group = yield self.ctx.modelFactory().model_read(self.ctx.models['trv_group'], group_id);
-                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_PARTICIPATE_LEAVE_OUT,  {reason: 'LEAVE_OUT', group: group, leaving_member: data.leaving_member });
+                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_PARTICIPATER_LEAVE_OUT,  {reason: 'LEAVE_OUT', group: group, leaving_member: data.leaving_member });
+                }
+                catch (e) {
+                    console.log(e);
+                    self.logger.error(e.message);
+                }
+            }).catch(self.ctx.coOnError);
+        });
+        socket.on(socketClientEvents.GROUP.DISSOLVE, function(data) {
+            return co(function *() {
+                try {
+                    console.log(socketClientEvents.GROUP.DISSOLVE + ':' + socket.id + '  => data  ' + JSON.stringify(data));
+                    var group_id = data.group_id;
+                    var group = yield self.ctx.modelFactory().model_read(self.ctx.models['trv_group'], group_id);
+                    if (group.dissolve_flag) {
+                        socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_LEADER_DISSOLVE,  {reason: 'DISSOLVE', group_id: group_id });
+                    }
                 }
                 catch (e) {
                     console.log(e);

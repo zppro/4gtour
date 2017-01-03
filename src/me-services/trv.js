@@ -825,6 +825,7 @@ module.exports = {
                                         cancel_flag: 0,
                                         group_status: {$in: [DIC.TRV07.SIGN_UP, DIC.TRV07.WAITING_TRAVEL, DIC.TRV07.TRAVELLING]},
                                         participants: {$elemMatch: {"participant_id": member_id}},
+                                        dissolve_flag : false,
                                         leave_outs: { $not: {$elemMatch: {"member_id": member_id}}}
                                     },
                                     select: selectGroup,
@@ -852,7 +853,7 @@ module.exports = {
                             var member_id = this.payload.member.member_id;
                             var latestParticipated = this.request.body.latestParticipated
                             var selectGroup = 'name group_status member_id member_name imgs leader assembling_time deadline participate_min participate_max participants checkins';
-                            var whereBase = {status: 1, cancel_flag: 0, group_status: {$in:[DIC.TRV07.SIGN_UP, DIC.TRV07.WAITING_TRAVEL, DIC.TRV07.TRAVELLING]}};
+                            var whereBase = {status: 1, cancel_flag: 0, group_status: {$in:[DIC.TRV07.SIGN_UP, DIC.TRV07.WAITING_TRAVEL, DIC.TRV07.TRAVELLING]}, dissolve_flag : false};
                             var where = whereBase;
                             if(latestParticipated){
                                 where = app._.extend({_id: { "$ne" : latestParticipated }},whereBase);
@@ -1165,6 +1166,12 @@ module.exports = {
                                 return;
                             }
 
+                            var isGroupLeader  = group.participants.some(function(o){
+                                return o.participant_id == member.code && o.position_in_group === DIC.TRV06.LEADER
+                            });
+                            if (isGroupLeader) {
+                                group.dissolve_flag = true
+                            }
                             group.leave_outs.push({ member_id: member.code });
 
                             yield group.save();

@@ -9,6 +9,7 @@
     "EXIT": "CG004",
     "CHECK_IN": "CG100",
     "LEAVE_OUT": "CG101",
-    "LOCATE": "CG102"
+    "DISSOLVE": "CG102",
+    "LOCATE": "CG103"
   }
 }
