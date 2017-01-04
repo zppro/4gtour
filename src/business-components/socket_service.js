@@ -251,7 +251,11 @@ module.exports = {
                 try {
                     console.log(socketClientEvents.GROUP.LOCATE + ':' + socket.id + '  => data  ' + JSON.stringify(data));
                     var group_id = data.group_id;
-                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_PARTICIPATE_LOCATION, {reason: 'LOCATE', locating_member: data.locating_member, location: data.location });
+                    var group = yield self.ctx.modelFactory().model_read(self.ctx.models['trv_group'], group_id);
+                    var isGroupLeader  = group.participants.some(function(o){
+                        return o.participant_id == data.locating_member.member_id && o.position_in_group === DIC.TRV06.LEADER
+                    });
+                    socket.to('group_' + group_id).emit(socketServerEvents.GROUP.BROADCAST_PARTICIPATE_LOCATION, {reason: 'LOCATE', locating_member: data.locating_member, location: data.location, isGroupLeader: isGroupLeader });
                 }
                 catch (e) {
                     console.log(e);
