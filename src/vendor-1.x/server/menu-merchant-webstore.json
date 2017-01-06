@@ -1,0 +1,41 @@
+[
+  {
+    "_id": "menu.merchant-webstore.PRODUCT-MANAGE",
+    "name": "产品管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.merchant-webstore.SPU",
+        "name": "标准产品单元(spu)",
+        "sref": "app.merchant-webstore.spu.list"
+      }
+    ]
+  },
+  {
+    "_id": "menu.merchant-webstore.SALE-MANAGE",
+    "name": "销售管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.merchant-webstore.ORDER",
+        "name": "订单",
+        "sref": "app.merchant-webstore.order.list"
+      }
+    ]
+  },
+  {
+    "_id": "menu.merchant-webstore.SYSTEM-MANAGE",
+    "name": "系统管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.merchant-webstore.USER-MANAGE",
+        "name": "用户管理",
+        "sref": "app.merchant-webstore.user-manage.list"
+      }
+    ]
+  }
+]

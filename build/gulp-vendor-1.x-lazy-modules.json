@@ -17,5 +17,7 @@
   { "type":"js","path":"src/{{target}}/js/lazy-modules/organization-travel/ticket.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/organization-travel/order.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/organization-travel/user-manage.js" },
-  { "type":"js","path":"src/{{target}}/js/lazy-modules/organization-travel/financial-org-receipts-and-disbursements-details.js" }
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/organization-travel/financial-org-receipts-and-disbursements-details.js" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/merchant-webstore/dashboard.js" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/merchant-webstore/user-manage.js" }
 ]

@@ -1,5 +1,13 @@
 [
   {
+    "_id": "subsystem.merchant-webstore-STANDARD",
+    "name": "Web商城",
+    "sref": "app.merchant-webstore",
+    "mtype":"business",
+    "usertype": ["A0002"],
+    "menujson": "menu-merchant-webstore.json"
+  },
+  {
     "_id": "subsystem.organization-travel-STANDARD",
     "name": "商户产品云",
     "sref": "app.organization-travel",

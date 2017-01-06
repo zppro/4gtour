@@ -126,11 +126,22 @@
     }
   },
   "subsystem": {
+    "merchant-webstore-STANDARD": "商户-Web商城-标准版",
     "organization-travel-STANDARD": "商户-标准版",
     "MANAGE-CENTER": "管理中心",
     "DEMO-CENTER": "演示中心"
   },
   "menu":{
+    "merchant-webstore": {
+      "PRODUCT-MANAGE": "产品管理",
+      "SPU": "标准产品单元(spu)",
+      "------------": "",
+      "SALE-MANAGE": "销售管理",
+      "ORDER": "订单",
+      "------------": "",
+      "SYSTEM-MANAGE": "系统管理",
+      "USER-MANAGE": "用户管理"
+    },
     "organization-travel": {
       "SNS": "社交网络",
       "SCENERY-SPOT": "景点",

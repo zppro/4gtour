@@ -35,6 +35,7 @@
                     var self = this;
                     SidebarLoader.getSubsystem(function (items) {
                         items = _.filter(items,checkUserType);
+                        items = _.filter(items, Auth.isSubsystemPermit);
                         $scope.subsystem.available = _.filter(items,checkAuthorition);
                         angular.forEach($scope.subsystem.available, function (item) {
                             if (self.isActive(item)) {
@@ -147,7 +148,7 @@
             function checkUserType(item) {
                 return _.contains(item.usertype, Auth.getUser().type);
             }
-
+            
             //可以检测subsystem和menu
             function checkAuthorition(item) {
                 if (!item.sref || item.sref == '#') {

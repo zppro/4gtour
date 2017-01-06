@@ -76,6 +76,16 @@
                 }
                 return false;
             },
+            isSubsystemPermit: function(subsystem) {
+                if (_open_funcs) {
+                    var menujson = (subsystem || {}).menujson;
+                    var compared = menujson.substr(0, menujson.indexOf('.json') + 1).replace(/-/g,'.');
+                    return -1 != _.findIndex(_open_funcs, function (o) {
+                            return o.func_id.replace(/-/g,'.').indexOf(compared) != -1
+                        })
+                }
+                return false;
+            },
             isAuthenticated: function () {
                 return _token && _user ? true : false;
             },

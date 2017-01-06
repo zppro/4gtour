@@ -55,7 +55,9 @@
                 {name:'subsystem.organization-travel.ticket.js',files:['app/js/lazy-modules/organization-travel/ticket.js']},
                 {name:'subsystem.organization-travel.order.js',files:['app/js/lazy-modules/organization-travel/order.js']},
                 {name:'subsystem.organization-travel.user-manage.js',files:['app/js/lazy-modules/organization-travel/user-manage.js']},
-                {name:'subsystem.organization-travel.financial-org-receipts-and-disbursements-details.js',files:['app/js/lazy-modules/organization-travel/financial-org-receipts-and-disbursements-details.js']}
+                {name:'subsystem.organization-travel.financial-org-receipts-and-disbursements-details.js',files:['app/js/lazy-modules/organization-travel/financial-org-receipts-and-disbursements-details.js']},
+                {name:'subsystem.merchant-webstore.dashboard.js',files:['app/js/lazy-modules/organization-travel/dashboard.js']},
+                {name:'subsystem.merchant-webstore.user-manage.js',files:['app/js/lazy-modules/organization-travel/user-manage.js']}
             ]
         })
     ;
