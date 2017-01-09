@@ -53,5 +53,15 @@
     "INTERRUPTED": "A0007",
     "TRAVELLING": "A0009",
     "FINISH": "A0011"
+  },
+  "MWS01":{
+    "NOT_PAY": "A0001",
+    "WAITING_SHIP": "A0003",
+    "SHIPPING": "A0005",
+    "RECEIVED": "A0007",
+    "FINISH": "A0009",
+    "REFUND_APPLY": "A0011",
+    "REFUNDING": "A0013",
+    "REFUNDED": "A0015"
   }
 }
