@@ -10,8 +10,10 @@
         .module('app.settings')
         .constant('SETTING_KEYS', {
             'CURRENT_SUBSYSTEM' :'currentSubsystem',
+            'STORAGE_ID_MERCHANT_WEBSTORE': 'merchant-webstore',
             'STORAGE_ID_ORGANIZATION_PFTA': 'organization_pfta',
             'STORAGE_ID_MANAGE_CENTER': 'manage_center',
+            'SREF_MERCHANT_WEBSTORE': 'app.merchant-webstore',
             'SREF_ORGANIZATION_PFTA': 'app.organization-travel',
             'SREF_MANAGE_CENTER': 'app.manage-center'
         })

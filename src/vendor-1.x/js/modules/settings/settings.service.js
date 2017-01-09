@@ -36,7 +36,10 @@
             },
             getSubsystemInstance: function (sref) {
                 var id;
-                if (SETTING_KEYS.SREF_ORGANIZATION_PFTA == sref) {
+                if (SETTING_KEYS.SREF_MERCHANT_WEBSTORE == sref) {
+                    id = SETTING_KEYS.STORAGE_ID_MERCHANT_WEBSTORE;
+                }
+                else if (SETTING_KEYS.SREF_ORGANIZATION_PFTA == sref) {
                     id = SETTING_KEYS.STORAGE_ID_ORGANIZATION_PFTA;
                 }
                 else if (SETTING_KEYS.SREF_MANAGE_CENTER == sref) {

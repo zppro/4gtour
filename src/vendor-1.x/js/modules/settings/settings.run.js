@@ -31,6 +31,7 @@
             asideToggled: false,
             viewAnimation: 'ng-fadeInUp',
             subsystem: {
+                merchant_webstore: {currentSubsystemSref: SETTING_KEYS.SREF_MERCHANT_WEBSTORE},
                 organization_pfta: {currentSubsystemSref: SETTING_KEYS.SREF_ORGANIZATION_PFTA},
                 manage_center: {currentSubsystemSref: SETTING_KEYS.SREF_MANAGE_CENTER}
             }

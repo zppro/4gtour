@@ -77,6 +77,8 @@
                 return false;
             },
             isSubsystemPermit: function(subsystem) {
+                if (subsystem.mtype == 'admin' || subsystem.mtype == 'demo')
+                    return true;
                 if (_open_funcs) {
                     var menujson = (subsystem || {}).menujson;
                     var compared = menujson.substr(0, menujson.indexOf('.json') + 1).replace(/-/g,'.');

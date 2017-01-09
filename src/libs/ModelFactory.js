@@ -90,7 +90,6 @@ ModelFactory.models = {};
 ModelFactory.loadModel = function(modelStructureLevelObject) {
     if (!modelStructureLevelObject.hasOwnProperty('name') && !modelStructureLevelObject.hasOwnProperty('path')) {
         for (var key in modelStructureLevelObject) {
-
             ModelFactory.loadModel.bind(this)(modelStructureLevelObject[key]);
         }
     }

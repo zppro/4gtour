@@ -19,17 +19,17 @@ module.exports = function(ctx,name) {
             name: {type: String, required: true},
             status: {type: Number, min: 0, max: 1, default: 1},
             cancel_flag: {type: Number, min: 0, max: 1, default: 0}, //撤销标记 违法信息时设置为1
+            imgs: [String],//套图
+            shipment_place: {type: String}, // 发货地址
             intro: {type: String},
             intro_url: {type: String},
-            imgs: [String],//套图
-            sales_monthly: {type: Number, min:0, default: 0},
-            sales_all: {type: Number, min:0, default: 0},
-            shipment_place: {type: String},
-            shipment_price: {type: Number, min:0, required: true},
             skus:[{
                 name: {type: String},
+                quantity: {type: Number, min:0},
                 sale_price:{type: Number, min:0},
-                market_price:{type: Number, min:0}
+                market_price:{type: Number, min:0},
+                sales_monthly: {type: Number, min:0, default: 0},
+                sales_all: {type: Number, min:0, default: 0}
             }],
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {
@@ -46,13 +46,21 @@ module.exports = function(ctx,name) {
             next();
         });
 
+        spuSchema.virtual('img').get(function () {
+            if (this.imgs.length == 0) {
+                return null
+            } else {
+                return this.imgs[0]
+            }
+        });
+
         spuSchema.virtual('sale_price_lower').get(function () {
             if (this.skus.length == 0) {
                 return 0
             } else {
                 return ctx._.min(this.skus,function(o){
                     return o.sale_price
-                })
+                }).sale_price;
             }
         });
 
@@ -62,27 +70,47 @@ module.exports = function(ctx,name) {
             } else {
                 return ctx._.max(this.skus,function(o){
                     return o.sale_price
-                })
+                }).sale_price;
             }
         });
 
         spuSchema.virtual('market_price_lower').get(function () {
             if (this.skus.length == 0) {
-                return 0
+                return 0;
             } else {
                 return ctx._.min(this.skus,function(o){
-                    return o.market_price
-                })
+                    return o.market_price;
+                }).market_price;
             }
         });
 
         spuSchema.virtual('market_price_upper').get(function () {
             if (this.skus.length == 0) {
-                return 0
+                return 0;
             } else {
                 return ctx._.max(this.skus,function(o){
-                    return o.market_price
-                })
+                    return o.market_price;
+                }).market_price;
+            }
+        });
+
+        spuSchema.virtual('sales_monthly').get(function () {
+            if (this.skus.length == 0) {
+                return 0
+            } else {
+                return ctx._.reduce(this.skus,function(totals, o){
+                    return totals + o.sales_monthly;
+                }, 0)
+            }
+        });
+
+        spuSchema.virtual('sales_all').get(function () {
+            if (this.skus.length == 0) {
+                return 0
+            } else {
+                return ctx._.reduce(this.skus,function(totals, o){
+                    return totals + o.sales_all;
+                }, 0)
             }
         });
 

@@ -1,0 +1,107 @@
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        <!--名称-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NAME') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='name',ng-model='vm.model.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-NAME")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'name','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        <!--产品图-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-IMGS') | translate}}:
+                        .col-md-10
+                            input.form-control(type='hidden', name='img',ng-model='vm.model.img')
+                            .img-border
+                                .img-loader(ng-if="vm.model.img")
+                                    img(ng-src="{{vm.model.img}}")
+                                .uploader-area(qiniu-uploader, button-text="选择图片" bucket='4gimg',user='vm.tenantId',ng-uploaded-url="vm.model.img")
+                    fieldset: .form-group
+                        <!--发货地址-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-SHIPMENT_PLACE') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='shipment_place',ng-model='vm.model.shipment_place',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-SHIPMENT_PLACE")|translate}}')
+                    fieldset: .form-group
+                        <!--产品简介-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-INTRO') | translate}}:
+                        .col-md-10
+                            textarea.form-control(name='intro',ng-model='vm.model.intro',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-INTRO")|translate}}')
+                    fieldset: .form-group
+                        <!--图文地址-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-INTRO_URL') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='intro_url',ng-model='vm.model.intro_url',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-INTRO_URL")|translate}}')
+                    .panel.panel-default.panel-grid
+                        .panel-heading-normal
+                            a {{ vm.viewTranslatePath('TAB1-LABEL-SKUS') | translate}}
+                        table.grid.table.table-bordered.table-hover.table-striped
+                            thead
+                                tr
+                                    th.text-center(check-all,width="30")
+                                        .checkbox.c-checkbox(data-toggle="tooltip",data-title="Check All")
+                                            label(ng-click="vm.checkSKUAll($event)")
+                                                input(type='checkbox')
+                                                span.fa.fa-check
+                                    th.text-center(width="240")
+                                        | 库存单元名称
+                                    th.text-center(width="80")
+                                        | 库存
+                                    th.text-center(width="80")
+                                        | 市场价格
+                                    th.text-center(width="80")
+                                        | 销售价格
+                                    th.text-center(width="50")
+                            tbody
+                                tr(ng-repeat="row in vm.model.skus" ng-click="vm.grid.selectRow($event,row)",ng-dblclick="vm.grid.dblclickRow(row.id)")
+                                    td.text-center
+                                        .checkbox.c-checkbox(ng-if="!row.$editing")
+                                            label
+                                                input(type='checkbox',ng-model="row.checked" )
+                                                span.fa.fa-check
+                                    td.text-left
+                                        span(ng-if="!row.$editing") {{::row.name}}
+                                        input.form-control(name="row$name",type="text",ng-if="row.$editing",ng-model='row.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-SKU_NAME")|translate}}' ,required='')
+                                        span.text-danger(ng-if="row.$editing",ng-show="utils.vinput(this.theForm,'row$name','required')") {{ "validator.REQUIRED" | translate}}
+                                    td
+                                        span(ng-if="!row.$editing") {{::row.quantity}}
+                                        input.form-control(name="row$quantity",type="number",ng-if="row.$editing",ng-model='row.quantity',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-SKU_QUANTITY")|translate}}' ,required='',ng-model-options="{debounce:500}",ui-validate="{quantity: '$value >= 0'}")
+                                        span.text-danger(ng-if="row.$editing",ng-show="utils.vinput(this.theForm,'row$quantity','required')") {{ "validator.REQUIRED" | translate}}
+                                        span.text-danger(ng-if="row.$editing",ng-show="utils.vinput(this.theForm,'row$quantity','quantity')") {{ "validator.MIN" | translate:{min:"0"} }}
+                                    td
+                                        span(ng-if="!row.$editing") {{::row.sale_price}}
+                                        input.form-control(name="row$sale_price",type="number",ng-if="row.$editing",ng-model='row.sale_price',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-SKU_SALE_PRICE")|translate}}' ,required='',ng-model-options="{debounce:500}",ui-validate="{sale_price: '$value >= 0'}")
+                                        span.text-danger(ng-if="row.$editing",ng-show="utils.vinput(this.theForm,'row$sale_price','required')") {{ "validator.REQUIRED" | translate}}
+                                        span.text-danger(ng-if="row.$editing",ng-show="utils.vinput(this.theForm,'row$sale_price','sale_price')") {{ "validator.MIN" | translate:{min:"0"} }}
+                                    td
+                                        span(ng-if="!row.$editing") {{::row.market_price}}
+                                        input.form-control(name="row$market_price",type="number",ng-if="row.$editing",ng-model='row.market_price',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-SKU_MARKET_PRICE")|translate}}' ,required='',ng-model-options="{debounce:500}",ui-validate="{market_price: '$value >= 0'}")
+                                        span.text-danger(ng-if="row.$editing",ng-show="utils.vinput(this.theForm,'row$market_price','required')") {{ "validator.REQUIRED" | translate}}
+                                        span.text-danger(ng-if="row.$editing",ng-show="utils.vinput(this.theForm,'row$market_price','market_price')") {{ "validator.MIN" | translate:{min:"0"} }}
+                                    td
+                                        .btn-group(ng-if="!vm.readonly && !row.$editing")
+                                            a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.editSKU(row)")
+                                                i.glyphicon.glyphicon-pencil
+                                        .btn-group(ng-if="row.$editing")
+                                            a.btn.btn-primary.btn-xs(title="{{'button.SAVE'|translate}}",ng-click="vm.saveSKU(row)")
+                                                i.glyphicon.glyphicon-ok-sign
+                                        .btn-group(ng-if="row.$editing")
+                                            a.btn.btn-primary.btn-xs(title="{{'button.CANCEL'|translate}}",ng-click="vm.cancelSKU(row)")
+                                                i.glyphicon.glyphicon-remove-sign
+                        .panel-footer
+                            .row
+                                .col-md-4.text-left
+                                    .btn-toolbar(ng-if="!vm.readonly")
+                                        .btn-group
+                                            a.btn.btn-primary.btn-sm(title="{{'button.ADD'|translate}}",ng-click="vm.addSKU()")
+                                                i.glyphicon.glyphicon-plus
+                                            a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.removeSKU()")
+                                                i.glyphicon.glyphicon-minus
+    .text-right.mt-lg
+        button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(type="submit") {{'button.SAVE'|translate}}

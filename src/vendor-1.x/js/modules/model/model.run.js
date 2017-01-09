@@ -10,9 +10,14 @@
     ;
     modelRun.$inject = ['modelNode'];
     function modelRun(modelNode) {
+        //web商城
+        modelNode.factory('mws-spu');
+        modelNode.factory('mws-order');
+
         //商户机构
         modelNode.factory('trv-scenerySpot');
 
+        //票付通
         modelNode.factory('idc-scenicSpot_PFT');
         modelNode.factory('idc-ticket_PFT');
         modelNode.factory('idc-order_PFT');

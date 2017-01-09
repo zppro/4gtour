@@ -35,6 +35,7 @@
                     var self = this;
                     SidebarLoader.getSubsystem(function (items) {
                         items = _.filter(items,checkUserType);
+                        console.log(items)
                         items = _.filter(items, Auth.isSubsystemPermit);
                         $scope.subsystem.available = _.filter(items,checkAuthorition);
                         angular.forEach($scope.subsystem.available, function (item) {

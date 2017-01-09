@@ -24,7 +24,7 @@
                 template: '<div class="module-header-wrapper" data-ui-view="module-header"></div><div class="module-content-wrapper" data-ui-view="module-content"></div>',
                 resolve: {
                     vmh: helper.buildVMHelper()
-                    , deps: helper.resolveFor2('subsystem.merchant-webstore')
+                    // , deps: helper.resolveFor2('subsystem.merchant-webstore')
                 }
             })
             .state('app.merchant-webstore.dashboard', {
@@ -38,7 +38,7 @@
                     },
                     "module-content": {
                         templateUrl: helper.basepath('merchant-webstore/dashboard.html'),
-                        controller: 'DashboardControllerOfOrganizationOfTravelController',
+                        controller: 'DashboardControllerOfMerchantOfWebstoreController',
                         resolve: {
                             instanceVM: helper.buildInstanceVM('app.merchant-webstore.dashboard')
                             , deps: helper.resolveFor2('subsystem.merchant-webstore.dashboard.js')
@@ -49,7 +49,7 @@
             })
             .state('app.merchant-webstore.spu', {
                 url: '/spu',
-                title: '景区',
+                title: '标准产品单元',
                 abstract: true,
                 views: {
                     "module-header": {
@@ -61,22 +61,19 @@
                     }
                 },
                 data:{
-                    func_id:'menu.merchant-webstore.spu'//业务系统使用
+                    func_id:'menu.merchant-webstore.SPU'//业务系统使用
                 }
                 , resolve: helper.resolveFor('subsystem.merchant-webstore.spu.js')
             })
             .state('app.merchant-webstore.spu.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath('merchant-webstore/spu-PFT-list.html'),
+                templateUrl: helper.basepath('merchant-webstore/spu-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'PFT_ScenicSpotGridController',
+                controller: 'SPUGridController',
                 resolve: {
                     entryVM: helper.buildEntryVM('app.merchant-webstore.spu.list', {
-                        modelName: 'idc-scenicSpot_PFT',
+                        modelName: 'mws-spu',
                         searchForm: {"status": 1},
-                        transTo: {
-                            "ticket": 'app.merchant-webstore.ticket.list',
-                        },
                         serverPaging: true,
                         blockUI: true,
                         columns: [
@@ -87,32 +84,39 @@
                                 width:  30
                             },
                             {
-                                label: '显示名称',
-                                name: 'show_name',
+                                label: '产品名称',
+                                name: 'name',
                                 type: 'string',
                                 width: 240,
                                 sortable: true
                             },
                             {
-                                label: '添加时间',
-                                name: 'UUaddtime',
-                                type: 'date',
+                                label: '销售价',
+                                name: 'sales_price',
+                                type: 'number',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '市场价',
+                                name: 'market_price',
+                                type: 'number',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '月销量',
+                                name: 'sales_monthly',
+                                type: 'number',
                                 width: 60,
                                 sortable: true
                             },
-                            // {
-                            //     label: '所在地区',
-                            //     name: 'UUarea',
-                            //     type: 'string',
-                            //     width: 120,
-                            //     sortable: true
-                            // },
                             {
-                                label: '产品类型',
-                                name: 'UUp_type',
-                                type: 'string',
+                                label: '总销量',
+                                name: 'sales_all',
+                                type: 'number',
                                 width: 60,
-                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/IDC00/object')
+                                sortable: true
                             },
                             {
                                 label: '',
@@ -126,14 +130,14 @@
             })
             .state('app.merchant-webstore.spu.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('merchant-webstore/spu-PFT-details.html'),
+                templateUrl: helper.basepath('merchant-webstore/spu-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'PFT_ScenicSpotDetailsController',
+                controller: 'SPUDetailsController',
                 resolve: {
                     entityVM: helper.buildEntityVM('app.merchant-webstore.spu.details', {
-                        modelName: 'idc-scenicSpot_PFT',
+                        modelName: 'mws-spu',
                         blockUI: true
-                    })
+                    }), deps: helper.resolveFor2('qiniu','qiniu-ng')
                 }
             })
             .state('app.merchant-webstore.order', {
@@ -156,28 +160,22 @@
             })
             .state('app.merchant-webstore.order.list', {
                 url: '/list/:action/:scenicSpotId',
-                templateUrl: helper.basepath('merchant-webstore/order-PFT-list.html'),
+                templateUrl: helper.basepath('merchant-webstore/order-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'PFT_OrderGridController',
+                controller: 'MWS_OrderGridController',
                 resolve: {
                     entryVM: helper.buildEntryVM('app.merchant-webstore.order.list', {
-                        modelName: 'idc-order_PFT',
+                        modelName: 'mws-order',
                         searchForm: {"status": 1},
                         serverPaging: true,
                         blockUI: true,
                         columns: [
                             {
-                                label: '本地订单号',
+                                label: '订单号',
                                 name: 'code',
                                 type: 'string',
                                 width: 80,
                                 sortable: true
-                            },
-                            {
-                                label: '产品名称',
-                                name: 'p_name',
-                                type: 'string',
-                                width: 80
                             },
                             {
                                 label: '订单金额',
@@ -187,65 +185,49 @@
                                 sortable: true
                             },
                             {
-                                label: '本地下单',
+                                label: '支付方式',
+                                name: 'pay_type_name',
+                                type: 'string',
+                                width: 60
+                            },
+                            {
+                                label: '支付时间',
                                 name: 'check_in_time',
                                 type: 'date',
                                 width: 80,
                                 sortable: true
                             },
                             {
-                                label: '本地状态',
-                                name: 'local_status',
-                                type: 'string',
-                                width: 60,
-                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/IDC01/object')
-                            },
-                            {
-                                label: '远端支付',
-                                name: 'UUpaystatus',
-                                type: 'string',
-                                width: 60,
-                                formatter: 'dictionary-local:{"0":"景区到付","1":"已成功","2":"未支付"}'
-                            },
-                            {
-                                label: '远端订单',
-                                name: 'UUstatus',
-                                type: 'string',
-                                width: 60,
-                                formatter: 'dictionary-local:{"0":"未使用","1":"已使用","2":"已过期","3":"被取消","4":"凭证码被替代","5":"被终端修改","6":"被终端撤销","7":"部分使用"}'
-                            },
-                            {
-                                label: '凭证号',
-                                name: 'UUcode',
+                                label: '订单状态',
+                                name: 'order_status_name',
                                 type: 'string',
                                 width: 60
                             },
                             {
                                 label: '下单人',
-                                name: 'member',
+                                name: 'order_man',
                                 type: 'string',
-                                width: 80
+                                width: 120
                             },
                             {
-                                label: '联系人',
-                                name: 'link_man',
+                                label: '收件人',
+                                name: 'shipping_man',
                                 type: 'string',
-                                width: 60
+                                width: 120
                             },
                             {
-                                label: '联系电话',
-                                name: 'link_phone',
+                                label: '收件地址',
+                                name: 'shipping_place',
                                 type: 'string',
-                                width: 60
+                                width: 120
                             },
                             {
                                 label: '',
                                 name: 'actions',
                                 sortable: false,
-                                width: 90
+                                width: 60
                             }
-                        ],
-                        switches: {leftTree: true}
+                        ]
                     })
                 }
             })
@@ -271,11 +253,11 @@
                 url: '/list/:action/:roles',
                 templateUrl: helper.basepath('merchant-webstore/user-manage-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'UserManageGridController',
+                controller: 'MerchantWebStoreUserManageGridController',
                 resolve: {
                     entryVM: helper.buildEntryVM('app.merchant-webstore.user-manage.list', {
                         modelName: 'pub-user',
-                        searchForm: {"status": 1,"type": 'A0002'},//user.type 养老机构用户
+                        searchForm: {"status": 1,"type": 'A0002'},//user.type Web商城用户
                         serverPaging: true,
                         columns: [
                             {
@@ -328,7 +310,7 @@
                 url: '/details/:action/:_id/:roles',
                 templateUrl: helper.basepath('merchant-webstore/user-manage-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'UserManageDetailsController',
+                controller: 'MerchantWebStoreUserManageDetailsController',
                 resolve: {
                     entityVM: helper.buildEntityVM('app.merchant-webstore.user-manage.details', {
                         modelName: 'pub-user',

@@ -3,6 +3,7 @@
   "SEQUENCE_DEFS": {
     "TENANT_ACCOUNT": "pub_tenantJournalAccount$voucher_no",
     "ORDER_OF_PFT": "order_PFT$code",
+    "ORDER_OF_MERCHANT_WEBSTORE": "mws_order$code",
     "SCENICSPOT": "scenerySpot$code"
   }
 }
