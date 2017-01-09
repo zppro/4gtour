@@ -31,13 +31,11 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var member_id = this.payload.member.member_id;
-                            var selectGroup = 'name imgs skus';
                             var where = {status: 1, cancel_flag: 0};
                             var rows = yield app.modelFactory().model_query(app.models['mws_spu'], {
                                     where: where,
-                                    select: selectGroup,
-                                    sort: {assembling_time: 1}
+                                    select: 'name imgs skus',
+                                    sort: {name: 1}
                                 },
                                 {limit: this.request.body.page.size, skip: this.request.body.page.skip});
  
