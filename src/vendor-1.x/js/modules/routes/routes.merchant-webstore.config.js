@@ -136,6 +136,7 @@
                 resolve: {
                     entityVM: helper.buildEntityVM('app.merchant-webstore.spu.details', {
                         modelName: 'mws-spu',
+                        model: {skus: []},
                         blockUI: true
                     }), deps: helper.resolveFor2('qiniu','qiniu-ng')
                 }

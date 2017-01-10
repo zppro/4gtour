@@ -77,7 +77,7 @@
 
         function addSKU() {
             if (!vm.$gridEditingOfSKU) {
-                vm.model.skus.push({isNew: true, $editing: true, skus: []})
+                vm.model.skus.push({isNew: true, $editing: true})
                 vm.$gridEditingOfSKU = true;
             }
         }
