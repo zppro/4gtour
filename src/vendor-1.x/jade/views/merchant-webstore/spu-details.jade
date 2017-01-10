@@ -53,9 +53,9 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                                     th.text-center(width="80")
                                         | 库存
                                     th.text-center(width="80")
-                                        | 市场价格
-                                    th.text-center(width="80")
                                         | 销售价格
+                                    th.text-center(width="80")
+                                        | 市场价格
                                     th.text-center(width="50")
                             tbody
                                 tr(ng-repeat="row in vm.model.skus" ng-click="vm.grid.selectRow($event,row)",ng-dblclick="vm.grid.dblclickRow(row.id)")
