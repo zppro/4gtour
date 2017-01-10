@@ -38,6 +38,7 @@ module.exports = {
                                     sort: {name: 1}
                                 },
                                 {limit: this.request.body.page.size, skip: this.request.body.page.skip});
+                            console.log(this.request.body);
  
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {

@@ -25,7 +25,7 @@ module.exports = function(ctx,name) {
             intro_url: {type: String},
             skus:[{
                 name: {type: String},
-                quantity: {type: Number, min:0},
+                quantity: {type: Number, min:0}, // 库存数量
                 sale_price:{type: Number, min:0},
                 market_price:{type: Number, min:0},
                 sales_monthly: {type: Number, min:0, default: 0},
@@ -51,6 +51,16 @@ module.exports = function(ctx,name) {
                 return null
             } else {
                 return this.imgs[0]
+            }
+        });
+
+        spuSchema.virtual('default_selected_sku').get(function () {
+            if (this.skus.length == 0) {
+                return null;
+            } else {
+                return ctx._.min(this.skus,function(o){
+                    return o.sale_price;
+                });
             }
         });
 
