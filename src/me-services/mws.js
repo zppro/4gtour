@@ -67,6 +67,23 @@ module.exports = {
                 }
             },
             {
+                method: 'order',
+                verb: 'get',
+                url: this.service_url_prefix + "/order/:orderId",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var order = yield app.modelFactory().model_read(app.models['mws_order'], this.params.orderId);
+                            this.body = app.wrapper.res.ret(order);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'orderCreate',
                 verb: 'post',
                 url: this.service_url_prefix + "/order",

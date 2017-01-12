@@ -119,6 +119,7 @@ module.exports = {
 
                 // 开始构建wx.requestPayment 参数
                 var requestPaymentObject = {
+                    appId: config.appid,
                     timeStamp: self.createTimeStamp(),
                     nonceStr: self.createNonceStr(),
                     package: 'prepay_id=' + ret.prepay_id,
@@ -127,6 +128,8 @@ module.exports = {
                 var paySign = self.createSignature(requestPaymentObject, config.mch_api_secret);
                 // console.log(paySign);
                 requestPaymentObject['paySign'] = paySign;
+                requestPaymentObject.appId = undefined;
+                console.log(requestPaymentObject);
                 return self.ctx.wrapper.res.ret({
                     orderId: orderid,
                     requestPaymentObject: requestPaymentObject
@@ -183,7 +186,7 @@ module.exports = {
         return Math.random().toString(36).substr(2, 15);
     },
     createTimeStamp : function () {
-        return parseInt(new Date().getTime() / 1000) + '';
+        return parseInt(new Date().getTime() / 1000, 10) + '';
     },
     createSignature: function (signObject, mch_api_secret) {
         var signKeys = [];
