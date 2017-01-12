@@ -67,17 +67,50 @@ module.exports = {
                 }
             },
             {
-                method: 'order-create',
+                method: 'orderCreate',
                 verb: 'post',
                 url: this.service_url_prefix + "/order",
                 handler: function (app, options) {
                     return function *(next) {
                         try {
+                            // console.log(this.req);
+                            var ip = this.request.headers["x-real-ip"] || this.request.headers("x-forwarded-for");
+                            console.log('ip:' + ip);
                             var order = app._.extend({
                                 order_status: DIC.MWS01.NOT_PAY
                             }, this.request.body);
+                            order.trade_time_expire = app.moment().add(1, 'days');
+                            order.ip = ip;
+                            var spu = yield app.modelFactory().model_read(app.models['mws_spu'], order.items[0].spu_id);
+                            order.tenantId = spu.tenantId;
                             var created = yield app.modelFactory().model_create(app.models['mws_order'], order);
-                            this.body = app.wrapper.res.ret(created);
+                            
+                            // 调用统一下单接口
+                            var goods_detail = [];
+                            for(var i=0;i<created.items.length;i++){
+                                goods_detail.push({
+                                    goods_id: created.items[i].sku_id,
+                                    goods_name: created.items[i].sku_name,
+                                    quantity : created.items[i].quantity,
+                                    price: created.items[i].price * 100
+                                })
+                            }
+                            if (created.shipping_fee > 0) {
+                                goods_detail.push({
+                                    goods_id: app.modelVariables.KEYS.SHIPPING_FEE,
+                                    goods_name: app.modelVariables.KEYS.SHIPPING_FEE,
+                                    quantity : 1,
+                                    price: created.shipping_fee * 100
+                                })
+                            }
+                            var trade_detail = {goods_detail:goods_detail};
+                            var total_fee = created.amount* 100 + created.shipping_fee * 100;
+                            var trade_time_start = app.moment(created.trade_time_start).format('YYYYMMDDHHmmss');
+                            var trade_time_expire = app.moment(created.trade_time_expire).format('YYYYMMDDHHmmss');
+                            console.log('orderid:' + created.id);
+                            this.body = yield app.app_weixin.unifiedorder(this.request.body.appid, this.request.body.open_id, ip, created.id, trade_detail, created.code, total_fee, trade_time_start, trade_time_expire);
+                            console.log(this.body);
+                            //this.body = app.wrapper.res.ret(created);
                         } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
@@ -88,7 +121,28 @@ module.exports = {
                 }
             },
             {
-                method: 'order-update',
+                method: 'orderPaySuccess',
+                verb: 'put',
+                url: this.service_url_prefix + "/orderPaySuccess/:orderId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var updateInfo = this.request.body;
+                            updateInfo.order_status = DIC.MWS01.WAITING_SHIP;
+                            updateInfo.pay_time = app.moment();
+                            yield app.modelFactory().model_update(app.models['mws_order'], this.params.orderId, updateInfo);
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'orderUpdate',
                 verb: 'put',
                 url: this.service_url_prefix + "/order/:orderId",
                 handler: function (app, options) {

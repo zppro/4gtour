@@ -5,5 +5,8 @@
     "ORDER_OF_PFT": "order_PFT$code",
     "ORDER_OF_MERCHANT_WEBSTORE": "mws_order$code",
     "SCENICSPOT": "scenerySpot$code"
+  },
+  "KEYS":{
+    "SHIPPING_FEE": "shipping_fee"
   }
 }

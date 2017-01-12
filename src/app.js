@@ -12,6 +12,7 @@ var koa = require('koa');
 var Router = require('koa-router');
 var router = Router();
 var koaBody = require('koa-body')();
+var xmlBodyParser = require('koa-xml-body').default;
 var staticCache = require('koa-static-cache');
 var koaStatic = require('koa-static');
 var path = require('path');
@@ -39,6 +40,9 @@ app.conf = {
         static_develop: '../pub-client-develop/',
         static_production: '../pub-client-production/'
     },
+    bodyParser: {
+        xml: ['/me-services/weixin/app/payNotify']
+    },
     auth: {
         toPaths:['/services'],
         ignorePaths: ['/services/share/login', '/services/robot/sendTestMail', '/services/open']
@@ -46,7 +50,7 @@ app.conf = {
     authApp: {
         toPaths: ['/me-services'],
         // ignorePaths: [{path: '/me-services/api/orders', method: 'get'}, '/me-services/trv/experience/', '/me-services/api/FourSeasonTour', '/me-services/api/proxyLogin', '/me-services/api/proxyLoginByToken']
-        ignorePaths: ['/me-services/api/FourSeasonTour', '/me-services/api/proxyLogin', '/me-services/api/proxyLoginByToken', '/me-services/api/updateContent', '/me-services/api/reStatMemberInfo', '/me-services/mws']
+        ignorePaths: ['/me-services/api/FourSeasonTour', '/me-services/api/proxyLogin', '/me-services/api/proxyLoginByToken', '/me-services/api/updateContent', '/me-services/api/reStatMemberInfo', '/me-services/mws', '/me-services/weixin/app']
     },
     crossDomainInterceptor:{
         toPaths:['/me-services']
@@ -327,6 +331,20 @@ co(function*() {
         var service_module = require('./services/' + o);
         _.each(service_module.actions, function (action) {
             Router.prototype[action.verb].apply(router, [service_module.name + "_" + action.method, action.url, action.handler(app)]);
+            if (app.conf.bodyParser.xml.findIndex(function(o){
+                    return action.url.startsWith(o);
+                }) == -1) {
+                router.use(action.url, koaBody);
+            } else {
+                router.use(action.url, xmlBodyParser({
+                    encoding: 'utf8', // lib will detect it from `content-type`
+                    onerror: (err, ctx) => {
+                        console.log(err);
+                        // ctx.throw(err.status, err.message);
+                    }
+                }));
+                console.log('xmlBodyParser use to ' + action.url);
+            }
         });
     });
     _.each(app.conf.meServiceNames, function (o) {
@@ -336,6 +354,21 @@ co(function*() {
 
             //support options for CORS
             Router.prototype['options'].apply(router, [action.url]);
+
+            if (app.conf.bodyParser.xml.findIndex(function(o){
+                    return action.url.startsWith(o);
+                }) == -1) {
+                router.use(action.url, koaBody);
+            } else {
+                router.use(action.url, xmlBodyParser({
+                    encoding: 'utf8', // lib will detect it from `content-type`
+                    onerror: (err, ctx) => {
+                        console.log(err);
+                        // ctx.throw(err.status, err.message);
+                    }
+                }));
+                console.log('xmlBodyParser use to ' + action.url);
+            }
         });
     });
     if(!app.conf.isProduction){
@@ -343,6 +376,22 @@ co(function*() {
             var service_module = require('./debug-services/' + o);
             _.each(service_module.actions, function (action) {
                 Router.prototype[action.verb].apply(router, [service_module.name + "_" + action.method, action.url, action.handler(app)]);
+
+                if (app.conf.bodyParser.xml.findIndex(function(o){
+                        return action.url.startsWith(o);
+                    }) == -1) {
+                    router.use(action.url, koaBody);
+                } else {
+                    router.use(action.url, xmlBodyParser({
+                        encoding: 'utf8', // lib will detect it from `content-type`
+                        onerror: (err, ctx) => {
+                            console.log(err);
+                            // ctx.throw(err.status, err.message);
+                        }
+                    }));
+                    console.log('xmlBodyParser use to ' + action.url);
+                }
+
             });
         });
     }
@@ -365,7 +414,7 @@ co(function*() {
     //    });
 
     //注意router.use的middleware有顺序
-    router.use(koaBody);
+    // router.use(koaBody);
     
     //中间件
     _.each(app.conf.auth.toPaths,function(o){
@@ -391,8 +440,7 @@ co(function*() {
     app.group_service.joinMonitoring();
 
     console.log('listening...');
-    
-    
+
 
 }).catch(app.coOnError);
 

@@ -25,21 +25,28 @@ module.exports = function(ctx,name) {
             order_status: {type: String, required: true, enum: ctx._.rest(ctx.dictionary.keys["MWS01"])},
             pay_type: {type: String, enum: ctx._.rest(ctx.dictionary.keys["MWS02"])},//订单支付方式
             pay_time: {type: Date},//订单支付时间
-            transaction_sn: {type: String},//支付流水号
+            trade_time_start: {type: Date, required: true, default: Date.now},
+            trade_time_expire: {type: Date, required: true},
+            transaction_id: {type: String},//支付流水号
             amount: {type: Number, default: 0.00},//订单金额
             items: [{
                 spu_id: {type: mongoose.Schema.Types.ObjectId},//标准产品单元名称
+                spu_name: {type: String},
                 sku_id: {type: mongoose.Schema.Types.ObjectId},//标准库存单元名称
-                settlement_price:  {type: Number},//门市价 单位元
+                sku_name: {type: String},
+                img: {type: String},
                 price: {type: Number, required: true},//下单单价 单位元
+                market_price:  {type: Number},//市场价 单位元
                 quantity: {type: Number, required: true},//数量
             }],
             open_id: {type: String, required: true},//下单人OpenId
-            order_nick_name: {type: String},//下单人昵称
-            shipping_nick_name: {type: String},//收件人名称
-            shipping_phone:  {type: String, required: true},//收件人手机
-            memo:  {type: String, required: true},//收件人手机: {type: String},//订单备注
-            shipping_place:{
+            order_nickname: {type: String},//下单人昵称
+            ip: {type: String},//下单人ip
+            memo:  {type: String},//收件人手机: {type: String},//订单备注
+            shipping_fee: {type: Number, default: 0.00},//运费
+            shipping_info:{
+                shipping_nickname: {type: String},//收件人名称
+                shipping_phone:  {type: String, required: true},//收件人手机
                 province: {type: String, required: true},
                 city: {type: String, required: true},
                 area: {type: String, required: true},
@@ -89,7 +96,10 @@ module.exports = function(ctx,name) {
             return MWS01[this.order_status].name;
         });
         order_Schema.virtual('pay_type_name').get(function () {
-            return MWS01[this.pay_type].name;
+            if (this.pay_type) {
+                return MWS01[this.pay_type].name;
+            }
+            return '';
         });
 
         return mongoose.model(name, order_Schema, name);

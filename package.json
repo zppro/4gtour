@@ -1,6 +1,6 @@
 {
   "name": "4gtour",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "",
   "main": "src/app.js",
   "scripts": {
@@ -57,6 +57,7 @@
     "co": "^4.5.4",
     "crypto": "0.0.3",
     "fs-extra": "0.30.0",
+    "jshashes": "^1.0.6",
     "jsonwebtoken": "^5.0.0",
     "jssha": "^2.2.0",
     "koa": "^1.1.2",
@@ -65,7 +66,9 @@
     "koa-statelessauth": "^1.0.2",
     "koa-static": "^1.5.2",
     "koa-static-cache": "^3.1.7",
+    "koa-xml-body": "^1.0.3",
     "log4js": "^0.6.25",
+    "md5": "^2.2.1",
     "memory-cache": "^0.1.6",
     "moment": "^2.13.0",
     "mongoose": "^4.6.1",
