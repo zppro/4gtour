@@ -334,7 +334,7 @@ co(function*() {
             if (app.conf.bodyParser.xml.findIndex(function(o){
                     return action.url.startsWith(o);
                 }) == -1) {
-                router.use(action.url, koaBody);
+                // router.use(action.url, koaBody);
             } else {
                 router.use(action.url, xmlBodyParser({
                     encoding: 'utf8', // lib will detect it from `content-type`
@@ -358,7 +358,7 @@ co(function*() {
             if (app.conf.bodyParser.xml.findIndex(function(o){
                     return action.url.startsWith(o);
                 }) == -1) {
-                router.use(action.url, koaBody);
+                // router.use(action.url, koaBody);
             } else {
                 router.use(action.url, xmlBodyParser({
                     encoding: 'utf8', // lib will detect it from `content-type`
@@ -380,7 +380,7 @@ co(function*() {
                 if (app.conf.bodyParser.xml.findIndex(function(o){
                         return action.url.startsWith(o);
                     }) == -1) {
-                    router.use(action.url, koaBody);
+                    // router.use(action.url, koaBody);
                 } else {
                     router.use(action.url, xmlBodyParser({
                         encoding: 'utf8', // lib will detect it from `content-type`
@@ -413,8 +413,8 @@ co(function*() {
     //        yield next;
     //    });
 
-    //注意router.use的middleware有顺序
-    // router.use(koaBody);
+    // 注意router.use的middleware有顺序
+    router.use(koaBody);
     
     //中间件
     _.each(app.conf.auth.toPaths,function(o){

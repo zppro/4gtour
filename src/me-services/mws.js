@@ -87,7 +87,7 @@ module.exports = {
                                     sort: {check_in_time: -1}
                                 },
                                 {limit: this.request.body.page.size, skip: this.request.body.page.skip});
-                             
+
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
