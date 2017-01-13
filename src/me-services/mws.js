@@ -38,8 +38,7 @@ module.exports = {
                                     sort: {name: 1}
                                 },
                                 {limit: this.request.body.page.size, skip: this.request.body.page.skip});
-                            console.log(this.request.body);
- 
+
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
@@ -58,6 +57,38 @@ module.exports = {
                         try {
                             var spu = yield app.modelFactory().model_read(app.models['mws_spu'], this.params.spuId);
                             this.body = app.wrapper.res.ret(spu);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'orders',
+                verb: 'post',
+                url: this.service_url_prefix + "/orders",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var where = {status: 1, open_id: this.request.body.openid};
+                            var orderStatus = this.request.body.order_status;
+                            if (orderStatus) {
+                                if (orderStatus.indexOf(',') != -1) {
+                                    where.order_status = { $in : orderStatus.split(',')}
+                                } else {
+                                    where.order_status = orderStatus;
+                                }
+                            }
+                            var rows = yield app.modelFactory().model_query(app.models['mws_order'], {
+                                    where: where,
+                                    select: 'code order_status amount items',
+                                    sort: {check_in_time: -1}
+                                },
+                                {limit: this.request.body.page.size, skip: this.request.body.page.skip});
+                             
+                            this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
