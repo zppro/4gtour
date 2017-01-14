@@ -160,7 +160,7 @@
                 , resolve: helper.resolveFor('subsystem.merchant-webstore.order.js')
             })
             .state('app.merchant-webstore.order.list', {
-                url: '/list/:action/:scenicSpotId',
+                url: '/list/:action',
                 templateUrl: helper.basepath('merchant-webstore/order-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'MWS_OrderGridController',
@@ -175,7 +175,7 @@
                                 label: '订单号',
                                 name: 'code',
                                 type: 'string',
-                                width: 80,
+                                width: 60,
                                 sortable: true
                             },
                             {
@@ -208,19 +208,19 @@
                                 label: '下单人',
                                 name: 'order_man',
                                 type: 'string',
-                                width: 120
+                                width: 80
                             },
                             {
                                 label: '收件人',
                                 name: 'shipping_man',
                                 type: 'string',
-                                width: 120
+                                width: 80
                             },
                             {
                                 label: '收件地址',
                                 name: 'shipping_place',
                                 type: 'string',
-                                width: 120
+                                width: 200
                             },
                             {
                                 label: '',

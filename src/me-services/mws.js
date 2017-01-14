@@ -4,6 +4,7 @@
  */
 var rp = require('request-promise-native');
 var DIC = require('../pre-defined/dictionary-constants.json');
+var district = require('../pre-defined/district.json');
 module.exports = {
     init: function (option) {
         var self = this;
@@ -25,13 +26,102 @@ module.exports = {
         
         this.actions = [
             {
+                method: 'shareProvinces',
+                verb: 'get',
+                url: this.service_url_prefix + "/share/provinces",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var provinces = app._.map(district, (o) => {
+                                return {id: o._id,name: o.name}
+                            })
+                            this.body = app.wrapper.res.rows(provinces);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'shareCities',
+                verb: 'get',
+                url: this.service_url_prefix + "/share/cities/:provinceId",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var provinceId = this.params.provinceId;
+                            var province = app._.find(district, (o) => {
+                                return o._id == provinceId
+                            });
+
+                            if (!province) {
+                                this.body = app.wrapper.res.rows([]);
+                                yield next;
+                                return;
+                            }
+                            var cities = app._.map(province.children, (o) => {
+                                return {id: o._id,name: o.name}
+                            })
+                            this.body = app.wrapper.res.rows(cities);
+
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'shareAreas',
+                verb: 'get',
+                url: this.service_url_prefix + "/share/areas/:provinceId,:cityId",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var provinceId = this.params.provinceId;
+                            var province = app._.find(district, (o) => {
+                                return o._id == provinceId
+                            });
+                            if (!province) {
+                                this.body = app.wrapper.res.rows([]);
+                                yield next;
+                                return;
+                            }
+
+                            var cityId = this.params.cityId;
+                            var city = app._.find(province.children, (o) => {
+                                return o._id == cityId
+                            });
+
+                            if (!city) {
+                                this.body = app.wrapper.res.rows([]);
+                                yield next;
+                                return;
+                            }
+                            var areas = app._.map(city.children, (o) => {
+                                return {id: o._id,name: o.name}
+                            })
+                            this.body = app.wrapper.res.rows(areas);
+
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'spus',
                 verb: 'post',
                 url: this.service_url_prefix + "/spus",
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var where = {status: 1, cancel_flag: 0};
+                            var where = {status: 1, cancel_flag: 0, tenantId: this.request.body.tenantId};
                             var rows = yield app.modelFactory().model_query(app.models['mws_spu'], {
                                     where: where,
                                     select: 'name imgs skus',
@@ -129,8 +219,6 @@ module.exports = {
                             }, this.request.body);
                             order.trade_time_expire = app.moment().add(1, 'days');
                             order.ip = ip;
-                            var spu = yield app.modelFactory().model_read(app.models['mws_spu'], order.items[0].spu_id);
-                            order.tenantId = spu.tenantId;
                             var created = yield app.modelFactory().model_create(app.models['mws_order'], order);
                             
                             // 调用统一下单接口
@@ -197,6 +285,67 @@ module.exports = {
                     return function *(next) {
                         try {
                             yield app.modelFactory().model_update(app.models['mws_order'], this.params.orderId, this.request.body);
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'shippings',
+                verb: 'post',
+                url: this.service_url_prefix + "/shippings",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var where = {status: 1, open_id: this.request.body.open_id, tenantId: this.request.body.tenantId};
+                            var rows = yield app.modelFactory().model_query(app.models['mws_shipping'], {
+                                    where: where,
+                                    select: 'shipping_nickname shipping_phone province city area address',
+                                    sort: {default_flag: 1 }
+                                },
+                                {limit: this.request.body.page.size, skip: this.request.body.page.skip});
+
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'shippingCreate',
+                verb: 'post',
+                url: this.service_url_prefix + "/shipping",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            // console.log(this.req);
+                            var created = yield app.modelFactory().model_create(app.models['mws_shipping'], this.request.body);
+                            this.body = app.wrapper.res.ret(created);
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'shippingUpdate',
+                verb: 'put',
+                url: this.service_url_prefix + "/shipping/:shippingId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            yield app.modelFactory().model_update(app.models['mws_shipping'], this.params.shippingId, this.request.body);
                             this.body = app.wrapper.res.default();
                         } catch (e) {
                             console.log(e);

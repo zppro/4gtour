@@ -97,7 +97,7 @@ module.exports = function(ctx,name) {
         });
         order_Schema.virtual('pay_type_name').get(function () {
             if (this.pay_type) {
-                return MWS01[this.pay_type].name;
+                return MWS02[this.pay_type].name;
             }
             return '';
         });
