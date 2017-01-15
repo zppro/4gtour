@@ -162,7 +162,8 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var where = {status: 1, open_id: this.request.body.openid};
+                            var where = {status: 1, open_id: this.request.body.open_id, tenantId: this.request.body.tenantId};
+                            console.log(where);
                             var orderStatus = this.request.body.order_status;
                             if (orderStatus) {
                                 if (orderStatus.indexOf(',') != -1) {
@@ -305,12 +306,29 @@ module.exports = {
                             var where = {status: 1, open_id: this.request.body.open_id, tenantId: this.request.body.tenantId};
                             var rows = yield app.modelFactory().model_query(app.models['mws_shipping'], {
                                     where: where,
-                                    select: 'shipping_nickname shipping_phone province city area address',
-                                    sort: {default_flag: 1 }
+                                    select: 'shipping_nickname shipping_phone province city area address default_flag',
+                                    sort: {default_flag: -1, operated_on: -1, check_in_time: -1 }
                                 },
                                 {limit: this.request.body.page.size, skip: this.request.body.page.skip});
 
                             this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'shipping',
+                verb: 'get',
+                url: this.service_url_prefix + "/shipping/:shippingId",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var shipping = yield app.modelFactory().model_read(app.models['mws_shipping'], this.params.shippingId);
+                            this.body = app.wrapper.res.ret(shipping);
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -327,6 +345,13 @@ module.exports = {
                     return function *(next) {
                         try {
                             // console.log(this.req);
+                            if (this.request.body.default_flag) {
+                                var defaultShipping = yield app.modelFactory().model_one(app.models['mws_shipping'], {where: {tenantId: this.request.body.tenantId, open_id: this.request.body.open_id, default_flag: true}});
+                                if (defaultShipping) {
+                                    defaultShipping.default_flag = false;
+                                    yield defaultShipping.save();
+                                }
+                            }
                             var created = yield app.modelFactory().model_create(app.models['mws_shipping'], this.request.body);
                             this.body = app.wrapper.res.ret(created);
                         } catch (e) {
@@ -345,7 +370,40 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
+                            if (this.request.body.default_flag) {
+                                var defaultShipping = yield app.modelFactory().model_one(app.models['mws_shipping'], {where: {tenantId: this.request.body.tenantId, open_id: this.request.body.open_id, default_flag: true}});
+                                if (defaultShipping) {
+                                    defaultShipping.default_flag = false;
+                                    yield defaultShipping.save();
+                                }
+                            }
                             yield app.modelFactory().model_update(app.models['mws_shipping'], this.params.shippingId, this.request.body);
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'shippingSetDefault',
+                verb: 'put',
+                url: this.service_url_prefix + "/shippingSetDefault/:shippingId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var shipping = yield app.modelFactory().model_read(app.models['mws_shipping'], this.params.shippingId);
+
+                            var defaultShipping = yield app.modelFactory().model_one(app.models['mws_shipping'], {where: {tenantId: shipping.tenantId, open_id: shipping.open_id, default_flag: true}});
+                            if (defaultShipping) {
+                                defaultShipping.default_flag = false;
+                                yield defaultShipping.save();
+                            }
+                            shipping.default_flag = true;
+                            yield shipping.save();
                             this.body = app.wrapper.res.default();
                         } catch (e) {
                             console.log(e);
