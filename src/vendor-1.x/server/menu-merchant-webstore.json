@@ -22,6 +22,11 @@
         "_id": "menu.merchant-webstore.ORDER",
         "name": "订单",
         "sref": "app.merchant-webstore.order.list"
+      },
+      {
+        "_id": "menu.merchant-webstore.AFTER-SALE",
+        "name": "售后",
+        "sref": "app.merchant-webstore.after-sale.list"
       }
     ]
   },

@@ -35,13 +35,40 @@
     },
     "order": {
       "list": {
-        "TITLE": "web商城-销售管理-订单-列表",
-        "SHIPPING": "发货确认",
-        "REFUNDING": "退货审核通过"
+        "TITLE": "web商城-销售管理-订单-列表"
       },
       "details": {
-        "NONE": "",
         "TITLE": "web商城-销售管理-订单-详情",
+        "HEAD-LABEL-CODE": "订单编号",
+        "HEAD-LABEL-ORDER_STATUS": "订单状态",
+        "HEAD-LABEL-CHECK_IN_TIME": "下单日期",
+        "TAB1": "基本信息",
+        "TAB2": "发票与物流",
+        "TAB1-LABEL-PAY_TYPE": "支付方式",
+        "TAB1-LABEL-PAY_TIME": "支付时间",
+        "TAB1-LABEL-TRANSACTION_ID": "支付流水号",
+        "TAB1-LABEL-AMOUNT": "金额",
+        "TAB1-LABEL-ORDER_NICKNAME": "下单人",
+        "TAB1-LABEL-MEMO": "备注",
+        "TAB2-LABEL-INVOICE_INFO": "发票信息",
+        "TAB2-LABEL-SHIPPING_FEE": "运费",
+        "TAB2-LABEL-SHIPPING_INFO$SHIPPING_NICKNAME": "收件人名称",
+        "TAB2-LABEL-SHIPPING_INFO$SHIPPING_PHONE": "收件人手机",
+        "TAB2-LABEL-SHIPPING_INFO$REGION": "收件人地区",
+        "TAB2-LABEL-SHIPPING_INFO$ADDRESS": "收件人详细地址",
+        "TAB2-LABEL-LOGISTICS_CODE": "发货物流单号",
+        "TAB2-PLACEHOLDER-LOGISTICS_CODE": "107998935964..",
+        "TAB2-LABEL-LOGISTICS_COMPANY": "发货物流公司",
+        "TAB2-PLACEHOLDER-LOGISTICS_COMPANY": "顺风速运..",
+        "SUBMIT-SHIPPING-CONFIRM-MESSAGE": "当前订单将发货，确定要继续么？"
+      }
+    },
+    "after-sale": {
+      "list": {
+        "TITLE": "web商城-销售管理-售后-列表"
+      },
+      "details": {
+        "TITLE": "web商城-销售管理-售后-详情",
         "HEAD-LABEL-CODE": "订单编号",
         "HEAD-LABEL-ORDER_STATUS": "订单状态",
         "HEAD-LABEL-CHECK_IN_TIME": "下单日期",

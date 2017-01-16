@@ -1,6 +1,6 @@
 /**
  * Created by zppro on 17-1-9.
- * Target:web商城 订单
+ * Target:web商城 售后
  */
 
 (function() {
@@ -8,14 +8,14 @@
 
     angular
         .module('subsystem.merchant-webstore.order',[])
-        .controller('MWS_OrderGridController', MWS_OrderGridController)
-        .controller('NWS_OrderDetailsController', NWS_OrderDetailsController)
+        .controller('MWS_AfterSaleGridController', MWS_AfterSaleGridController)
+        .controller('NWS_AfterSaleDetailsController', NWS_AfterSaleDetailsController)
     ;
 
 
-    MWS_OrderGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
+    MWS_AfterSaleGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
 
-    function MWS_OrderGridController($scope, ngDialog, vmh, vm) {
+    function MWS_AfterSaleGridController($scope, ngDialog, vmh, vm) {
         $scope.vm = vm;
         $scope.utils = vmh.utils.g; 
 
@@ -23,14 +23,33 @@
 
         function init() {
             vm.init({removeDialog: ngDialog});
-               
+
+            if (vm.switches.leftTree) {
+                vmh.shareService.d('MWS06').then(function (rows) {
+                    var treeNodes = _.map(_.initial(rows),function(row){
+                        return {_id:row.value,name:row.name};
+                    });
+                    treeNodes.unshift({_id: '', name:'全部'});
+                    vm.trees = [new vmh.treeFactory.sTree('tree1', treeNodes, {mode: 'grid'})];
+                    vm.trees[0].selectedNode = vm.trees[0].findNodeById($scope.$stateParams.roles);
+                });
+
+                $scope.$on('tree:node:select', function ($event, node) {
+
+                    var selectNodeId = node._id;
+                    if ($scope.$stateParams.roles != selectNodeId) {
+                        $scope.$state.go(vm.viewRoute(), {roles: selectNodeId});
+                    }
+                });
+            }
+
             vm.query();
         }
     }
 
-    NWS_OrderDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
+    NWS_AfterSaleDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
 
-    function NWS_OrderDetailsController($scope, ngDialog, vmh, vm) {
+    function NWS_AfterSaleDetailsController($scope, ngDialog, vmh, vm) {
 
         var vm = $scope.vm = vm;
         $scope.utils = vmh.utils.v;

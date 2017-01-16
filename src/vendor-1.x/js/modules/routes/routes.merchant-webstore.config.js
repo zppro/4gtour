@@ -193,7 +193,7 @@
                             },
                             {
                                 label: '支付时间',
-                                name: 'check_in_time',
+                                name: 'pay_time',
                                 type: 'date',
                                 width: 80,
                                 sortable: true
@@ -242,6 +242,86 @@
                         modelName: 'mws-order',
                         model: {items: [], tracking: []},
                         blockUI: true
+                    })
+                }
+            })
+            .state('app.merchant-webstore.after-sale', {
+                url: '/after-sale',
+                title: '售后',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath('partials/merchant-webstore/module-header.html'),
+                        controller: 'ModuleHeaderForTenantController'
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id:'menu.merchant-webstore.AFTER-SALE'//业务系统使用
+                }
+                , resolve: helper.resolveFor('subsystem.merchant-webstore.after-sale.js')
+            })
+            .state('app.merchant-webstore.after-sale.list', {
+                url: '/list/:action/:type',
+                templateUrl: helper.basepath('merchant-webstore/after-sale-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'MWS_AfterSaleGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM('app.merchant-webstore.after-sale.list', {
+                        modelName: 'mws-afterSale',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        blockUI: true,
+                        columns: [
+                            {
+                                label: '售后号',
+                                name: 'code',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '申请时间',
+                                name: 'check_in_time',
+                                type: 'date',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '售后状态',
+                                name: 'biz_status_name',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '售后类型',
+                                name: 'type_name',
+                                type: 'string',
+                                width: 60
+                            },
+                            {
+                                label: '订单号',
+                                name: 'order_code',
+                                type: 'string',
+                                width: 60
+                            },
+                            {
+                                label: '审核结果',
+                                name: 'audit_result_name',
+                                type: 'string',
+                                width: 80
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 60
+                            }
+                        ],
+                        switches: {leftTree: true}
                     })
                 }
             })

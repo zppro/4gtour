@@ -59,6 +59,7 @@
                 {name:'subsystem.merchant-webstore.dashboard.js',files:['app/js/lazy-modules/merchant-webstore/dashboard.js']},
                 {name:'subsystem.merchant-webstore.spu.js',files:['app/js/lazy-modules/merchant-webstore/spu.js']},
                 {name:'subsystem.merchant-webstore.order.js',files:['app/js/lazy-modules/merchant-webstore/order.js']},
+                {name:'subsystem.merchant-webstore.after-sale.js',files:['app/js/lazy-modules/merchant-webstore/after-sale.js']},
                 {name:'subsystem.merchant-webstore.user-manage.js',files:['app/js/lazy-modules/merchant-webstore/user-manage.js']}
             ]
         })

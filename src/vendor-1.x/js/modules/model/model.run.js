@@ -13,6 +13,7 @@
         //web商城
         modelNode.factory('mws-spu');
         modelNode.factory('mws-order');
+        modelNode.factory('mws-afterSale');
 
         //商户机构
         modelNode.factory('trv-scenerySpot');

@@ -21,5 +21,6 @@
   { "type":"js","path":"src/{{target}}/js/lazy-modules/merchant-webstore/dashboard.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/merchant-webstore/spu.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/merchant-webstore/order.js" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/merchant-webstore/after-sale.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/merchant-webstore/user-manage.js" }
 ]
