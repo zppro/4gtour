@@ -20,12 +20,14 @@ module.exports = function(ctx,name) {
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
-            code: {type: String, required: true, minlength: 10, maxlength: 10, index: {unique: true}},//本地订单编号(10位)+ 'R' + 6位年月日+2位序列
+            code: {type: String, required: true, minlength: 10, maxlength: 10, index: {unique: true}},//6位年月日+3位序列 + suffix = 'P/D'
             biz_status: {type: String, required: true, enum: ctx._.rest(ctx.dictionary.keys["MWS05"])},
             type: {type: String, required: true, enum: ctx._.rest(ctx.dictionary.keys["MWS06"])},//售后类型
             memo:  {type: String, required: true},//请求售后原因
             orderId: {type: mongoose.Schema.Types.ObjectId},
             order_code: {type: String, required: true},
+            open_id: {type: String, required: true},//申请售后人OpenId
+            apply_for_nickname: {type: String},//申请售后人昵称
             audit_on: {type: Date},//审核时间
             audit_result: {type: String, enum: ctx._.rest(ctx.dictionary.keys["MWS07"])},//审核结果
             audit_comment:  {type: String},//审核结果说明
@@ -44,13 +46,17 @@ module.exports = function(ctx,name) {
                 var self = this;
                 ctx.sequenceFactory.getSequenceVal(ctx.modelVariables.SEQUENCE_DEFS.AFTER_SALE_OF_MERCHANT_WEBSTORE).then(function(ret){
                     console.log('mws_afterSale$code:'+ret);
-                    self.code = self.order_code + ret;
+                    self.code = ret;
                     next();
                 });
             }
             else{
                 next();
             }
+        });
+
+        afterSaleSchema.virtual('full_code').get(function () {
+            return this.order_code + 'R' + this.code;
         });
 
         afterSaleSchema.pre('update', function (next) {
@@ -67,7 +73,10 @@ module.exports = function(ctx,name) {
         });
 
         afterSaleSchema.virtual('audit_result_name').get(function () {
-            return MWS07[this.audit_result].name;
+            if (this.pay_type) {
+                return MWS07[this.audit_result].name;
+            }
+            return ''
         });
 
         return mongoose.model(name, afterSaleSchema, name);

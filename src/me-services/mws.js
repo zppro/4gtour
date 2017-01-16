@@ -258,8 +258,56 @@ module.exports = {
                 }
             },
             {
+                method: 'orderRepay',
+                verb: 'post',
+                url: this.service_url_prefix + "/orderRepay/:orderId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+
+                            var notPayedOrder = yield app.modelFactory().model_read(app.models['mws_order'], this.params.orderId);
+                            if (!notPayedOrder) {
+                                this.body = app.wrapper.res.error({code: 53001 ,message: 'invalid orderId' });
+                            }
+                            var ip = this.request.headers["x-real-ip"] || this.request.headers("x-forwarded-for");
+                            console.log('ip:' + ip);
+                            // 调用统一下单接口
+                            var goods_detail = [];
+                            for(var i=0;i<notPayedOrder.items.length;i++){
+                                goods_detail.push({
+                                    goods_id: notPayedOrder.items[i].sku_id,
+                                    goods_name: notPayedOrder.items[i].sku_name,
+                                    quantity : notPayedOrder.items[i].quantity,
+                                    price: notPayedOrder.items[i].price * 100
+                                })
+                            }
+                            if (notPayedOrder.shipping_fee > 0) {
+                                goods_detail.push({
+                                    goods_id: app.modelVariables.KEYS.SHIPPING_FEE,
+                                    goods_name: app.modelVariables.KEYS.SHIPPING_FEE,
+                                    quantity : 1,
+                                    price: notPayedOrder.shipping_fee * 100
+                                })
+                            }
+                            var trade_detail = {goods_detail:goods_detail};
+                            var total_fee = notPayedOrder.amount* 100 + notPayedOrder.shipping_fee * 100;
+                            var trade_time_start = app.moment(notPayedOrder.trade_time_start).format('YYYYMMDDHHmmss');
+                            var trade_time_expire = app.moment(notPayedOrder.trade_time_expire).format('YYYYMMDDHHmmss');
+                            console.log('orderid:' + notPayedOrder.id);
+                            this.body = yield app.app_weixin.unifiedorder(this.request.body.appid, notPayedOrder.open_id, ip, notPayedOrder.id, trade_detail, notPayedOrder.code, total_fee, trade_time_start, trade_time_expire);
+                            console.log(this.body);
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'orderPaySuccess',
-                verb: 'put',
+                verb: 'post',
                 url: this.service_url_prefix + "/orderPaySuccess/:orderId",
                 handler: function (app, options) {
                     return function *(next) {
@@ -268,7 +316,30 @@ module.exports = {
                             updateInfo.order_status = DIC.MWS01.WAITING_SHIP;
                             updateInfo.pay_time = app.moment();
                             yield app.modelFactory().model_update(app.models['mws_order'], this.params.orderId, updateInfo);
-                            this.body = app.wrapper.res.default();
+                            var updated = yield app.modelFactory().model_read(app.models['mws_order'], this.params.orderId);
+                            this.body = app.wrapper.res.ret(updated);
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'orderConfirmReceiptGoods',
+                verb: 'post',
+                url: this.service_url_prefix + "/orderConfirmReceiptGoods/:orderId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var updateInfo = this.request.body;
+                            updateInfo.order_status = DIC.MWS01.RECEIVED;
+                            updateInfo.receipt_on = app.moment();
+                            yield app.modelFactory().model_update(app.models['mws_order'], this.params.orderId, updateInfo);
+                            var updated = yield app.modelFactory().model_read(app.models['mws_order'], this.params.orderId);
+                            this.body = app.wrapper.res.ret(updated);
                         } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
@@ -287,6 +358,26 @@ module.exports = {
                         try {
                             yield app.modelFactory().model_update(app.models['mws_order'], this.params.orderId, this.request.body);
                             this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'orderRemove',
+                verb: 'delete',
+                url: this.service_url_prefix + "/order/:orderId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            // console.log(this.req);
+                            yield app.modelFactory().model_update(app.models['mws_order'], this.params.orderId, {status: 0});
+                            this.body = app.wrapper.res.default();
+                            //this.body = app.wrapper.res.ret(created);
                         } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
@@ -338,6 +429,23 @@ module.exports = {
                 }
             },
             {
+                method: 'getDefaultShipping',
+                verb: 'post',
+                url: this.service_url_prefix + "/getDefaultShipping",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var defaultShipping = yield app.modelFactory().model_one(app.models['mws_shipping'], {where: {status: 1, tenantId: this.request.body.tenantId, open_id: this.request.body.open_id, default_flag: true}});
+                            this.body = app.wrapper.res.ret(defaultShipping);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'shippingCreate',
                 verb: 'post',
                 url: this.service_url_prefix + "/shipping",
@@ -346,7 +454,7 @@ module.exports = {
                         try {
                             // console.log(this.req);
                             if (this.request.body.default_flag) {
-                                var defaultShipping = yield app.modelFactory().model_one(app.models['mws_shipping'], {where: {tenantId: this.request.body.tenantId, open_id: this.request.body.open_id, default_flag: true}});
+                                var defaultShipping = yield app.modelFactory().model_one(app.models['mws_shipping'], {where: {status: 1, tenantId: this.request.body.tenantId, open_id: this.request.body.open_id, default_flag: true}});
                                 if (defaultShipping) {
                                     defaultShipping.default_flag = false;
                                     yield defaultShipping.save();
@@ -371,13 +479,31 @@ module.exports = {
                     return function *(next) {
                         try {
                             if (this.request.body.default_flag) {
-                                var defaultShipping = yield app.modelFactory().model_one(app.models['mws_shipping'], {where: {tenantId: this.request.body.tenantId, open_id: this.request.body.open_id, default_flag: true}});
+                                var defaultShipping = yield app.modelFactory().model_one(app.models['mws_shipping'], {where: {status: 1, tenantId: this.request.body.tenantId, open_id: this.request.body.open_id, default_flag: true}});
                                 if (defaultShipping) {
                                     defaultShipping.default_flag = false;
                                     yield defaultShipping.save();
                                 }
                             }
                             yield app.modelFactory().model_update(app.models['mws_shipping'], this.params.shippingId, this.request.body);
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'shippingRemove',
+                verb: 'delete',
+                url: this.service_url_prefix + "/shipping/:shippingId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            yield app.modelFactory().model_update(app.models['mws_shipping'], this.params.shippingId, {status: 0});
                             this.body = app.wrapper.res.default();
                         } catch (e) {
                             console.log(e);
@@ -397,7 +523,7 @@ module.exports = {
                         try {
                             var shipping = yield app.modelFactory().model_read(app.models['mws_shipping'], this.params.shippingId);
 
-                            var defaultShipping = yield app.modelFactory().model_one(app.models['mws_shipping'], {where: {tenantId: shipping.tenantId, open_id: shipping.open_id, default_flag: true}});
+                            var defaultShipping = yield app.modelFactory().model_one(app.models['mws_shipping'], {where: {status: 1, tenantId: shipping.tenantId, open_id: shipping.open_id, default_flag: true}});
                             if (defaultShipping) {
                                 defaultShipping.default_flag = false;
                                 yield defaultShipping.save();
@@ -405,6 +531,34 @@ module.exports = {
                             shipping.default_flag = true;
                             yield shipping.save();
                             this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'afterSaleCreate',
+                verb: 'post',
+                url: this.service_url_prefix + "/afterSale",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var order = yield app.modelFactory().model_read(app.models['mws_order'], this.request.body.orderId);
+                            if (!order) {
+                                this.body = app.wrapper.res.error({code: 53001 ,message: 'invalid orderId' });
+                            }
+                            var afterSale = app._.extend({
+                                biz_status: DIC.MWS05.WAITING_AUDIT,
+                                order_code: order.code
+                            }, this.request.body);
+                            var created = yield app.modelFactory().model_create(app.models['mws_afterSale'], afterSale);
+                            order.order_status = DIC.MWS01.REFUND_APPLY;
+                            yield order.save();
+                            this.body = app.wrapper.res.ret(created);
                         } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);

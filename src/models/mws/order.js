@@ -21,7 +21,7 @@ module.exports = function(ctx,name) {
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
-            code: {type: String, required: true, minlength: 10, maxlength: 10, index: {unique: true}},//本地订单编号 按照规则 6位年月日+3位序列+ + suffix = 'P/D'
+            code: {type: String, required: true, minlength: 10, maxlength: 10, index: {unique: true}},//本地订单编号 按照规则 6位年月日+3位序列+  suffix = 'P/D'
             order_status: {type: String, required: true, enum: ctx._.rest(ctx.dictionary.keys["MWS01"])},
             pay_type: {type: String, enum: ctx._.rest(ctx.dictionary.keys["MWS02"])},//订单支付方式
             pay_time: {type: Date},//订单支付时间
@@ -65,6 +65,7 @@ module.exports = function(ctx,name) {
                 title_type: {type: String, enum: ctx._.rest(ctx.dictionary.keys["MWS04"])},
                 title: {type: String}
             },
+            receipt_on: {type: Date},
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {
             toObject: {
