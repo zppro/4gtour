@@ -136,7 +136,7 @@
                 resolve: {
                     entityVM: helper.buildEntityVM('app.merchant-webstore.spu.details', {
                         modelName: 'mws-spu',
-                        model: {skus: []},
+                        model: {skus: [], imgs: []},
                         blockUI: true
                     }), deps: helper.resolveFor2('qiniu','qiniu-ng')
                 }
@@ -229,6 +229,19 @@
                                 width: 60
                             }
                         ]
+                    })
+                }
+            })
+            .state('app.merchant-webstore.order.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath('merchant-webstore/order-details.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'NWS_OrderDetailsController',
+                resolve: {
+                    entityVM: helper.buildEntityVM('app.merchant-webstore.order.details', {
+                        modelName: 'mws-order',
+                        model: {items: [], tracking: []},
+                        blockUI: true
                     })
                 }
             })

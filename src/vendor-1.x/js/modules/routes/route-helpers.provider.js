@@ -143,7 +143,7 @@
 
         function buildVMHelper() {
 
-            return ['$timeout', '$q', '$translate', '$http', 'Browser', 'blockUI', 'cfpLoadingBar', 'shareNode', 'extensionNode','extOfOrganizationOfTravelNode','idtNode', 'debugNode', 'clientData', 'treeFactory', 'Notify', 'GridUtils', 'ViewUtils', function ($timeout, $q, $translate, $http, Browser, blockUI, cfpLoadingBar, shareNode, extensionNode,extOfOrganizationOfTravelNode,idtNode, debugNode, clientData, treeFactory, Notify, GridUtils, ViewUtils) {
+            return ['$timeout', '$q', '$translate', '$http', 'Browser', 'blockUI', 'cfpLoadingBar', 'shareNode', 'extensionNode','extOfOrganizationOfTravelNode','mwsNode', 'idtNode', 'debugNode', 'clientData', 'treeFactory', 'Notify', 'GridUtils', 'ViewUtils', function ($timeout, $q, $translate, $http, Browser, blockUI, cfpLoadingBar, shareNode, extensionNode,extOfOrganizationOfTravelNode,mwsNode, idtNode, debugNode, clientData, treeFactory, Notify, GridUtils, ViewUtils) {
 
                 function promiseWrapper() {
                     if (arguments.length > 0) {
@@ -233,6 +233,7 @@
                     shareService: shareNode,
                     extensionService: extensionNode,
                     extOfOrganizationOfTravelService:extOfOrganizationOfTravelNode,
+                    mwsService: mwsNode,
                     idtService: idtNode,
                     debugService: debugNode,
                     clientData: clientData,
@@ -344,15 +345,24 @@
                 }
 
                 function add() {
-                    $state.go(this.moduleRoute('details'), _.defaults({
-                        action: 'add',
-                        _id: 'new'
-                    }, this.toDetailsParams));
+                    // $state.go(this.moduleRoute('details'), _.defaults({
+                    //     action: 'add',
+                    //     _id: 'new'
+                    // }, this.toDetailsParams));
+                    this.actionDef('add', 'new');
                 }
 
                 function edit(id,params) {
+                    // $state.go(this.moduleRoute('details'), _.defaults({
+                    //     action: 'edit',
+                    //     _id: id
+                    // }, this.toDetailsParams,params));
+                    this.actionDef('edit', id, params);
+                }
+
+                function actionDef(action, id, params) {
                     $state.go(this.moduleRoute('details'), _.defaults({
-                        action: 'edit',
+                        action: action,
                         _id: id
                     }, this.toDetailsParams,params));
                 }
@@ -375,10 +385,11 @@
                 }
 
                 function read(id,params) {
-                    $state.go(this.moduleRoute('details'), _.defaults({
-                        action: 'read',
-                        _id: id
-                    }, this.toDetailsParams, params));
+                    // $state.go(this.moduleRoute('details'), _.defaults({
+                    //     action: 'read',
+                    //     _id: id
+                    // }, this.toDetailsParams, params));
+                    this.actionDef('read', id, params);
                 }
 
                 function remove(relatedAction) {
@@ -577,6 +588,7 @@
                     }],
                     add: add,
                     edit: edit,
+                    actionDef: actionDef,
                     batchAdd:batchAdd,
                     batchEdit:batchEdit,
                     read: read,

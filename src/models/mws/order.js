@@ -17,7 +17,7 @@ module.exports = function(ctx,name) {
     else {
         module.isloaded = true;
 
-        var order_Schema = new mongoose.Schema({
+        var orderSchema = new mongoose.Schema({
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
@@ -57,6 +57,8 @@ module.exports = function(ctx,name) {
                 description:  {type: String}
             }],
             logistics_code: {type: String},
+            logistics_company: {type: String},
+            logistics_time: {type: Date},
             invoice_flag: {type: Boolean, default: false}, //默认不开票
             invoice_info:{
                 type: {type: String, enum: ctx._.rest(ctx.dictionary.keys["MWS03"])},
@@ -73,7 +75,7 @@ module.exports = function(ctx,name) {
             }
         });
 
-        order_Schema.pre('validate', function (next) {
+        orderSchema.pre('validate', function (next) {
             if (this.code == ctx.modelVariables.SERVER_GEN) {
                 var self = this;
                 ctx.sequenceFactory.getSequenceVal(ctx.modelVariables.SEQUENCE_DEFS.ORDER_OF_MERCHANT_WEBSTORE).then(function(ret){
@@ -87,21 +89,36 @@ module.exports = function(ctx,name) {
             }
         });
 
-        order_Schema.pre('update', function (next) {
+        orderSchema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();
         });
 
-        order_Schema.virtual('order_status_name').get(function () {
+        orderSchema.virtual('order_status_name').get(function () {
             return MWS01[this.order_status].name;
         });
-        order_Schema.virtual('pay_type_name').get(function () {
+
+        orderSchema.virtual('pay_type_name').get(function () {
             if (this.pay_type) {
                 return MWS02[this.pay_type].name;
             }
             return '';
         });
 
-        return mongoose.model(name, order_Schema, name);
+        orderSchema.virtual('invoice_info$type_name').get(function () {
+            if (this.invoice_flag && this.invoice_info && this.invoice_info.type) {
+                return MWS03[this.invoice_info.type].name;
+            }
+            return '';
+        });
+
+        orderSchema.virtual('invoice_info$title_type_name').get(function () {
+            if (this.invoice_flag && this.invoice_info && this.invoice_info.title_type) {
+                return MWS04[this.invoice_info.title_type].name;
+            }
+            return '';
+        });
+
+        return mongoose.model(name, orderSchema, name);
     }
 }

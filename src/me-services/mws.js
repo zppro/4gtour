@@ -1,6 +1,6 @@
 /**
  * Created by zppro on 17-1-9.
- * travel related
+ * 网上商城移动接口 related
  */
 var rp = require('request-promise-native');
 var DIC = require('../pre-defined/dictionary-constants.json');

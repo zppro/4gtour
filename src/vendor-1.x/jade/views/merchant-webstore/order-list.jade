@@ -30,15 +30,15 @@
                         td {{::row.pay_type_name}}
                         td {{::row.pay_time|date:'yyyy-MM-dd HH:mm'}}
                         td {{row.order_status_name}}
-                        td.td-nowrap(title="{{::row.order_nickname}} ({{::row.open_id}})")  {{:: row.order_nickname || row.open_id}}
+                        td {{:: row.order_nickname}}
                         td.td-nowrap(title="{{::row.shipping_info.shipping_nickname}} ({{::row.shipping_info.shipping_phone}})") {{::row.shipping_info.shipping_nickname}} ({{::row.shipping_info.shipping_phone}})
                         td.td-nowrap(title="{{::row.shipping_info.province}}-{{::row.shipping_info.city}}-{{::row.shipping_info.area}}-{{::row.shipping_info.address}})") {{::row.shipping_info.province}}-{{::row.shipping_info.city}}-{{::row.shipping_info.area}}-{{::row.shipping_info.address}}
                         td.text-left
                             .btn-group
-                                a.btn.btn-primary.btn-xs(title="{{'button.READ'|translate}}",ng-click="vm.read(row._id)")
-                                    i.glyphicon.glyphicon-search
+                                a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
+                                    i.glyphicon.glyphicon-pencil
                             .btn-group(ng-if="row.order_status == 'A0003'")
-                                a.btn.btn-primary.btn-xs(title="{{ vm.viewTranslatePath('SHIPPING') | translate}}",ng-click="vm.shippingOrder(row)")
+                                a.btn.btn-primary.btn-xs(title="{{ vm.viewTranslatePath('SHIPPING') | translate}}",ng-click="vm.actionDef('ship', row.id)")
                                     i.glyphicon.glyphicon-send
                             .btn-group(ng-if="row.order_status == 'A0011'")
                                 a.btn.btn-danger.btn-xs(title="{{ vm.viewTranslatePath('REFUNDING') | translate}}",ng-click="vm.refuncForOrder(row)")

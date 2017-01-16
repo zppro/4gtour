@@ -10,6 +10,7 @@
         .provider('shareNode', ShareNode)
         .provider('extensionNode', ExtensionNode)
         .provider('extOfOrganizationOfTravelNode',ExtOfOrganizationOfTravelNode)
+        .provider('mwsNode', mwsNode)
         .provider('idtNode',IDTNode)
         .provider('extensionOfDashboardOfTenantNode',ExtensionOfDashboardOfTenantNode)
         .provider('qiniuNode',QiniuNode)
@@ -442,7 +443,7 @@
                 function upgradeAppServerSide(appId) {
                     return $http.post(baseUrl + 'upgradeAppServerSide/' + appId);
                 }
-                
+
                 function upgradeAppClientSide(appId, os) {
                     return $http.post(baseUrl + 'upgradeAppClientSide/' + appId + ',' + os);
                 }
@@ -506,6 +507,31 @@
                 function PFT$resendSmsForOrder(orderId) {
                     return $http.post(baseUrl + 'PFT$resendSmsForOrder/' + orderId);
                 }
+            }]
+        };
+
+        function setBaseUrl(url) {
+            baseUrl = url;
+        }
+    }
+
+    function mwsNode() {
+        var baseUrl;
+        return {
+            // provider access level
+            setBaseUrl: setBaseUrl,
+
+            // controller access level
+            $get: ['$http', function ($http) {
+
+                return {
+                    ship: ship
+                };
+
+                function ship(orderId, data) {
+                    return $http.post(baseUrl + 'ship/' + orderId, data);
+                }
+
             }]
         };
 

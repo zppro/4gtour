@@ -1,0 +1,110 @@
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .row
+        .col-md-1.control-label {{ vm.viewTranslatePath('HEAD-LABEL-CODE') | translate}}:
+        .col-md-3
+            input.read-control-underline(readonly,ng-model="vm.model.code")
+        .col-md-1.control-label {{ vm.viewTranslatePath('HEAD-LABEL-ORDER_STATUS') | translate}}:
+        .col-md-4
+            input.read-control-underline(readonly,ng-model="vm.model.order_status_name")
+        .col-md-1.control-label {{ vm.viewTranslatePath('HEAD-LABEL-CHECK_IN_TIME') | translate}}:
+        .col-md-2
+            input.read-control-underline(readonly,value="{{vm.model.check_in_time|date}}")
+    .row-split
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        <!--订单支付方式-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-PAY_TYPE') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.pay_type_name}}
+                    fieldset: .form-group
+                        <!--订单支付时间-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-PAY_TIME') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.pay_type_name | date}}
+                    fieldset: .form-group
+                        <!--订单支付流水号-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-TRANSACTION_ID') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.transaction_id}}
+                    fieldset: .form-group
+                        <!--订单金额-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-AMOUNT') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.amount|currency}}
+                    fieldset: .form-group
+                        <!--下单人昵称-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ORDER_NICKNAME') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.order_nickname}}
+                    fieldset: .form-group
+                        <!--下单备注-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-MEMO') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.memo}}
+            tab(active="vm.tab2.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB2') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab2')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab2
+                    fieldset: .form-group
+                        <!--发票信息-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-INVOICE_INFO') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.invoice_flag ? vm.model.invoice_info.title + '(' + vm.model.invoice_info$type_name + '-' + vm.model.invoice_info$title_type_name + ')' : '不开发票'}}
+                    fieldset: .form-group
+                        <!--收件人名称-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-SHIPPING_INFO$SHIPPING_NICKNAME') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.shipping_info.shipping_nickname}}
+                    fieldset: .form-group
+                        <!--收件人手机-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-SHIPPING_INFO$SHIPPING_PHONE') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.shipping_info.shipping_phone}}
+                    fieldset: .form-group
+                        <!--收件人地区-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-SHIPPING_INFO$REGION') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.shipping_info.province + vm.model.shipping_info.city + vm.model.shipping_info.area}}
+                    fieldset: .form-group
+                        <!--收件人详细地址-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-SHIPPING_INFO$ADDRESS') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.shipping_info.address}}
+                    fieldset: .form-group
+                        <!--运费-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-SHIPPING_FEE') | translate}}:
+                        .col-md-10(ng-if=" vm.model.order_status == 'A0005' || vm._action_ == 'ship' ")
+                            input.form-control(name="shipping_fee",type="number",ng-model='vm.model.shipping_fee',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-SHIPPING_FEE")|translate}}' ,required='',ng-model-options="{debounce:500}",ui-validate="{shipping_fee: '$value >= 0'}")
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'shipping_fee','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'shipping_fee','shipping_fee')") {{ "validator.MIN" | translate:{min:"0"} }}
+                        .col-md-10(ng-if="vm.model.order_status != 'A0005' && vm._action_ != 'ship' ")
+                            .form-readable {{vm.model.shipping_fee | currency}}
+                    fieldset: .form-group
+                        <!--发货物流单号-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-LOGISTICS_CODE') | translate}}:
+                        .col-md-10(ng-if=" vm.model.order_status == 'A0005' || vm._action_ == 'ship' ")
+                            input.form-control(type='text', name='logistics_code',ng-model='vm.model.logistics_code',placeholder='{{vm.viewTranslatePath("TAB2-PLACEHOLDER-LOGISTICS_CODE")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'logistics_code','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.model.order_status != 'A0005' && vm._action_ != 'ship' ")
+                            .form-readable {{vm.model.logistics_code}}
+                    fieldset: .form-group
+                        <!--发货物流公司-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-LOGISTICS_COMPANY') | translate}}:
+                        .col-md-10(ng-if="vm.model.order_status == 'A0005' || vm._action_ == 'ship' ")
+                            input.form-control(type='text', name='logistics_company',ng-model='vm.model.logistics_company',placeholder='{{vm.viewTranslatePath("TAB2-PLACEHOLDER-LOGISTICS_COMPANY")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'logistics_company','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.model.order_status != 'A0005' && vm._action_ != 'ship' ")
+                            .form-readable {{vm.model.logistics_company}}
+    .text-right.mt-lg
+        button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(ng-if="vm._action_ != 'ship' ", type="submit") {{'button.SAVE'|translate}}
+        button.btn.btn-success(ng-if="vm._action_ == 'ship' ", type="submit") {{'button.SHIP'|translate}}
