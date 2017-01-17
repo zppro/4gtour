@@ -317,6 +317,7 @@ module.exports = {
                             updateInfo.pay_time = app.moment();
                             yield app.modelFactory().model_update(app.models['mws_order'], this.params.orderId, updateInfo);
                             var updated = yield app.modelFactory().model_read(app.models['mws_order'], this.params.orderId);
+                            yield app.spu_service.appendSaleInfoByOrderPaySuccess(updated);
                             this.body = app.wrapper.res.ret(updated);
                         } catch (e) {
                             console.log(e);
@@ -453,14 +454,20 @@ module.exports = {
                     return function *(next) {
                         try {
                             // console.log(this.req);
-                            if (this.request.body.default_flag) {
-                                var defaultShipping = yield app.modelFactory().model_one(app.models['mws_shipping'], {where: {status: 1, tenantId: this.request.body.tenantId, open_id: this.request.body.open_id, default_flag: true}});
+                            var shippingInfo = app._.extend({}, this.request.body);
+                            if (shippingInfo.default_flag) {
+                                var defaultShipping = yield app.modelFactory().model_one(app.models['mws_shipping'], {where: {status: 1, tenantId: shippingInfo.tenantId, open_id: shippingInfo.open_id, default_flag: true}});
                                 if (defaultShipping) {
                                     defaultShipping.default_flag = false;
                                     yield defaultShipping.save();
                                 }
+                            } else {
+                                var totals = yield app.modelFactory().model_totals(app.models['mws_shipping'], {where: {status: 1, tenantId: shippingInfo.tenantId, open_id: shippingInfo.open_id}});
+                                if(totals.length == 0) {
+                                    shippingInfo.default_flag = true;
+                                }
                             }
-                            var created = yield app.modelFactory().model_create(app.models['mws_shipping'], this.request.body);
+                            var created = yield app.modelFactory().model_create(app.models['mws_shipping'], shippingInfo);
                             this.body = app.wrapper.res.ret(created);
                         } catch (e) {
                             console.log(e);
@@ -516,7 +523,7 @@ module.exports = {
             },
             {
                 method: 'shippingSetDefault',
-                verb: 'put',
+                verb: 'post',
                 url: this.service_url_prefix + "/shippingSetDefault/:shippingId",
                 handler: function (app, options) {
                     return function *(next) {
@@ -533,6 +540,189 @@ module.exports = {
                             this.body = app.wrapper.res.default();
                         } catch (e) {
                             console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'invoices',
+                verb: 'post',
+                url: this.service_url_prefix + "/invoices",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var where = {status: 1, open_id: this.request.body.open_id, tenantId: this.request.body.tenantId};
+                            var rows = yield app.modelFactory().model_query(app.models['mws_invoice'], {
+                                    where: where,
+                                    select: 'type title_type title default_flag',
+                                    sort: {default_flag: -1, operated_on: -1, check_in_time: -1 }
+                                },
+                                {limit: this.request.body.page.size, skip: this.request.body.page.skip});
+
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'invoice',
+                verb: 'get',
+                url: this.service_url_prefix + "/invoice/:invoiceId",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var invoice = yield app.modelFactory().model_read(app.models['mws_invoice'], this.params.invoiceId);
+                            this.body = app.wrapper.res.ret(invoice);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'getDefaultInvoice',
+                verb: 'post',
+                url: this.service_url_prefix + "/getDefaultInvoice",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var defaultInvoice = yield app.modelFactory().model_one(app.models['mws_invoice'], {where: {status: 1, tenantId: this.request.body.tenantId, open_id: this.request.body.open_id, default_flag: true}});
+                            this.body = app.wrapper.res.ret(defaultInvoice);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'invoiceCreate',
+                verb: 'post',
+                url: this.service_url_prefix + "/invoice",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            // console.log(this.req);
+                            var invoiceInfo = app._.extend({}, this.request.body);
+                            if (invoiceInfo.default_flag) {
+                                var defaultInvoice = yield app.modelFactory().model_one(app.models['mws_invoice'], {where: {status: 1, tenantId: invoiceInfo.tenantId, open_id: invoiceInfo.open_id, default_flag: true}});
+                                if (defaultInvoice) {
+                                    defaultInvoice.default_flag = false;
+                                    yield defaultInvoice.save();
+                                }
+                            } else {
+                                var totals = yield app.modelFactory().model_totals(app.models['mws_invoice'], {where: {status: 1, tenantId: invoiceInfo.tenantId, open_id: invoiceInfo.open_id}});
+                                if(totals.length == 0) {
+                                    invoiceInfo.default_flag = true;
+                                }
+                            }
+                            var created = yield app.modelFactory().model_create(app.models['mws_invoice'], invoiceInfo);
+                            this.body = app.wrapper.res.ret(created);
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'invoiceUpdate',
+                verb: 'put',
+                url: this.service_url_prefix + "/invoice/:invoiceId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            if (this.request.body.default_flag) {
+                                var defaultInvoice = yield app.modelFactory().model_one(app.models['mws_invoice'], {where: {status: 1, tenantId: this.request.body.tenantId, open_id: this.request.body.open_id, default_flag: true}});
+                                if (defaultInvoice) {
+                                    defaultInvoice.default_flag = false;
+                                    yield defaultInvoice.save();
+                                }
+                            }
+                            yield app.modelFactory().model_update(app.models['mws_invoice'], this.params.invoiceId, this.request.body);
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'invoiceRemove',
+                verb: 'delete',
+                url: this.service_url_prefix + "/invoice/:invoiceId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            yield app.modelFactory().model_update(app.models['mws_invoice'], this.params.invoiceId, {status: 0});
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'invoiceSetDefault',
+                verb: 'post',
+                url: this.service_url_prefix + "/invoiceSetDefault/:invoiceId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var invoice = yield app.modelFactory().model_read(app.models['mws_invoice'], this.params.invoiceId);
+
+                            var defaultInvoice = yield app.modelFactory().model_one(app.models['mws_invoice'], {where: {status: 1, tenantId: shipping.tenantId, open_id: shipping.open_id, default_flag: true}});
+                            if (defaultInvoice) {
+                                defaultInvoice.default_flag = false;
+                                yield defaultInvoice.save();
+                            }
+                            invoice.default_flag = true;
+                            yield invoice.save();
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'afterSales',
+                verb: 'post',
+                url: this.service_url_prefix + "/afterSales",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var where = {status: 1, open_id: this.request.body.open_id, tenantId: this.request.body.tenantId};
+                            var rows = yield app.modelFactory().model_query(app.models['mws_afterSale'], {
+                                    where: where,
+                                    select: 'code biz_status type memo orderId order_code audit_result audit_comment',
+                                    sort: {operated_on: -1, check_in_time: -1 }
+                                },
+                                {limit: this.request.body.page.size, skip: this.request.body.page.skip});
+
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
                         }
