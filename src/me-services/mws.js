@@ -689,7 +689,7 @@ module.exports = {
                         try {
                             var invoice = yield app.modelFactory().model_read(app.models['mws_invoice'], this.params.invoiceId);
 
-                            var defaultInvoice = yield app.modelFactory().model_one(app.models['mws_invoice'], {where: {status: 1, tenantId: shipping.tenantId, open_id: shipping.open_id, default_flag: true}});
+                            var defaultInvoice = yield app.modelFactory().model_one(app.models['mws_invoice'], {where: {status: 1, tenantId: invoice.tenantId, open_id: invoice.open_id, default_flag: true}});
                             if (defaultInvoice) {
                                 defaultInvoice.default_flag = false;
                                 yield defaultInvoice.save();
