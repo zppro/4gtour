@@ -142,7 +142,8 @@
       "AFTER-SALE": "售后",
       "------------": "",
       "SYSTEM-MANAGE": "系统管理",
-      "USER-MANAGE": "用户管理"
+      "USER-MANAGE": "用户管理",
+      "WX-APP-CONFIG": "微信小程序配置"
     },
     "organization-travel": {
       "SNS": "社交网络",

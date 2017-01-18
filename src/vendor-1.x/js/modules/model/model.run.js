@@ -14,6 +14,7 @@
         modelNode.factory('mws-spu');
         modelNode.factory('mws-order');
         modelNode.factory('mws-afterSale');
+        modelNode.factory('mws-wxAppConfig');
 
         //商户机构
         modelNode.factory('trv-scenerySpot');

@@ -112,6 +112,24 @@
         "TAB1-LABEL-PHONE": "手机号码",
         "TAB1-PLACEHOLDER-PHONE": "137XXXX0258.."
       }
+    },
+    "wx-app-config": {
+      "list": {
+        "TITLE": "web商城-系统管理-微信小程序配置-列表"
+      },
+      "details": {
+        "TITLE": "web商城-系统管理-微信小程序配置-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-APP_ID": "小程序id",
+        "TAB1-PLACEHOLDER-APP_ID": "wx1111111111111111",
+        "TAB1-LABEL-APP_NAME": "小程序名称",
+        "TAB1-PLACEHOLDER-APP_NAME": "XX网上商城..",
+        "TAB1-LABEL-TEMPLATES": "消息模版",
+        "TAB1-LABEL-TEMPLATES-KEY": "模版查找键",
+        "TAB1-PLACEHOLDER-TEMPLATES-KEY": "OrderShipped..",
+        "TAB1-LABEL-TEMPLATES-WX_TEMPLATE_ID": "微信模版id",
+        "TAB1-PLACEHOLDER-TEMPLATES-WX_TEMPLATE_ID": "从微信小程序平台复制过来.."
+      }
     }
   }
 }

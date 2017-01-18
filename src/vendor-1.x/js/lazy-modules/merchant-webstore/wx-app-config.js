@@ -7,15 +7,14 @@
     'use strict';
 
     angular
-        .module('subsystem.merchant-webstore.spu',[])
-        .controller('SPUGridController', SPUGridController)
-        .controller('SPUDetailsController', SPUDetailsController)
+        .module('subsystem.merchant-webstore.wx-app-config',[])
+        .controller('MWS_wxAppConfigGridController', MWS_wxAppConfigGridController)
+        .controller('MWS_wxAppConfigDetailsController', MWS_wxAppConfigDetailsController)
     ;
 
-    SPUGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
+    MWS_wxAppConfigGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
 
-    function SPUGridController($scope, ngDialog, vmh, vm) {
-        console.log(3456)
+    function MWS_wxAppConfigGridController($scope, ngDialog, vmh, vm) {
         $scope.vm = vm;
         $scope.utils = vmh.utils.g; 
 
@@ -32,9 +31,9 @@
         }
     }
 
-    SPUDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
+    MWS_wxAppConfigDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
 
-    function SPUDetailsController($scope, ngDialog, vmh, vm) {
+    function MWS_wxAppConfigDetailsController($scope, ngDialog, vmh, vm) {
 
         var vm = $scope.vm = vm;
         $scope.utils = vmh.utils.v;
@@ -47,44 +46,44 @@
             vm.init({removeDialog: ngDialog});
 
             vm.doSubmit = doSubmit;
-            vm.checkSKUAll = checkSKUAll;
-            vm.addSKU = addSKU;
-            vm.editSKU = editSKU;
-            vm.saveSKU = saveSKU;
-            vm.cancelSKU = cancelSKU;
-            vm.removeSKU = removeSKU;
+            vm.checkTemplateAll = checkTemplateAll;
+            vm.addTemplate = addTemplate;
+            vm.editTemplate = editTemplate;
+            vm.saveTemplate = saveTemplate;
+            vm.cancelTemplate = cancelTemplate;
+            vm.removeTemplate = removeTemplate;
             
             vm.tab1 = {cid: 'contentTab1',active:true};
-            
+
             vm.load();
         }
 
-        function checkSKUAll($event) {
+        function checkTemplateAll($event) {
             var rowCheckState = true;
             if ($event.target.tagName == "INPUT" && $event.target.type == "checkbox") {
                 var $checkbox = angular.element($event.target);
                 rowCheckState = $checkbox.prop('checked');
             }
 
-            for(var i=0;i<vm.model.skus.length;i++) {
-                vm.model.skus[i].checked = rowCheckState;
+            for(var i=0;i<vm.model.templates.length;i++) {
+                vm.model.templates[i].checked = rowCheckState;
             }
         }
 
-        function addSKU() {
-            if (!vm.$gridEditingOfSKU) {
-                vm.model.skus.push({isNew: true, $editing: true})
-                vm.$gridEditingOfSKU = true;
+        function addTemplate() {
+            if (!vm.$gridEditingOfTemplate) {
+                vm.model.templates.push({isNew: true, $editing: true})
+                vm.$gridEditingOfTemplate = true;
             }
         }
 
-        function editSKU(row) {
+        function editTemplate(row) {
             vm.editingRow = angular.copy(row);
             row.$editing = true;
-            vm.$gridEditingOfSKU = true;
+            vm.$gridEditingOfTemplate = true;
         }
 
-        function saveSKU(row) {
+        function saveTemplate(row) {
             if(row.isNew) {
                 row.isNew = false;
             }
@@ -92,22 +91,22 @@
                 vm.editingRow = null;
             }
             row.$editing = false;
-            vm.$gridEditingOfSKU = false;
+            vm.$gridEditingOfTemplate = false;
         }
 
-        function cancelSKU(row) {
+        function cancelTemplate(row) {
             if(row.isNew) {
-                vm.model.skus.splice(vm.model.skus.length - 1, 1);
+                vm.model.templates.splice(vm.model.templates.length - 1, 1);
             }
             else {
                 _.extend(row, vm.editingRow);
             }
             row.$editing = false;
-            vm.$gridEditingOfSKU = false;
+            vm.$gridEditingOfTemplate = false;
         }
 
-        function removeSKU() {
-            var haveSelected = _.some(vm.model.skus, function (row) {
+        function removeTemplate() {
+            var haveSelected = _.some(vm.model.templates, function (row) {
                 return row.checked
             });
             if (!haveSelected) {
@@ -121,10 +120,10 @@
                 template: 'removeConfirmDialog.html',
                 className: 'ngdialog-theme-default'
             }).then(function () {
-                for(var i=0;i<vm.model.skus.length;i++) {
-                    var row = vm.model.skus[i];
+                for(var i=0;i<vm.model.templates.length;i++) {
+                    var row = vm.model.templates[i];
                     if (row.checked) {
-                        vm.model.skus.splice(i, 1);
+                        vm.model.templates.splice(i, 1);
                         i--;
                     }
                 }

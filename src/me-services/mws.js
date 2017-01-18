@@ -245,7 +245,17 @@ module.exports = {
                             var trade_time_start = app.moment(created.trade_time_start).format('YYYYMMDDHHmmss');
                             var trade_time_expire = app.moment(created.trade_time_expire).format('YYYYMMDDHHmmss');
                             console.log('orderid:' + created.id);
-                            this.body = yield app.app_weixin.unifiedorder(this.request.body.appid, this.request.body.open_id, ip, created.id, trade_detail, created.code, total_fee, trade_time_start, trade_time_expire);
+                            var wrapperRet = yield app.app_weixin.unifiedorder(this.request.body.appid, this.request.body.open_id, ip, created.id, trade_detail, created.code, total_fee, trade_time_start, trade_time_expire);
+                            console.log(wrapperRet.ret)
+                            if (wrapperRet.ret.scene_id) {
+                                // 将prepay_id作为场景ID存储并作为服务端发货提醒的推送消息的场景ID使用
+                                yield app.modelFactory().model_create(app.models['mws_wxTemplateMessageKeyStore'], {
+                                    open_id: order.open_id,
+                                    scene_id: wrapperRet.ret.scene_id,
+                                    tenantId: order.tenantId
+                                });
+                            }
+                            this.body = wrapperRet;
                             console.log(this.body);
                             //this.body = app.wrapper.res.ret(created);
                         } catch (e) {
@@ -294,7 +304,16 @@ module.exports = {
                             var trade_time_start = app.moment(notPayedOrder.trade_time_start).format('YYYYMMDDHHmmss');
                             var trade_time_expire = app.moment(notPayedOrder.trade_time_expire).format('YYYYMMDDHHmmss');
                             console.log('orderid:' + notPayedOrder.id);
-                            this.body = yield app.app_weixin.unifiedorder(this.request.body.appid, notPayedOrder.open_id, ip, notPayedOrder.id, trade_detail, notPayedOrder.code, total_fee, trade_time_start, trade_time_expire);
+                            var wrapperRet = yield app.app_weixin.unifiedorder(this.request.body.appid, notPayedOrder.open_id, ip, notPayedOrder.id, trade_detail, notPayedOrder.code, total_fee, trade_time_start, trade_time_expire);
+                            if (wrapperRet.ret.scene_id) {
+                                // 将prepay_id作为场景ID存储并作为服务端发货提醒的推送消息的场景ID使用
+                                yield app.modelFactory().model_create(app.models['mws_wxTemplateMessageKeyStore'], {
+                                    open_id: order.open_id,
+                                    scene_id: wrapperRet.ret.scene_id,
+                                    tenantId: order.tenantId
+                                });
+                            }
+                            this.body = wrapperRet;
                             console.log(this.body);
                         } catch (e) {
                             console.log(e);

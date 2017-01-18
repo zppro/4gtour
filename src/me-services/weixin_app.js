@@ -180,6 +180,36 @@ module.exports = {
                         yield next;
                     };
                 }
+            },
+            {
+                method: 'sendTemplateMessage',
+                verb: 'post',
+                url: this.service_url_prefix + "/sendTemplateMessage",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var wrapperRet = yield app.app_weixin.requestAccessToken(this.request.body.appid, this.request.body.code);
+                            if (!wrapperRet.success) {
+                                this.body = wrapperRet;
+                                yield next;
+                                return;
+                            }
+                            
+                            console.log(gen_session_key)
+                            var session = yield app.app_weixin.getSession(gen_session_key);
+                            console.log(gen_session_key);
+                            console.log(session);
+                            this.body = app.wrapper.res.ret({
+                                session_key: gen_session_key,
+                                session_value: session
+                            });
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
             }
         ];
 

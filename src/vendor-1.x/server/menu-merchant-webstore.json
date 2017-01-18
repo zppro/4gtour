@@ -40,6 +40,11 @@
         "_id": "menu.merchant-webstore.USER-MANAGE",
         "name": "用户管理",
         "sref": "app.merchant-webstore.user-manage.list"
+      },
+      {
+        "_id": "menu.merchant-webstore.WX-APP-CONFIG",
+        "name": "微信小程序配置",
+        "sref": "app.merchant-webstore.wx-app-config.list"
       }
     ]
   }

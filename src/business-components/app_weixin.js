@@ -25,11 +25,83 @@ module.exports = {
 
         this.CACHE_MODULE = 'WX-APP-';
         this.CACHE_ITEM_SESSION = 'SESSION';
+        this.CACHE_ITEM_ACCESS_TOKEN = 'ACCESS_TOKEN';
         // this.ensureAccessToken();
         // debug: vGrveUaIbvYzYUaAPDeAPWEFNBIXYyOq8S2X0tS6xff0FeonqcmXE75HwlLavGsKmBL05UZ1GBwljLvYwlKt8WLI2XiYXK_oD4AK_tUcWhkYMNiAGANBC
         this.dl$xml2js = this.ctx.wrapper.cb(xml2js.parseString);
         console.log(this.filename + ' ready... ');
         return this;
+    },
+    requestAccessToken : function (appid, forceRefresh) {
+        var self = this;
+        return co(function *() {
+            try {
+                var cacheKey = self.CACHE_MODULE + self.CACHE_ITEM_ACCESS_TOKEN + '@' + appid;
+                var accessToken = self.ctx.cache.get(cacheKey);
+                if (!forceRefresh) {
+                    if(accessToken) {
+                        console.log('get AccessToken from cache')
+                        return self.ctx.wrapper.res.ret(accessToken);
+                    }
+                }
+
+                // 不存在或者过期或者强制刷新
+                var config = yield self.getConfig(appid);
+                if (!config) return self.ctx.wrapper.res.error({code: 53999 ,message: 'invalid appid' }); //无效的appid
+
+                var success = true;
+                var ret = yield rp({
+                    url: 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' + config.appid + '&secret=' + config.secret,
+                    json: true
+                });
+
+                accessToken = ret.access_token;
+                if (!accessToken) {
+                    self.logger.error(ret);
+                    return self.ctx.wrapper.res.error({code: ret.errcode ,message: ret.errmsg });
+                }
+                console.log('ret.expires_in:' + ret.expires_in);
+                self.ctx.cache.put(cacheKey, accessToken, ret.expires_in * 1000,function (key, value) {
+                    // 需要yield 转化成 *fn
+                    console.log('accessToken expires')
+                    self.requestAccessToken(appid, true)
+                });
+                console.log('requestAccessToken ->' + accessToken);
+                return self.ctx.wrapper.res.ret(accessToken);
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+            }
+        }).catch(self.ctx.coOnError);
+    },
+    sendTemplateMessage: function(appid, sendData) {
+        var self = this;
+        return co(function *() {
+            try {
+                var wrapperRet = yield self.requestAccessToken(appid, true);
+                if (!wrapperRet.success) return wrapperRet;
+                var accessToken = wrapperRet.ret;
+                var ret = yield rp({
+                    method: 'POST',
+                    url: 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=' + accessToken,
+                    form: sendData,
+                    json: true
+                });
+
+                console.log(ret);
+
+                if (ret.errcode != 0) {
+                    self.logger.error(ret);
+                    return self.ctx.wrapper.res.error({code: ret.errcode ,message: ret.errmsg });
+                }
+                return self.ctx.wrapper.res.default();
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+            }
+        }).catch(self.ctx.coOnError);
     },
     getSession: function (gen_session_key) {
         var key = this.CACHE_MODULE + this.CACHE_ITEM_SESSION + '@' + gen_session_key;
@@ -128,9 +200,10 @@ module.exports = {
                 var paySign = self.createSignature(requestPaymentObject, config.mch_api_secret);
                 // console.log(paySign);
                 requestPaymentObject['paySign'] = paySign;
-                requestPaymentObject.appId = undefined;
+                delete requestPaymentObject.appId
                 console.log(requestPaymentObject);
                 return self.ctx.wrapper.res.ret({
+                    scene_id: ret.prepay_id,
                     orderId: orderid,
                     requestPaymentObject: requestPaymentObject
                 });

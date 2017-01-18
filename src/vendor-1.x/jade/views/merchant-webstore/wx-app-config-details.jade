@@ -1,0 +1,74 @@
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        <!--app_id-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-APP_ID') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='app_id',ng-model='vm.model.app_id',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-APP_ID")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'app_id','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        <!--app名称-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-APP_NAME') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='app_name',ng-model='vm.model.app_name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-APP_NAME")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'app_name','required')") {{ "validator.REQUIRED" | translate}}
+                    .panel.panel-default.panel-grid
+                        .panel-heading-normal
+                            a {{ vm.viewTranslatePath('TAB1-LABEL-TEMPLATES') | translate}}
+                        table.grid.table.table-bordered.table-hover.table-striped
+                            thead
+                                tr
+                                    th.text-center(check-all,width="30")
+                                        .checkbox.c-checkbox(data-toggle="tooltip",data-title="Check All")
+                                            label(ng-click="vm.checkTemplateAll($event)")
+                                                input(type='checkbox')
+                                                span.fa.fa-check
+                                    th.text-center(width="80")
+                                        | {{vm.viewTranslatePath("TAB1-LABEL-TEMPLATES-KEY")|translate}}
+                                    th.text-center(width="240")
+                                        | {{vm.viewTranslatePath("TAB1-LABEL-TEMPLATES-WX_TEMPLATE_ID")|translate}}
+                                    th.text-center(width="50")
+                            tbody
+                                tr(ng-repeat="row in vm.model.templates" ng-click="vm.grid.selectRow($event,row)",ng-dblclick="vm.grid.dblclickRow(row.id)")
+                                    td.text-center
+                                        .checkbox.c-checkbox(ng-if="!row.$editing")
+                                            label
+                                                input(type='checkbox',ng-model="row.checked" )
+                                                span.fa.fa-check
+                                    td.text-left
+                                        span(ng-if="!row.$editing") {{::row.key}}
+                                        input.form-control(name="row$key",type="text",ng-if="row.$editing",ng-model='row.key',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-TEMPLATES-KEY")|translate}}' ,required='')
+                                        span.text-danger(ng-if="row.$editing",ng-show="utils.vinput(this.theForm,'row$key','required')") {{ "validator.REQUIRED" | translate}}
+                                    td
+                                        span(ng-if="!row.$editing") {{::row.wx_template_id}}
+                                        input.form-control(name="row$wx_template_id",type="text",ng-if="row.$editing",ng-model='row.wx_template_id',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-TEMPLATES-WX_TEMPLATE_ID")|translate}}' ,required='')
+                                        span.text-danger(ng-if="row.$editing",ng-show="utils.vinput(this.theForm,'row$wx_template_id','required')") {{ "validator.REQUIRED" | translate}}
+                                    td
+                                        .btn-group(ng-if="!vm.readonly && !row.$editing")
+                                            a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.editTemplate(row)")
+                                                i.glyphicon.glyphicon-pencil
+                                        .btn-group(ng-if="row.$editing")
+                                            a.btn.btn-primary.btn-xs(title="{{'button.SAVE'|translate}}",ng-click="vm.saveTemplate(row)")
+                                                i.glyphicon.glyphicon-ok-sign
+                                        .btn-group(ng-if="row.$editing")
+                                            a.btn.btn-primary.btn-xs(title="{{'button.CANCEL'|translate}}",ng-click="vm.cancelTemplate(row)")
+                                                i.glyphicon.glyphicon-remove-sign
+                        .panel-footer
+                            .row
+                                .col-md-4.text-left
+                                    .btn-toolbar(ng-if="!vm.readonly")
+                                        .btn-group
+                                            a.btn.btn-primary.btn-sm(title="{{'button.ADD'|translate}}",ng-click="vm.addTemplate()")
+                                                i.glyphicon.glyphicon-plus
+                                            a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.removeTemplate()")
+                                                i.glyphicon.glyphicon-minus
+    .text-right.mt-lg
+        button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(type="submit") {{'button.SAVE'|translate}}

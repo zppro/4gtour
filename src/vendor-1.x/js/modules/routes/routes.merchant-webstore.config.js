@@ -414,6 +414,72 @@
                     })
                 }
             })
+            .state('app.merchant-webstore.wx-app-config', {
+                url: '/wx-app-config',
+                title: '微信app',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath('partials/merchant-webstore/module-header.html'),
+                        controller: 'ModuleHeaderForTenantController'
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id:'menu.merchant-webstore.WX-APP-CONFIG'//业务系统使用
+                }
+                , resolve: helper.resolveFor('subsystem.merchant-webstore.wx-app-config.js')
+            })
+            .state('app.merchant-webstore.wx-app-config.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath('merchant-webstore/wx-app-config-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'MWS_wxAppConfigGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM('app.merchant-webstore.wx-app-config.list', {
+                        modelName: 'mws-wxAppConfig',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        blockUI: true,
+                        columns: [
+                            {
+                                label: 'appid',
+                                name: 'app_id',
+                                sortable: false,
+                                width:  120
+                            },
+                            {
+                                label: 'app名称',
+                                name: 'app_name',
+                                type: 'string',
+                                width: 240,
+                                sortable: true
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 60
+                            }
+                        ]
+                    })
+                }
+            })
+            .state('app.merchant-webstore.wx-app-config.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath('merchant-webstore/wx-app-config-details.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'MWS_wxAppConfigDetailsController',
+                resolve: {
+                    entityVM: helper.buildEntityVM('app.merchant-webstore.wx-app-config.details', {
+                        modelName: 'mws-wxAppConfig',
+                        model: {templates: []},
+                        blockUI: true
+                    })
+                }
+            })
         ;
 
     } // routesConfig
