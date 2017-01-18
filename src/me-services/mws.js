@@ -462,11 +462,12 @@ module.exports = {
                                     yield defaultShipping.save();
                                 }
                             } else {
-                                var totals = yield app.modelFactory().model_totals(app.models['mws_shipping'], {where: {status: 1, tenantId: shippingInfo.tenantId, open_id: shippingInfo.open_id}});
+                                var totals = yield app.modelFactory().model_totals(app.models['mws_shipping'], {status: 1, tenantId: shippingInfo.tenantId, open_id: shippingInfo.open_id});
                                 if(totals.length == 0) {
                                     shippingInfo.default_flag = true;
                                 }
                             }
+                            console.log(shippingInfo);
                             var created = yield app.modelFactory().model_create(app.models['mws_shipping'], shippingInfo);
                             this.body = app.wrapper.res.ret(created);
                         } catch (e) {
@@ -621,7 +622,7 @@ module.exports = {
                                     yield defaultInvoice.save();
                                 }
                             } else {
-                                var totals = yield app.modelFactory().model_totals(app.models['mws_invoice'], {where: {status: 1, tenantId: invoiceInfo.tenantId, open_id: invoiceInfo.open_id}});
+                                var totals = yield app.modelFactory().model_totals(app.models['mws_invoice'], {status: 1, tenantId: invoiceInfo.tenantId, open_id: invoiceInfo.open_id});
                                 if(totals.length == 0) {
                                     invoiceInfo.default_flag = true;
                                 }
