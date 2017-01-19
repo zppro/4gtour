@@ -17,7 +17,7 @@ module.exports = function(ctx,name) {
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
-            app_id: {type: String, required: true},
+            app_id: {type: String, required: true}, //unique
             app_name: {type: String, required: true},
             templates:[{
                 key: {type: String, required: true}, //查找键

@@ -117,7 +117,7 @@ module.exports = {
                     },
                     {limit: 1});
 
-                if (wxAppConfigs.length == 0) return self.ctx.wrapper.res.error({code: 53998 ,message: 'can not find wxAppConfig for the templateKey:' + templateKey });
+                if (wxAppConfigs.length == 0) return self.ctx.wrapper.res.error({code: 53996 ,message: 'can not find wxAppConfig for the templateKey:' + templateKey });
                 var wxAppConfig = wxAppConfigs[0];
 
                 var bizScene = yield self.ctx.modelFactory().model_one(self.ctx.models['mws_wxTemplateMessageKeyStore'],{
@@ -128,7 +128,7 @@ module.exports = {
                             }
                         }
                     });
-                if(!bizScene) return self.ctx.wrapper.res.error({code: 53997 ,message: 'no non-used biz_scene' });
+                if(!bizScene) return self.ctx.wrapper.res.error({code: 53995 ,message: 'no non-used biz_scene' });
 
                 var template = self.ctx._.find(wxAppConfig.templates, (o) => {
                     return o.key =  templateKey

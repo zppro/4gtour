@@ -24,6 +24,23 @@ module.exports = {
 
         this.actions = [
             {
+                method: 'wxAppConfig',
+                verb: 'get',
+                url: this.service_url_prefix + "/wxAppConfig/:wxAppConfigId",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var wxAppConfig = yield app.modelFactory().model_read(app.models['mws_wxAppConfig'], this.params.wxAppConfigId);
+                            this.body = app.wrapper.res.ret(wxAppConfig);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'getSession',
                 verb: 'get',
                 url: this.service_url_prefix + "/getSession/:gen_session_key",

@@ -244,7 +244,7 @@ module.exports = {
                             var total_fee = created.amount* 100 + created.shipping_fee * 100;
                             var trade_time_start = app.moment(created.trade_time_start).format('YYYYMMDDHHmmss');
                             var trade_time_expire = app.moment(created.trade_time_expire).format('YYYYMMDDHHmmss');
-                            console.log('orderid:' + created.id);
+                            console.log('open_id:' + this.request.body.open_id);
                             var wrapperRet = yield app.app_weixin.unifiedorder(this.request.body.appid, this.request.body.open_id, ip, created.id, trade_detail, created.code, total_fee, trade_time_start, trade_time_expire);
                             console.log(wrapperRet.ret)
                             console.log(order.formId)
