@@ -182,6 +182,22 @@ module.exports = {
                 }
             },
             {
+                method: 'requestAccessToken',
+                verb: 'post',
+                url: this.service_url_prefix + "/requestAccessToken",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            this.body = yield app.app_weixin.requestAccessToken(this.request.body.appid)
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'sendTemplateMessage',
                 verb: 'post',
                 url: this.service_url_prefix + "/sendTemplateMessage",
