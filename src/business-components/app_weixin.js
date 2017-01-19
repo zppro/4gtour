@@ -75,10 +75,11 @@ module.exports = {
             }
         }).catch(self.ctx.coOnError);
     },
-    sendTemplateMessage: function(appid, sendData) {
+    sendTemplateMessage2: function(appid, sendData) {
         var self = this;
         return co(function *() {
             try {
+
                 var wrapperRet = yield self.requestAccessToken(appid, true);
                 if (!wrapperRet.success) return wrapperRet;
                 var accessToken = wrapperRet.ret;
@@ -94,6 +95,75 @@ module.exports = {
                 if (ret.errcode != 0) {
                     self.logger.error(ret);
                     return self.ctx.wrapper.res.error({code: ret.errcode ,message: ret.errmsg });
+                }
+                return self.ctx.wrapper.res.default();
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+            }
+        }).catch(self.ctx.coOnError);
+    },
+    sendTemplateMessage: function(templateKey, toUserOpenId, tenantId, sendData) {
+        var self = this;
+        return co(function *() {
+            try {
+                var wxAppConfigs = yield self.ctx.modelFactory().model_query(self.ctx.models['mws_wxAppConfig'], {
+                        where: {
+                            status: 1,
+                            tenantId: tenantId,
+                            templates: {$elemMatch: {"key": templateKey}}
+                        }
+                    },
+                    {limit: 1});
+
+                if (wxAppConfigs.length == 0) return self.ctx.wrapper.res.error({code: 53998 ,message: 'can not find wxAppConfig for the templateKey:' + templateKey });
+                var wxAppConfig = wxAppConfigs[0];
+
+                var bizScene = yield self.ctx.modelFactory().model_one(self.ctx.models['mws_wxTemplateMessageKeyStore'],{
+                        where: {
+                            use_flag: false, open_id: toUserOpenId, tenantId: tenantId,
+                            check_in_time:{
+                                $gte: self.ctx.moment().subtract(7, 'days').toDate(),
+                            }
+                        }
+                    });
+                if(!bizScene) return self.ctx.wrapper.res.error({code: 53997 ,message: 'no non-used biz_scene' });
+
+                var template = self.ctx._.find(wxAppConfig.templates, (o) => {
+                    return o.key =  templateKey
+                });
+
+                sendData.touser = bizScene.open_id;
+                sendData.template_id = template.wx_template_id;
+                sendData.form_id = bizScene.scene_id;
+                var wrapperRet = yield self.requestAccessToken(wxAppConfig.app_id);
+                if (!wrapperRet.success) return wrapperRet;
+                var accessToken = wrapperRet.ret;
+                var sendDataJsonStr = JSON.stringify(sendData);
+                var ret = yield rp({
+                    method: 'POST',
+                    url: 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=' + accessToken,
+                    form: sendDataJsonStr,
+                    json: true
+                });
+                console.log(ret);
+                if (ret.errcode != 0) {
+                    self.logger.error(ret);
+                    if (ret.errcode == 41028 || ret.errcode == 41029) {
+                        // formid 问题导致的表示无法使用该业务场景
+                        bizScene.use_flag = true;
+                    }
+                    bizScene.used_on = self.ctx.moment();
+                    bizScene.send_data = ret.errmsg;
+                    yield  bizScene.save();
+                    return self.ctx.wrapper.res.error({code: ret.errcode ,message: ret.errmsg });
+                } else {
+                    // 成功
+                    bizScene.use_flag = true;
+                    bizScene.used_on = self.ctx.moment();
+                    bizScene.send_data = sendDataJsonStr;
+                    yield  bizScene.save();
                 }
                 return self.ctx.wrapper.res.default();
             }
