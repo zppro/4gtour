@@ -65,69 +65,41 @@ module.exports = {
                             }
 
                             var wrapperResult = yield app.app_weixin.sendTemplateMessage('OrderShipped', order.open_id, order.tenantId, sendData);
-                            
-                            // var bizScene = yield app.modelFactory().model_one(app.models['mws_wxTemplateMessageKeyStore'], {where: {use_flag: false, open_id: order.open_id, tenantId: order.tenantId}});
-                            // if(bizScene) {
-                            //     //发送模版消息-订单发货提醒
-                            //     var templateKey = 'OrderShipped';
-                            //     var configs = yield app.modelFactory().model_query(app.models['mws_wxAppConfig'], {
-                            //             where: {
-                            //                 status: 1,
-                            //                 tenantId: order.tenantId,
-                            //                 templates: {$elemMatch: {"key": templateKey}}
-                            //             }
-                            //         },
-                            //         {limit: 1});
-                            //
-                            //     if (configs.length == 1) {
-                            //         var config = configs[0];
-                            //         var template = app._.find(config.templates, (o) => {
-                            //           return o.key =  templateKey
-                            //         });
-                            //
-                            //         if (template && template.wx_template_id) {
-                            //             // 调用组件app_weixin发送模版消息
-                            //             var sendData = {
-                            //                 "touser": bizScene.open_id,
-                            //                 "template_id" : template.wx_template_id,
-                            //                 "page": '/pages/mine/order-details?orderId=' + order.id,
-                            //                 "form_id": bizScene.scene_id,
-                            //                 "data": {
-                            //                     "keyword1": {
-                            //                         "value": order.code,
-                            //                         "color": "#173177"
-                            //                     },
-                            //                     "keyword2": {
-                            //                         "value": order.items[0].spu_name,
-                            //                         "color": "#173177"
-                            //                     },
-                            //                     "keyword3": {
-                            //                         "value": order.logistics_code,
-                            //                         "color": "#173177"
-                            //                     },
-                            //                     "keyword4": {
-                            //                         "value": order.logistics_company,
-                            //                         "color": "#173177"
-                            //                     },
-                            //                     "keyword5": {
-                            //                         "value": app.moment(order.logistics_time).format('YYYY年MM月DD日'),
-                            //                         "color": "#173177"
-                            //                     }
-                            //                 }
-                            //                 ,emphasis_keyword: "keyword3.DATA"
-                            //             }
-                            //             var wrapperResult = app.app_weixin.sendTemplateMessage2(config.app_id, JSON.stringify(sendData));
-                            //             if (wrapperResult.success) {
-                            //                 bizScene.use_flag = true;
-                            //                 bizScene.used_on = app.moment();
-                            //                 bizScene.send_data = JSON.stringify(sendData);
-                            //                 yield  bizScene.save();
-                            //             }
-                            //         }
-                            //     }
-                            // }
-                            
+               
                             this.body = wrapperResult;
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'accessTokens',
+                verb: 'get',
+                url: this.service_url_prefix + "/accessTokens",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            //app.cache.get(cach
+                            var keys = app.cache.keys();
+                            var prefix = app.app_weixin.CACHE_MODULE + app.app_weixin.CACHE_ITEM_ACCESS_TOKEN + '@';
+                            console.log(prefix);
+                            var rows = [];
+                            var accessTokenCacheKeys = app._.filter(keys,(o) => {
+                                console.log(o);
+                                console.log(o.indexOf(prefix));
+                                return o.indexOf(prefix) == 0
+                            });
+
+                            if(accessTokenCacheKeys.length > 0){
+                                app._.each(accessTokenCacheKeys, (k) => {
+                                  rows.push({key:k, value: app.cache.get(k)})
+                                })
+                            }
+
+                            this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);

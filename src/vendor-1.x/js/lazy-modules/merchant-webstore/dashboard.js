@@ -20,6 +20,18 @@
         function init() {
 
             vm.init();
+            
+            vm.refreshAccessTokens = function () {
+                vmh.blocker.start();
+                vmh.mwsService.accessTokens().then(function(rows){
+                    vm.accessTokens = rows;
+                }).finally(function(){
+                    vmh.blocker.stop();
+                });
+            }
+
+            vm.refreshAccessTokens();
+
         }
     }
 

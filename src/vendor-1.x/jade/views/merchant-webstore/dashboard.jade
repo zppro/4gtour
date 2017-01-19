@@ -3,3 +3,19 @@ h3
 
 .row
    h2.text-center.text-thin 与当前商户相关的汇总数据视图
+.row
+   .col-md-10.text-center
+      h3
+         | accessToken监控
+         .btn-group
+            a.btn.btn-primary.btn-sm(title="{{'button.REFRESH'|translate}}",ng-click="vm.refreshAccessTokens()")
+               i.glyphicon.glyphicon-refresh
+      table.grid.table.table-bordered.table-hover.table-striped(align="center")
+         thead
+            tr
+               th.text-center(width="30") accessToken键
+               th.text-center(width="70") accessToken值
+         tbody
+            tr(ng-repeat="row in vm.accessTokens" )
+               td.text-left {{row.key}}
+               td.text-left {{row.value}}

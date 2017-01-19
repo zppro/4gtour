@@ -525,11 +525,16 @@
             $get: ['$http', function ($http) {
 
                 return {
-                    ship: ship
+                    ship: ship,
+                    accessTokens: accessTokens
                 };
 
                 function ship(orderId, data) {
                     return $http.post(baseUrl + 'ship/' + orderId, data);
+                }
+
+                function accessTokens() {
+                    return $http.get(baseUrl + 'accessTokens');
                 }
 
             }]
