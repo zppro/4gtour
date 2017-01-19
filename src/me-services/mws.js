@@ -247,6 +247,14 @@ module.exports = {
                             console.log('orderid:' + created.id);
                             var wrapperRet = yield app.app_weixin.unifiedorder(this.request.body.appid, this.request.body.open_id, ip, created.id, trade_detail, created.code, total_fee, trade_time_start, trade_time_expire);
                             console.log(wrapperRet.ret)
+                            console.log(order.formId)
+                            if (order.formId && order.formId != 'the formId is a mock one') {
+                                yield app.modelFactory().model_create(app.models['mws_wxTemplateMessageKeyStore'], {
+                                    open_id: order.open_id,
+                                    scene_id: order.formId,
+                                    tenantId: order.tenantId
+                                })
+                            }
                             // if (wrapperRet.ret.scene_id) {
                             //     // 将prepay_id作为场景ID存储并作为服务端发货提醒的推送消息的场景ID使用
                             //     yield app.modelFactory().model_create(app.models['mws_wxTemplateMessageKeyStore'], {
