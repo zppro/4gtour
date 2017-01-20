@@ -61,10 +61,11 @@ module.exports = {
                     return self.ctx.wrapper.res.error({code: ret.errcode ,message: ret.errmsg });
                 }
                 console.log('ret.expires_in:' + ret.expires_in);
-                self.ctx.cache.put(cacheKey, accessToken, ret.expires_in * 1000,function (key, value) {
-                    // 需要yield 转化成 *fn
-                    console.log('accessToken expires')
-                    self.requestAccessToken(appid, true)
+                self.ctx.cache.put(cacheKey, accessToken, ret.expires_in * 1000,() => {
+                    co(function*() {
+                        console.log('accessToken expires')
+                        yield self.requestAccessToken(appid, true)
+                    });
                 });
                 console.log('requestAccessToken ->' + accessToken);
                 return self.ctx.wrapper.res.ret(accessToken);
