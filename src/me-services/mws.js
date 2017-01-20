@@ -313,6 +313,14 @@ module.exports = {
                             var trade_time_expire = app.moment(notPayedOrder.trade_time_expire).format('YYYYMMDDHHmmss');
                             console.log('orderid:' + notPayedOrder.id);
                             var wrapperRet = yield app.app_weixin.unifiedorder(this.request.body.appid, notPayedOrder.open_id, ip, notPayedOrder.id, trade_detail, notPayedOrder.code, total_fee, trade_time_start, trade_time_expire);
+                            var formId = this.request.body.formId;
+                            if (formId && formId != 'the formId is a mock one') {
+                                yield app.modelFactory().model_create(app.models['mws_wxTemplateMessageKeyStore'], {
+                                    open_id: notPayedOrder.open_id,
+                                    scene_id: formId,
+                                    tenantId: notPayedOrder.tenantId
+                                })
+                            }
                             // if (wrapperRet.ret.scene_id) {
                             //     // 将prepay_id作为场景ID存储并作为服务端发货提醒的推送消息的场景ID使用
                             //     yield app.modelFactory().model_create(app.models['mws_wxTemplateMessageKeyStore'], {
