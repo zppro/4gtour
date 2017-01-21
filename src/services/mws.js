@@ -24,9 +24,9 @@ module.exports = {
 
         this.actions = [
             {
-                method: 'ship',
+                method: 'orderShip',
                 verb: 'post',
-                url: this.service_url_prefix + "/ship/:orderId",
+                url: this.service_url_prefix + "/order/ship/:orderId",
                 handler: function (app, options) {
                     return function *(next) {
                         try {
@@ -67,6 +67,40 @@ module.exports = {
                             var wrapperResult = yield app.app_weixin.sendTemplateMessage('OrderShipped', order.open_id, order.tenantId, sendData);
                
                             this.body = wrapperResult;
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'spuPublish',
+                verb: 'post',
+                url: this.service_url_prefix + "/spu/publish/:spuId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            yield app.modelFactory().model_update(app.models['mws_spu'], this.params.spuId, {publish_flag: true});
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'spuUnpublish',
+                verb: 'post',
+                url: this.service_url_prefix + "/spu/unpublish/:spuId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            yield app.modelFactory().model_update(app.models['mws_spu'], this.params.spuId, {publish_flag: false});
+                            this.body = app.wrapper.res.default();
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);

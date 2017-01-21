@@ -8,7 +8,9 @@
     },
     "spu": {
       "list": {
-        "TITLE": "web商城-产品管理-标准产品单元-列表"
+        "TITLE": "web商城-产品管理-标准产品单元-列表",
+        "PUBLISH-CONFIRM-MESSAGE": "当前产品将被上架，确定要继续么？",
+        "UNPUBLISH-CONFIRM-MESSAGE": "当前产品将被下架，确定要继续么？"
       },
       "details": {
         "TITLE": "web商城-产品管理-标准产品单元-详情",

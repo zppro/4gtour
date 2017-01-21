@@ -121,10 +121,10 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var where = {status: 1, cancel_flag: 0, tenantId: this.request.body.tenantId};
+                            var where = {status: 1,  cancel_flag: 0, publish_flag:true, tenantId: this.request.body.tenantId};
                             var rows = yield app.modelFactory().model_query(app.models['mws_spu'], {
                                     where: where,
-                                    select: 'name imgs skus',
+                                    select: 'name imgs skus shipment_place',
                                     sort: {name: 1}
                                 },
                                 {limit: this.request.body.page.size, skip: this.request.body.page.skip});

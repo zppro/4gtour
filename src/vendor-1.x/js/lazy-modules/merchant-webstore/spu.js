@@ -24,11 +24,52 @@
         function init() {
             vm.init({removeDialog: ngDialog});
 
-
+            vm.publish = publish;
+            vm.unpublish = unpublish;
             // vmh.translate(vm.viewTranslatePath('RESET-USER-PASSWORD-COMMENT')).then(function (ret) {
             //     $scope.dialogData = {details: ret};
             // });
             vm.query();
+        }
+
+        function publish(row) {
+            ngDialog.openConfirm({
+                template: 'customConfirmDialog.html',
+                className: 'ngdialog-theme-default',
+                controller: ['$scope', function ($scopeConfirm) {
+                    $scopeConfirm.message = vm.viewTranslatePath('PUBLISH-CONFIRM-MESSAGE')
+                }]
+            }).then(function () {
+                vm.blocker.start();
+                vmh.mwsService.spuPublish(row.id).then(function(ret){
+                    vmh.translate('notification.CUSTOM-SUCCESS',{customAction: '上架'}).then(function (msg) {
+                        vmh.alertSuccess(msg);
+                    })
+                    row.publish_flag = true;
+                }).finally(function(){
+                    vm.blocker.stop();
+                });
+            });
+        }
+
+        function unpublish(row) {
+            ngDialog.openConfirm({
+                template: 'customConfirmDialog.html',
+                className: 'ngdialog-theme-default',
+                controller: ['$scope', function ($scopeConfirm) {
+                    $scopeConfirm.message = vm.viewTranslatePath('UNPUBLISH-CONFIRM-MESSAGE')
+                }]
+            }).then(function () {
+                vm.blocker.start();
+                vmh.mwsService.spuUnPublish(row.id).then(function(ret){
+                    vmh.translate('notification.CUSTOM-SUCCESS',{customAction: '下架'}).then(function (msg) {
+                        vmh.alertSuccess(msg);
+                    })
+                    row.publish_flag = false;
+                }).finally(function(){
+                    vm.blocker.stop();
+                });
+            });
         }
     }
 

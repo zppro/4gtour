@@ -32,6 +32,7 @@
                                 a.btn.btn-primary.btn-xs(popover-template=" 'TP-img.html' " popover-title="{{::row.name}}",popover-placement="right",popover-trigger="mouseenter")
                                     i.glyphicon.glyphicon-eye-open
                         td.text-left {{::row.name}}
+                        td {{row.publish_flag|boolFilter}}
                         td {{::row.sale_price_lower|currency}} ~ {{::row.sale_price_upper|currency}}
                         td {{::row.market_price_lower|currency}} ~ {{::row.market_price_upper|currency}}
                         td.text-right {{::row.sales_monthly}}
@@ -40,6 +41,12 @@
                             .btn-group
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row.id)")
                                     i.glyphicon.glyphicon-pencil
+                            .btn-group(ng-if="row.publish_flag")
+                                a.btn.btn-danger.btn-xs(title="{{ vm.viewTranslatePath('UNPUBLISH') | translate}}",ng-click="vm.unpublish(row)")
+                                    i.glyphicon.glyphicon-save
+                            .btn-group(ng-if="!row.publish_flag")
+                                a.btn.btn-danger.btn-xs(title="{{ vm.viewTranslatePath('PUBLISH') | translate}}",ng-click="vm.publish(row)")
+                                    i.glyphicon.glyphicon-open
                     tr(ng-if="vm.paged.length==0")
                         td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}
             .panel-footer

@@ -525,12 +525,22 @@
             $get: ['$http', function ($http) {
 
                 return {
-                    ship: ship,
+                    orderShip: orderShip,
+                    spuPublish: spuPublish,
+                    spuUnPublish: spuUnPublish,
                     accessTokens: accessTokens
                 };
 
-                function ship(orderId, data) {
-                    return $http.post(baseUrl + 'ship/' + orderId, data);
+                function orderShip(orderId, data) {
+                    return $http.post(baseUrl + 'order/ship/' + orderId, data);
+                }
+
+                function spuPublish(spuId, data) {
+                    return $http.post(baseUrl + 'spu/publish/' + spuId, data);
+                }
+
+                function spuUnPublish(spuId, data) {
+                    return $http.post(baseUrl + 'spu/unpublish/' + spuId, data);
                 }
 
                 function accessTokens() {

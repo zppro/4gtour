@@ -91,6 +91,13 @@
                                 sortable: true
                             },
                             {
+                                label: '上架',
+                                name: 'publish_flag',
+                                type: 'bool',
+                                width: 40,
+                                sortable: true
+                            },
+                            {
                                 label: '销售价',
                                 name: 'sales_price',
                                 type: 'number',

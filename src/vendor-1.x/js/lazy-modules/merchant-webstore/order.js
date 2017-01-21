@@ -69,7 +69,7 @@
                         }]
                     }).then(function () {
                         vm.blocker.start();
-                        vmh.mwsService.ship(vm.model.id, {shipping_fee: vm.model.shipping_fee, logistics_code: vm.model.logistics_code, logistics_company: vm.model.logistics_company}).then(function(ret){
+                        vmh.mwsService.orderShip(vm.model.id, {shipping_fee: vm.model.shipping_fee, logistics_code: vm.model.logistics_code, logistics_company: vm.model.logistics_company}).then(function(ret){
                             vmh.translate('notification.CUSTOM-SUCCESS',{customAction: '发货'}).then(function (msg) {
                                 vmh.alertSuccess(msg);
                             })

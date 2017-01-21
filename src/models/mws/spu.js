@@ -18,11 +18,12 @@ module.exports = function(ctx,name) {
             operated_on: {type: Date, default: Date.now},
             name: {type: String, required: true},
             status: {type: Number, min: 0, max: 1, default: 1},
-            cancel_flag: {type: Number, min: 0, max: 1, default: 0}, //撤销标记 违法信息时设置为1
+            cancel_flag: {type: Number, min: 0, max: 1, default: 0}, //强制撤销标记 违法信息时设置为1 平台管理使用
             imgs: [String],//套图
             shipment_place: {type: String}, // 发货地址
             intro: {type: String},
             intro_url: {type: String},
+            publish_flag: {type: Boolean, default: false}, //上架标志 租户使用
             skus:[{
                 name: {type: String},
                 quantity: {type: Number, min:0}, // 库存数量
