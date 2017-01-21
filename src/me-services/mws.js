@@ -4,7 +4,7 @@
  */
 var rp = require('request-promise-native');
 var DIC = require('../pre-defined/dictionary-constants.json');
-var district = require('../pre-defined/district.json');
+var caddress = require('../pre-defined/caddress.json');
 module.exports = {
     init: function (option) {
         var self = this;
@@ -32,7 +32,7 @@ module.exports = {
                 handler: function (app, options) {
                     return function * (next) {
                         try {
-                            var provinces = app._.map(district, (o) => {
+                            var provinces = app._.map(caddress, (o) => {
                                 return {id: o._id,name: o.name}
                             })
                             this.body = app.wrapper.res.rows(provinces);
@@ -52,7 +52,7 @@ module.exports = {
                     return function * (next) {
                         try {
                             var provinceId = this.params.provinceId;
-                            var province = app._.find(district, (o) => {
+                            var province = app._.find(caddress, (o) => {
                                 return o._id == provinceId
                             });
 
@@ -82,7 +82,7 @@ module.exports = {
                     return function * (next) {
                         try {
                             var provinceId = this.params.provinceId;
-                            var province = app._.find(district, (o) => {
+                            var province = app._.find(caddress, (o) => {
                                 return o._id == provinceId
                             });
                             if (!province) {
