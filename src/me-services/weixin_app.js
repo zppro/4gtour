@@ -141,6 +141,13 @@ module.exports = {
                                 allowSurrogateChars: true
                             });
                             var notifyData = this.request.body.xml;
+
+                            for(var key in  notifyData) {
+                                if (app._.isArray(notifyData[key])) {
+                                    notifyData[key] = notifyData[key][0];
+                                }
+                            }
+
                             var signValid = yield app.app_weixin.validateNotifyData(notifyData);
                             self.logger.info('$$$ signValid：' + signValid);
                             if (!signValid) {
