@@ -135,7 +135,7 @@ module.exports = {
                     return function * (next) {
                         try {
                             self.logger.info('-----------------begin payNotify------------------------');
-                            self.logger.info(this.request.body.xml);
+                            self.logger.info(this.request.body);
                             var that = this;
                             var builder = new xml2js.Builder({
                                 allowSurrogateChars: true
