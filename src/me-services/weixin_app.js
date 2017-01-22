@@ -135,7 +135,7 @@ module.exports = {
                     return function * (next) {
                         try {
                             self.logger.info('-----------------begin payNotify------------------------');
-                            self.logger.info(this.request.body);
+                            // self.logger.info(this.request.body);
                             var that = this;
                             var builder = new xml2js.Builder({
                                 allowSurrogateChars: true
@@ -147,7 +147,7 @@ module.exports = {
                                     notifyData[key] = notifyData[key][0];
                                 }
                             }
-
+                            self.logger.info(notifyData);
                             var signValid = yield app.app_weixin.validateNotifyData(notifyData);
                             self.logger.info('$$$ signValid：' + signValid);
                             if (!signValid) {
@@ -162,8 +162,9 @@ module.exports = {
                             }
 
                             var out_trade_no = notifyData['out_trade_no'];
+                            self.logger.info('out_trade_no:' + out_trade_no);
                             var transaction_id = notifyData['transaction_id'];
-                            console.log(transaction_id);
+                            self.logger.info('transaction_id:' + transaction_id);
                             var payedOrder = yield app.modelFactory().model_one(app.models['mws_order'], { where: {
                                 out_trade_no: out_trade_no
                             }});
