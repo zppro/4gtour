@@ -166,7 +166,7 @@ module.exports = {
                             var transaction_id = notifyData['transaction_id'];
                             self.logger.info('transaction_id:' + transaction_id);
                             var payedOrder = yield app.modelFactory().model_one(app.models['mws_order'], { where: {
-                                out_trade_no: out_trade_no
+                                code: out_trade_no
                             }});
                             self.logger.info(payedOrder);
                             if (!payedOrder) {
