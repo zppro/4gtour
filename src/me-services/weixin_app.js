@@ -134,7 +134,7 @@ module.exports = {
                 handler: function (app, options) {
                     return function * (next) {
                         try {
-                            self.logger.info('-----------------begin payNotify------------------------');
+                            // self.logger.info('-----------------begin payNotify------------------------');
                             // self.logger.info(this.request.body);
                             var that = this;
                             var builder = new xml2js.Builder({
@@ -147,7 +147,7 @@ module.exports = {
                                     notifyData[key] = notifyData[key][0];
                                 }
                             }
-                            self.logger.info(notifyData);
+                            // self.logger.info(notifyData);
                             var signValid = yield app.app_weixin.validateNotifyData(notifyData);
                             self.logger.info('$$$ signValid：' + signValid);
                             if (!signValid) {
@@ -162,13 +162,13 @@ module.exports = {
                             }
 
                             var out_trade_no = notifyData['out_trade_no'];
-                            self.logger.info('out_trade_no:' + out_trade_no);
+                            // self.logger.info('out_trade_no:' + out_trade_no);
                             var transaction_id = notifyData['transaction_id'];
-                            self.logger.info('transaction_id:' + transaction_id);
+                            // self.logger.info('transaction_id:' + transaction_id);
                             var payedOrder = yield app.modelFactory().model_one(app.models['mws_order'], { where: {
                                 code: out_trade_no
                             }});
-                            self.logger.info(payedOrder);
+                            // self.logger.info(payedOrder);
                             if (!payedOrder) {
                                 this.body = builder.buildObject({
                                     xml:{
@@ -201,8 +201,8 @@ module.exports = {
                                     return_code: 'SUCCESS'
                                 }
                             });
-                            self.logger.info(this.body);
-                            self.logger.info('-----------------end payNotify------------------------');
+                            // self.logger.info(this.body);
+                            // self.logger.info('-----------------end payNotify------------------------');
 
                         } catch (e) {
                             self.logger.error(e.message);
