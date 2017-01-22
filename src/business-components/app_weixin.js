@@ -290,6 +290,8 @@ module.exports = {
         var self = this;
         return co(function *() {
             try {
+                self.logger.info('----------------begin validateNotifyData--------------------');
+                self.logger.info(notifyData);
                 var signKeys = [];
                 for(var key in  notifyData) {
                     if (self.ctx._.isArray(notifyData[key])) {
@@ -317,7 +319,7 @@ module.exports = {
                     console.log('MD5');
                     genSign =  md5(stringSignTemp).toUpperCase();
                 }
-
+                self.logger.info('----------------end validateNotifyData--------------------');
                 return genSign == notifyData['sign'];
             }
             catch (e) {
