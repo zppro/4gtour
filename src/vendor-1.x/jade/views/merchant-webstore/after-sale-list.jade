@@ -36,12 +36,15 @@
                         td {{::row.order_code}}
                         td {{::row.audit_result_name}}
                         td.text-left
-                            .btn-group
+                            .btn-group(ng-if="row.biz_status == 'A0001'")
+                                a.btn.btn-primary.btn-xs(title="{{ vm.viewTranslatePath('ACCEPT') | translate}}",ng-click="vm.actionDef('accept', row.id)")
+                                    i.glyphicon.glyphicon-save
+                            .btn-group(ng-if="row.biz_status == 'A0003'")
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
                                     i.glyphicon.glyphicon-pencil
-                            .btn-group(ng-if="row.order_status == 'A0001'")
-                                a.btn.btn-primary.btn-xs(title="{{ vm.viewTranslatePath('SHIPPING') | translate}}",ng-click="vm.actionDef('audit', row.id)")
-                                    i.glyphicon.glyphicon-send
+                            .btn-group(ng-if="row.biz_status != 'A0001' && row.biz_status != 'A0003'")
+                                a.btn.btn-primary.btn-xs(title="{{'button.READ'|translate}}",ng-click="vm.read(row._id)")
+                                    i.glyphicon.glyphicon-search
                     tr(ng-if="vm.paged.length==0")
                         td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}
             .panel-footer

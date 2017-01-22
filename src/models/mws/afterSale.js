@@ -28,9 +28,9 @@ module.exports = function(ctx,name) {
             order_code: {type: String, required: true},
             open_id: {type: String, required: true},//申请售后人OpenId
             apply_for_nickname: {type: String},//申请售后人昵称
-            audit_on: {type: Date},//审核时间
-            audit_result: {type: String, enum: ctx._.rest(ctx.dictionary.keys["MWS07"])},//审核结果
-            audit_comment:  {type: String},//审核结果说明
+            audit_on: {type: Date},//受理时间
+            audit_result: {type: String, enum: ctx._.rest(ctx.dictionary.keys["MWS07"])},//受理结果
+            audit_comment:  {type: String},//受理结果说明
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {
             toObject: {
@@ -73,7 +73,7 @@ module.exports = function(ctx,name) {
         });
 
         afterSaleSchema.virtual('audit_result_name').get(function () {
-            if (this.pay_type) {
+            if (this.audit_result) {
                 return MWS07[this.audit_result].name;
             }
             return ''

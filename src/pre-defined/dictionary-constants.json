@@ -65,8 +65,9 @@
     "REFUNDED": "A0015"
   },
   "MWS05":{
-    "WAITING_AUDIT": "A0001",
-    "AUDIT_PASS": "A0003",
-    "TERMINATED": "A0005"
+    "WAITING_ACCEPT": "A0001",
+    "ACCEPTED": "A0003",
+    "AUDIT_PASS": "A0005",
+    "TERMINATED":"A0007"
   }
 }

@@ -26,22 +26,24 @@
 
             if (vm.switches.leftTree) {
                 vmh.shareService.d('MWS06').then(function (rows) {
-                    var treeNodes = _.map(_.initial(rows),function(row){
+                    var treeNodes = _.map(rows,function(row){
                         return {_id:row.value,name:row.name};
                     });
                     treeNodes.unshift({_id: '', name:'全部'});
                     vm.trees = [new vmh.treeFactory.sTree('tree1', treeNodes, {mode: 'grid'})];
-                    vm.trees[0].selectedNode = vm.trees[0].findNodeById($scope.$stateParams.roles);
+                    vm.trees[0].selectedNode = vm.trees[0].findNodeById($scope.$stateParams.type);
                 });
 
                 $scope.$on('tree:node:select', function ($event, node) {
-
                     var selectNodeId = node._id;
-                    if ($scope.$stateParams.roles != selectNodeId) {
-                        $scope.$state.go(vm.viewRoute(), {roles: selectNodeId});
+                    if ($scope.$stateParams.type != selectNodeId) {
+                        $scope.$state.go(vm.viewRoute(), {type: selectNodeId});
                     }
                 });
             }
+
+
+
 
             vm.query();
         }
@@ -62,40 +64,36 @@
             vm.init({removeDialog: ngDialog});
 
             vm.doSubmit = doSubmit;
+            vm.tab1 = {cid: 'contentTab1', active: true};
 
-            vm.tab1 = {cid: 'contentTab1'};
-            vm.tab2 = {cid: 'contentTab2'};
 
-            if (vm._action_ == 'ship') {
-                vm.tab2.active = true;
-            } else {
-                vm.tab1.active = true;
-            }
+            vmh.shareService.d('MWS07').then(function (rows) {
+                vm.selectBinding.afterSaleAuditResults = rows;
+            });
 
-            vm.load();
+            vm.load().then(function(){
+                if (vm._action_ == 'accept' && vm.model.biz_status == 'A0001') {
+                    vmh.mwsService.afterSaleAccept(vm.model.id).then(function(ret){
+                        vm.model.biz_status = ret.biz_status;
+                        vm.model.audit_on = ret.audit_on;
+                    });
+                }
+            });
 
         }
 
-
         function doSubmit() {
             if ($scope.theForm.$valid) {
-                if (vm._action_ == 'ship') {
+                if (vm.finish_flag) {
                     ngDialog.openConfirm({
                         template: 'customConfirmDialog.html',
                         className: 'ngdialog-theme-default',
                         controller: ['$scope', function ($scopeConfirm) {
-                            $scopeConfirm.message = vm.viewTranslatePath('SUBMIT-SHIPPING-CONFIRM-MESSAGE')
+                            $scopeConfirm.message = vm.viewTranslatePath('SUBMIT-FINISH-CONFIRM-MESSAGE')
                         }]
                     }).then(function () {
-                        vm.blocker.start();
-                        vmh.mwsService.ship(vm.model.id, {shipping_fee: vm.model.shipping_fee, logistics_code: vm.model.logistics_code, logistics_company: vm.model.logistics_company}).then(function(ret){
-                            vmh.translate('notification.CUSTOM-SUCCESS',{customAction: '发货'}).then(function (msg) {
-                                vmh.alertSuccess(msg);
-                            })
-                            vm.toListView();
-                        }).finally(function(){
-                            vm.blocker.stop();
-                        });
+                        vm.model.biz_status = 'A0005';
+                        vm.save();
                     });
                 } else {
                     vm.save();
@@ -104,9 +102,6 @@
             else {
                 if ($scope.utils.vtab(vm.tab1.cid)) {
                     vm.tab1.active = true;
-                }
-                if ($scope.utils.vtab(vm.tab2.cid)) {
-                    vm.tab2.active = true;
                 }
             }
         }

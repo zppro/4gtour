@@ -1,0 +1,69 @@
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .row
+        .col-md-1.control-label {{ vm.viewTranslatePath('HEAD-LABEL-CODE') | translate}}:
+        .col-md-2
+            input.read-control-underline(readonly,ng-model="vm.model.code")
+        .col-md-1.control-label {{ vm.viewTranslatePath('HEAD-LABEL-BIZ_STATUS') | translate}}:
+        .col-md-2
+            input.read-control-underline(readonly,ng-model="vm.model.biz_status_name")
+        .col-md-1.control-label {{ vm.viewTranslatePath('HEAD-LABEL-APPLY_FOR_NICKNAME') | translate}}:
+        .col-md-2
+            input.read-control-underline(readonly,ng-model="vm.model.apply_for_nickname")
+        .col-md-1.control-label {{ vm.viewTranslatePath('HEAD-LABEL-CHECK_IN_TIME') | translate}}:
+        .col-md-2
+            input.read-control-underline(readonly,value="{{vm.model.check_in_time|date}}")
+    .row-split
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        <!--售后类型-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-TYPE') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.type_name}}
+                    fieldset: .form-group
+                        <!--申请原因-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-MEMO') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.memo}}
+                    fieldset: .form-group
+                        <!--原始订单-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ORDER_CODE') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.order_code}}
+                    fieldset: .form-group
+                        <!--受理时间-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-AUDIT_ON') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.audit_on | date}}
+                    fieldset: .form-group
+                        <!--受理结果-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-AUDIT_RESULT') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            .btn-group
+                                .btn.btn-primary(name='audit_result',ng-repeat='auditResult in vm.selectBinding.afterSaleAuditResults',ng-model='vm.model.audit_result',btn-radio="auditResult.value",required='') {{auditResult.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'audit_result','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.model.audit_result_name}}
+                    fieldset: .form-group
+                        <!--受理结果说明-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-AUDIT_COMMENT') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            textarea.form-control(name='audit_comment',ng-model='vm.model.audit_comment',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-AUDIT_COMMENT")|translate}}')
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.model.audit_comment}}
+    .text-right.mt-lg(ng-if="!vm.readonly")
+        .checkbox.c-checkbox
+            label
+                input#finishFlag(type='checkbox',ng-model='vm.finish_flag')
+                span.fa.fa-check
+        label(for="finishFlag") {{ vm.viewTranslatePath('TAB1-LABEL-FINISH_FLAG') | translate}}
+    .text-right.mt-lg
+        button.btn.btn-warning(ng-if="!vm.readonly", type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(ng-if="!vm.readonly", type="submit") {{'button.SAVE'|translate}}
+        button.btn.btn-primary(ng-if="vm.readonly",type="button",ng-click="vm.toListView()") {{'button.RETURN'|translate}}

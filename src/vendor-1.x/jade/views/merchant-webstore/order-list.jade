@@ -40,9 +40,6 @@
                             .btn-group(ng-if="row.order_status == 'A0003'")
                                 a.btn.btn-primary.btn-xs(title="{{ vm.viewTranslatePath('SHIPPING') | translate}}",ng-click="vm.actionDef('ship', row.id)")
                                     i.glyphicon.glyphicon-send
-                            .btn-group(ng-if="row.order_status == 'A0011'")
-                                a.btn.btn-danger.btn-xs(title="{{ vm.viewTranslatePath('REFUNDING') | translate}}",ng-click="vm.refuncForOrder(row)")
-                                    i.glyphicon.glyphicon-share-alt
                     tr(ng-if="vm.paged.length==0")
                         td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}
             .panel-footer

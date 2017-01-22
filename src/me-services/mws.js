@@ -778,7 +778,7 @@ module.exports = {
                                 this.body = app.wrapper.res.error({code: 53001 ,message: 'invalid orderId' });
                             }
                             var afterSale = app._.extend({
-                                biz_status: DIC.MWS05.WAITING_AUDIT,
+                                biz_status: DIC.MWS05.WAITING_ACCEPT,
                                 order_code: order.code
                             }, this.request.body);
                             var created = yield app.modelFactory().model_create(app.models['mws_afterSale'], afterSale);

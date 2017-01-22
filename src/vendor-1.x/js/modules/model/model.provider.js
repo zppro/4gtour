@@ -528,6 +528,7 @@
                     orderShip: orderShip,
                     spuPublish: spuPublish,
                     spuUnPublish: spuUnPublish,
+                    afterSaleAccept: afterSaleAccept,
                     accessTokens: accessTokens
                 };
 
@@ -542,6 +543,11 @@
                 function spuUnPublish(spuId, data) {
                     return $http.post(baseUrl + 'spu/unpublish/' + spuId, data);
                 }
+
+                function afterSaleAccept(afterSaleId, data) {
+                    return $http.post(baseUrl + 'afterSale/accept/' + afterSaleId, data);
+                }
+
 
                 function accessTokens() {
                     return $http.get(baseUrl + 'accessTokens');

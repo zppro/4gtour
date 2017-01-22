@@ -110,6 +110,24 @@ module.exports = {
                 }
             },
             {
+                method: 'afterSaleAccept',
+                verb: 'post',
+                url: this.service_url_prefix + "/afterSale/accept/:afterSaleId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var acceptData = {biz_status: DIC.MWS05.ACCEPTED, audit_on: app.moment()};
+                            yield app.modelFactory().model_update(app.models['mws_afterSale'], this.params.afterSaleId, acceptData);
+                            this.body = app.wrapper.res.ret(acceptData);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'accessTokens',
                 verb: 'get',
                 url: this.service_url_prefix + "/accessTokens",

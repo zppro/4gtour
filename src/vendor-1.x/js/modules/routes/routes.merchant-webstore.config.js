@@ -316,7 +316,7 @@
                                 width: 60
                             },
                             {
-                                label: '审核结果',
+                                label: '受理结果',
                                 name: 'audit_result_name',
                                 type: 'string',
                                 width: 80
@@ -329,6 +329,19 @@
                             }
                         ],
                         switches: {leftTree: true}
+                    })
+                }
+            })
+            .state('app.merchant-webstore.after-sale.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath('merchant-webstore/after-sale-details.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'NWS_AfterSaleDetailsController',
+                resolve: {
+                    entityVM: helper.buildEntityVM('app.merchant-webstore.after-sale.details', {
+                        modelName: 'mws-afterSale',
+                        model: {},
+                        blockUI: true
                     })
                 }
             })
