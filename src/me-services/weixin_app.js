@@ -142,6 +142,7 @@ module.exports = {
                             });
                             var notifyData = this.request.body.xml;
                             var signValid = yield app.app_weixin.validateNotifyData(notifyData);
+                            self.logger.info('$$$ signValid：' + signValid);
                             if (!signValid) {
                                 this.body = builder.buildObject({
                                     xml:{
@@ -159,6 +160,7 @@ module.exports = {
                             var payedOrder = yield app.modelFactory().model_one(app.models['mws_order'], { where: {
                                 out_trade_no: out_trade_no
                             }});
+                            self.logger.info(payedOrder);
                             if (!payedOrder) {
                                 this.body = builder.buildObject({
                                     xml:{
