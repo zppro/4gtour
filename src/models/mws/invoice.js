@@ -21,7 +21,13 @@ module.exports = function(ctx,name) {
             open_id: {type: String, required: true},//下单人OpenId
             type: {type: String, enum: ctx._.rest(ctx.dictionary.keys["MWS03"])},
             title_type: {type: String, enum: ctx._.rest(ctx.dictionary.keys["MWS04"])},
-            title: {type: String},
+            title: {type: String}, // 开票抬头
+            content: {type: String}, // 开票内容
+            tax_number: {type: String}, // 税号 type == ‘A0005’ 增值税发票时使用
+            registered_address: {type: String}, // 注册地址 type == ‘A0005’ 增值税发票时使用
+            registered_phone: {type: String}, // 注册电话 type == ‘A0005’ 增值税发票时使用
+            deposit_bank: {type: String}, // 开户银行 type == ‘A0005’ 增值税发票时使用
+            bank_account: {type: String}, // 开户银行 type == ‘A0005’ 增值税发票时使用
             default_flag: {type: Boolean, required: false}, //默认标志
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {
