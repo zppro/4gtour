@@ -189,6 +189,44 @@ module.exports = {
                 }
             },
             {
+                method: 'orderStat',
+                verb: 'post',
+                url: this.service_url_prefix + "/orderStat",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var rows = yield app.modelFactory().model_aggregate(app.models['mws_order'], [
+                                {
+                                    $match: {
+                                        status: 1,
+                                        open_id: this.request.body.open_id,
+                                        order_status: {$in: [DIC.MWS01.NOT_PAY, DIC.MWS01.WAITING_SHIP, DIC.MWS01.SHIPPING, DIC.MWS01.REFUND_APPLY, DIC.MWS01.REFUNDING]},
+                                        tenantId: app.ObjectId(this.request.body.tenantId)
+                                    }
+                                },
+                                {
+                                    $group: {
+                                        _id: '$order_status',
+                                        count: {$sum: 1}
+                                    }
+                                }
+                            ]);
+                            var orderStat = {};
+                            app._.each(rows, (o) => {
+                                orderStat[o._id] = o.count;
+                            });
+
+                            // console.log(orderStat);
+                            this.body = app.wrapper.res.ret(orderStat);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'order',
                 verb: 'get',
                 url: this.service_url_prefix + "/order/:orderId",

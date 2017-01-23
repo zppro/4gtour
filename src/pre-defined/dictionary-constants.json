@@ -62,7 +62,8 @@
     "FINISH": "A0009",
     "REFUND_APPLY": "A0011",
     "REFUNDING": "A0013",
-    "REFUNDED": "A0015"
+    "REFUNDED": "A0015",
+    "CLOSED": "A0017"
   },
   "MWS05":{
     "WAITING_ACCEPT": "A0001",
