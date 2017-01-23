@@ -17,11 +17,11 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         <!--产品图-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-IMGS') | translate}}:
                         .col-md-10
-                            input.form-control(type='hidden', name='img',ng-model='vm.model.img')
                             .img-border
                                 .img-loader(ng-if="vm.model.img")
                                     img(ng-src="{{vm.model.img}}")
                                 .uploader-area(qiniu-uploader, button-text="选择图片" bucket='4gimg',user='vm.tenantId',ng-uploaded-url="vm.model.img")
+                            input.form-control(type='text', name='img',ng-model='vm.model.img')
                     fieldset: .form-group
                         <!--发货地址-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-SHIPMENT_PLACE') | translate}}:
