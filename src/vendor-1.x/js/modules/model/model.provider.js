@@ -671,7 +671,8 @@
             $get: ['$http', function ($http) {
 
                 return {
-                    uploadToken: uploadToken
+                    uploadToken: uploadToken,
+                    upload: upload
                 };
 
                 function uploadToken(user,bucket,key) {
@@ -688,6 +689,10 @@
                     }
 
                     return $http.get(baseUrl + 'uploadToken/' + user + ',' + bucket + ',' + key);
+                }
+                
+                function upload() {
+                    return $http.post(baseUrl + 'upload');
                 }
             }]
         };

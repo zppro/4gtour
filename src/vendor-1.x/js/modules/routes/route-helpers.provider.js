@@ -352,6 +352,23 @@
                     this.actionDef('add', 'new');
                 }
 
+                function setOrder(id, row) {
+                    return $translate(['prompt.SET-ORDER-PROMPT-TITLE', 'notification.NORMAL-SUCCESS']).then(function (ret) {
+                        var promise = $q.when(true);
+                        var newOrderNo = parseInt(window.prompt(ret[0], row.order_no || ''), 10);
+                        if(newOrderNo !== NaN && newOrderNo !== parseInt(row.order_no, 10)) {
+                            Notify.alert('<div class="text-center"><em class="fa fa-check"></em> ' + ret[1] + '</div>', 'success');
+                            promise = modelService.update(id, {order_no: newOrderNo}).$promise;
+                            return promise.then(function () {
+                                row.order_no = newOrderNo;
+                            });
+                        } else {
+                            return promise;
+                        }
+                    });
+                    
+                }
+
                 function edit(id,params) {
                     // $state.go(this.moduleRoute('details'), _.defaults({
                     //     action: 'edit',
@@ -587,6 +604,7 @@
                         return ngDialog;
                     }],
                     add: add,
+                    setOrder: setOrder,
                     edit: edit,
                     actionDef: actionDef,
                     batchAdd:batchAdd,

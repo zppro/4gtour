@@ -9,5 +9,7 @@
             .img-loader
                 img(ng-src="{{vm.testUpload2}}")
             .uploader-area(qiniu-uploader,bucket='4gimg',user='vm.user_code',ng-uploaded-url="vm.testUpload2")
-
+.row
+    .col-xs-3.pt
+        button.btn.btn-primary(ng-click="vm.testNodeJSUploadImage()") 测试服务端上传
 

@@ -39,6 +39,9 @@
                         td.text-right {{::row.sales_all}}
                         td
                             .btn-group
+                                a.btn.btn-primary.btn-xs(title="{{'button.SET-ORDER'|translate}}",ng-click="vm.setOrder(row.id, row)")
+                                    i.glyphicon.glyphicon-sort-by-attributes
+                            .btn-group
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row.id)")
                                     i.glyphicon.glyphicon-pencil
                             .btn-group(ng-if="row.publish_flag")

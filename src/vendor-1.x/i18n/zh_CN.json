@@ -8,6 +8,7 @@
     "REFRESH":"刷新",
     "BATCH-ADD": "批量新增",
     "BATCH-EDIT": "批量修改",
+    "SET-ORDER": "设置排序号(从小到大排列)",
     "EDIT": "修改",
     "CHANGE": "变更",
     "READ": "查看",
@@ -105,6 +106,9 @@
     "SUBMIT": "确定要提交么？",
     "BOOKING": "确定要记账么？",
     "RED":"确定要冲红么？"
+  },
+  "prompt": {
+    "SET-ORDER-PROMPT-TITLE": "设置新的排序序号"
   },
   "dashboard": {
     "WELCOME": "欢迎来到{{appName}}"

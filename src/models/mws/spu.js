@@ -32,6 +32,7 @@ module.exports = function(ctx,name) {
                 sales_monthly: {type: Number, min:0, default: 0},
                 sales_all: {type: Number, min:0, default: 0}
             }],
+            order_no: {type: Number, required: true, default: 1},
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {
             toObject: {

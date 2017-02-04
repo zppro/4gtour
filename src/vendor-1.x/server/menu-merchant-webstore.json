@@ -27,6 +27,11 @@
         "_id": "menu.merchant-webstore.AFTER-SALE",
         "name": "售后",
         "sref": "app.merchant-webstore.after-sale.list"
+      },
+      {
+        "_id": "menu.merchant-webstore.CHANNEL-UNIT",
+        "name": "渠道",
+        "sref": "app.merchant-webstore.channel-unit.list"
       }
     ]
   },

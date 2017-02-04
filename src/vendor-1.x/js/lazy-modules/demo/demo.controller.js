@@ -619,8 +619,8 @@
 
     }
 
-    DemoIMGProcessQiNiuController.$inject = ['$scope','vmh', 'instanceVM','Auth'];
-    function DemoIMGProcessQiNiuController($scope, vmh, vm,Auth) {
+    DemoIMGProcessQiNiuController.$inject = ['$scope','vmh', 'instanceVM','Auth', 'qiniuNode'];
+    function DemoIMGProcessQiNiuController($scope, vmh, vm, Auth, qiniuNode) {
         $scope.vm = vm;
 
         init();
@@ -628,7 +628,13 @@
         function init() {
             vm.init();
             vm.user_code = Auth.getUser().code;
-            
+            vm.testNodeJSUploadImage = function () {
+                return qiniuNode.upload().then(function (ret) {
+                    console.log(ret.data)
+                });
+            }
+
+
         }
     }
 
