@@ -529,7 +529,8 @@
                     spuPublish: spuPublish,
                     spuUnPublish: spuUnPublish,
                     afterSaleAccept: afterSaleAccept,
-                    accessTokens: accessTokens
+                    accessTokens: accessTokens,
+                    requestAccessToken: requestAccessToken
                 };
 
                 function orderShip(orderId, data) {
@@ -548,9 +549,12 @@
                     return $http.post(baseUrl + 'afterSale/accept/' + afterSaleId, data);
                 }
 
+                function accessTokens(tenantId) {
+                    return $http.get(baseUrl + 'accessTokens/' + tenantId);
+                }
 
-                function accessTokens() {
-                    return $http.get(baseUrl + 'accessTokens');
+                function requestAccessToken(app_id) {
+                    return $http.post(baseUrl + 'requestAccessToken', {appid: app_id});
                 }
 
             }]

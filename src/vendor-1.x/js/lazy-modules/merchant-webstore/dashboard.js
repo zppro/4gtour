@@ -23,8 +23,18 @@
             
             vm.refreshAccessTokens = function () {
                 vmh.blocker.start();
-                vmh.mwsService.accessTokens().then(function(rows){
+                vmh.mwsService.accessTokens(vm.tenantId).then(function(rows){
                     vm.accessTokens = rows;
+                }).finally(function(){
+                    vmh.blocker.stop();
+                });
+            }
+            
+            vm.requestAccessToken = function (app_id) {
+                vmh.blocker.start();
+                vmh.mwsService.requestAccessToken(app_id).then(function(){
+                    vmh.alertSuccess('notification.NORMAL-SUCCESS', true);
+                    vm.refreshAccessTokens();
                 }).finally(function(){
                     vmh.blocker.stop();
                 });

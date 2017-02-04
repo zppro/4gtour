@@ -17,6 +17,7 @@
     "REMOVE": "删除",
     "CLEAR": "清空",
     "CONFIRM": "确定",
+    "GEN":"生成",
     "USER": "管理用户",
     "RESET-USER-PASSWORD":"重设密码",
     "OPEN-FUNCS": "开通功能模块",

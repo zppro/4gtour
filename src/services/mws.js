@@ -130,28 +130,39 @@ module.exports = {
             {
                 method: 'accessTokens',
                 verb: 'get',
-                url: this.service_url_prefix + "/accessTokens",
+                url: this.service_url_prefix + "/accessTokens/:tenantId",
                 handler: function (app, options) {
                     return function *(next) {
                         try {
+                            var tenantId = this.params.tenantId;
+                            var wxConfigs = yield app.modelFactory().model_query(app.models['mws_wxAppConfig'], { where:{tenantId: tenantId}});
+                            if (wxConfigs.length === 0) return self.ctx.wrapper.res.error({code: 53994 ,message: 'not found appid for the tenant:' + tenantId });
                             //app.cache.get(cach
-                            var keys = app.cache.keys();
+
                             var prefix = app.app_weixin.CACHE_MODULE + app.app_weixin.CACHE_ITEM_ACCESS_TOKEN + '@';
-                            console.log(prefix);
-                            var rows = [];
-                            var accessTokenCacheKeys = app._.filter(keys,(o) => {
-                                console.log(o);
-                                console.log(o.indexOf(prefix));
-                                return o.indexOf(prefix) == 0
+
+                            var rows = app._.map(wxConfigs, (o) => {
+                                var key = prefix + o.app_id;
+                               return app._.extend(app._.pick(o,['app_id', 'app_name']),{access_token: app.cache.get(key)});
                             });
-
-                            if(accessTokenCacheKeys.length > 0){
-                                app._.each(accessTokenCacheKeys, (k) => {
-                                  rows.push({key:k, value: app.cache.get(k)})
-                                })
-                            }
-
+                            console.log(rows);
                             this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'requestAccessToken',
+                verb: 'post',
+                url: this.service_url_prefix + "/requestAccessToken",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            this.body = yield app.app_weixin.requestAccessToken(this.request.body.appid)
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);

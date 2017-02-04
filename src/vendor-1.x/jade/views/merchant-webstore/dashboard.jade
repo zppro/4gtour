@@ -1,6 +1,5 @@
 h3
    | 数据面板
-
 .row
    h2.text-center.text-thin 与当前商户相关的汇总数据视图
 .row
@@ -13,9 +12,14 @@ h3
       table.grid.table.table-bordered.table-hover.table-striped(align="center")
          thead
             tr
-               th.text-center(width="30") accessToken键
-               th.text-center(width="70") accessToken值
+               th.text-center(width="30") 小程序Id
+               th.text-center(width="30") 小程序名称
+               th.text-center(width="80") accessToken值
          tbody
             tr(ng-repeat="row in vm.accessTokens" )
-               td.text-left {{row.key}}
-               td.text-left {{row.value}}
+               td {{row.app_id}}
+               td {{row.app_name}}
+               td
+                  | {{row.access_token}}
+                  a.btn.btn-primary.btn-sm(ng-if="row.access_token == null", title="{{'button.GEN'|translate}}",ng-click="vm.requestAccessToken(row.app_id)")
+                     i.glyphicon.glyphicon-plus-sign
