@@ -89,6 +89,22 @@
         "SUBMIT-FINISH-CONFIRM-MESSAGE": "当前售后记录将关闭，无法再修改，确定要继续么？"
       }
     },
+    "channel-unit": {
+      "list": {
+        "TITLE": "web商城-销售管理-渠道-列表"
+      },
+      "details": {
+        "TITLE": "web商城-销售管理-渠道-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-TYPE": "渠道类型",
+        "TAB1-LABEL-PARENT_ID": "上级渠道",
+        "TAB1-PLACEHOLDER-PARENT_ID": "渠道链的上级节点 当前是【省代】-【地区分销/大客户】",
+        "TAB1-LABEL-CODE": "渠道编码",
+        "TAB1-PLACEHOLDER-CODE": "B1",
+        "TAB1-LABEL-NAME": "渠道名称",
+        "TAB1-PLACEHOLDER-NAME": "XX省办事处"
+      }
+    },
     "user-manage": {
       "list": {
         "TITLE": "机构养老云-系统管理-用户-列表",

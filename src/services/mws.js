@@ -136,7 +136,7 @@ module.exports = {
                         try {
                             var tenantId = this.params.tenantId;
                             var wxConfigs = yield app.modelFactory().model_query(app.models['mws_wxAppConfig'], { where:{tenantId: tenantId}});
-                            if (wxConfigs.length === 0) return self.ctx.wrapper.res.error({code: 53994 ,message: 'not found appid for the tenant:' + tenantId });
+                            if (wxConfigs.length === 0) return app.wrapper.res.error({code: 53994 ,message: 'not found appid for the tenant:' + tenantId });
                             //app.cache.get(cach
 
                             var prefix = app.app_weixin.CACHE_MODULE + app.app_weixin.CACHE_ITEM_ACCESS_TOKEN + '@';

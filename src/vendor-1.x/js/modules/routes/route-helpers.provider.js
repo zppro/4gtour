@@ -268,7 +268,13 @@
 
 
                     //设置searchForm
-                    this.searchForm = _.defaults(this.searchForm, processStateParamToSearchForm($stateParams, 'action'), option.searchForm);
+                    if (option.omitStateParamToSearchForm) {
+                        // StateParam中的参数不作为查询条件
+                        this.searchForm = _.defaults(this.searchForm, option.searchForm);
+                    } else {
+                        this.searchForm = _.defaults(this.searchForm, processStateParamToSearchForm($stateParams, 'action'), option.searchForm);
+                    }
+
 
                     //继承数据处理
                     //设置selectFilterObject
@@ -576,7 +582,7 @@
                     selectFilterObject: {"common": {}},
                     sort: {
                         column: option.sortColumn || this.pk || '_id',
-                        direction: -1,
+                        direction: option.sortDirection || -1,
                         toggle: function (column) {
                             if (column.sortable) {
                                 if (this.column === column.name) {

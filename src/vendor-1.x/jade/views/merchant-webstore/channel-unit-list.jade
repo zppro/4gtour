@@ -1,6 +1,8 @@
-//
-   Created by zppro on 16-11-21.
-.col-xs-12.text-center(block-ui="list-block")
+.col-xs-2(ng-if="vm.switches.leftTree")
+    .tree.tree-basic#tree1(ng-style="{height:vm.size.h-15}")
+        ul
+            li.repeat-modify(ng-repeat='node in vm.trees[0].treeData',ng-include="'tree-basic-renderer.html'",ng-init="tIndex=0;nIndex = $index")
+.text-center(ng-class='{"col-xs-10":vm.switches.leftTree,"col-xs-12":!vm.switches.leftTree}')
     .row
         form.form-search
             .input-group.pull-right.page-search
@@ -27,30 +29,16 @@
                                 label
                                     input(type='checkbox' data="trBubble" ng-model="row.checked" )
                                     span.fa.fa-check(data="trBubble")
-                        td
-                            .btn-group(ng-if="row.img.indexOf('http://') != -1 || row.img.indexOf('https://')!=-1")
-                                a.btn.btn-primary.btn-xs(popover-template=" 'TP-img.html' " popover-title="{{::row.name}}",popover-placement="right",popover-trigger="mouseenter")
-                                    i.glyphicon.glyphicon-eye-open
+                        td.text-left {{::row.code}}
                         td.text-left {{::row.name}}
-                        td {{row.publish_flag|boolFilter}}
-                        td {{::row.sale_price_lower|currency}} ~ {{::row.sale_price_upper|currency}}
-                        td {{::row.market_price_lower|currency}} ~ {{::row.market_price_upper|currency}}
-                        td.text-right {{::row.sales_monthly}}
-                        td.text-right {{::row.sales_all}}
-                        td.text-right {{row.order_no}}
-                        td
+                        td {{::row.type_name}}
+                        td.text-left
                             .btn-group
-                                a.btn.btn-primary.btn-xs(title="{{'button.SET-ORDER'|translate}}",ng-click="vm.setOrder(row.id, row)")
-                                    i.glyphicon.glyphicon-sort-by-attributes
-                            .btn-group
-                                a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row.id)")
+                                a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
                                     i.glyphicon.glyphicon-pencil
-                            .btn-group(ng-if="row.publish_flag")
-                                a.btn.btn-danger.btn-xs(title="{{ vm.viewTranslatePath('UNPUBLISH') | translate}}",ng-click="vm.unpublish(row)")
-                                    i.glyphicon.glyphicon-save
-                            .btn-group(ng-if="!row.publish_flag")
-                                a.btn.btn-danger.btn-xs(title="{{ vm.viewTranslatePath('PUBLISH') | translate}}",ng-click="vm.publish(row)")
-                                    i.glyphicon.glyphicon-open
+                            .btn-group(ng-if="row.type !== 'A0001'")
+                                a.btn.btn-primary.btn-xs(title="{{ 'button.GEN' | translate}}",ng-click="vm.qrcodeGen(row.id)")
+                                    i.glyphicon.glyphicon-qrcode
                     tr(ng-if="vm.paged.length==0")
                         td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}
             .panel-footer
@@ -64,5 +52,3 @@
                                     i.glyphicon.glyphicon-minus
                     .col-md-8
                         pagination.pagination-sm.pull-right(total-items="vm.page.totals",ng-model="vm.page.no",max-size="5",items-per-page="vm.page.size",boundary-links="true" ,ng-change="vm.paging()")
-script(type='text/ng-template', id="TP-img.html")
-    img(ng-src="{{row.img}}",style="max-width:200px;")

@@ -74,6 +74,8 @@
                     entryVM: helper.buildEntryVM('app.merchant-webstore.spu.list', {
                         modelName: 'mws-spu',
                         searchForm: {"status": 1},
+                        sortColumn: 'order_no',
+                        sortDirection: 1,
                         serverPaging: true,
                         blockUI: true,
                         columns: [
@@ -121,6 +123,13 @@
                             {
                                 label: '总销量',
                                 name: 'sales_all',
+                                type: 'number',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '排序序号',
+                                name: 'order_no',
                                 type: 'number',
                                 width: 60,
                                 sortable: true
@@ -342,6 +351,85 @@
                         modelName: 'mws-afterSale',
                         model: {},
                         blockUI: true
+                    })
+                }
+            })
+            .state('app.merchant-webstore.channel-unit', {
+                url: '/channel-unit',
+                title: '渠道',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath('partials/merchant-webstore/module-header.html'),
+                        controller: 'ModuleHeaderForTenantController'
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id:'menu.merchant-webstore.CHANNEL-UNIT'//业务系统使用
+                }
+                , resolve: helper.resolveFor('subsystem.merchant-webstore.channel-unit.js')
+            })
+            .state('app.merchant-webstore.channel-unit.list', {
+                url: '/list/:action/:parentId',
+                templateUrl: helper.basepath('merchant-webstore/channel-unit-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'MWS_ChannelUnitGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM('app.merchant-webstore.channel-unit.list', {
+                        modelName: 'mws-channelUnit',
+                        searchForm: {"status": 1},
+                        sortColumn: 'code',
+                        sortDirection: 1,
+                        omitStateParamToSearchForm: true,
+                        serverPaging: true,
+                        blockUI: true,
+                        columns: [
+                            {
+                                label: '渠道编码',
+                                name: 'code',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '渠道名称',
+                                name: 'name',
+                                type: 'string',
+                                width: 200,
+                                sortable: true
+                            },
+                            {
+                                label: '类型',
+                                name: 'type_name',
+                                type: 'string',
+                                width: 80
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 60
+                            }
+                        ],
+                        switches: {leftTree: true},
+                        toDetails: ['parentId']
+                    })
+                }
+            })
+            .state('app.merchant-webstore.channel-unit.details', {
+                url: '/details/:action/:_id/:parentId',
+                templateUrl: helper.basepath('merchant-webstore/channel-unit-details.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'NWS_ChannelUnitDetailsController',
+                resolve: {
+                    entityVM: helper.buildEntityVM('app.merchant-webstore.channel-unit.details', {
+                        modelName: 'mws-channelUnit',
+                        model: {},
+                        blockUI: true,
+                        toList: ['parentId']
                     })
                 }
             })

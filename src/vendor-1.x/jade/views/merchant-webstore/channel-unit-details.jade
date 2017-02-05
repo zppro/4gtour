@@ -1,0 +1,41 @@
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        <!--渠道类型-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-TYPE') | translate}}:
+                        .col-md-10
+                            .btn-group
+                                .btn.btn-primary(name='type',ng-repeat='type in vm.selectBinding.channelUnitTypes',ng-model='vm.model.type',btn-radio="type.value",required='') {{type.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'type','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-PARENT_ID') | translate}}:
+                        .col-md-10(ng-if="vm.model.type != 'A0001' ")
+                            ui-select(name="parentId",ng-model='vm.model.parentId', theme='bootstrap',required='',on-select="vm.onParentIdChanged()")
+                                ui-select-match(placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-PARENT_ID")|translate}}') {{$select.selected.name}}
+                                ui-select-choices(repeat='channelUnitAgent.id as channelUnitAgent in vm.selectBinding.channelUnitAgents | filter: {name: $select.search}')
+                                    div(ng-bind-html='channelUnitAgent.name | highlight: $select.search')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'parentId','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.model.type == 'A0001' ")
+                            .form-readable 无
+                    fieldset: .form-group
+                        <!--编码-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-CODE') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='code',ng-model='vm.model.code',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-CODE")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'code','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        <!--名称-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NAME') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='name',ng-model='vm.model.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-NAME")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'name','required')") {{ "validator.REQUIRED" | translate}}
+    .text-right.mt-lg
+        button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(type="submit") {{'button.SAVE'|translate}}

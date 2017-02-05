@@ -39,7 +39,10 @@ module.exports = function(ctx,name) {
 
 
         channelUnitSchema.virtual('type_name').get(function () {
-            return MWS08[this.type].name;
+            if (this.type) {
+                return MWS08[this.type].name;
+            }
+            return '';
         });
 
 
