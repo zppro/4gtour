@@ -21,6 +21,9 @@ module.exports = function(ctx,name) {
             type: {type: String, required: true, enum: ctx._.rest(ctx.dictionary.keys["MWS08"])},
             code: {type: String, required: true, minlength: 1, maxlength: 12, index: {unique: true}},
             name: {type: String, required: true},
+            wxa_url: {type: String},
+            wxa_qrcode_width: {type: Number, default: 430},
+            wxa_qrcode: {type: String},
             parentId: {type: mongoose.Schema.Types.ObjectId, ref: 'mws_channelUnit'},
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {

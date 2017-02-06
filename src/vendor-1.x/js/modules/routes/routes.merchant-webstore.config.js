@@ -417,6 +417,7 @@
                         switches: {leftTree: true},
                         toDetails: ['parentId']
                     })
+                    , deps: helper.resolveFor2('file-saver')
                 }
             })
             .state('app.merchant-webstore.channel-unit.details', {

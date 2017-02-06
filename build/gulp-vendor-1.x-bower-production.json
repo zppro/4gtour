@@ -24,5 +24,6 @@
   "src/{{target}}/bower_components/plupload/js/plupload.full.min.js",
   "src/{{target}}/bower_components/plupload/js/Moxie.swf",
   "src/{{target}}/bower_components/plupload/js/i18n/zh_CN.js",
-  "src/{{target}}/bower_components/qiniu/dist/qiniu.min.js"
+  "src/{{target}}/bower_components/qiniu/dist/qiniu.min.js",
+  "src/{{target}}/bower_components/file-saver/FileSaver.min.js"
 ]

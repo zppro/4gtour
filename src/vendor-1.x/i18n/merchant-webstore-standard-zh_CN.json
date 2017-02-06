@@ -91,7 +91,13 @@
     },
     "channel-unit": {
       "list": {
-        "TITLE": "web商城-销售管理-渠道-列表"
+        "TITLE": "web商城-销售管理-渠道-列表",
+        "DLG1-LABEL-TITLE": "微信小程序渠道入口",
+        "DLG1-LABEL-WXA_URL": "链接",
+        "DLG1-PLACEHOLDER-WXA_URL": "pages/index?channelUnitId=...",
+        "DLG1-LABEL-WXA_QRCODE_WIDTH": "生成宽度",
+        "DLG1-PLACEHOLDER-WXA_QRCODE_WIDTH": "430",
+        "DLG1-LABEL-WXA-QRCODE": "二维码"
       },
       "details": {
         "TITLE": "web商城-销售管理-渠道-详情",

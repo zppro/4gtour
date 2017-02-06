@@ -8,7 +8,7 @@ var weixinConfig = require('../pre-defined/weixin-config.json');
 
 module.exports = {
     init: function (ctx) {
-        console.log('init weixin... ');
+        console.log('init mp_weixin... ');
         var self = this;
         this.file = __filename;
         this.filename = this.file.substr(this.file.lastIndexOf('/') + 1);

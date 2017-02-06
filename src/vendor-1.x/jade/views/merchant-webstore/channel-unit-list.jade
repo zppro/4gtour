@@ -37,7 +37,7 @@
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
                                     i.glyphicon.glyphicon-pencil
                             .btn-group(ng-if="row.type !== 'A0001'")
-                                a.btn.btn-primary.btn-xs(title="{{ 'button.GEN' | translate}}",ng-click="vm.qrcodeGen(row.id)")
+                                a.btn.btn-primary.btn-xs(title="{{ 'button.GEN' | translate}}",ng-click="vm.openDialogWXAQRCode(row)")
                                     i.glyphicon.glyphicon-qrcode
                     tr(ng-if="vm.paged.length==0")
                         td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}
@@ -52,3 +52,41 @@
                                     i.glyphicon.glyphicon-minus
                     .col-md-8
                         pagination.pagination-sm.pull-right(total-items="vm.page.totals",ng-model="vm.page.no",max-size="5",items-per-page="vm.page.size",boundary-links="true" ,ng-change="vm.paging()")
+script(type="text/ng-template", id="dlg-channel-unit-qrcode.html")
+    form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+        .ngdialog-message
+            h3.mt0 {{ vm.viewTranslatePath('DLG1-LABEL-TITLE') | translate}}
+        .ngdialog-input
+            .row
+                label.col-md-3.control-label.slim {{ vm.viewTranslatePath('DLG1-LABEL-WXA_URL') | translate}}:
+                .col-md-9
+                    .form-readable {{vm.model.id}}
+            .row
+                label.col-md-3.control-label.slim {{ vm.viewTranslatePath('DLG1-LABEL-WXA_URL') | translate}}:
+                .col-md-9
+                    input.control(type='text', name='wxa_url',ng-model='vm.model.wxa_url',placeholder='{{vm.viewTranslatePath("DLG1-PLACEHOLDER-WXA_URL")|translate}}' ,required='')
+                    span.text-danger(ng-show="utils.vinput(this.theForm,'wxa_url','required')") {{ "validator.REQUIRED" | translate}}
+            .row-split
+            .row
+                label.col-md-3.control-label {{ vm.viewTranslatePath('DLG1-LABEL-WXA_QRCODE_WIDTH') | translate}}:
+                .col-md-9
+                    input(type='number', name='wxa_qrcode_width',ng-model='vm.model.wxa_qrcode_width',placeholder='{{vm.viewTranslatePath("DLG1-PLACEHOLDER-WXA_QRCODE_WIDTH")|translate}}' ,required='', ng-model-options="{debounce:500}",ui-validate="{wxa_qrcode_width: '$value > 10'}")
+                    span.text-danger(ng-show="utils.vinput(this.theForm,'wxa_qrcode_width','required')") {{ "validator.REQUIRED" | translate}}
+                    span.text-danger(ng-show="utils.vinput(this.theForm,'wxa_qrcode_width','number')") {{ "validator.NUMBER" | translate}}
+                    span.text-danger(ng-show="utils.vinput(this.theForm,'wxa_qrcode_width','wxa_qrcode_width')") {{ "validator.MIN" | translate:{min:"10"} }}
+                    button.btn.btn-primary(type="submit") {{'button.GEN'|translate}}
+            .row-split
+            .row
+                .col-md-12
+                    .wxa-qrcode
+                        img(ng-if="vm.model.wxa_qrcode", ng-src="{{vm.model.wxa_qrcode}}")
+            .row-split
+            .row(ng-if="vm.model.wxa_qrcode")
+                .col-md-12
+                    .form-readable {{vm.model.wxa_qrcode}}
+        .ngdialog-buttons
+            .row
+                .col-md-3
+                .col-md-6.text-center
+                    a.btn.btn-success(ng-click="vm.downloadQRCode()") {{ "button.DOWNLOAD" | translate}}
+                .col-md-3

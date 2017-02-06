@@ -9,7 +9,7 @@ var xml2js = require('xml2js');
 var md5 = require('md5')
 module.exports = {
     init: function (ctx) {
-        console.log('init weixin... ');
+        console.log('init app_weixin... ');
         var self = this;
         this.file = __filename;
         this.filename = this.file.substr(this.file.lastIndexOf('/') + 1);

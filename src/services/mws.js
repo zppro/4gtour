@@ -3,6 +3,8 @@
  * 网上商城web接口
  */
 var DIC = require('../pre-defined/dictionary-constants.json');
+var rq = require('request');
+var fs = require('fs-extra');
 module.exports = {
     init: function (option) {
         var self = this;
@@ -119,6 +121,59 @@ module.exports = {
                             var acceptData = {biz_status: DIC.MWS05.ACCEPTED, audit_on: app.moment()};
                             yield app.modelFactory().model_update(app.models['mws_afterSale'], this.params.afterSaleId, acceptData);
                             this.body = app.wrapper.res.ret(acceptData);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'genWXAQRCode',
+                verb: 'post',
+                url: this.service_url_prefix + "/channelUnit/genWXAQRCode/:channelUnitId",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var channelUnit = yield app.modelFactory().model_read(app.models['mws_channelUnit'], this.params.channelUnitId);
+                            if (!channelUnit) {
+                                this.body = app.wrapper.res.error({code: 53001 ,message: 'invalid channelUnitId' });
+                                yield next;
+                                return;
+                            }
+                            channelUnit.wxa_url =  this.request.body.wxa_url;
+                            channelUnit.wxa_qrcode_width = this.request.body.wxa_qrcode_width;
+
+                            var wxAppConfig = yield app.modelFactory().model_one(app.models['mws_wxAppConfig'], {where: {status: 1, tenantId:channelUnit.tenantId}, select:'app_id'});
+
+                            var accessTokenWrapper = yield app.app_weixin.requestAccessToken(wxAppConfig.app_id);
+                            if (!accessTokenWrapper.success) {
+                                this.body = accessTokenWrapper;
+                                yield next;
+                                return;
+                            }
+                            var url = 'https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=' + accessTokenWrapper.ret;
+                            var file = 'channelUnit-' + this.params.channelUnitId + '.jpg';
+                            var downloadPromise = new Promise(function (resolve, reject) {
+                                var stream  = rq({
+                                    method: 'POST',
+                                    url: url,
+                                    body: {path: channelUnit.wxa_url, width: channelUnit.wxa_qrcode_width},
+                                    json: true
+                                }).pipe(fs.createWriteStream(file));
+                                stream.on('finish', function () { 
+                                    resolve();
+                                });
+                            });
+                            yield downloadPromise;
+
+                            var retWrapper = yield app.open_qiniu.upload(file, true);
+                            if (retWrapper.success) {
+                                channelUnit.wxa_qrcode = retWrapper.ret;
+                                yield channelUnit.save();
+                            }
+                            this.body = retWrapper;
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);

@@ -25,26 +25,18 @@ module.exports = {
             this.logger.info(this.file + " loaded!");
         }
 
-        qiniu.conf.ACCESS_KEY = 'icuD_ORmQEtx79qweXz60YEJPvuMN9XYjOWUZG_s';
-        qiniu.conf.SECRET_KEY = 'adLkjl-7Velkq-3BjyCccrcJZhjQzH6VyAs7DK6t';
-
-        qiniuExt.config({
-            access_key: qiniu.conf.ACCESS_KEY ,
-            secret_key: qiniu.conf.SECRET_KEY
-        })
-
-        var default_bucket = '4gimg';
+        
 
         this.actions = [
             {
-                method: 'uploadToken',
+                method: 'uploadTokenOld',
                 verb: 'get',
-                url: this.service_url_prefix + "/uploadToken/:user,:bucket,:key?",
+                url: this.service_url_prefix + "/uploadTokenOld/:user,:bucket,:key?",
                 handler: function (app, options) {
                     return function * (next) {
                         try {
 
-                            var bucket = this.params.bucket || default_bucket;
+                            var bucket = this.params.bucket;
                             var key = this.params.key;
                             var user = this.params.user;
 
@@ -59,8 +51,32 @@ module.exports = {
                             this.set("Pragma", "no-cache");
                             this.set("Expires", 0);
                             this.set('Parse','no-parse');
-                            
+
                             this.body = {uptoken: pubPolicy.token()};
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'uploadToken',
+                verb: 'get',
+                url: this.service_url_prefix + "/uploadToken/:user,:bucket,:key?",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var bucket = this.params.bucket;
+                            var key = this.params.key;
+                            var user = this.params.user;
+                            this.set("Cache-Control", "max-age=0, private, must-revalidate");
+                            this.set("Pragma", "no-cache");
+                            this.set("Expires", 0);
+                            this.set('Parse','no-parse');
+                            var uploadToken = app.open_qiniu.genUploadToken(key, bucket, user);
+                            this.body = {uptoken: uploadToken};
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -106,6 +122,24 @@ module.exports = {
                             var resultStr= yield downloadPromise;
                             console.log(resultStr);
                             this.body = app.wrapper.res.ret(resultStr);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'download',
+                verb: 'post',
+                url: this.service_url_prefix + "/download",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var downloadUrl = this.request.body.downloadUrl;
+                            this.set("parse", "no-parse");
+                            this.body = rq(downloadUrl);
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);

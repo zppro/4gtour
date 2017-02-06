@@ -8,7 +8,7 @@ var utils = require('../libs/Utils')
 
 module.exports = {
     init: function (ctx) {
-        console.log('init weixin... ');
+        console.log('init mobile_site_weixin... ');
         var self = this;
         this.file = __filename;
         this.filename = this.file.substr(this.file.lastIndexOf('/') + 1);

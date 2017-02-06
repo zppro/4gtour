@@ -529,6 +529,7 @@
                     spuPublish: spuPublish,
                     spuUnPublish: spuUnPublish,
                     afterSaleAccept: afterSaleAccept,
+                    genWXAQRCode: genWXAQRCode,
                     accessTokens: accessTokens,
                     requestAccessToken: requestAccessToken
                 };
@@ -547,6 +548,10 @@
 
                 function afterSaleAccept(afterSaleId, data) {
                     return $http.post(baseUrl + 'afterSale/accept/' + afterSaleId, data);
+                }
+
+                function genWXAQRCode(channelUnitId, data) {
+                    return $http.post(baseUrl + 'channelUnit/genWXAQRCode/' + channelUnitId, data);
                 }
 
                 function accessTokens(tenantId) {
@@ -672,7 +677,9 @@
 
                 return {
                     uploadToken: uploadToken,
-                    upload: upload
+                    upload: upload,
+                    download: download,
+                    download2: download2
                 };
 
                 function uploadToken(user,bucket,key) {
@@ -693,6 +700,48 @@
                 
                 function upload() {
                     return $http.post(baseUrl + 'upload');
+                }
+
+                function download(downloadUrl, fileName) {
+                    if(!downloadUrl) return false;
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('get', downloadUrl, true);
+                    xhr.responseType = 'blob';
+                    xhr.onload = function() {
+                        // 注意这里的this.response 是一个blob对象 就是文件对象
+                        if (this.status == 200) {
+                            saveAs(this.response, fileName);
+                        }
+                    }
+                    xhr.send();
+                    return true;
+                }
+
+                function download2(downloadUrl, fileName) {
+                    return $http.post(baseUrl + 'download', {downloadUrl: downloadUrl}, {responseType: 'blob'}).success(function (res){
+                        saveAs(res, decodeURI(fileName || downloadUrl));
+                    });
+                }
+
+                var loadImageToBlob  = function(url, callback) {
+                    if(!url || !callback) return false;
+
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.open('get', url, true);
+
+                    xhr.responseType = 'blob';
+
+                    xhr.onload = function() {
+
+                        // 注意这里的this.response 是一个blob对象 就是文件对象
+
+                        callback(this.status == 200 ? this.response : false);
+
+                    }
+                    xhr.send();
+                    return true;
+
                 }
             }]
         };
