@@ -102,7 +102,7 @@
             // loadImageToBlob(vm.model.wxa_qrcode, function (blob) {
             //     saveAs(blob, decodeURI(vm.model.name + '.jpg'));
             // });
-            qiniuNode.download(vm.model.wxa_qrcode, vm.model.name + '.jpg');
+            qiniuNode.download(vm.model.wxa_qrcode + '?t=' + new Date(), vm.model.name + '.jpg');
         }
 
         
