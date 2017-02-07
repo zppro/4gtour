@@ -125,7 +125,7 @@ module.exports = {
                             var rows = yield app.modelFactory().model_query(app.models['mws_spu'], {
                                     where: where,
                                     select: 'name imgs skus shipment_place',
-                                    sort: {name: 1}
+                                    sort: {order_no: 1, name: 1}
                                 },
                                 {limit: this.request.body.page.size, skip: this.request.body.page.skip});
 

@@ -29,10 +29,12 @@ module.exports = {
         qiniuExt.config({
             access_key: qiniu.conf.ACCESS_KEY ,
             secret_key: qiniu.conf.SECRET_KEY
-        })
+        });
 
         this.default_bucket = '4gimg';
         this.default_bucket_download_url_prefix = 'http://img2.okertrip.com/';
+
+        this.client =  new qiniu.rs.Client();
 
         console.log(this.filename + ' ready... ');
         return this;
@@ -47,6 +49,36 @@ module.exports = {
         var pubPolicy = new qiniu.rs.PutPolicy2(pubPolicyObj);
         var uploadToken = pubPolicy.token();
         return uploadToken;
+    },
+    stat: function (key, bucket) {
+        var self = this;
+        bucket = bucket || this.default_bucket;
+        return co(function *() {
+            try {
+                var ret =  yield self.ctx.wrapper.cb(self.client.stat)(bucket, key);
+                console.log(ret);
+                return ret;
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+            }
+        }).catch(self.ctx.coOnError);
+    },
+    remove: function (key, bucket) {
+        var self = this;
+        bucket = bucket || this.default_bucket;
+        return co(function *() {
+            try {
+                var ret =  yield self.ctx.wrapper.cb(self.client.remove)(bucket, key);
+                console.log(ret);
+                return ret;
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+            }
+        }).catch(self.ctx.coOnError);
     },
     upload: function(file, removeRaw, bucket, bucketDownloadUrlPrefix) {
         var self = this;
@@ -63,16 +95,15 @@ module.exports = {
                             reject();
                         })
                         .on('end', function(reply) {
-                            console.log(reply);
-                            resolve(reply.key);
+                            resolve(reply);
                             if (removeRaw) fs.removeSync(file)
                         });
                 });
-                var key =  yield uploadPromise;
-                if(!key) {
+                var uploadRet =  yield uploadPromise;
+                if(!uploadRet) {
                     return self.ctx.wrapper.res.error({code: 53993 ,message: 'qiniu upload error' });
                 }
-                return self.ctx.wrapper.res.ret((bucketDownloadUrlPrefix || self.default_bucket_download_url_prefix) + key);
+                return self.ctx.wrapper.res.ret((bucketDownloadUrlPrefix || self.default_bucket_download_url_prefix) + uploadRet.key + '?hash=' + uploadRet.hash);
             }
             catch (e) {
                 console.log(e);

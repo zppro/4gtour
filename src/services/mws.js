@@ -167,9 +167,10 @@ module.exports = {
                                 });
                             });
                             yield downloadPromise;
-
+                            var removeRet = yield app.open_qiniu.remove(file);
                             var retWrapper = yield app.open_qiniu.upload(file, true);
                             if (retWrapper.success) {
+                                console.log(retWrapper.ret);
                                 channelUnit.wxa_qrcode = retWrapper.ret;
                                 yield channelUnit.save();
                             }
