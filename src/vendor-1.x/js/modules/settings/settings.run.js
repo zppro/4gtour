@@ -12,8 +12,8 @@
         // Global Settings
         // -----------------------------------
         $rootScope.app = {
-            name: '四季游-业务管理系统',
-            description: '商户发布产品跟踪订单',
+            name: '梧斯源-综合业务平台',
+            description: '集养老、旅游、服务于一体综合性业务平台',
             year: ((new Date()).getFullYear()),
             layout: {
                 isFixed: true,

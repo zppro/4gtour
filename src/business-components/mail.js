@@ -84,7 +84,7 @@ module.exports = {
                 var pay_time = self.ctx.moment(info.pay_time || Date.now).format('YYYY-MM-DD HH:mm:ss');
                 var pay_type = (IDC02[info.pay_type]||{}).name || '';
                 var mailOptions = {
-                    from: '"四季游服务" <' + user + '>', // sender address
+                    from: '"梧斯源服务" <' + user + '>', // sender address
                     to: 'zhouh@carrycheng.com', // list of receivers
                     subject: '【付款通知】 订单号<' + info.code + '>已支付', // Subject line
                     text: '订单号：' + info.code + '\r\n金额:￥' + info.amount + '\r\n支付方式:'+ pay_type + '\r\n付款时间：' + pay_time +' \r\n【自动发送,请勿回复】'// plaintext body
