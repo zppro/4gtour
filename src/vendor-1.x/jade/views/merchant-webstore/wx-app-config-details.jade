@@ -19,6 +19,11 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         .col-md-10
                             input.form-control(type='text', name='app_name',ng-model='vm.model.app_name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-APP_NAME")|translate}}' ,required='')
                             span.text-danger(ng-show="utils.vinput(this.theForm,'app_name','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        <!--splash图片-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-SPLASH_IMG') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='splash_img',ng-model='vm.model.splash_img',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-SPLASH_IMG")|translate}}')
                     .panel.panel-default.panel-grid
                         .panel-heading-normal
                             a {{ vm.viewTranslatePath('TAB1-LABEL-TEMPLATES') | translate}}

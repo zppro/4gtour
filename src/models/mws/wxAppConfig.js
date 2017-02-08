@@ -23,6 +23,7 @@ module.exports = function(ctx,name) {
                 key: {type: String, required: true}, //查找键
                 wx_template_id: {type: String, required: true} //微信模版id
             }],
+            splash_img: {type: String},
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {
             toObject: {
