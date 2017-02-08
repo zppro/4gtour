@@ -156,6 +156,23 @@ module.exports = {
                 }
             },
             {
+                method: 'channelUnit',
+                verb: 'get',
+                url: this.service_url_prefix + "/channelUnit/:channelUnitId",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var channelUnit = yield app.modelFactory().model_read(app.models['mws_channelUnit'], this.params.channelUnitId);
+                            this.body = app.wrapper.res.ret(channelUnit);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'orders',
                 verb: 'post',
                 url: this.service_url_prefix + "/orders",

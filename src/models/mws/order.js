@@ -66,6 +66,7 @@ module.exports = function(ctx,name) {
                 title: {type: String}
             },
             receipt_on: {type: Date},
+            channelUnitId: {type: mongoose.Schema.Types.ObjectId},
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {
             toObject: {

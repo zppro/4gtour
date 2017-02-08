@@ -31,6 +31,7 @@ module.exports = function(ctx,name) {
             audit_on: {type: Date},//受理时间
             audit_result: {type: String, enum: ctx._.rest(ctx.dictionary.keys["MWS07"])},//受理结果
             audit_comment:  {type: String},//受理结果说明
+            channelUnitId: {type: mongoose.Schema.Types.ObjectId},
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {
             toObject: {
