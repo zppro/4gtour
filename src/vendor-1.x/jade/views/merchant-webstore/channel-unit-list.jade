@@ -36,7 +36,7 @@
                             .btn-group
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
                                     i.glyphicon.glyphicon-pencil
-                            .btn-group(ng-if="row.type !== 'A0001'")
+                            .btn-group
                                 a.btn.btn-primary.btn-xs(title="{{ 'button.GEN' | translate}}",ng-click="vm.openDialogWXAQRCode(row)")
                                     i.glyphicon.glyphicon-qrcode
                     tr(ng-if="vm.paged.length==0")
