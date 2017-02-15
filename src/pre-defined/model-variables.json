@@ -5,9 +5,34 @@
     "ORDER_OF_PFT": "order_PFT$code",
     "ORDER_OF_MERCHANT_WEBSTORE": "mws_order$code",
     "AFTER_SALE_OF_MERCHANT_WEBSTORE": "mws_afterSale$code",
+    "ENTER_TO_TENANT": "psn_enter$tenant",
+    "RECEPTION_TO_TENANT": "psn_reception$tenant",
+    "LEAVE_TO_TENANT": "psn_leave$tenant",
+    "BOOKING_TO_TENANT": "booking$tenant",
     "SCENICSPOT": "scenerySpot$code"
   },
   "KEYS":{
     "SHIPPING_FEE": "shipping_fee"
+  },
+  "SOURCE_TYPES": {
+    "ELDERLY": "psn_elderly",
+    "RECHARGE": "psn_recharge",
+    "RED": "pub_red"
+  },
+  "PSN": {
+    "ROOM_CATEGORIES": {
+      "SINGLE-ROOM": 1,
+      "DOUBLE-ROOM": 2,
+      "TRIPLE-ROOM": 3,
+      "DOMITORY-ROOM": [4,5,6,7,8,9,10,11,12,13]
+    },
+    "CHARGE_ITEM_CUSTOMIZED_CATAGORY": {
+      "_ID": "charge-item.organization-pension.CUSTOMIZED",
+      "NAME": "特色服务"
+    },
+    "CHARGE_ITEM_OTHER_CATAGORY": {
+      "_ID": "charge-item.organization-pension.OTHER",
+      "NAME": "其他"
+    }
   }
 }

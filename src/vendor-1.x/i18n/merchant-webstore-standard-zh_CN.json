@@ -144,6 +144,8 @@
         "TAB1-PLACEHOLDER-APP_NAME": "XX网上商城..",
         "TAB1-LABEL-SPLASH_IMG": "小程序splash图",
         "TAB1-PLACEHOLDER-SPLASH_IMG": "https://img2.okertrip.com/splash-image/2016-2-8-0.jpg..",
+        "TAB1-LABEL-QRCODE": "二维码",
+        "TAB1-PLACEHOLDER-QRCODE": "https://img2.okertrip.com/qrcode/小程序app_id..",
         "TAB1-LABEL-TEMPLATES": "消息模版",
         "TAB1-LABEL-TEMPLATES-KEY": "模版查找键",
         "TAB1-PLACEHOLDER-TEMPLATES-KEY": "OrderShipped..",

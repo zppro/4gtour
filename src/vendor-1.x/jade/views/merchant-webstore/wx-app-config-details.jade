@@ -23,7 +23,20 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         <!--splash图片-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-SPLASH_IMG') | translate}}:
                         .col-md-10
+                            .img-border
+                                .img-loader(ng-if="vm.model.splash_img")
+                                    img(ng-src="{{vm.model.splash_img}}")
+                                .uploader-area(qiniu-uploader, button-text="选择图片" bucket='4gimg',user='vm.model.app_id',ng-uploaded-url="vm.model.splash_img")
                             input.form-control(type='text', name='splash_img',ng-model='vm.model.splash_img',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-SPLASH_IMG")|translate}}')
+                    fieldset: .form-group
+                        <!--二维码-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-QRCODE') | translate}}:
+                        .col-md-10
+                            .img-border
+                                .img-loader(ng-if="vm.model.qrcode")
+                                    img(ng-src="{{vm.model.qrcode}}")
+                                .uploader-area(qiniu-uploader, button-text="选择图片" bucket='4gimg',user='vm.model.app_id',ng-uploaded-url="vm.model.qrcode")
+                            input.form-control(type='text', name='qrcode',ng-model='vm.model.qrcode',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-QRCODE")|translate}}')
                     .panel.panel-default.panel-grid
                         .panel-heading-normal
                             a {{ vm.viewTranslatePath('TAB1-LABEL-TEMPLATES') | translate}}

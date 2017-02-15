@@ -586,7 +586,7 @@
                         modelName: 'mws-wxAppConfig',
                         model: {templates: []},
                         blockUI: true
-                    })
+                    }), deps: helper.resolveFor2('qiniu','qiniu-ng')
                 }
             })
         ;

@@ -24,6 +24,7 @@ module.exports = function(ctx,name) {
                 wx_template_id: {type: String, required: true} //微信模版id
             }],
             splash_img: {type: String},
+            qrcode: {type: String},
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {
             toObject: {
