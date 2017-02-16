@@ -39,6 +39,8 @@
                 {name: 'echarts-ng', files: ['vendor/echarts-ng/dist/echarts-ng.min.js']},
                 {name:'qiniu-ng',files:['app/js/lazy-modules/qiniu-ng.js']},
                 {name:'app.demo',files:['app/js/lazy-modules/demo.js']},
+                {name:'subsystem.shared.user-manage.js',files:['app/js/lazy-modules/shared/user-manage.js']},
+                {name:'subsystem.shared.wxa-config.js',files:['app/js/lazy-modules/shared/wxa-config.js']},
                 {name:'subsystem.manage-center', files: ['app/css/manage-center.css']},
                 {name:'subsystem.manage-center.dashboard.js',files:['app/js/lazy-modules/manage-center/dashboard.js']},
                 {name:'subsystem.manage-center.tenant-account-manage.js',files:['app/js/lazy-modules/manage-center/tenant-account-manage.js']},
@@ -63,7 +65,8 @@
                 {name:'subsystem.merchant-webstore.after-sale.js',files:['app/js/lazy-modules/merchant-webstore/after-sale.js']},
                 {name:'subsystem.merchant-webstore.channel-unit.js',files:['app/js/lazy-modules/merchant-webstore/channel-unit.js']},
                 {name:'subsystem.merchant-webstore.user-manage.js',files:['app/js/lazy-modules/merchant-webstore/user-manage.js']},
-                {name:'subsystem.merchant-webstore.wx-app-config.js',files:['app/js/lazy-modules/merchant-webstore/wx-app-config.js']}
+                {name:'subsystem.merchant-webstore.wx-app-config.js',files:['app/js/lazy-modules/merchant-webstore/wx-app-config.js']},
+                {name:'subsystem.health-center.dashboard.js',files:['app/js/lazy-modules/health-center/dashboard.js']}
             ]
         })
     ;

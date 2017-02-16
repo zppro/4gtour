@@ -1,0 +1,20 @@
+[
+  {
+    "_id": "menu.health-center.SYSTEM-MANAGE",
+    "name": "系统管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.health-center.USER-MANAGE",
+        "name": "用户管理",
+        "sref": "app.health-center.user-manage.list"
+      },
+      {
+        "_id": "menu.health-center.WXA-CONFIG",
+        "name": "微信小程序配置*",
+        "sref": "app.health-center.wxa-config.list"
+      }
+    ]
+  }
+]

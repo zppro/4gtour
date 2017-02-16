@@ -41,6 +41,23 @@ module.exports = {
                 }
             },
             {
+                method: 'wxaConfig',
+                verb: 'get',
+                url: this.service_url_prefix + "/wxaConfig/:wxaConfigId",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var wxaConfig = yield app.modelFactory().model_read(app.models['pub_wxaConfig'], this.params.wxaConfigId);
+                            this.body = app.wrapper.res.ret(wxaConfig);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'getSession',
                 verb: 'get',
                 url: this.service_url_prefix + "/getSession/:gen_session_key",

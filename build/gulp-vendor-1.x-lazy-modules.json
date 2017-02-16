@@ -1,6 +1,8 @@
 [
   { "type":"js","path":"src/{{target}}/js/lazy-modules/qiniu-ng/" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/demo/" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/shared/user-manage.js" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/shared/wxa-config.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/dashboard.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/tenant-account-manage.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/tenant-order-manage.js" },
@@ -24,5 +26,6 @@
   { "type":"js","path":"src/{{target}}/js/lazy-modules/merchant-webstore/after-sale.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/merchant-webstore/channel-unit.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/merchant-webstore/user-manage.js" },
-  { "type":"js","path":"src/{{target}}/js/lazy-modules/merchant-webstore/wx-app-config.js" }
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/merchant-webstore/wx-app-config.js" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/health-center/dashboard.js" }
 ]

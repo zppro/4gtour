@@ -10,6 +10,10 @@
     ;
     modelRun.$inject = ['modelNode'];
     function modelRun(modelNode) {
+
+        // *子系统共享*
+        modelNode.factory('pub-wxaConfig');
+
         //web商城
         modelNode.factory('mws-spu');
         modelNode.factory('mws-order');
