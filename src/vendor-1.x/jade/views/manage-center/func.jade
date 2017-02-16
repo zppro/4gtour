@@ -1,7 +1,9 @@
 
 .col-xs-2.col-fixed
-    .row.btn-group
-            label.btn.btn-primary(ng-repeat='subsystem in vm.selectBinding.subsystems',ng-model='vmc.selectedSubsystem',btn-radio="subsystem",ng-change="vmc.onSubsystemChanged()") {{subsystem.name}}
+    //.row.btn-group
+    //        label.btn.btn-primary(ng-repeat='subsystem in vm.selectBinding.subsystems',ng-model='vmc.selectedSubsystem',btn-radio="subsystem",ng-change="vmc.onSubsystemChanged()") {{subsystem.name}}
+    .row
+        .dropdown(s-dropdown,is-button,s-dropdown-option="{selectItemFormat:'object'}", ng-model="vmc.selectedSubsystem",s-dropdown-data="vm.dropdownDataPromise",dropdown-template-url='dropdown-default-renderer.html' on-select="vmc.onSubsystemChanged(item)")
     .row
         .tree.tree-basic#tree1(ng-style="{height:vm.size.h-(vm.switches.setTenantOpenFuncs?45:15)}")
             ul

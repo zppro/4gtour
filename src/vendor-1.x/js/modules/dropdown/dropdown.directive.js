@@ -10,8 +10,8 @@
         .directive('sDropdown', sDropdown)
     ;
 
-    sDropdown.$inject = ['$q'];
-    function sDropdown($q) {
+    sDropdown.$inject = ['$q', '$timeout'];
+    function sDropdown($q, $timeout) {
 
 
         var directive = {
@@ -38,7 +38,8 @@
 
             // Bring in changes from outside:
             scope.$watch('model', function(newValue,oldValue) {
-
+                console.log(newValue)
+                console.log(oldValue)
                 if (newValue != oldValue) {
                     scope.$eval(attrs.ngModel + ' = model');
                     setShowText();
@@ -61,12 +62,12 @@
             scope.select = function (item) {
                 scope.model = selectItemFormat == 'object' ? item : item[valueKey];
                 if (scope.onSelect) {
-                    scope.onSelect({item: item});
+                    $timeout(function () {
+                        scope.onSelect({item: item});
+                    }, 0);
                 }
             };
-            console.log(23424)
             $q.when(data).then(function (items) {
-                console.log(5555)
                 scope.items = items;
 
                 setShowText();
@@ -74,25 +75,23 @@
 
             function setShowText() {
                 scope.showText = scope.emptyPlaceholder || '请选择';
-                for (var i = 0; i < scope.items.length; i++) {
-
-                    if (selectItemFormat == 'object') {
-                        if (scope.items[i] == scope.model || scope.items[i][valueKey] == scope.model[valueKey]) {
-                            scope.showText = scope.items[i][textKey];
-                            break;
+                if (scope.items) {
+                    for (var i = 0; i < scope.items.length; i++) {
+                        if (selectItemFormat == 'object') {
+                            if (scope.model && scope.items[i] == scope.model) { //|| (valueKey && scope.items[i][valueKey] == scope.model[valueKey])
+                                scope.showText = scope.items[i][textKey];
+                                break;
+                            }
                         }
-                    }
-                    else {
+                        else {
 
-                        if (scope.items[i][valueKey] == scope.model) {
-                            scope.showText = scope.items[i][textKey];
-                            break;
+                            if (scope.items[i][valueKey] == scope.model) {
+                                scope.showText = scope.items[i][textKey];
+                                break;
+                            }
                         }
                     }
                 }
-
-
-
             }
         }
     }

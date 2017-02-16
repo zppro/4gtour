@@ -109,8 +109,8 @@ script(type="text/ng-template", id="changePasswordByUser.html")
                     button.btn.btn-success(type='submit') {{ "button.SAVE" | translate}}
 script(type='text/ng-template', id="dropdown-default-renderer.html")
     .btn-group(dropdown)
-        button.btn.btn-success(type="button",ng-if="isButton",ng-bind="showText")
-        button.btn.btn-warning.dropdown-toggle(type="button",ng-if="isButton",dropdown-toggle)
+        button.btn.btn-primary(type="button",ng-if="isButton",ng-bind="showText")
+        button.btn.btn-primary.dropdown-toggle(type="button",ng-if="isButton",dropdown-toggle)
             span.caret
         a.dropdown-toggle(ng-if="!isButton",ng-bind="showText",dropdown-toggle)
         span(ng-if="!isButton").caret

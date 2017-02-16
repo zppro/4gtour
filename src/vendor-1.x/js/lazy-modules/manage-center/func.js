@@ -44,12 +44,14 @@
                 vm.selectBinding.tenants = tenantService.query(vm.selectFilterObject.tenants, '_id name');
             }
 
-            vmh.clientData.getJson('subsystem').then(function (items) {
+            vm.dropdownDataPromise = vmh.clientData.getJson('subsystem').then(function (items) {
+                console.log(items)
                 vm.selectBinding.subsystems = _.where(items, {mtype: 'business'});
                 if (vm.selectBinding.subsystems && vm.selectBinding.subsystems.length > 0) {
                     vmc.selectedSubsystem = vm.selectBinding.subsystems[0];
                     onSubsystemChanged();
                 }
+                return vm.selectBinding.subsystems
             });
 
             if(vm.switches.setTenantOpenFuncs) {
@@ -62,12 +64,11 @@
             vmc.totalPrice = totalPrice;
             vmc.save = save;
 
-            function onTenantIdChanged(){
+            function onTenantIdChanged(selectedSubsystem){
                 $scope.$state.go(vm.moduleRoute(), {tenantId: vmc.selectedTenantId});
             }
 
             function onSubsystemChanged() {
-
                 var getTenantPriceFuncsPromise;
                 if(vm.switches.setTenantOpenFuncs) {
                     getTenantPriceFuncsPromise = vmh.fetch(tenantService.query({_id: vmc.selectedTenantId}, 'price_funcs'));
