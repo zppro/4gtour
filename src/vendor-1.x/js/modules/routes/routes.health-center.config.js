@@ -137,7 +137,7 @@
                 }
             })
             .state('app.health-center.wxa-config', {
-                url: '/wx-app-config',
+                url: '/wxa-config',
                 title: '微信小程序*',
                 abstract: true,
                 views: {

@@ -52,10 +52,31 @@
             vm.saveTemplate = saveTemplate;
             vm.cancelTemplate = cancelTemplate;
             vm.removeTemplate = removeTemplate;
+
+            vm.fillSplashArray = fillSplashArray;
             
             vm.tab1 = {cid: 'contentTab1',active:true};
 
-            vm.load();
+            vm.load().then(function () {
+                vm.splash_imgs_count = vm.model.splash_imgs.length
+                vm.splash_imgs = [].concat(vm.model.splash_imgs);
+                console.log(vm.splash_imgs)
+            });
+        }
+
+        function fillSplashArray () {
+            console.log('vm.splash_imgs_count:'+vm.splash_imgs_count)
+            if(angular.isNumber(vm.splash_imgs_count)) {
+                console.log('fillSplashArray')
+                if (vm.splash_imgs_count > vm.splash_imgs.length) {
+                    for(var i=vm.splash_imgs.length;i<  vm.splash_imgs_count;i++) {
+                        vm.splash_imgs[i] = null
+                    }
+                } else if (vm.splash_imgs_count < vm.splash_imgs.length) {
+                    vm.splash_imgs.splice(vm.splash_imgs_count, vm.splash_imgs.length - vm.splash_imgs_count)
+                }
+                console.log(vm.splash_imgs)
+            }
         }
 
         function checkTemplateAll($event) {
@@ -134,13 +155,8 @@
         function doSubmit() {
 
             if ($scope.theForm.$valid) {
-                if (vm.model.img) {
-                    if (vm.model.imgs.length > 0) {
-                        vm.model.imgs[0] = vm.model.img;
-                    } else {
-                        vm.model.imgs.push(vm.model.img);
-                    }
-                }
+                console.log(vm.splash_imgs)
+                vm.model.splash_imgs = vm.splash_imgs
                 vm.save();
             }
             else {

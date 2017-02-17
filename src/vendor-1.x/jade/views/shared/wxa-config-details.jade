@@ -21,13 +21,22 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                             span.text-danger(ng-show="utils.vinput(this.theForm,'app_name','required')") {{ "validator.REQUIRED" | translate}}
                     fieldset: .form-group
                         <!--splash图片-->
-                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-SPLASH_IMG') | translate}}:
-                        .col-md-10
-                            .img-border
-                                .img-loader(ng-if="vm.model.splash_img")
-                                    img(ng-src="{{vm.model.splash_img}}")
-                                .uploader-area(qiniu-uploader, button-text="选择图片" bucket='4gimg',user='vm.model.app_id',ng-uploaded-url="vm.model.splash_img")
-                            input.form-control(type='text', name='splash_img',ng-model='vm.model.splash_img',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-SPLASH_IMG")|translate}}')
+                        div
+                            label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-SPLASH_IMG') | translate}}:
+                            .col-md-10
+                                input.form-control(type='number',name='splash_imgs_count' ,ng-model='vm.splash_imgs_count',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-SPLASH_IMGS_COUNT")|translate}}', required='' ui-validate="'$value>=0'" ng-change="vm.fillSplashArray()")
+                                span.text-danger(ng-show="utils.vinput(this.theForm,'splash_imgs_count','required')") {{ "validator.REQUIRED" | translate}}
+                                span.text-danger(ng-show="utils.vinput(this.theForm,'splash_imgs_count','number')") {{ "validator.NUMBER" | translate}}
+                                span.text-danger(ng-show="utils.vinput(this.theForm,'splash_imgs_count','validator')") {{ "validator.MIN" | translate:{min:0} }}
+                        div
+                            .col-md-2
+                            .col-md-10
+                                div(ng-repeat="splash_img in vm.splash_imgs track by $index" )
+                                    .img-border
+                                        .img-loader(ng-if="splash_img")
+                                            img(ng-src="{{splash_img}}")
+                                        .uploader-area(qiniu-uploader, button-text="选择图片" bucket='4gimg',user='vm.model.app_id',ng-uploaded-url="vm.splash_imgs[$index]")
+                                    input.form-control(type='text', name='splash_img',ng-model='vm.splash_imgs[$index]',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-SPLASH_IMG")|translate}}')
                     fieldset: .form-group
                         <!--二维码-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-QRCODE') | translate}}:

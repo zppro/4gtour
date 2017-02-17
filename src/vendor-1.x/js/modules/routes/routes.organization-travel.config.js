@@ -561,13 +561,13 @@
                 data:{
                     func_id:'menu.organization-travel.USER-MANAGE'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.organization-travel.user-manage.js')
+                , resolve: helper.resolveFor('subsystem.shared.user-manage.js')
             })
             .state('app.organization-travel.user-manage.list', {
                 url: '/list/:action/:roles',
-                templateUrl: helper.basepath('organization-travel/user-manage-list.html'),
+                templateUrl: helper.basepath('shared/user-manage-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'UserManageGridController',
+                controller: 'Shared_UserManageGridController',
                 resolve: {
                     entryVM: helper.buildEntryVM('app.organization-travel.user-manage.list', {
                         modelName: 'pub-user',
@@ -622,9 +622,9 @@
             })
             .state('app.organization-travel.user-manage.details', {
                 url: '/details/:action/:_id/:roles',
-                templateUrl: helper.basepath('organization-travel/user-manage-details.html'),
+                templateUrl: helper.basepath('shared/user-manage-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'UserManageDetailsController',
+                controller: 'Shared_UserManageDetailsController',
                 resolve: {
                     entityVM: helper.buildEntityVM('app.organization-travel.user-manage.details', {
                         modelName: 'pub-user',

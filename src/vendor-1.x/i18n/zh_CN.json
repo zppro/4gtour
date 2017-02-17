@@ -134,8 +134,9 @@
     }
   },
   "subsystem": {
-    "merchant-webstore-STANDARD": "商户-Web商城-标准版",
-    "organization-travel-STANDARD": "商户-标准版",
+    "merchant-webstore-STANDARD": "网上商城-标准版",
+    "health-center-STANDARD": "健康中心-标准版",
+    "organization-travel-STANDARD": "在线旅游-标准版",
     "MANAGE-CENTER": "管理中心",
     "DEMO-CENTER": "演示中心"
   },
@@ -152,6 +153,11 @@
       "SYSTEM-MANAGE": "系统管理",
       "USER-MANAGE": "用户管理",
       "WX-APP-CONFIG": "微信小程序配置"
+    },
+    "health-center": {
+      "SYSTEM-MANAGE": "系统管理",
+      "USER-MANAGE": "用户管理",
+      "WXA-CONFIG": "微信小程序配置*"
     },
     "organization-travel": {
       "SNS": "社交网络",

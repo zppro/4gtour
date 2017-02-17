@@ -57,14 +57,12 @@
                 {name:'subsystem.organization-travel.scenic-spot.js',files:['app/js/lazy-modules/organization-travel/scenic-spot.js']},
                 {name:'subsystem.organization-travel.ticket.js',files:['app/js/lazy-modules/organization-travel/ticket.js']},
                 {name:'subsystem.organization-travel.order.js',files:['app/js/lazy-modules/organization-travel/order.js']},
-                {name:'subsystem.organization-travel.user-manage.js',files:['app/js/lazy-modules/organization-travel/user-manage.js']},
                 {name:'subsystem.organization-travel.financial-org-receipts-and-disbursements-details.js',files:['app/js/lazy-modules/organization-travel/financial-org-receipts-and-disbursements-details.js']},
                 {name:'subsystem.merchant-webstore.dashboard.js',files:['app/js/lazy-modules/merchant-webstore/dashboard.js']},
                 {name:'subsystem.merchant-webstore.spu.js',files:['app/js/lazy-modules/merchant-webstore/spu.js']},
                 {name:'subsystem.merchant-webstore.order.js',files:['app/js/lazy-modules/merchant-webstore/order.js']},
                 {name:'subsystem.merchant-webstore.after-sale.js',files:['app/js/lazy-modules/merchant-webstore/after-sale.js']},
                 {name:'subsystem.merchant-webstore.channel-unit.js',files:['app/js/lazy-modules/merchant-webstore/channel-unit.js']},
-                {name:'subsystem.merchant-webstore.user-manage.js',files:['app/js/lazy-modules/merchant-webstore/user-manage.js']},
                 {name:'subsystem.merchant-webstore.wx-app-config.js',files:['app/js/lazy-modules/merchant-webstore/wx-app-config.js']},
                 {name:'subsystem.health-center.dashboard.js',files:['app/js/lazy-modules/health-center/dashboard.js']}
             ]

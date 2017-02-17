@@ -1,15 +1,23 @@
 [
   {
     "_id": "subsystem.merchant-webstore-STANDARD",
-    "name": "Web商城",
+    "name": "网上商城",
     "sref": "app.merchant-webstore",
     "mtype":"business",
     "usertype": ["A0002"],
     "menujson": "menu-merchant-webstore.json"
   },
   {
+    "_id": "subsystem.health-center-STANDARD",
+    "name": "健康中心",
+    "sref": "app.health-center",
+    "mtype":"business",
+    "usertype": ["A0002"],
+    "menujson": "menu-health-center.json"
+  },
+  {
     "_id": "subsystem.organization-travel-STANDARD",
-    "name": "商户产品云",
+    "name": "在线旅游",
     "sref": "app.organization-travel",
     "mtype":"business",
     "usertype": ["A0002"],

@@ -450,13 +450,13 @@
                 data:{
                     func_id:'menu.merchant-webstore.USER-MANAGE'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.merchant-webstore.user-manage.js')
+                , resolve: helper.resolveFor('subsystem.shared.user-manage.js')
             })
             .state('app.merchant-webstore.user-manage.list', {
                 url: '/list/:action/:roles',
-                templateUrl: helper.basepath('merchant-webstore/user-manage-list.html'),
+                templateUrl: helper.basepath('shared/user-manage-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'MerchantWebStoreUserManageGridController',
+                controller: 'Shared_UserManageGridController',
                 resolve: {
                     entryVM: helper.buildEntryVM('app.merchant-webstore.user-manage.list', {
                         modelName: 'pub-user',
@@ -511,9 +511,9 @@
             })
             .state('app.merchant-webstore.user-manage.details', {
                 url: '/details/:action/:_id/:roles',
-                templateUrl: helper.basepath('merchant-webstore/user-manage-details.html'),
+                templateUrl: helper.basepath('shared/user-manage-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'MerchantWebStoreUserManageDetailsController',
+                controller: 'Shared_UserManageDetailsController',
                 resolve: {
                     entityVM: helper.buildEntityVM('app.merchant-webstore.user-manage.details', {
                         modelName: 'pub-user',

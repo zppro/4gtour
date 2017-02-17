@@ -85,10 +85,11 @@
                         });
                         vmc.marketPriceFuncs = vmc.priceFuncs;
                         vmc.priceFuncs = results[2][0].price_funcs;
+                        console.log('vmc.priceFuncs:');
+                        console.log(vmc.priceFuncs);
                     }
                     if (totalFuncs.length > 0) {
                         vm.trees = [new vmh.treeFactory.sTree('tree1', totalFuncs, {mode: 'check'})];
-                        console.log(vmc.priceFuncs);
                         vm.trees[0].checkedNodes = _.compact(_.map(vmc.priceFuncs, function (o) {
                             return vm.trees[0].findNodeById(o.func_id);
                         })).sort(function (node1, node2) {
@@ -149,7 +150,11 @@
 
             function save() {
                 if(vm.switches.setTenantOpenFuncs) {
-                    vmh.exec(tenantService.update(vmc.selectedTenantId, {price_funcs: _.toArray(vmc.funcs)}));
+                    console.log('saving vmc.priceFuncs:'); 
+                    var filter_priceFuncs = _.reject(vmc.priceFuncs, function(o) {
+                        return o.subsystem_id === vmc.selectedSubsystem._id
+                    });
+                    vmh.exec(tenantService.update(vmc.selectedTenantId, {price_funcs: _.toArray(vmc.funcs).concat(filter_priceFuncs)}));
                 }
                 else{
                     vmh.exec(funcService.bulkInsert(_.toArray(vmc.funcs), {subsystem_id: vmc.selectedSubsystem._id}));
