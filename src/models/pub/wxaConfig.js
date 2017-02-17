@@ -35,11 +35,11 @@ module.exports = function(ctx,name) {
             }
         });
 
-        wxAppConfigSchema.pre('update', function (next) {
+        wxaConfigSchema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();
         });
 
-        return mongoose.model(name, wxAppConfigSchema, name);
+        return mongoose.model(name, wxaConfigSchema, name);
     }
 }
