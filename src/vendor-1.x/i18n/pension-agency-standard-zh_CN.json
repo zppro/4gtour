@@ -1,0 +1,125 @@
+{
+  "pension-agency": {
+    "dashboard": {
+      "TITLE": "养老机构-数据面板",
+      "LIVE-IN":"入住总人数",
+      "LIVE-IN-ON-CURRENTMONTH":"本月新增",
+      "LIVE-IN-MAN-TIME":"入住总人次",
+      "SUBSIDIARY_LEDGER-SELF":"主账户",
+      "SUBSIDIARY_LEDGER-GOV_SUBSIDY":"政府补助账户",
+      "SUBSIDIARY_LEDGER-SOCIAL_DONATION":"社会捐赠账户",
+      "BED-INFO-TOTALS":"床位总数",
+      "BED-INFO-LIVEINS":"占用数",
+      "BED-INFO-VACANCY_RATE":"床位空置率",
+      "CHART-TITLE-ELDERLY-AGE-GROUPS":"入住老人年龄分布",
+      "CHART-SERIE-NAME-ELDERLY-AGE-GROUPS":"年龄区间",
+      "&lt60":"60周岁以下",
+      "60-69":"60-69周岁",
+      "70-79":"70-79周岁",
+      "&gte80":"80周岁及以上",
+      "CHART-TITLE-ROOM-VACANCY_RATE-MONTHLY":"近期入住情况",
+      "CHART-SERIE-NAME-ROOM-VACANCY_RATE-MONTHLY":"入住人数",
+      "CHART-SERIE-DATA-UNIT-ROOM-VACANCY_RATE-MONTHLY":"人",
+      "CHART-TITLE-ROOM-CATAGORY-OF-MANTIME":"入住房型情况",
+      "CHART-SERIE-NAME-ROOM-CATAGORY-OF-MANTIME":"房间类型",
+      "SINGLE-ROOM": "单人间",
+      "DOUBLE-ROOM": "双人间",
+      "TRIPLE-ROOM": "三人间",
+      "DOMITORY-ROOM": "多人间",
+      "CHART-TITLE-ROOM-CATAGORY-OF-MANTIME-Monthly":"近期入住房型情况"
+    },
+    "enter-manage": {
+      "list": {
+        "TITLE": "养老机构-老人管理-入院-列表",
+        "SUBMIT-ENTER-FINANCIAL-AUDIT":"提交财务审核",
+        "COMPLETE-ENTER":"确认完成入院",
+        "CAN-NOT-ADD-AS-LIMIT":"无法新增入院记录，因为机构当前已经达到最大入住数量"
+      },
+      "details": {
+        "TITLE": "养老机构-老人管理-入院-详情",
+        "HEAD-LABEL-CODE":"入院登记号",
+        "HEAD-PLACEHOLDER-CODE":"自动生成",
+        "HEAD-LABEL-ENTER_ON":"入院日期",
+        "TAB1": "老人信息",
+        "TAB2": "食宿信息",
+        "TAB3": "护理与服务",
+        "TAB4": "费用信息",
+        "TAB1-LABEL-ELDERLY-NAME": "老人姓名",
+        "TAB1-PLACEHOLDER-ELDERLY-NAME": "张三",
+        "TAB1-LABEL-ELDERLY-ID_NO": "身份证号",
+        "TAB1-LABEL-ELDERLY-SEX": "性别",
+        "TAB1-LABEL-ELDERLY-BIRTHDAY": "出生日期",
+        "TAB1-PLACEHOLDER-ELDERLY-BIRTHDAY": "从身份证读取..",
+        "TAB1-LABEL-ELDERLY-MARRIAGE": "婚姻情况",
+        "TAB1-LABEL-ELDERLY-HOME_ADDRESS": "家庭住址",
+        "TAB1-PLACEHOLDER-ELDERLY-HOME_ADDRESS": "XX小区X幢X单元XXX",
+        "TAB1-LABEL-ELDERLY-MEDICAL_INSURANCE": "医保所在地",
+        "TAB1-LABEL-ELDERLY-POLITICS_STATUS": "政治面貌",
+        "TAB1-LABEL-ELDERLY-INHABIT_STATUS": "居住状况",
+        "TAB1-LABEL-ELDERLY-FINANCIAL_STATUS": "经济状况",
+        "TAB1-LABEL-ELDERLY-HOBBIES": "爱好特长",
+        "TAB1-LABEL-ELDERLY-MEDICAL_HISTORIES": "过往病史",
+        "TAB1-LABEL-REMARK":"备注",
+        "TAB1-PLACEHOLDER-REMARK":"补充说明一些情况",
+        "TAB1-LABEL-ELDERLY-FAMILY-MEMBER": "家庭成员",
+        "TAB1-PLACEHOLDER-ELDERLY-FAMILY-MEMBER-NAME": "家属姓名",
+        "TAB1-PLACEHOLDER-ELDERLY-FAMILY-MEMBER-PHONE": "联系电话",
+        "TAB1-PLACEHOLDER-ELDERLY-FAMILY-MEMBER-ADDRESS": "联系地址",
+        "TAB2-BOARD-INFO":"饮食套餐",
+        "TAB2-ROOM-INFO":"房间床位",
+        "TAB3-NURSING-INFO":"护理信息",
+        "TAB3-CUSTOM-SERVICE-INFO":"特色服务",
+        "TAB4-CHARGE-ITEM":"收费项目",
+        "TAB4-CHARGE-PERIOD-PRICE-SUM":"费用小计",
+        "TAB4-PERIOD-VALUE-IN-ADVANCE":"预收",
+        "TAB4-PERIOD-OF-MONTH":"{{period_value}}月",
+        "TAB4-CHARGE-TOTALS":"费用总计",
+        "SUBMIT-ENTER-FINANCIAL-AUDIT":"提交财务审核",
+        "UNDO-ENTER-FINANCIAL-AUDIT":"撤回编辑",
+        "COMPLETE-ENTER":"确认完成入院"
+      }
+    },
+    "user-manage": {
+      "list": {
+        "TITLE": "养老机构-系统管理-用户-列表",
+        "RESET-USER-PASSWORD-COMMENT": "密码将会被重设为默认值"
+      },
+      "details": {
+        "TITLE": "健康中心-系统管理-用户-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-CODE": "用户编码",
+        "TAB1-PLACEHOLDER-CODE": "rainbow@abc.com",
+        "TAB1-LABEL-NAME": "用户名称",
+        "TAB1-PLACEHOLDER-NAME": "钟XX..",
+        "TAB1-LABEL-FLAG-COLLECTION": "标志集合",
+        "TAB1-LABEL-STOP_FLAG": "停用",
+        "TAB1-LABEL-ROLE": "角色",
+        "TAB1-PLACEHOLDER-ROLE": "请设置用户角色..",
+        "TAB1-LABEL-PHONE": "手机号码",
+        "TAB1-PLACEHOLDER-PHONE": "137XXXX0258.."
+      }
+    },
+    "wxa-config": {
+      "list": {
+        "TITLE": "养老机构-系统管理-微信小程序配置-列表"
+      },
+      "details": {
+        "TITLE": "养老机构-系统管理-微信小程序配置-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-APP_ID": "小程序id",
+        "TAB1-PLACEHOLDER-APP_ID": "wx1111111111111111",
+        "TAB1-LABEL-APP_NAME": "小程序名称",
+        "TAB1-PLACEHOLDER-APP_NAME": "XX网上商城..",
+        "TAB1-LABEL-SPLASH_IMG": "小程序splash图",
+        "TAB1-PLACEHOLDER-SPLASH_IMG": "https://img2.okertrip.com/splash-image/2016-2-8-0.jpg..",
+        "TAB1-LABEL-QRCODE": "二维码",
+        "TAB1-PLACEHOLDER-QRCODE": "https://img2.okertrip.com/qrcode/小程序app_id..",
+        "TAB1-LABEL-TEMPLATES": "消息模版",
+        "TAB1-LABEL-TEMPLATES-KEY": "模版查找键",
+        "TAB1-PLACEHOLDER-TEMPLATES-KEY": "OrderShipped..",
+        "TAB1-LABEL-TEMPLATES-WX_TEMPLATE_ID": "微信模版id",
+        "TAB1-PLACEHOLDER-TEMPLATES-WX_TEMPLATE_ID": "从微信小程序平台复制过来.."
+      }
+    }
+  }
+}

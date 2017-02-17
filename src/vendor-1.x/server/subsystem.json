@@ -8,6 +8,14 @@
     "menujson": "menu-merchant-webstore.json"
   },
   {
+    "_id": "subsystem.pension-agency-STANDARD",
+    "name": "养老机构",
+    "sref": "app.pension-agency",
+    "mtype":"business",
+    "usertype": ["A0002"],
+    "menujson": "menu-pension-agency.json"
+  },
+  {
     "_id": "subsystem.health-center-STANDARD",
     "name": "健康中心",
     "sref": "app.health-center",

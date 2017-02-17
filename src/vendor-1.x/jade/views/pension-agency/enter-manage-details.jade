@@ -1,0 +1,300 @@
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .row
+        .col-md-1.control-label {{ vm.viewTranslatePath('HEAD-LABEL-CODE') | translate}}:
+        .col-md-3
+            input.read-control-underline(readonly,placeholder='{{vm.viewTranslatePath("HEAD-PLACEHOLDER-CODE")|translate}}',ng-model="vm.model.code")
+        .col-md-5
+        .col-md-1.control-label {{ vm.viewTranslatePath('HEAD-LABEL-ENTER_ON') | translate}}:
+        .col-md-2
+            .input-group(ng-if="!vm.readonly")
+                input.read-control-underline(type="text",name='validate_util',is-open="vm.openedDP[0]",datepicker-popup="",ng-model="vm.model.enter_on" ,required='',ng-click="vm.openDP($event,2,0)")
+                span.input-group-btn
+                    button.btn.btn-primary.btn-xs(ng-click="vm.openDP($event,2,0)")
+                        i.glyphicon.glyphicon-calendar
+            input.read-control-underline(ng-if="vm.readonly",readonly,value="{{vm.model.enter_on|date}}")
+    .row-split
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        <!--姓名-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY-NAME') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            input.form-control(type='text', name='elderly$name',ng-model='vm.elderlyModel.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-ELDERLY-NAME")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$name','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.elderlyModel.name}}
+                    fieldset: .form-group
+                        <!--身份证号-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY-ID_NO') | translate}}:
+                        .col-md-10
+                            input(type='text',name='elderly$id_no',ng-model='vm.elderlyModel.id_no',required='',maxlength="18",box-input,box-input-option="{readonly:{{vm.readonly}} }",ng-model-options="{debounce:500}",box-readonly="vm.readonly",id-no2="{successEvent:true}",ui-validate-async="{serverSideCheck: 'vm.serverSideCheck($value)'}")
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$id_no','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$id_no','IDNo')") {{ "validator.ID-NO" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$id_no','serverSideCheck')") {{ "validator.SERVER-SIDE-CHECK" | translate:{item:vm.CheckBeforeAddEnterError} }}
+                    fieldset: .form-group
+                        <!--性别-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY-SEX') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            .btn-group
+                                .btn.btn-primary(name='elderly$sex',ng-repeat='sex in vm.selectBinding.sex',ng-model='vm.elderlyModel.sex',btn-radio="sex.value",required='',extract-sex="vm.elderlyModel.id_no") {{sex.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$sex','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .btn-group
+                                .btn.btn-primary.cursor-not-allowed(name='elderly$sex',ng-repeat='sex in vm.selectBinding.sex',ng-class="{'active':vm.elderlyModel.sex==sex.value}") {{sex.name}}
+                    fieldset: .form-group
+                        <!--出生日期-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY-BIRTHDAY') | translate}}:
+                        .col-md-2(ng-if="!vm.readonly")
+                            .input-group
+                                input.form-control(type="text",name='elderly$birthday',is-open="vm.openedDP[1]",datepicker-popup="",ng-model="vm.elderlyModel.birthday" ,placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-ELDERLY-BIRTHDAY")|translate}}',required='',ng-click="vm.openDP($event,2,1)",extract-birthday="vm.elderlyModel.id_no")
+                                span.input-group-btn
+                                    button.btn.btn-primary(ng-click="vm.openDP($event,2,1)")
+                                        i.glyphicon.glyphicon-calendar
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$birthday','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$birthday','date')") {{ "validator.DATE" | translate}}
+                        .col-md-2(ng-if="vm.readonly")
+                            .form-readable {{vm.elderlyModel.birthday|date}}
+                    fieldset: .form-group
+                        <!--婚姻情况-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY-MARRIAGE') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            .btn-group
+                                .btn.btn-primary(name='elderly$marriage',ng-repeat='marriage in vm.selectBinding.marriages',ng-model='vm.elderlyModel.marriage',btn-radio="marriage.value",required='') {{marriage.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$marriage','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .btn-group
+                                .btn.btn-primary.cursor-not-allowed(name='elderly$marriage',ng-repeat='marriage in vm.selectBinding.marriages',ng-class="{'active':vm.elderlyModel.marriage==marriage.value}") {{marriage.name}}
+                    fieldset: .form-group
+                        <!--家庭住址-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY-HOME_ADDRESS') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            input.form-control(type='text', name='elderly$home_address',ng-model='vm.elderlyModel.home_address',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-ELDERLY-HOME_ADDRESS")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$home_address','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.elderlyModel.home_address}}
+                    fieldset: .form-group
+                        <!--医保所在地-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY-MEDICAL_INSURANCE') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            .btn-group
+                                .btn.btn-primary(name='elderly$medical_insurance',ng-repeat='medical_insurance in vm.selectBinding.medical_insurances',ng-model='vm.elderlyModel.medical_insurance',btn-radio="medical_insurance.value",required='') {{medical_insurance.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$medical_insurance','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .btn-group
+                                .btn.btn-primary.cursor-not-allowed(name='elderly$medical_insurance',ng-repeat='medical_insurance in vm.selectBinding.medical_insurances',ng-class="{'active':vm.elderlyModel.medical_insurance==medical_insurance.value}") {{medical_insurance.name}}
+                    fieldset: .form-group
+                        <!--政治面貌-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY-POLITICS_STATUS') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            .btn-group
+                                .btn.btn-primary(name='elderly$politics_status',ng-repeat='politics_status in vm.selectBinding.politics_statuses',ng-model='vm.elderlyModel.politics_status',btn-radio="politics_status.value",required='') {{politics_status.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$politics_status','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .btn-group
+                                .btn.btn-primary.cursor-not-allowed(name='elderly$politics_status',ng-repeat='politics_status in vm.selectBinding.politics_statuses',ng-class="{'active':vm.elderlyModel.politics_status==politics_status.value}") {{politics_status.name}}
+                    fieldset: .form-group
+                        <!--居住状况-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY-INHABIT_STATUS') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            .btn-group
+                                .btn.btn-primary(name='elderly$inhabit_status',ng-repeat='inhabit_status in vm.selectBinding.inhabit_statuses',ng-model='vm.elderlyModel.inhabit_status',btn-radio="inhabit_status.value",required='') {{inhabit_status.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$inhabit_status','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .btn-group
+                                .btn.btn-primary.cursor-not-allowed(name='elderly$inhabit_status',ng-repeat='inhabit_status in vm.selectBinding.inhabit_statuses',ng-class="{'active':vm.elderlyModel.inhabit_status==inhabit_status.value}") {{inhabit_status.name}}
+                    fieldset: .form-group
+                        <!--经济状况-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY-FINANCIAL_STATUS') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            .btn-group
+                                .btn.btn-primary(name='elderly$financial_status',ng-repeat='financial_status in vm.selectBinding.financial_statuses',ng-model='vm.elderlyModel.financial_status',btn-radio="financial_status.value",required='') {{financial_status.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$financial_status','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .btn-group
+                                .btn.btn-primary.cursor-not-allowed(name='elderly$financial_status',ng-repeat='financial_status in vm.selectBinding.financial_statuses',ng-class="{'active':vm.elderlyModel.financial_status==financial_status.value}") {{financial_status.name}}
+                    fieldset: .form-group
+                        <!--特长爱好-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY-HOBBIES') | translate}}:
+                        .col-md-10
+                            .tree.tree-dropdown(name='elderly$hobbies',s-tree,s-tree-data="vm.hobbiesPromise",s-tree-height="200", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',layout:'dropdown',readonly:{{vm.readonly}}}",ng-model="vm.elderlyModel.hobbies",required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$hobbies','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        <!--过往病史-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY-MEDICAL_HISTORIES') | translate}}:
+                        .col-md-10
+                            .tree.tree-dropdown(name='elderly$medical_histories',s-tree,s-tree-data="vm.medical_historiesPromise",s-tree-height="200", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',layout:'dropdown',readonly:{{vm.readonly}} }",ng-model="vm.elderlyModel.medical_histories",required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$medical_histories','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        <!--备注-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-REMARK') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            textarea.form-control(name='remark',ng-model='vm.model.remark',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-REMARK")|translate}}',maxlength="400")
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.model.remark}}
+                    .panel.panel-default.panel-grid
+                        .panel-heading-normal
+                            a {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY-FAMILY-MEMBER') | translate}}
+                        table.grid.table.table-bordered.table-hover.table-striped
+                            thead
+                                tr
+                                    th.text-center(check-all,width="30")
+                                        .checkbox.c-checkbox(data-toggle="tooltip",data-title="Check All")
+                                            label(ng-click="vm.checkElderlyFamilyMemberAll($event)")
+                                                input(type='checkbox')
+                                                span.fa.fa-check
+                                    th.text-center(width="60")
+                                        | 姓名
+                                    th.text-center(width="50")
+                                        | 性别
+                                    th.text-center(width="100")
+                                        | 与老人关系
+                                    th.text-center(width="80")
+                                        | 联系电话
+                                    th.text-center(width="200")
+                                        | 地址
+                                    th.text-center(width="50")
+                            tbody
+                                tr(ng-repeat="row in vm.elderlyModel.family_members" ng-click="vm.grid.selectRow($event,row)",ng-dblclick="vm.grid.dblclickRow(row.id)")
+                                    td.text-center
+                                        .checkbox.c-checkbox(ng-if="!row.$editing")
+                                            label
+                                                input(type='checkbox',ng-model="row.checked" )
+                                                span.fa.fa-check
+                                    td.text-left
+                                        span(ng-if="!row.$editing") {{::row.name}}
+                                        input.form-control(name="row$name",type="text",ng-if="row.$editing",ng-model='row.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-ELDERLY-FAMILY-MEMBER-NAME")|translate}}' ,required='')
+                                        span.text-danger(ng-if="row.$editing",ng-show="utils.vinput(this.theForm,'row$name','required')") {{ "validator.REQUIRED" | translate}}
+                                    td.text-center
+                                        span(ng-if="!row.$editing") {{::row.sex|diFilter:vm.selectBinding.sex}}
+                                        .dropdown(ng-if="row.$editing",s-dropdown,is-button,ng-model="row.sex",s-dropdown-data="vm.selectBinding.sex")
+                                    td.text-center
+                                        span(ng-if="!row.$editing") {{::row.relation_with|diFilter:vm.selectBinding.relationsWithTheElderly}}
+                                        .dropdown(ng-if="row.$editing",s-dropdown,is-button,ng-model="row.relation_with",s-dropdown-data="vm.selectBinding.relationsWithTheElderly")
+                                    td.text-left
+                                        span(ng-if="!row.$editing") {{::row.phone}}
+                                        input.form-control(name="row$phone",type="text",ng-if="row.$editing",ng-model='row.phone',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-ELDERLY-FAMILY-MEMBER-PHONE")|translate}}' ,required='',ng-model-options="{debounce:500}",ui-validate="{phone: 'utils.isPhone($value)'}")
+                                        span.text-danger(ng-if="row.$editing",ng-show="utils.vinput(this.theForm,'row$phone','required')") {{ "validator.REQUIRED" | translate}}
+                                        span.text-danger(ng-if="row.$editing",ng-show="utils.vinput(this.theForm,'row$phone','phone')") {{ "validator.FORMAT" | translate:{item:"手机号码"} }}
+                                    td.text-left
+                                        span(ng-if="!row.$editing") {{::row.address}}
+                                        input.form-control(type="text",ng-if="row.$editing",ng-model='row.address',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-ELDERLY-FAMILY-MEMBER-ADDRESS")|translate}}' ,required='')
+                                    td
+                                        .btn-group(ng-if="!vm.readonly && !row.$editing")
+                                            a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.editElderlyFamilyMember(row)")
+                                                i.glyphicon.glyphicon-pencil
+                                        .btn-group(ng-if="row.$editing")
+                                            a.btn.btn-primary.btn-xs(title="{{'button.SAVE'|translate}}",ng-click="vm.saveElderlyFamilyMember(row)")
+                                                i.glyphicon.glyphicon-ok-sign
+                                        .btn-group(ng-if="row.$editing")
+                                            a.btn.btn-primary.btn-xs(title="{{'button.CANCEL'|translate}}",ng-click="vm.cancelElderlyFamilyMember(row)")
+                                                i.glyphicon.glyphicon-remove-sign
+                        .panel-footer
+                            .row
+                                .col-md-4.text-left
+                                    .btn-toolbar(ng-if="!vm.readonly")
+                                        .btn-group
+                                            a.btn.btn-primary.btn-sm(title="{{'button.ADD'|translate}}",ng-click="vm.addElderlyFamilyMember()")
+                                                i.glyphicon.glyphicon-plus
+                                            a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.removeElderlyFamilyMember()")
+                                                i.glyphicon.glyphicon-minus
+            tab(active="vm.tab2.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB2') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab2')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab2
+                    fieldset: .form-group
+                        <!--伙食信息-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-BOARD-INFO') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            .btn-group
+                                .btn.btn-primary(name='board_info',ng-repeat='board_info in vm.selectBinding.board_infos',ng-model='vm.model.board_info',ng-click='vm.setBoardSummary(board_info)',btn-radio="board_info.item_id",required='') {{board_info.item_name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'board_info','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .btn-group
+                                .btn.btn-primary.cursor-not-allowed(name='board_info',ng-repeat='board_info in vm.selectBinding.board_infos',ng-class="{'active':vm.model.board_info==board_info.item_id}") {{board_info.item_name}}
+                    fieldset: .form-group
+                        <!--床位信息-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-ROOM-INFO') | translate}}:
+                        .col-md-10
+                            .tree.tree-tile(ng-if='!vm.treeHidden',s-tree,s-tree-data="vm.treeData",s-tree-node-is-disabled="vm.isDisabled(node)",s-tree-node-func="vm.getOccupyElderlyName(node)",s-tree-height="400", s-tree-template-url='tree-room-tile-renderer.html',s-tree-option="{layout:'tile',readonly:{{vm.readonly}}}", ng-model="vm.model.room_info",required='')
+            tab(active="vm.tab3.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB3') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab3')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab3
+                    fieldset: .form-group
+                        <!--护理信息-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB3-NURSING-INFO') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            .btn-group
+                                .btn.btn-primary(name='nursing_info',ng-repeat='nursing_info in vm.selectBinding.nursing_infos',ng-model='vm.model.nursing_info',ng-click='vm.setNursingSummary(nursing_info)',btn-radio="nursing_info.item_id",required='') {{nursing_info.item_name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'nursing_info','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .btn-group
+                                .btn.btn-primary.cursor-not-allowed(name='nursing_info',ng-repeat='nursing_info in vm.selectBinding.nursing_infos',ng-class="{'active':vm.model.nursing_info==nursing_info.item_id}") {{nursing_info.item_name}}
+                    fieldset: .form-group
+                        <!--特色服务-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB3-CUSTOM-SERVICE-INFO') | translate}}:
+                        .col-md-10
+            tab(active="vm.tab4.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB4') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab4')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab4
+                    fieldset: .form-group
+                        <!--收费项目-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB4-CHARGE-ITEM') | translate}}:
+                        .col-md-10
+                            ul.charge-item-in-enter(ng-repeat='charge_item_level_one in vm.selectedStandard.children')
+                                li.charge-item-level-one
+                                    span {{charge_item_level_one._id | translate}}
+                                li.charge-item-level-two( ng-class='{"selected":vm.isSelected(charge_item_level_two) }', ng-repeat='charge_item_level_two in charge_item_level_one.children')
+                                    .row
+                                        .col-md-1
+                                            .checkbox.c-checkbox(ng-if="!vm.readonly && charge_item_level_two.data && charge_item_level_two.data.manual_seletable")
+                                                label
+                                                    input(type='checkbox',ng-model="vm.selectionOfManualSelectable[charge_item_level_two.item_id]" )
+                                                    span.fa.fa-check
+                                        .col-md-5
+                                            span {{ (charge_item_level_two.item_id | translate) == charge_item_level_two.item_id ? charge_item_level_two.item_name: (charge_item_level_two.item_id | translate) }}
+                                        .col-md-6
+                                            span {{charge_item_level_two.period_price|currency}} / {{vm.period_map[charge_item_level_two.period]}}
+                    fieldset: .form-group
+                        <!--费用小计-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB4-CHARGE-PERIOD-PRICE-SUM') | translate}}:
+                        .col-md-10
+                            span {{vm.sumPeriodPrice()|currency}} / {{ vm.viewTranslatePath('TAB4-PERIOD-OF-MONTH') | translate }}
+                    fieldset: .form-group
+                        <!--预收期间-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB4-PERIOD-VALUE-IN-ADVANCE') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            .btn-group
+                                .btn.btn-primary(name='period_value_in_advance',ng-repeat='periodValue in vm.selectBinding.periodValues',ng-model='vm.model.period_value_in_advance',btn-radio="periodValue",required='') {{ vm.viewTranslatePath('TAB4-PERIOD-OF-MONTH') | translate:{period_value:periodValue+''} }}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'period_value_in_advance','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .btn-group
+                                .btn.btn-primary.cursor-not-allowed(name='period_value_in_advance',ng-repeat='periodValue in vm.selectBinding.periodValues',ng-class="{'active':vm.model.period_value_in_advance==periodValue}") {{ vm.viewTranslatePath('TAB4-PERIOD-OF-MONTH') | translate:{period_value:periodValue+''} }}
+                    fieldset: .form-group
+                        <!--费用总计-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB4-CHARGE-TOTALS') | translate}}:
+                        .col-md-10
+                            span {{vm.sumPeriodPrice() * vm.model.period_value_in_advance|currency}}
+    .text-right.mt-lg
+        button.btn.btn-danger.pull-left(ng-if="false",type="button",ng-click="vm.model.elderlyId = null") 清除vm.model.elderlyId
+        button.btn.btn-danger.pull-left(ng-if="vm.model.current_register_step=='A0001'",type="button",ng-click="vm.disable(vm.disableEnterRelatedAction)") {{'button.REMOVE'|translate}}
+        button.btn.btn-warning(ng-if="!vm.readonly",type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(ng-if="!vm.readonly",type="submit") {{'button.SAVE'|translate}}
+        button.btn.btn-danger(ng-if="vm.model.current_register_step=='A0001'",type="button",ng-click="vm.submitEnterFinancialAudit()") {{vm.viewTranslatePath('SUBMIT-ENTER-FINANCIAL-AUDIT')|translate}}
+        button.btn.btn-danger(ng-if="vm.model.current_register_step=='A0003'||vm.model.current_register_step=='A0005'",type="button",ng-click="vm.undoEnterFinancialAudit()") {{vm.viewTranslatePath('UNDO-ENTER-FINANCIAL-AUDIT')|translate}}
+        button.btn.btn-success(ng-if="vm.model.current_register_step=='A0003'",type="button",ng-click="vm.comfirmEnterReceipt()") {{'button.CONFIRM-RECEIPT'|translate}}
+        button.btn.btn-success(ng-if="vm.model.current_register_step=='A0005'",type="button",ng-click="vm.completeEnter()") {{vm.viewTranslatePath('COMPLETE-ENTER')|translate}}
+        button.btn.btn-primary(ng-if="vm.readonly",type="button",ng-click="vm.cancel()") {{'button.RETURN'|translate}}

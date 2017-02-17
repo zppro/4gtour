@@ -135,6 +135,7 @@
   },
   "subsystem": {
     "merchant-webstore-STANDARD": "网上商城-标准版",
+    "pension-agency-STANDARD": "养老机构-标准版",
     "health-center-STANDARD": "健康中心-标准版",
     "organization-travel-STANDARD": "在线旅游-标准版",
     "MANAGE-CENTER": "管理中心",
@@ -153,6 +154,29 @@
       "SYSTEM-MANAGE": "系统管理",
       "USER-MANAGE": "用户管理",
       "WX-APP-CONFIG": "微信小程序配置"
+    },
+    "pension-agency": {
+      "OLDMAN-MANAGE": "老人管理",
+      "ENTER-MANAGE": "入院管理",
+      "IN-MANAGE": "在院管理",
+      "EXIT-MANAGE": "出院管理",
+      "RECEPTION-MANAGE": "接待管理",
+      "LEAVE-MANAGE": "外出管理",
+      "------------": "",
+      "FINANCIAL-MANAGE": "财务管理",
+      "ENTER-PAYMENT": "入院缴费",
+      "RECHARGE": "账户充值",
+      "ARREARAGE-MANAGE": "欠费管理",
+      "EXIT-SETTLEMENT": "出院结算",
+      "RED": "冲红明细",
+      "ORG-RECEIPTS-AND-DISBURSEMENTS-DETAILS": "收支明细",
+      "------------": "",
+      "MATERIAL-MANAGE": "物资管理",
+      "EXIT-ITEM-RETURN":"出院物品归还",
+      "------------": "",
+      "SYSTEM-MANAGE": "系统管理",
+      "USER-MANAGE": "用户管理",
+      "WXA-CONFIG": "微信小程序配置*"
     },
     "health-center": {
       "SYSTEM-MANAGE": "系统管理",

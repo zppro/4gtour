@@ -1,0 +1,171 @@
+[
+  {
+    "_id": "menu.pension-agency.OLDMAN-MANAGE",
+    "name": "老人管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.pension-agency.ENTER-MANAGE",
+        "name": "入院管理",
+        "sref": "app.pension-agency.enter-manage.list"
+
+      },
+      {
+        "_id": "menu.pension-agency.IN-MANAGE",
+        "name": "在院管理",
+        "sref": "app.pension-agency.in-manage.list"
+      },
+      {
+        "_id": "menu.pension-agency.EXIT-MANAGE",
+        "name": "出院管理",
+        "sref": "app.pension-agency.exit-manage.list"
+      },
+      {
+        "_id": "menu.pension-agency.RECEPTION-MANAGE",
+        "name": "接待管理",
+        "sref": "app.pension-agency.reception-manage.list"
+      },
+      {
+        "_id": "menu.pension-agency.LEAVE-MANAGE",
+        "name": "外出管理",
+        "sref": "app.pension-agency.leave-manage.list"
+      }
+    ]
+  },
+  {
+    "_id": "menu.pension-agency.FINANCIAL-MANAGE",
+    "name": "财务管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.pension-agency.ENTER-PAYMENT",
+        "name": "老人入院缴费",
+        "sref": "app.pension-agency.financial-enter-payment.list"
+      },
+      {
+        "_id": "menu.pension-agency.RECHARGE",
+        "name": "老人账户充值",
+        "sref": "app.pension-agency.financial-recharge.list"
+      },
+      {
+        "_id": "menu.pension-agency.ARREARAGE-MANAGE",
+        "name": "老人欠费管理",
+        "sref": "app.pension-agency.financial-arrearage-manage"
+      },
+      {
+        "_id": "menu.pension-agency.EXIT-SETTLEMENT",
+        "name": "老人出院结算",
+        "sref": "app.pension-agency.financial-exit-settlement.list"
+      },
+      {
+        "_id": "menu.pension-agency.RED",
+        "name": "机构冲红明细",
+        "sref": "app.pension-agency.financial-red.list"
+      },
+      {
+        "_id": "menu.pension-agency.ORG-RECEIPTS-AND-DISBURSEMENTS-DETAILS",
+        "name": "机构收支明细",
+        "sref": "app.pension-agency.financial-org-receipts-and-disbursements-details.list"
+      }
+    ]
+  },
+  {
+    "_id": "menu.pension-agency.MATERIAL-MANAGE",
+    "name": "物资管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.pension-agency.EXIT-ITEM-RETURN",
+        "name": "出院物品归还",
+        "sref": "app.pension-agency.material-exit-item-return.list"
+      },
+      {
+        "_id": "menu.pension-agency.EX-WAREHOUSE-MANAGE",
+        "name": "出库管理",
+        "sref": "app.pension-agency.material-ex-warehouse-manage.list"
+      },
+      {
+        "_id": "menu.pension-agency.IM-WAREHOUSE-MANAGE",
+        "name": "入库管理",
+        "sref": "app.pension-agency.material-im-warehouse-manage.list"
+      },
+      {
+        "_id": "menu.pension-agency.INVENTORY-MANAGE",
+        "name": "库存管理",
+        "sref": "app.pension-agency.material-inventory-manage.list"
+      },
+      {
+        "_id": "menu.pension-agency.INVENTORY-ACCOUNT",
+        "name": "库存清单",
+        "sref": "app.pension-agency.material-inventory-account.list"
+      },
+      {
+        "_id": "menu.pension-agency.DONATION-MANAGE",
+        "name": "捐赠管理",
+        "sref": "app.pension-agency.material-donation-manage.list"
+      },
+      {
+        "_id": "menu.pension-agency.FIX-ASSERTS-MANAGE",
+        "name": "固定资产管理",
+        "sref": "app.pension-agency.material-fix-asserts-manage.list"
+      },
+      {
+        "_id": "menu.pension-agency.ITEM-CATALOG-MANAGE",
+        "name": "物资品类管理",
+        "sref": "app.pension-agency.material-item-catalog-manage.list"
+      }
+    ]
+  },
+  {
+    "_id": "menu.pension-agency.KNOWLEDGE-BASE-MANAGE",
+    "name": "知识库管理",
+    "sref": "app.pension-agency.knowledge-base-manage",
+    "icon": "fa fa-file-o"
+  },
+  {
+    "_id": "menu.pension-agency.SYSTEM-MANAGE",
+    "name": "系统管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.pension-agency.DEPARTMENT-MANAGE",
+        "name": "部门管理",
+        "sref": "app.pension-agency.system-department-manage"
+      },
+      {
+        "_id": "menu.pension-agency.ROOM-MANAGE",
+        "name": "房间管理",
+        "sref": "app.pension-agency.room-manage.list"
+      },
+      {
+        "_id": "menu.pension-agency.DISTRICT-MANAGE",
+        "name": "片区管理",
+        "sref": "app.pension-agency.district-manage.list"
+      },
+      {
+        "_id": "menu.pension-agency.CHARGE-STANDARD",
+        "name": "收费标准",
+        "sref": "app.pension-agency.charge-standard"
+      },
+      {
+        "_id": "menu.pension-agency.CHARGE-ITEM-CUSTOMIZED",
+        "name": "特色服务",
+        "sref": "app.pension-agency.charge-item-customized.list"
+      },
+      {
+        "_id": "menu.pension-agency.USER-MANAGE",
+        "name": "用户管理",
+        "sref": "app.pension-agency.user-manage.list"
+      },
+      {
+        "_id": "menu.pension-agency.WXA-CONFIG",
+        "name": "微信小程序配置*",
+        "sref": "app.pension-agency.wxa-config.list"
+      }
+    ]
+  }
+]
