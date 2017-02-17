@@ -19,7 +19,7 @@ module.exports = function(ctx,name) {
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
             type: {type: String, required: true, enum: ctx._.rest(ctx.dictionary.keys["MWS08"])},
-            code: {type: String, required: true, minlength: 1, maxlength: 12, index: {unique: true}},
+            code: {type: String, required: true, minlength: 1, index: {unique: true}},
             name: {type: String, required: true},
             wxa_url: {type: String},
             wxa_qrcode_width: {type: Number, default: 430},
