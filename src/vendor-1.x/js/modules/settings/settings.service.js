@@ -39,8 +39,14 @@
                 if (SETTING_KEYS.SREF_MERCHANT_WEBSTORE == sref) {
                     id = SETTING_KEYS.STORAGE_ID_MERCHANT_WEBSTORE;
                 }
-                else if (SETTING_KEYS.SREF_ORGANIZATION_PFTA == sref) {
-                    id = SETTING_KEYS.STORAGE_ID_ORGANIZATION_PFTA;
+                else if (SETTING_KEYS.SREF_PENSION_AGENCY == sref) {
+                    id = SETTING_KEYS.STORAGE_ID_PENSION_AGENCY;
+                }
+                else if (SETTING_KEYS.SREF_HEALTH_CENTER == sref) {
+                    id = SETTING_KEYS.STORAGE_ID_HEALTH_CENTER;
+                }
+                else if (SETTING_KEYS.SREF_ORGANIZATION_TRAVEL == sref) {
+                    id = SETTING_KEYS.STORAGE_ID_ORGANIZATION_TRAVEL;
                 }
                 else if (SETTING_KEYS.SREF_MANAGE_CENTER == sref) {
                     id = SETTING_KEYS.STORAGE_ID_MANAGE_CENTER;

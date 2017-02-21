@@ -38,7 +38,7 @@
                     },
                     "module-content": {
                         templateUrl: helper.basepath('pension-agency/dashboard.html'),
-                        controller: 'DashboardControllerOfHealthCenterController',
+                        controller: 'DashboardPensionAgencyController',
                         resolve: {
                             instanceVM: helper.buildInstanceVM('app.pension-agency.dashboard')
                             , deps: helper.resolveFor2('subsystem.pension-agency.dashboard.js')

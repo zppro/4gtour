@@ -4,4 +4,9 @@
 h4
     //| {{ vm.viewTranslatePath('TITLE') | translate}}
     | {{ vmh.stateToTrans($state.current.name) +'.TITLE'|translate}}
-    span.org-name.pull-right  {{ vm.tenantName}}
+    ul.module-header-actions.pull-right
+        li(ng-if="app.isFullScreen")
+            a(href='', ng-click="app.exitFullScreen($event)",title="{{ 'topbar.normal-screen.TITLE' | translate }}" )
+                em.icon-size-actual
+    span.org-name.pull-right
+        | {{ vm.tenantName}}

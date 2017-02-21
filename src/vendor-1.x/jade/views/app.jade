@@ -5,10 +5,10 @@ header.topnavbar-wrapper(ng-include="'app/views/partials/top-navbar.html'", ng-c
 aside.aside(ng-include="'app/views/partials/sidebar.html'", ng-controller="SidebarController")
 
 // offsidebar
-aside.offsidebar(ng-include="'app/views/partials/offsidebar.html'")
+aside.offsidebar(ng-if="false" ng-include="'app/views/partials/offsidebar.html'")
 
 // Main section
-section(block-ui="module-block")
+section(data-ng-class="{'full-screen': app.isFullScreen}", block-ui="module-block")
 
   // Page content
   .content-wrapper(ui-view="", autoscroll="false", ng-class="app.viewAnimation")

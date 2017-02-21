@@ -23,11 +23,14 @@ nav.navbar.topnavbar(role='navigation')
         // START User avatar toggle
         li
           // Button used to collapse the left sidebar. Only visible on tablet and desktops
-          a(href='', ng-click="toggleUserBlock()",title="{{ 'topbar.user-block.TITLE' | translate }}" )
+          a(href='', ng-click="toggleUserBlock($event)",title="{{ 'topbar.user-block.TITLE' | translate }}" )
             em.icon-user
         // END User avatar toggle
-        // START lock screen
         li
+          a(href='', ng-click="app.fullScreen($event)",title="{{ 'topbar.full-screen.TITLE' | translate }}" )
+            em.icon-size-fullscreen
+        // START lock screen
+        li(ng-if="false")
           a(ng-click="app.lock($event)", title="{{ 'topbar.lock.TITLE' | translate }}")
             em.icon-lock
          // END lock screen
@@ -39,7 +42,7 @@ nav.navbar.topnavbar(role='navigation')
       // END Left navbar
 
       // START Right Navbar
-      ul.nav.navbar-nav.navbar-right
+      ul.nav.navbar-nav.navbar-right(ng-if="false")
         // Search icon
         li
           a(search-open="")

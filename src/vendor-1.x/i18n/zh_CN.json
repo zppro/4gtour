@@ -123,6 +123,12 @@
     "user-block": {
       "TITLE": "用户信息"
     },
+    "full-screen": {
+      "TITLE": "全屏"
+    },
+    "normal-screen": {
+      "TITLE": "恢复"
+    },
     "lock": {
       "TITLE": "锁定屏幕"
     },

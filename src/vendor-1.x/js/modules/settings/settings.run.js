@@ -16,7 +16,7 @@
             description: '集养老、旅游、服务于一体综合性业务平台',
             year: ((new Date()).getFullYear()),
             layout: {
-                isFixed: true,
+                isFixed: false,
                 isCollapsed: false,
                 isBoxed: false,
                 isRTL: false,
@@ -25,14 +25,17 @@
                 asideHover: false,
                 theme: null
             },
+            isFullScreen: false,
             useFullLayout: false,
             hiddenFooter: false,
             offsidebarOpen: false,
-            asideToggled: false,
+            asideToggled: true,
             viewAnimation: 'ng-fadeInUp',
             subsystem: {
                 merchant_webstore: {currentSubsystemSref: SETTING_KEYS.SREF_MERCHANT_WEBSTORE},
-                organization_pfta: {currentSubsystemSref: SETTING_KEYS.SREF_ORGANIZATION_PFTA},
+                pension_agency: { currentSubsystemSref: SETTING_KEYS.SREF_PENSION_AGENCY},
+                health_center: { currentSubsystemSref: SETTING_KEYS.SREF_HEALTH_CENTER},
+                organization_travel: {currentSubsystemSref: SETTING_KEYS.SREF_ORGANIZATION_TRAVEL},
                 manage_center: {currentSubsystemSref: SETTING_KEYS.SREF_MANAGE_CENTER}
             }
         };

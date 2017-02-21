@@ -10,8 +10,8 @@
 
     angular
         .module('subsystem.organization-travel')
-        .constant('ORG_PFTA_CHARGE_ITEM', {
-            'ROOM': ORG_PFTA_CHARGE_ITEM_PREFIX + 'ROOM',
+        .constant('ORG_TRAVEL_CHARGE_ITEM', {
+            'ROOM': ORG_TRAVEL_CHARGE_ITEM_PREFIX + 'ROOM',
             'BOARD': ORG_PFTA_CHARGE_ITEM_PREFIX + 'BOARD',
             'NURSING': ORG_PFTA_CHARGE_ITEM_PREFIX + 'NURSING',
             'OTHER': ORG_PFTA_CHARGE_ITEM_PREFIX + 'OTHER',

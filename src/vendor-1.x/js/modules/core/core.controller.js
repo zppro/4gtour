@@ -43,6 +43,35 @@
                 $event.stopPropagation();
             };
 
+            $rootScope.app.fullScreen = function ($event) {
+                $rootScope.app.isFullScreen = true;
+                var el = document.documentElement;
+                var rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen;
+                if (typeof rfs != "undefined" && rfs) {
+                    rfs.call(el);
+                } else if(typeof window.ActiveXObject != "undefined"){
+                    var wscript = new ActiveXObject("WScript.Shell");
+                    if (wscript!=null) {
+                        wscript.SendKeys("{F11}");
+                    }
+                }
+                $event.stopPropagation();
+            }
+            $rootScope.app.exitFullScreen = function ($event) {
+                $rootScope.app.isFullScreen = false;
+                var efs = document.exitFullscreen || document.webkitCancelFullScreen || document.mozCancelFullScreen || document.msExitFullscreen;
+                console.log(efs)
+                if (typeof efs != "undefined" && efs) {
+                    efs.call(document)
+                } else if(typeof window.ActiveXObject != "undefined"){
+                    var wscript = new ActiveXObject("WScript.Shell");
+                    if (wscript!=null) {
+                        wscript.SendKeys("{F11}");
+                    }
+                }
+                $event.stopPropagation();
+            }
+
         }
     }
 
