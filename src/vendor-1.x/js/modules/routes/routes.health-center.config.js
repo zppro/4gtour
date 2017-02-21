@@ -197,7 +197,7 @@
                 resolve: {
                     entityVM: helper.buildEntityVM('app.health-center.wxa-config.details', {
                         modelName: 'pub-wxaConfig',
-                        model: {templates: []},
+                        model: {templates: [], splash_imgs: []},
                         blockUI: true
                     }), deps: helper.resolveFor2('qiniu','qiniu-ng')
                 }
