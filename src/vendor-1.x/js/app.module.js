@@ -18,20 +18,20 @@
     angular
         .module('4gtour', [
             'app.core',
+            'app.settings',
             'app.routes',
             'app.sidebar',
-            'app.navsearch',
+            // 'app.navsearch',
             'app.preloader',
             'app.loadingbar',
             'app.translate',
-            'app.settings',
             'app.pages',
             'app.notify',
             'app.utils',
             'app.interceptor',
             'app.auth',
             'app.model',
-            'app.charts',
+            // 'app.charts',
             'app.grid',
             'app.tree',
             'app.dropdown'

@@ -1,40 +1,40 @@
 [
   {
-    "_id": "menu.pension-agency.OLDMAN-MANAGE",
+    "_id": "menu.pension-agency.OLDMAN",
     "name": "老人管理",
     "sref": "#",
     "icon": "icon-folder",
     "children": [
       {
-        "_id": "menu.pension-agency.ENTER-MANAGE",
+        "_id": "menu.pension-agency.ENTER",
         "name": "入院管理",
-        "sref": "app.pension-agency.enter-manage.list"
+        "sref": "app.pension-agency.enter.list"
 
       },
       {
-        "_id": "menu.pension-agency.IN-MANAGE",
+        "_id": "menu.pension-agency.IN",
         "name": "在院管理",
-        "sref": "app.pension-agency.in-manage.list"
+        "sref": "app.pension-agency.in.list"
       },
       {
-        "_id": "menu.pension-agency.EXIT-MANAGE",
+        "_id": "menu.pension-agency.EXIT",
         "name": "出院管理",
-        "sref": "app.pension-agency.exit-manage.list"
+        "sref": "app.pension-agency.exit.list"
       },
       {
-        "_id": "menu.pension-agency.RECEPTION-MANAGE",
+        "_id": "menu.pension-agency.RECEPTION",
         "name": "接待管理",
-        "sref": "app.pension-agency.reception-manage.list"
+        "sref": "app.pension-agency.reception.list"
       },
       {
-        "_id": "menu.pension-agency.LEAVE-MANAGE",
+        "_id": "menu.pension-agency.LEAVE",
         "name": "外出管理",
-        "sref": "app.pension-agency.leave-manage.list"
+        "sref": "app.pension-agency.leave.list"
       }
     ]
   },
   {
-    "_id": "menu.pension-agency.FINANCIAL-MANAGE",
+    "_id": "menu.pension-agency.FINANCIAL",
     "name": "财务管理",
     "sref": "#",
     "icon": "icon-folder",
@@ -50,9 +50,9 @@
         "sref": "app.pension-agency.financial-recharge.list"
       },
       {
-        "_id": "menu.pension-agency.ARREARAGE-MANAGE",
+        "_id": "menu.pension-agency.ARREARAGE",
         "name": "老人欠费管理",
-        "sref": "app.pension-agency.financial-arrearage-manage"
+        "sref": "app.pension-agency.financial-arrearage"
       },
       {
         "_id": "menu.pension-agency.EXIT-SETTLEMENT",
@@ -72,7 +72,7 @@
     ]
   },
   {
-    "_id": "menu.pension-agency.MATERIAL-MANAGE",
+    "_id": "menu.pension-agency.MATERIAL",
     "name": "物资管理",
     "sref": "#",
     "icon": "icon-folder",
@@ -126,25 +126,20 @@
     "icon": "fa fa-file-o"
   },
   {
-    "_id": "menu.pension-agency.SYSTEM-MANAGE",
-    "name": "系统管理",
+    "_id": "menu.pension-agency.BASIC-SETTINGS",
+    "name": "基础设置",
     "sref": "#",
-    "icon": "icon-folder",
+    "icon": "fa fa-file-o",
     "children": [
       {
-        "_id": "menu.pension-agency.DEPARTMENT-MANAGE",
-        "name": "部门管理",
-        "sref": "app.pension-agency.system-department-manage"
+        "_id": "menu.pension-agency.ROOM",
+        "name": "房间",
+        "sref": "app.pension-agency.room.list"
       },
       {
-        "_id": "menu.pension-agency.ROOM-MANAGE",
-        "name": "房间管理",
-        "sref": "app.pension-agency.room-manage.list"
-      },
-      {
-        "_id": "menu.pension-agency.DISTRICT-MANAGE",
-        "name": "片区管理",
-        "sref": "app.pension-agency.district-manage.list"
+        "_id": "menu.pension-agency.DISTRICT",
+        "name": "片区",
+        "sref": "app.pension-agency.district.list"
       },
       {
         "_id": "menu.pension-agency.CHARGE-STANDARD",
@@ -155,7 +150,15 @@
         "_id": "menu.pension-agency.CHARGE-ITEM-CUSTOMIZED",
         "name": "特色服务",
         "sref": "app.pension-agency.charge-item-customized.list"
-      },
+      }
+    ]
+  },
+  {
+    "_id": "menu.pension-agency.SYSTEM-MANAGE",
+    "name": "系统管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
       {
         "_id": "menu.pension-agency.USER-MANAGE",
         "name": "用户管理",

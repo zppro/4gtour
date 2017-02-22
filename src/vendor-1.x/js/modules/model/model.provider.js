@@ -10,7 +10,8 @@
         .provider('shareNode', ShareNode)
         .provider('extensionNode', ExtensionNode)
         .provider('extOfOrganizationOfTravelNode',ExtOfOrganizationOfTravelNode)
-        .provider('mwsNode', mwsNode)
+        .provider('mwsNode', MWSNode)
+        .provider('psnDashboardNode', PSNDashboardNode)
         .provider('idtNode',IDTNode)
         .provider('extensionOfDashboardOfTenantNode',ExtensionOfDashboardOfTenantNode)
         .provider('qiniuNode',QiniuNode)
@@ -515,7 +516,7 @@
         }
     }
 
-    function mwsNode() {
+    function MWSNode() {
         var baseUrl;
         return {
             // provider access level
@@ -562,6 +563,75 @@
                     return $http.post(baseUrl + 'requestAccessToken', {appid: app_id});
                 }
 
+            }]
+        };
+
+        function setBaseUrl(url) {
+            baseUrl = url;
+        }
+    }
+
+    function PSNDashboardNode(){
+        var baseUrl;
+        return {
+            // provider access level
+            setBaseUrl: setBaseUrl,
+
+            // controller access level
+            $get: ['$http', function ($http) {
+
+                return {
+                    liveIn: liveIn,
+                    liveInOnCurrentMonth: liveInOnCurrentMonth,
+                    liveInManTime: liveInManTime,
+                    tenantAccountInfo: tenantAccountInfo,
+                    bedInfo: bedInfo,
+                    liveinAndAccountAndBedInfo:liveinAndAccountAndBedInfo,
+                    elderlyAgeGroups: elderlyAgeGroups,
+                    roomVacancyRateMonthly: roomVacancyRateMonthly,
+                    roomCatagoryOfManTime: roomCatagoryOfManTime,
+                    roomCatagoryOfManTimeMonthly: roomCatagoryOfManTimeMonthly
+                };
+
+                function liveIn(tenantId) {
+                    return $http.get(baseUrl + 'liveIn/' + tenantId);
+                }
+
+                function liveInOnCurrentMonth(tenantId){
+                    return $http.get(baseUrl + 'liveInOnCurrentMonth/' + tenantId);
+                }
+
+                function liveInManTime(tenantId){
+                    return $http.get(baseUrl + 'liveInManTime/' + tenantId);
+                }
+                
+                function tenantAccountInfo(tenantId){
+                    return $http.get(baseUrl + 'tenantAccountInfo/' + tenantId);
+                }
+
+                function bedInfo(tenantId){
+                    return $http.get(baseUrl + 'bedInfo/' + tenantId);
+                }
+
+                function liveinAndAccountAndBedInfo(tenantId){
+                    return $http.get(baseUrl + 'liveinAndAccountAndBedInfo/' + tenantId);
+                }
+
+                function elderlyAgeGroups(tenantId){
+                    return $http.get(baseUrl + 'elderlyAgeGroups/' + tenantId+'/60/10');
+                }
+
+                function roomVacancyRateMonthly(tenantId,start,end) {
+                    return $http.get(baseUrl + 'roomVacancyRateMonthly/' + tenantId + '/' + start + '/' + end);
+                }
+
+                function roomCatagoryOfManTime(tenantId){
+                    return $http.get(baseUrl + 'roomCatagoryOfManTime/' + tenantId);
+                }
+
+                function roomCatagoryOfManTimeMonthly(tenantId,start,end){
+                    return $http.get(baseUrl + 'roomCatagoryOfManTimeMonthly/' + tenantId+ '/' + start + '/' + end);
+                }
             }]
         };
 

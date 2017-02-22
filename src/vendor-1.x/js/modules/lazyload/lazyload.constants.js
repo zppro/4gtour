@@ -49,6 +49,8 @@
                 {name:'subsystem.merchant-webstore.wx-app-config.js',files:['app/js/lazy-modules/merchant-webstore/wx-app-config.js']},
                 {name:'subsystem.pension-agency',files:['app/js/lazy-modules/pension-agency-share.js','app/css/pension-agency.css']},
                 {name:'subsystem.pension-agency.dashboard.js',files:['app/js/lazy-modules/pension-agency/dashboard.js']},
+                {name:'subsystem.pension-agency.room.js',files:['app/js/lazy-modules/pension-agency/room.js']},
+                {name:'subsystem.pension-agency.district.js',files:['app/js/lazy-modules/pension-agency/district.js']},
                 {name:'subsystem.health-center.dashboard.js',files:['app/js/lazy-modules/health-center/dashboard.js']},
                 {name:'subsystem.organization-travel',files:['app/js/lazy-modules/organization-travel-share.js']},
                 {name:'subsystem.organization-travel.dashboard.js',files:['app/js/lazy-modules/organization-travel/dashboard.js']},

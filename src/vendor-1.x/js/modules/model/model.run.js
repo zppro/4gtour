@@ -21,6 +21,9 @@
         modelNode.factory('mws-channelUnit');
         modelNode.factory('mws-wxAppConfig');
 
+        //养老机构
+        modelNode.factory('psn-district');
+
         //商户机构
         modelNode.factory('trv-scenerySpot');
 

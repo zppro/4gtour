@@ -28,7 +28,7 @@
       "DOMITORY-ROOM": "多人间",
       "CHART-TITLE-ROOM-CATAGORY-OF-MANTIME-Monthly":"近期入住房型情况"
     },
-    "enter-manage": {
+    "enter": {
       "list": {
         "TITLE": "养老机构-老人管理-入院-列表",
         "SUBMIT-ENTER-FINANCIAL-AUDIT":"提交财务审核",
@@ -97,6 +97,17 @@
         "TAB1-PLACEHOLDER-ROLE": "请设置用户角色..",
         "TAB1-LABEL-PHONE": "手机号码",
         "TAB1-PLACEHOLDER-PHONE": "137XXXX0258.."
+      }
+    },
+    "district": {
+      "list": {
+        "TITLE": "养老机构-系统管理-片区-列表"
+      },
+      "details": {
+        "TITLE": "养老机构-系统管理-片区-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-NAME": "片区名称",
+        "TAB1-PLACEHOLDER-NAME": "A区南楼.."
       }
     },
     "wxa-config": {

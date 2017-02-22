@@ -18,7 +18,7 @@ module.exports = {
         var self = this;
         return co(function *() {
 
-            var elderly_totals = yield self.ctx.modelFactory().model_totals(self.ctx.models['pub_elderly'], {
+            var elderly_totals = yield self.ctx.modelFactory().model_totals(self.ctx.models['psn_elderly'], {
                 tenantId: tenant._id,
                 status: 1,
                 live_in_flag: true
@@ -34,7 +34,7 @@ module.exports = {
             var begin = self.ctx.moment(self.ctx.moment().startOf('month').format('YYYY-MM-DD')+" 00:00:00");
             var end = self.ctx.moment(self.ctx.moment().endOf('month').format('YYYY-MM-DD')+" 23:59:59");
 
-            var elderly_totals = yield self.ctx.modelFactory().model_totals(self.ctx.models['pub_elderly'], {
+            var elderly_totals = yield self.ctx.modelFactory().model_totals(self.ctx.models['psn_elderly'], {
                 tenantId: tenant._id,
                 status: 1,
                 live_in_flag: true,
@@ -81,7 +81,11 @@ module.exports = {
                     }
                 }
             ]);
-            var totals = arrTotals[0].count;
+
+            var totals = 0;
+            if (arrTotals.length === 1) {
+                totals = arrTotals[0].count
+            }
 
             var arrLiveIns = yield  self.ctx.modelFactory().model_totals(self.ctx.models['psn_roomOccupancyChangeHistory'], {
                 tenantId: tenant._id,
@@ -93,7 +97,7 @@ module.exports = {
                 totals: totals,
                 liveins: liveins,
                 frees: totals - liveins,
-                vacancy_rate: (100 * (totals - liveins) / totals).toFixed(1)
+                vacancy_rate: (100 * (totals - liveins) / (totals || 1)).toFixed(1)
             };
         });
     }

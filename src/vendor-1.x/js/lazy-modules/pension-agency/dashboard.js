@@ -6,13 +6,13 @@
     'use strict';
 
     angular
-        .module('subsystem.pension-agency.dashboard',[])
+        .module('subsystem.pension-agency')
         .controller('DashboardPensionAgencyController', DashboardPensionAgencyController)
     ;
 
-    DashboardPensionAgencyController.$inject = ['$scope', '$echarts','extensionOfDashboardOfTenantNode','vmh', 'instanceVM'];
+    DashboardPensionAgencyController.$inject = ['$scope', '$echarts','psnDashboardNode','vmh', 'instanceVM'];
 
-    function DashboardPensionAgencyController($scope, $echarts,extensionOfDashboardOfTenantNode,vmh, vm) {
+    function DashboardPensionAgencyController($scope, $echarts,psnDashboardNode, vmh, vm) {
         $scope.vm = vm;
 
         init();
@@ -21,22 +21,21 @@
         function init() {
 
             vm.init();
-            getDeviceStatInfo();
-            // elderlyAgeGroups();
-            // roomVacancyRateMonthly();
-            // roomCatagoryOfManTime();
-            // roomCatagoryOfManTimeMonthly();
+            liveinAndAccountAndBedInfo();
+            elderlyAgeGroups();
+            roomVacancyRateMonthly();
+            roomCatagoryOfManTime();
+            roomCatagoryOfManTimeMonthly();
         }
-
-        function getDeviceStatInfo(){
-            extensionOfDashboardOfTenantNode.getDeviceStatInfo().then(function(ret){
-                console.log(ret);
-                vm.deviceStatInfo = ret;
+  
+        function liveinAndAccountAndBedInfo(){
+            psnDashboardNode.liveinAndAccountAndBedInfo(vm.tenantId).then(function(ret){
+                vm.liveinAndAccountAndBedInfo = ret;
             });
         }
 
         function elderlyAgeGroups(){
-            extensionOfDashboardOfTenantNode.elderlyAgeGroups(vm.tenantId).then(function(rows){
+            psnDashboardNode.elderlyAgeGroups(vm.tenantId).then(function(rows){
                 //data: ["60岁以下", "60-69岁", "70-79岁", '80岁及以上']//legend data
                 //data: [
                 //    {value: 335, name: '60岁以下'},
@@ -97,7 +96,7 @@
 
         function roomVacancyRateMonthly(){
 
-            extensionOfDashboardOfTenantNode.roomVacancyRateMonthly(vm.tenantId,moment().subtract(5,'months').format('YYYY-MM-DD'),moment().format('YYYY-MM-DD')).then(function(rows) {
+            psnDashboardNode.roomVacancyRateMonthly(vm.tenantId,moment().subtract(5,'months').format('YYYY-MM-DD'),moment().format('YYYY-MM-DD')).then(function(rows) {
                 //data: ['2016-02','2016-03','2016-04','2016-05','2016-06','2016-07'] //legend data
                 //data:[0, 0, 0, 0, 0, 13, 10],//serials data
                 var names = _.pluck(rows,'period_value');
@@ -163,7 +162,7 @@
         }
 
         function roomCatagoryOfManTime(){
-            extensionOfDashboardOfTenantNode.roomCatagoryOfManTime(vm.tenantId).then(function(rows){
+            psnDashboardNode.roomCatagoryOfManTime(vm.tenantId).then(function(rows){
                 var titles = _.map(rows,function(o){return vm.moduleTranslatePath(o.title);});
                 var values = _.pluck(rows,'value');
 
@@ -231,7 +230,7 @@
         }
 
         function roomCatagoryOfManTimeMonthly() {
-            extensionOfDashboardOfTenantNode.roomCatagoryOfManTimeMonthly(vm.tenantId, moment().subtract(5, 'months').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')).then(function (result) {
+            psnDashboardNode.roomCatagoryOfManTimeMonthly(vm.tenantId, moment().subtract(5, 'months').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')).then(function (result) {
                 var xAxisData = result.xAxisData;
                 var titles = _.map(result.seriesData,function(o){return vm.moduleTranslatePath(o.name);});
                 var key_chart_title_roomCatagoryOfManTimeMonthly = vm.moduleTranslatePath('CHART-TITLE-ROOM-CATAGORY-OF-MANTIME-Monthly');
@@ -242,7 +241,6 @@
 
                     var names = _.values(ret[1]);
                     var seriesData = _.map(result.seriesData,function(o,i){return _.extend(o,{name:names[i], type:'bar'})});
-
                     vm.roomCatagoryOfManTimeMonthly_id = $echarts.generateInstanceIdentity();
                     vm.roomCatagoryOfManTimeMonthly_config = {
                         title: {

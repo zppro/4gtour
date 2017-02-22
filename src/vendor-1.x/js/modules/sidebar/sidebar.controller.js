@@ -97,7 +97,6 @@
                 });
                 //菜单中带参数如下
                 ///{"sref": "app.manage-center.tenant-account-manage.list","params": "{\"types\":[\"A0001\",\"A0002\"]}"}}
-
                 $scope.menuItems = permitItemsOfLevelOne;
 
 

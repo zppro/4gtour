@@ -11,8 +11,8 @@
         .module('app.routes')
         .config(routesConfig);
 
-    routesConfig.$inject = ['$stateProvider', '$locationProvider', '$urlRouterProvider', 'RouteHelpersProvider', 'AUTH_ACCESS_LEVELS','MODEL_VARIABLES'];
-    function routesConfig($stateProvider, $locationProvider, $urlRouterProvider, helper, AUTH_ACCESS_LEVELS,MODEL_VARIABLES) {
+    routesConfig.$inject = ['$stateProvider', '$locationProvider', '$urlRouterProvider', 'RouteHelpersProvider', 'AUTH_ACCESS_LEVELS'];
+    function routesConfig($stateProvider, $locationProvider, $urlRouterProvider, helper, AUTH_ACCESS_LEVELS) {
 
         // Set the following to true to enable the HTML5 Mode
         // You may have to set <base> tag in index and a routing configuration in your server
