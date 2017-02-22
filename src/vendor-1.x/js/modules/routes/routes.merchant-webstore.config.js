@@ -15,9 +15,9 @@
     function routesMerchantWebstoreConfig($stateProvider, helper, AUTH_ACCESS_LEVELS,MODEL_VARIABLES) {
 
 
-        // 商户开始
+        // 网上商城开始
         $stateProvider
-            .state('app.merchant-webstore', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ROOT + MODEL_VARIABLES.SUBSYSTEM_NAMES.MERCHANT_WEBSTORE, {
                 url: '/merchant-webstore',
                 abstract: true,
                 access_level: AUTH_ACCESS_LEVELS.USER,
@@ -27,34 +27,34 @@
                     // , deps: helper.resolveFor2('subsystem.merchant-webstore')
                 }
             })
-            .state('app.merchant-webstore.dashboard', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'dashboard', {
                 url: '/dashboard',
                 title: '数据面板',
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/merchant-webstore/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MERCHANT_WEBSTORE),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('merchant-webstore/dashboard.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MERCHANT_WEBSTORE + 'dashboard.html'),
                         controller: 'DashboardControllerOfMerchantOfWebstoreController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.merchant-webstore.dashboard')
-                            , deps: helper.resolveFor2('subsystem.merchant-webstore.dashboard.js')
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.MERCHANT_WEBSTORE + 'dashboard')
+                            , deps: helper.resolveFor2(MODEL_VARIABLES.RES_PREFIXS.MERCHANT_WEBSTORE + 'dashboard.js')
                         }
                     }
                 }
                 , resolve: helper.resolveFor('echarts.common','echarts-ng','classyloader')
             })
-            .state('app.merchant-webstore.spu', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'spu', {
                 url: '/spu',
                 title: '标准产品单元',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/merchant-webstore/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MERCHANT_WEBSTORE),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -63,15 +63,15 @@
                 data:{
                     func_id:'menu.merchant-webstore.SPU'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.merchant-webstore.spu.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MERCHANT_WEBSTORE + 'spu.js')
             })
-            .state('app.merchant-webstore.spu.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'spu.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath('merchant-webstore/spu-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MERCHANT_WEBSTORE + 'spu-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'SPUGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.merchant-webstore.spu.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MERCHANT_WEBSTORE + 'spu.list', {
                         modelName: 'mws-spu',
                         searchForm: {"status": 1},
                         sortColumn: 'order_no',
@@ -144,27 +144,27 @@
                     })
                 }
             })
-            .state('app.merchant-webstore.spu.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'spu.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('merchant-webstore/spu-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MERCHANT_WEBSTORE + 'spu-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'SPUDetailsController',
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.merchant-webstore.spu.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MERCHANT_WEBSTORE + 'spu.details', {
                         modelName: 'mws-spu',
                         model: {skus: [], imgs: []},
                         blockUI: true
                     }), deps: helper.resolveFor2('qiniu','qiniu-ng')
                 }
             })
-            .state('app.merchant-webstore.order', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'order', {
                 url: '/order',
                 title: '订单',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/merchant-webstore/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MERCHANT_WEBSTORE),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -173,15 +173,15 @@
                 data:{
                     func_id:'menu.merchant-webstore.ORDER'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.merchant-webstore.order.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MERCHANT_WEBSTORE + 'order.js')
             })
-            .state('app.merchant-webstore.order.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'order.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath('merchant-webstore/order-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MERCHANT_WEBSTORE + 'order-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'MWS_OrderGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.merchant-webstore.order.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MERCHANT_WEBSTORE + 'order.list', {
                         modelName: 'mws-order',
                         searchForm: {"status": 1},
                         serverPaging: true,
@@ -248,27 +248,27 @@
                     })
                 }
             })
-            .state('app.merchant-webstore.order.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'order.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('merchant-webstore/order-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MERCHANT_WEBSTORE + 'order-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'NWS_OrderDetailsController',
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.merchant-webstore.order.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MERCHANT_WEBSTORE + 'order.details', {
                         modelName: 'mws-order',
                         model: {items: [], tracking: []},
                         blockUI: true
                     })
                 }
             })
-            .state('app.merchant-webstore.after-sale', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'after-sale', {
                 url: '/after-sale',
                 title: '售后',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/merchant-webstore/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MERCHANT_WEBSTORE),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -277,15 +277,15 @@
                 data:{
                     func_id:'menu.merchant-webstore.AFTER-SALE'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.merchant-webstore.after-sale.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MERCHANT_WEBSTORE + 'after-sale.js')
             })
-            .state('app.merchant-webstore.after-sale.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'after-sale.list', {
                 url: '/list/:action/:type',
-                templateUrl: helper.basepath('merchant-webstore/after-sale-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MERCHANT_WEBSTORE + 'after-sale-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'MWS_AfterSaleGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.merchant-webstore.after-sale.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MERCHANT_WEBSTORE + 'after-sale.list', {
                         modelName: 'mws-afterSale',
                         searchForm: {"status": 1},
                         serverPaging: true,
@@ -341,27 +341,27 @@
                     })
                 }
             })
-            .state('app.merchant-webstore.after-sale.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'after-sale.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('merchant-webstore/after-sale-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MERCHANT_WEBSTORE + 'after-sale-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'NWS_AfterSaleDetailsController',
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.merchant-webstore.after-sale.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MERCHANT_WEBSTORE + 'after-sale.details', {
                         modelName: 'mws-afterSale',
                         model: {},
                         blockUI: true
                     })
                 }
             })
-            .state('app.merchant-webstore.channel-unit', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'channel-unit', {
                 url: '/channel-unit',
                 title: '渠道',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/merchant-webstore/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MERCHANT_WEBSTORE),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -370,15 +370,15 @@
                 data:{
                     func_id:'menu.merchant-webstore.CHANNEL-UNIT'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.merchant-webstore.channel-unit.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MERCHANT_WEBSTORE + 'channel-unit.js')
             })
-            .state('app.merchant-webstore.channel-unit.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'channel-unit.list', {
                 url: '/list/:action/:parentId',
-                templateUrl: helper.basepath('merchant-webstore/channel-unit-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MERCHANT_WEBSTORE + 'channel-unit-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'MWS_ChannelUnitGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.merchant-webstore.channel-unit.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MERCHANT_WEBSTORE + 'channel-unit.list', {
                         modelName: 'mws-channelUnit',
                         searchForm: {"status": 1},
                         sortColumn: 'code',
@@ -420,13 +420,13 @@
                     , deps: helper.resolveFor2('file-saver')
                 }
             })
-            .state('app.merchant-webstore.channel-unit.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'channel-unit.details', {
                 url: '/details/:action/:_id/:parentId',
-                templateUrl: helper.basepath('merchant-webstore/channel-unit-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MERCHANT_WEBSTORE + 'channel-unit-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'NWS_ChannelUnitDetailsController',
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.merchant-webstore.channel-unit.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MERCHANT_WEBSTORE + 'channel-unit.details', {
                         modelName: 'mws-channelUnit',
                         model: {},
                         blockUI: true,
@@ -434,14 +434,14 @@
                     })
                 }
             })
-            .state('app.merchant-webstore.user-manage', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'user-manage', {
                 url: '/user-manage',
                 title: '用户管理',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/merchant-webstore/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MERCHANT_WEBSTORE),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -450,15 +450,15 @@
                 data:{
                     func_id:'menu.merchant-webstore.USER-MANAGE'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.shared.user-manage.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'user-manage.js')
             })
-            .state('app.merchant-webstore.user-manage.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'user-manage.list', {
                 url: '/list/:action/:roles',
-                templateUrl: helper.basepath('shared/user-manage-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'user-manage-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'Shared_UserManageGridController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.USER_MANAGE_GRID,
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.merchant-webstore.user-manage.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MERCHANT_WEBSTORE + 'user-manage.list', {
                         modelName: 'pub-user',
                         searchForm: {"status": 1,"type": 'A0002'},//user.type Web商城用户
                         serverPaging: true,
@@ -509,13 +509,13 @@
                     })
                 }
             })
-            .state('app.merchant-webstore.user-manage.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'user-manage.details', {
                 url: '/details/:action/:_id/:roles',
-                templateUrl: helper.basepath('shared/user-manage-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'user-manage-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'Shared_UserManageDetailsController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.USER_MANAGE_DETAILS,
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.merchant-webstore.user-manage.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MERCHANT_WEBSTORE + 'user-manage.details', {
                         modelName: 'pub-user',
                         model: {type:'A0002'},
                         blockUI: true,
@@ -523,14 +523,14 @@
                     })
                 }
             })
-            .state('app.merchant-webstore.wx-app-config', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'wx-app-config', {
                 url: '/wx-app-config',
                 title: '微信app',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/merchant-webstore/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MERCHANT_WEBSTORE),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -539,15 +539,15 @@
                 data:{
                     func_id:'menu.merchant-webstore.WX-APP-CONFIG'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.merchant-webstore.wx-app-config.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MERCHANT_WEBSTORE + 'wx-app-config.js')
             })
-            .state('app.merchant-webstore.wx-app-config.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'wx-app-config.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath('merchant-webstore/wx-app-config-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MERCHANT_WEBSTORE + 'wx-app-config-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'MWS_wxAppConfigGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.merchant-webstore.wx-app-config.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MERCHANT_WEBSTORE + 'wx-app-config.list', {
                         modelName: 'mws-wxAppConfig',
                         searchForm: {"status": 1},
                         serverPaging: true,
@@ -576,13 +576,13 @@
                     })
                 }
             })
-            .state('app.merchant-webstore.wx-app-config.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MERCHANT_WEBSTORE + 'wx-app-config.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('merchant-webstore/wx-app-config-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MERCHANT_WEBSTORE + 'wx-app-config-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'MWS_wxAppConfigDetailsController',
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.merchant-webstore.wx-app-config.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MERCHANT_WEBSTORE + 'wx-app-config.details', {
                         modelName: 'mws-wxAppConfig',
                         model: {templates: []},
                         blockUI: true

@@ -17,7 +17,7 @@
 
         // 个人健康管理中心
         $stateProvider
-            .state('app.health-center', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ROOT + MODEL_VARIABLES.SUBSYSTEM_NAMES.HEALTH_CENTER, {
                 url: '/health-center',
                 abstract: true,
                 access_level: AUTH_ACCESS_LEVELS.USER,
@@ -27,34 +27,34 @@
                     // , deps: helper.resolveFor2('subsystem.health-center')
                 }
             })
-            .state('app.health-center.dashboard', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.HEALTH_CENTER + 'dashboard', {
                 url: '/dashboard',
                 title: '数据面板',
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/health-center/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.HEALTH_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('health-center/dashboard.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.HEALTH_CENTER + 'dashboard.html'),
                         controller: 'DashboardControllerOfHealthCenterController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.health-center.dashboard')
-                            , deps: helper.resolveFor2('subsystem.health-center.dashboard.js')
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.HEALTH_CENTER + 'dashboard')
+                            , deps: helper.resolveFor2(MODEL_VARIABLES.RES_PREFIXS.HEALTH_CENTER + 'dashboard.js')
                         }
                     }
                 }
                 , resolve: helper.resolveFor('echarts.common','echarts-ng','classyloader')
             })
-            .state('app.health-center.user-manage', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.HEALTH_CENTER + 'user-manage', {
                 url: '/user-manage',
                 title: '用户管理',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/health-center/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.HEALTH_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -63,15 +63,15 @@
                 data:{
                     func_id:'menu.health-center.USER-MANAGE'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.shared.user-manage.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'user-manage.js')
             })
-            .state('app.health-center.user-manage.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.HEALTH_CENTER + 'user-manage.list', {
                 url: '/list/:action/:roles',
-                templateUrl: helper.basepath('shared/user-manage-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'user-manage-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'Shared_UserManageGridController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.USER_MANAGE_GRID,
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.health-center.user-manage.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.HEALTH_CENTER +'user-manage.list', {
                         modelName: 'pub-user',
                         searchForm: {"status": 1,"type": 'A0002'},//user.type Web商城用户
                         serverPaging: true,
@@ -122,13 +122,13 @@
                     })
                 }
             })
-            .state('app.health-center.user-manage.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.HEALTH_CENTER + 'user-manage.details', {
                 url: '/details/:action/:_id/:roles',
-                templateUrl: helper.basepath('shared/user-manage-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'user-manage-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'Shared_UserManageDetailsController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.USER_MANAGE_DETAILS,
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.health-center.user-manage.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.HEALTH_CENTER + 'user-manage.details', {
                         modelName: 'pub-user',
                         model: {type:'A0002'},
                         blockUI: true,
@@ -136,14 +136,14 @@
                     })
                 }
             })
-            .state('app.health-center.wxa-config', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.HEALTH_CENTER + 'wxa-config', {
                 url: '/wxa-config',
                 title: '微信小程序*',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/health-center/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.HEALTH_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -152,15 +152,15 @@
                 data:{
                     func_id:'menu.health-center.WXA-CONFIG'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.shared.wxa-config.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED +'wxa-config.js')
             })
-            .state('app.health-center.wxa-config.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.HEALTH_CENTER + 'wxa-config.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath('shared/wxa-config-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'wxa-config-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'Shared_wxaConfigGridController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.WXACONFIG_GRID,
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.health-center.wxa-config.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.HEALTH_CENTER + 'wxa-config.list', {
                         modelName: 'pub-wxaConfig',
                         searchForm: {"status": 1},
                         serverPaging: true,
@@ -189,13 +189,13 @@
                     })
                 }
             })
-            .state('app.health-center.wxa-config.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.HEALTH_CENTER + 'wxa-config.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('shared/wxa-config-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'wxa-config-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'Shared_wxaConfigDetailsController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.WXACONFIG_DETAILS,
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.health-center.wxa-config.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.HEALTH_CENTER + 'wxa-config.details', {
                         modelName: 'pub-wxaConfig',
                         model: {templates: [], splash_imgs: []},
                         blockUI: true
