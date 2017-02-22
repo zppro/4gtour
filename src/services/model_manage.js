@@ -187,12 +187,13 @@ module.exports = {
             },
             {
                 method: 'bulkUpdate',
-                verb: 'put',
+                verb: 'post',
                 url: this.service_url_prefix + "/:model/$bulkUpdate",
                 handler: function (app, options) {
                     return function * (next) {
                         try {
                             var modelOption = app.getModelOption(this);
+                            console.log(this.request.body)
                             var ret = yield app.modelFactory().bulkUpdate(modelOption.model_name, modelOption.model_path, this.request.body);
                             if (ret.error) {
                                 this.body = app.wrapper.res.error(ret.error)

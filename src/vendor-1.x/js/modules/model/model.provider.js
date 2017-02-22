@@ -82,7 +82,7 @@
                             }, successFn, errorFn)
                         };
                         this.services[name].bulkUpdate = function (conditions,batchModel, successFn, errorFn) {
-                            return this._update({_id: '$bulkUpdate'}, {
+                            return this._post({_id: '$bulkUpdate'}, {
                                 conditions: conditions,
                                 batchModel: batchModel
                             }, successFn, errorFn)

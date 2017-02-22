@@ -28,7 +28,7 @@
             vm.init({removeDialog: ngDialog});
 
             if (vm.switches.leftTree) {
-                vmh.shareService.tmp('T3001/pfta-district', 'name', vm.treeFilterObject).then(function (treeNodes) {
+                vmh.shareService.tmp('T3001/psn-district', 'name', vm.treeFilterObject).then(function (treeNodes) {
                     vm.trees = [new vmh.treeFactory.sTree('tree1', treeNodes, {mode: 'grid'})];
                     vm.trees[0].selectedNode = vm.trees[0].findNodeById($scope.$stateParams.districtId);
                 });
@@ -61,7 +61,7 @@
 
             vm.init({removeDialog: ngDialog});
 
-            vm.selectBinding.districts = vm.modelNode.services['pfta-district'].query(_.defaults(vm.selectFilterObject.districts, vm.selectFilterObject.common), '_id name');
+            vm.selectBinding.districts = vm.modelNode.services['psn-district'].query(_.defaults(vm.selectFilterObject.districts, vm.selectFilterObject.common), '_id name');
 
             vm.maxFloors = 10;
             vm.maxNumbersInFloor = 8;
@@ -204,7 +204,7 @@
             vm.maxFloors = 10;
             vm.maxNumbersInFloor = 16;
 
-            vm.selectBinding.districts = vm.modelNode.services['pfta-district'].query(_.defaults(vm.selectFilterObject.districts, vm.selectFilterObject.common), '_id name');
+            vm.selectBinding.districts = vm.modelNode.services['psn-district'].query(_.defaults(vm.selectFilterObject.districts, vm.selectFilterObject.common), '_id name');
 
 
             vm.switchDistrict = switchDistrict;

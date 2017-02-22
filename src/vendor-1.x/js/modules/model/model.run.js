@@ -23,6 +23,7 @@
 
         //养老机构
         modelNode.factory('psn-district');
+        modelNode.factory('psn-room');
 
         //商户机构
         modelNode.factory('trv-scenerySpot');

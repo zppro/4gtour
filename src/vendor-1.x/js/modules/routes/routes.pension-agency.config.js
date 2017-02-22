@@ -11,50 +11,49 @@
         .module('app.routes')
         .config(routesHealthCenterConfig);
 
-    routesHealthCenterConfig.$inject = ['$stateProvider', 'RouteHelpersProvider', 'AUTH_ACCESS_LEVELS','MODEL_VARIABLES', 'SETTING_KEYS'];
-    function routesHealthCenterConfig($stateProvider, helper, AUTH_ACCESS_LEVELS,MODEL_VARIABLES, SETTING_KEYS) {
+    routesHealthCenterConfig.$inject = ['$stateProvider', 'RouteHelpersProvider', 'AUTH_ACCESS_LEVELS','MODEL_VARIABLES'];
+    function routesHealthCenterConfig($stateProvider, helper, AUTH_ACCESS_LEVELS,MODEL_VARIABLES) {
 
-        var subsystemPrefix = SETTING_KEYS.SREF_PENSION_AGENCY
-        // 个人健康管理中心
+        // 养老机构
         $stateProvider
-            .state(subsystemPrefix, {
-                url: '/pension-agency',
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ROOT + MODEL_VARIABLES.SUBSYSTEM_NAMES.PENSION_AGENCY, {
+                url: MODEL_VARIABLES.URLS.PENSION_AGENCY,
                 abstract: true,
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 template: '<div class="module-header-wrapper" data-ui-view="module-header"></div><div class="module-content-wrapper" data-ui-view="module-content"></div>',
                 resolve: {
                     vmh: helper.buildVMHelper()
-                    , deps: helper.resolveFor2('subsystem.pension-agency')
+                    , deps: helper.resolveFor2(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY)
                 }
             })
-            .state(subsystemPrefix + '.dashboard', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'dashboard', {
                 url: '/dashboard',
                 title: '数据面板',
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/pension-agency/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('pension-agency/dashboard.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'dashboard.html'),
                         controller: 'DashboardPensionAgencyController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.pension-agency.dashboard')
-                            , deps: helper.resolveFor2('subsystem.pension-agency.dashboard.js')
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'dashboard')
+                            , deps: helper.resolveFor2(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'dashboard.js')
                         }
                     }
                 }
                 , resolve: helper.resolveFor('echarts.common','echarts-ng','classyloader')
             })
-            .state(subsystemPrefix + '.enter', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'enter', {
                 url: '/enter',
                 title: '入院管理',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/pension-agency/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -64,13 +63,13 @@
                     func_id:'menu.pension-agency.ENTER'//业务系统使用
                 }
             })
-            .state(subsystemPrefix + '.enter.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'enter.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath('pension-agency/enter-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'enter-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'EnterManageGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.pension-agency.enter.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'enter.list', {
                         modelName: 'psn-enter',
                         searchForm: {"status": 1},
                         serverPaging: true,
@@ -120,13 +119,13 @@
                     })
                 }
             })
-            .state(subsystemPrefix + '.enter.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'enter.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('pension-agency/enter-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'enter-details.html'),
                 controller: 'EnterManageDetailsController',
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.pension-agency.enter.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'enter.details', {
                         modelName: 'psn-enter',
                         model: {
                             code: MODEL_VARIABLES.PRE_DEFINED.SERVER_GEN,
@@ -137,14 +136,14 @@
                     })
                 }
             })
-            .state(subsystemPrefix + '.room', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'room', {
                 url: '/room',
                 title: '房间管理',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/pension-agency/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -154,15 +153,16 @@
                     func_id:'menu.pension-agency.ROOM',//业务系统使用
                     selectFilterObject: {"districts": {"status": 1}}
                 }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'room.js')
             })
-            .state(subsystemPrefix + '.room.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'room.list', {
                 url: '/list/:action/:districtId',
-                templateUrl: helper.basepath('pension-agency/room-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'room-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'RoomGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.pension-agency.room.list', {
-                        modelName: 'pfta-room',
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'room.list', {
+                        modelName: 'psn-room',
                         searchForm: {"status": 1},
                         serverPaging: true,
                         columns: [
@@ -213,13 +213,13 @@
                     })
                 }
             })
-            .state(subsystemPrefix + '.room.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'room.details', {
                 url: '/details/:action/:_id/:districtId',
-                templateUrl: helper.basepath('pension-agency/room-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'room-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'RoomDetailsController',
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.pension-agency.room.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'room.details', {
                         modelName: 'psn-room',
                         model: {
                             capacity: 1
@@ -229,13 +229,13 @@
                     })
                 }
             })
-            .state(subsystemPrefix + '.room.details-batch-add', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'room.details-batch-add', {
                 url: '/details-batch-add/:districtId',
-                templateUrl: helper.basepath('pension-agency/room-details-batch-add.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'room-details-batch-add.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'RoomDetailsBatchAddController',
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.pension-agency.room.details-batch-add', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'room.details-batch-add', {
                         modelName: 'psn-room',
                         model: {
                             capacity: 1
@@ -246,14 +246,14 @@
                     deps: helper.resolveFor2('angularjs-slider')
                 }
             })
-            .state(subsystemPrefix + '.room.details-batch-edit', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'room.details-batch-edit', {
                 url: '/details-batch-edit/:districtId',
-                templateUrl: helper.basepath('pension-agency/room-details-batch-edit.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'room-details-batch-edit.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'RoomDetailsBatchEditController',
                 params:{selectedIds:null},
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.pension-agency.room.details-batch-edit', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'room.details-batch-edit', {
                         modelName: 'psn-room',
                         model: {
                             capacity: 1
@@ -263,14 +263,14 @@
                     })
                 }
             })
-            .state(subsystemPrefix + '.district', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'district', {
                 url: '/district',
                 title: '片区管理',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/pension-agency/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -279,16 +279,15 @@
                 data:{
                     func_id:'menu.pension-agency.DISTRICT'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.pension-agency.district.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'district.js')
             })
-            .state(subsystemPrefix + '.district.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'district.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath('pension-agency/district-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'district-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-
                 controller: 'DistrictGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.pension-agency.district.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'district.list', {
                         modelName: 'psn-district',
                         searchForm: {"status": 1},
                         serverPaging: true,
@@ -310,27 +309,27 @@
                     })
                 }
             })
-            .state(subsystemPrefix + '.district.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'district.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('pension-agency/district-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'district-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'DistrictDetailsController',
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.pension-agency.district.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'district.details', {
                         modelName: 'psn-district'
                         , blockUI: true
                     })
                     //, deps: helper.resolveFor2('ui.select')
                 }
             })
-            .state(subsystemPrefix + '.user-manage', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'user-manage', {
                 url: '/user-manage',
                 title: '用户管理',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/pension-agency/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -339,15 +338,15 @@
                 data:{
                     func_id:'menu.pension-agency.USER-MANAGE'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.shared.user-manage.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'user-manage.js')
             })
-            .state(subsystemPrefix + '.user-manage.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'user-manage.list', {
                 url: '/list/:action/:roles',
-                templateUrl: helper.basepath('shared/user-manage-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'user-manage-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'Shared_UserManageGridController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.USER_MANAGE_GRID,
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.pension-agency.user-manage.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'user-manage.list', {
                         modelName: 'pub-user',
                         searchForm: {"status": 1,"type": 'A0002'},//user.type Web商城用户
                         serverPaging: true,
@@ -398,13 +397,13 @@
                     })
                 }
             })
-            .state(subsystemPrefix + '.user-manage.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'user-manage.details', {
                 url: '/details/:action/:_id/:roles',
-                templateUrl: helper.basepath('shared/user-manage-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'user-manage-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'Shared_UserManageDetailsController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.USER_MANAGE_DETAILS,
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.pension-agency.user-manage.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'user-manage.details', {
                         modelName: 'pub-user',
                         model: {type:'A0002'},
                         blockUI: true,
@@ -412,14 +411,14 @@
                     })
                 }
             })
-            .state(subsystemPrefix + '.wxa-config', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'wxa-config', {
                 url: '/wxa-config',
                 title: '微信小程序*',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/pension-agency/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -428,15 +427,15 @@
                 data:{
                     func_id:'menu.pension-agency.WXA-CONFIG'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.shared.wxa-config.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'wxa-config.js')
             })
-            .state(subsystemPrefix + '.wxa-config.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'wxa-config.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath('shared/wxa-config-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'wxa-config-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'Shared_wxaConfigGridController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.WXACONFIG_GRID,
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.pension-agency.wxa-config.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'wxa-config.list', {
                         modelName: 'pub-wxaConfig',
                         searchForm: {"status": 1},
                         serverPaging: true,
@@ -465,13 +464,13 @@
                     })
                 }
             })
-            .state(subsystemPrefix + '.wxa-config.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'wxa-config.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('shared/wxa-config-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'wxa-config-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'Shared_wxaConfigDetailsController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.WXACONFIG_DETAILS,
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.pension-agency.wxa-config.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'wxa-config.details', {
                         modelName: 'pub-wxaConfig',
                         model: {templates: []},
                         blockUI: true
