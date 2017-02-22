@@ -24,6 +24,8 @@
         //养老机构
         modelNode.factory('psn-district');
         modelNode.factory('psn-room');
+        modelNode.factory('psn-chargeItemCustomized');
+
 
         //商户机构
         modelNode.factory('trv-scenerySpot');

@@ -1,21 +1,21 @@
 /**
- * district Created by zppro on 17-2-22.
- * Target:养老机构片区  (移植自fsrok)
+ * system-district-manage.controller Created by zppro on 17-2-22.
+ * Target:自定义收费项目 (移植自fsrok)
  */
 
 (function() {
     'use strict';
-    
+
     angular
         .module('subsystem.pension-agency')
-        .controller('DistrictGridController', DistrictGridController)
-        .controller('DistrictDetailsController', DistrictDetailsController)
+        .controller('ChargeItemCustomizedGridController', ChargeItemCustomizedGridController)
+        .controller('ChargeItemCustomizedDetailsController', ChargeItemCustomizedDetailsController)
     ;
 
 
-    DistrictGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
+    ChargeItemCustomizedGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
 
-    function DistrictGridController($scope, ngDialog, vmh, vm) {
+    function ChargeItemCustomizedGridController($scope, ngDialog, vmh, vm) {
 
         $scope.vm = vm;
         $scope.utils = vmh.utils.g;
@@ -24,13 +24,14 @@
 
         function init() {
             vm.init({removeDialog: ngDialog});
+
             vm.query();
         }
     }
 
-    DistrictDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
+    ChargeItemCustomizedDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
 
-    function DistrictDetailsController($scope, ngDialog, vmh, vm) {
+    function ChargeItemCustomizedDetailsController($scope, ngDialog, vmh, vm) {
 
         var vm = $scope.vm = vm;
         $scope.utils = vmh.utils.v;
@@ -41,7 +42,6 @@
         function init() {
 
             vm.init({removeDialog: ngDialog});
-
 
             vm.doSubmit = doSubmit;
             vm.tab1 = {cid: 'contentTab1'};
@@ -54,6 +54,7 @@
         function doSubmit() {
 
             if ($scope.theForm.$valid) {
+
                 vm.save();
             }
             else {
@@ -62,8 +63,6 @@
                 }
             }
         }
-
-
     }
 
 })();

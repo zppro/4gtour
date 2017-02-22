@@ -69,15 +69,17 @@ var source = {
         subsystem: paths.src_client + 'less/subsystem/*.*'
     },
     scripts: {
-        watch: [paths.src_client + 'js/**/*', '!' + paths.src_client + 'js/custom/**/*', '!' + paths.src_client + 'js/lazy-modules/**/*'],
+        watch: [paths.src_client + 'js/**/*',  paths.src_client + 'js/lazy-modules/**/*.module.js', '!' + paths.src_client + 'js/custom/**/*', '!' + paths.src_client + 'js/lazy-modules/**/*.js'],
         app: [
             paths.src_client + 'js/app.module.js',
             // template modules
             paths.src_client + 'js/modules/**/*.module.js',
             paths.src_client + 'js/modules/**/*.js',
-            // custom modules
-            paths.src_client + 'js/custom/**/*.module.js',
-            paths.src_client + 'js/custom/**/*.js'
+            // lazy-modules -definations
+            paths.src_client + 'js/lazy-modules/**/*.module.js'
+            // // custom modules
+            // paths.src_client + 'js/custom/**/*.module.js',
+            // paths.src_client + 'js/custom/**/*.js'
         ],
         name_concat_js: 'app.js'
     },
@@ -372,7 +374,7 @@ gulp.task('lazy-modules:scripts', function() {
                 dirName = arr[arr.length - 1];
             }
             //目录合并
-            return gulp.src([path.join(o, '*.module.js'), path.join(o, '*.js')],{base:source.lazyModules.root})
+            return gulp.src(['!' + path.join(o, '*.module.js'), path.join(o, '*.js')],{base:source.lazyModules.root})
                 .pipe($plugins.jsvalidate())
                 .on('error', handleError)
                 .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.init()))

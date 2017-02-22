@@ -1,13 +1,13 @@
 /**
  * Created by zppro on 17-1-9.
- * Target:web商城 SPU
+ * Target:微信小程序配置
  */
 
 (function() {
     'use strict';
 
     angular
-        .module('subsystem.shared.wxa-config',[])
+        .module('subsystem.shared')
         .controller('Shared_wxaConfigGridController', Shared_wxaConfigGridController)
         .controller('Shared_wxaConfigDetailsController', Shared_wxaConfigDetailsController)
     ;

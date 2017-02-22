@@ -60,6 +60,17 @@ module.exports = function(ctx,name) {
                 //payed: {type: Boolean, default: false},
                 expired_on: {type: Date, default: ctx.moment('1970-01-01T00:00:00+0000')}
             }],
+            charge_standards:[{
+                charge_standard: {type: String, required: true},
+                charge_items: [{
+                    check_in_time: {type: Date, default: Date.now},
+                    item_id: {type: String, required: true},
+                    item_name: {type: String, required: true},
+                    period_price: {type: Number, default: 0.00},
+                    period: {type: String, required: true, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D1015"])},
+                    orderNo: {type: Number, default: 0}
+                }]
+            }],
             general_ledger:{type: Number, default: 0.00},//一般在通过流水月结转
             subsidiary_ledger: {
                 self: {type: Number, default: 0.00},//主账户

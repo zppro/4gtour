@@ -81,10 +81,10 @@
     },
     "room": {
       "list": {
-        "TITLE": "养老机构-系统管理-房间-列表"
+        "TITLE": "养老机构-基础设置-房间-列表"
       },
       "details": {
-        "TITLE": "养老机构-系统管理-房间-详情",
+        "TITLE": "养老机构-基础设置-房间-详情",
         "TAB1": "基本信息",
         "TAB1-LABEL-DISTRICT_ID":"所在片区",
         "TAB1-PLACEHOLDER-DISTRICT_ID":"请选择一个片区..",
@@ -98,7 +98,7 @@
         "TAB1-LABEL-STOP_FLAG": "停用"
       },
       "details-batch-add": {
-        "TITLE": "养老机构-系统管理-房间-批量添加",
+        "TITLE": "养老机构-基础设置-房间-批量添加",
         "TAB1": "批量添加信息",
         "TAB1-LABEL-DISTRICT_ID":"所在片区",
         "TAB1-PLACEHOLDER-DISTRICT_ID":"请选择一个片区..",
@@ -110,7 +110,7 @@
         "TAB1-LABEL-STOP_FLAG": "停用"
       },
       "details-batch-edit": {
-        "TITLE": "养老机构-系统管理-房间-批量编辑",
+        "TITLE": "养老机构-基础设置-房间-批量编辑",
         "TAB1": "批量编辑信息",
         "TAB1-LABEL-CAPACITY": "床位数量",
         "TAB1-PLACEHOLDER-CAPACITY": "4..",
@@ -120,13 +120,34 @@
     },
     "district": {
       "list": {
-        "TITLE": "养老机构-系统管理-片区-列表"
+        "TITLE": "养老机构-基础设置-片区-列表"
       },
       "details": {
-        "TITLE": "养老机构-系统管理-片区-详情",
+        "TITLE": "养老机构-基础设置-片区-详情",
         "TAB1": "基本信息",
         "TAB1-LABEL-NAME": "片区名称",
         "TAB1-PLACEHOLDER-NAME": "A区南楼.."
+      }
+    },
+    "charge-standard": {
+      "TITLE": "养老机构-基础设置-收费标准",
+      "HEADER-ITEM_NAME": "收费项目",
+      "HEADER-PERIOD_PRICE": "收费价格",
+      "HEADER-PRICER": "调价器",
+      "HEADER-PERIOD": "收费周期"
+    },
+    "charge-item-customized": {
+      "list": {
+        "TITLE": "养老机构-基础设置-特色服务-列表"
+      },
+      "details": {
+        "TITLE": "养老机构-系统管理-特色服务-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-NAME": "服务名称",
+        "TAB1-PLACEHOLDER-NAME": "每月体检..",
+        "TAB1-LABEL-Served_Quantity":"服务老人数量",
+        "TAB1-LABEL-REMARK":"备注",
+        "TAB1-PLACEHOLDER-REMARK":"补充说明一些情况"
       }
     },
     "user-manage": {

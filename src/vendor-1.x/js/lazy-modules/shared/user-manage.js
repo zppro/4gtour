@@ -7,7 +7,7 @@
     'use strict';
 
     angular
-        .module('subsystem.shared.user-manage',[])
+        .module('subsystem.shared')
         .controller('Shared_UserManageGridController', Shared_UserManageGridController)
         .controller('Shared_UserManageDetailsController', Shared_UserManageDetailsController)
     ;
