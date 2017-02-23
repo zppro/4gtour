@@ -6,7 +6,7 @@
     'use strict';
 
     angular
-        .module('subsystem.manage-center.tenant-user-manage',[])
+        .module('subsystem.manage-center')
         .controller('TenantUserManageGridController', TenantUserManageGridController)
         .controller('TenantUserManageDetailsController', TenantUserManageDetailsController)
     ;

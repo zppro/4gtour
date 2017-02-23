@@ -6,7 +6,7 @@
     'use strict';
 
     angular
-        .module('subsystem.manage-center.order-receipt-confirmation',[])
+        .module('subsystem.manage-center')
         .controller('OrderReceiptConfirmationGridController', OrderReceiptConfirmationGridController)
     ;
 

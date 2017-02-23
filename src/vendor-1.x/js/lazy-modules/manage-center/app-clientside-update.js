@@ -6,7 +6,7 @@
     'use strict';
 
     angular
-        .module('subsystem.manage-center.app-clientside-update',[])
+        .module('subsystem.manage-center')
         .controller('AppClientSideUpdateGridController', AppClientSideUpdateGridController)
         .controller('AppClientSideUpdateDetailsController', AppClientSideUpdateDetailsController)
     ;

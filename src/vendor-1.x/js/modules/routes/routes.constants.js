@@ -10,8 +10,8 @@
         HEALTH_CENTER = 'health-center',
         ORGANIZATION_TRAVEL = 'organization-travel',
         MANAGE_CENTER = 'manage-center',
+        DEMO_CENTER = 'demo-center',
         SHARED = 'shared';
-
     angular
         .module('app.routes')
         .constant('MODEL_VARIABLES', {
@@ -32,7 +32,8 @@
                 PENSION_AGENCY: PENSION_AGENCY,
                 HEALTH_CENTER: HEALTH_CENTER,
                 ORGANIZATION_TRAVEL: ORGANIZATION_TRAVEL,
-                MANAGE_CENTER: MANAGE_CENTER
+                MANAGE_CENTER: MANAGE_CENTER,
+                DEMO_CENTER: DEMO_CENTER
             },
             STATE_PREFIXS: {
                 ROOT: APP +DOT_CHAR,
@@ -40,14 +41,16 @@
                 PENSION_AGENCY: STATE_PREFIX+ PENSION_AGENCY + DOT_CHAR,
                 HEALTH_CENTER: STATE_PREFIX + HEALTH_CENTER + DOT_CHAR,
                 ORGANIZATION_TRAVEL: STATE_PREFIX+ ORGANIZATION_TRAVEL + DOT_CHAR,
-                MANAGE_CENTER: STATE_PREFIX + MANAGE_CENTER + DOT_CHAR
+                MANAGE_CENTER: STATE_PREFIX + MANAGE_CENTER + DOT_CHAR,
+                DEMO_CENTER: STATE_PREFIX + DEMO_CENTER + DOT_CHAR
             },
             VM_PREFIXS: {
                 MERCHANT_WEBSTORE: VM_PREFIX + MERCHANT_WEBSTORE + DOT_CHAR,
                 PENSION_AGENCY: VM_PREFIX+ PENSION_AGENCY + DOT_CHAR,
                 HEALTH_CENTER: VM_PREFIX + HEALTH_CENTER + DOT_CHAR,
                 ORGANIZATION_TRAVEL: VM_PREFIX+ ORGANIZATION_TRAVEL + DOT_CHAR,
-                MANAGE_CENTER: VM_PREFIX + MANAGE_CENTER + DOT_CHAR
+                MANAGE_CENTER: VM_PREFIX + MANAGE_CENTER + DOT_CHAR,
+                DEMO_CENTER: VM_PREFIX + DEMO_CENTER + DOT_CHAR
             },
             RES_PREFIXS:{
                 MERCHANT_WEBSTORE: RES_PREFIX + MERCHANT_WEBSTORE + DOT_CHAR,
@@ -55,6 +58,7 @@
                 HEALTH_CENTER: RES_PREFIX + HEALTH_CENTER + DOT_CHAR,
                 ORGANIZATION_TRAVEL: RES_PREFIX + ORGANIZATION_TRAVEL + DOT_CHAR,
                 MANAGE_CENTER: RES_PREFIX + MANAGE_CENTER + DOT_CHAR,
+                DEMO_CENTER: RES_PREFIX + DEMO_CENTER + DOT_CHAR,
                 SHARED: RES_PREFIX + SHARED + DOT_CHAR,
             },
             URLS:{
@@ -63,6 +67,7 @@
                 HEALTH_CENTER: '/' + HEALTH_CENTER,
                 ORGANIZATION_TRAVEL: '/' + ORGANIZATION_TRAVEL,
                 MANAGE_CENTER: '/' + MANAGE_CENTER,
+                DEMO_CENTER: '/' + DEMO_CENTER,
                 SHARED: '/' + SHARED
             },
             HEAD_TEMPLATES:{
@@ -71,6 +76,7 @@
                 HEALTH_CENTER: 'partials/' +  HEALTH_CENTER + '/module-header.html',
                 ORGANIZATION_TRAVEL: 'partials/' +  ORGANIZATION_TRAVEL + '/module-header.html',
                 MANAGE_CENTER: 'partials/' +  MANAGE_CENTER + '/module-header.html',
+                DEMO_CENTER: 'partials/module-header.html',
                 SHARED:  'partials/module-header.html'
             },
             CONTENT_TEMPLATES:{
@@ -78,7 +84,8 @@
                 PENSION_AGENCY: PENSION_AGENCY + '/',
                 HEALTH_CENTER: HEALTH_CENTER + '/' ,
                 ORGANIZATION_TRAVEL: ORGANIZATION_TRAVEL + '/',
-                MANAGE_CENTER: MANAGE_CENTER + '/'  ,
+                MANAGE_CENTER: MANAGE_CENTER + '/',
+                DEMO_CENTER: DEMO_CENTER + '/',
                 SHARED: SHARED + '/'
             }
         })

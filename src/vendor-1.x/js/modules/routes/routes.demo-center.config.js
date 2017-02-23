@@ -12,41 +12,41 @@
         .config(routesDemoCenterConfig);
 
     routesDemoCenterConfig.$inject = ['$stateProvider', 'RouteHelpersProvider', 'AUTH_ACCESS_LEVELS','MODEL_VARIABLES'];
-    function routesDemoCenterConfig($stateProvider, helper, AUTH_ACCESS_LEVELS,MODEL_VARIABLES) {
+    function routesDemoCenterConfig($stateProvider, helper, AUTH_ACCESS_LEVELS, MODEL_VARIABLES) {
 
 
         // 演示中心开始
         $stateProvider
-            .state('app.demo-center', {
-                url: '/demo-center',
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ROOT + MODEL_VARIABLES.SUBSYSTEM_NAMES.DEMO_CENTER, {
+                url: '/demo',
                 abstract: true,
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 template: '<div class="module-header-wrapper" data-ui-view="module-header"></div><div class="module-content-wrapper" data-ui-view="module-content"></div>',
                 resolve: {
                     vmh: helper.buildVMHelper()
-                    , deps: helper.resolveFor2('app.demo')
+                    , deps: helper.resolveFor2(MODEL_VARIABLES.RES_PREFIXS.DEMO_CENTER)
                 }
             })
-            .state('app.demo-center.grid-basic', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.DEMO_CENTER + 'grid-basic', {
                 url: '/grid-basic',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.DEMO_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
                     }
                 }
             })
-            .state('app.demo-center.grid-basic.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.DEMO_CENTER + 'grid-basic.list', {
                 url: '/list/:action',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
-                templateUrl: helper.basepath('demo-center/grid-basic-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.DEMO_CENTER + 'grid-basic-list.html'),
                 controller: 'DemoGridBasicController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.demo-center.grid-basic.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.DEMO_CENTER + 'grid-basic.list', {
                         columns: [
                             {
                                 label: 'ID',
@@ -87,167 +87,167 @@
                     })
                 }
             })
-            .state('app.demo-center.grid-basic.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.DEMO_CENTER + 'grid-basic.details', {
                 url: '/details/:action/:_id',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
-                templateUrl: helper.basepath('demo-center/grid-basic-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.DEMO_CENTER + 'grid-basic-details.html'),
                 controller: 'DemoGridBasicDetailsController',
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.demo-center.grid-basic.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.DEMO_CENTER + 'grid-basic.details', {
                         blockUI: true
                     })
                 }
             })
-            .state('app.demo-center.tree-basic', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.DEMO_CENTER + 'tree-basic', {
                 url: '/tree-basic',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.DEMO_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('demo-center/tree-basic.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.DEMO_CENTER + 'tree-basic.html'),
                         controller: 'DemoTreeBasicController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.demo-center.tree-basic')
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.DEMO_CENTER + 'tree-basic')
                         }
                     }
                 }
             })
-            .state('app.demo-center.tree-extend', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.DEMO_CENTER + 'tree-extend', {
                 url: '/tree-extend',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.DEMO_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('demo-center/tree-extend.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.DEMO_CENTER + 'tree-extend.html'),
                         controller: 'DemoTreeExtendController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.demo-center.tree-extend')
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.DEMO_CENTER + 'tree-extend')
                         }
                     }
                 }
             })
-            .state('app.demo-center.tree-directive', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.DEMO_CENTER + 'tree-directive', {
                 url: '/tree-directive',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.DEMO_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('demo-center/tree-directive.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.DEMO_CENTER + 'tree-directive.html'),
                         controller: 'DemoTreeDirectiveController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.demo-center.tree-directive')
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.DEMO_CENTER + 'tree-directive')
                         }
                     }
                 }
             })
-            .state('app.demo-center.tree-nav', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.DEMO_CENTER + 'tree-nav', {
                 url: '/tree-nav',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.DEMO_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('demo-center/tree-nav.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.DEMO_CENTER + 'tree-nav.html'),
                         controller: 'DemoTreeNavController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.demo-center.tree-nav')
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.DEMO_CENTER + 'tree-nav')
                         }
                     }
                 }
             })
-            .state('app.demo-center.tree-tile', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.DEMO_CENTER + 'tree-tile', {
                 url: '/tree-tile',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.DEMO_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('demo-center/tree-tile.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.DEMO_CENTER + 'tree-tile.html'),
                         controller: 'DemoTreeTileController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.demo-center.tree-tile')
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.DEMO_CENTER + 'tree-tile')
                         }
                     }
                 }
             })
-            .state('app.demo-center.img-process-qiniu', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.DEMO_CENTER + 'img-process-qiniu', {
                 url: '/img-process-qiniu',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.DEMO_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('demo-center/img-process-qiniu.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.DEMO_CENTER + 'img-process-qiniu.html'),
                         controller: 'DemoIMGProcessQiNiuController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.demo-center.img-process-qiniu')
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.DEMO_CENTER + 'img-process-qiniu')
                             , deps: helper.resolveFor2('qiniu','qiniu-ng')
                         }
                     }
                 }
             })
-            .state('app.demo-center.dropdown', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.DEMO_CENTER + 'dropdown', {
                 url: '/dropdown',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.DEMO_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('demo-center/dropdown.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.DEMO_CENTER + 'dropdown.html'),
                         controller: 'DemoDropdownController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.demo-center.dropdown')
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.DEMO_CENTER + 'dropdown')
                         }
                     }
                 }
             })
-            .state('app.demo-center.box-input', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.DEMO_CENTER + 'box-input', {
                 url: '/box-input',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.DEMO_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('demo-center/box-input.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.DEMO_CENTER + 'box-input.html'),
                         controller: 'DemoBoxInputController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.demo-center.box-input')
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.DEMO_CENTER + 'box-input')
                         }
                     }
                 }
             })
-            .state('app.demo-center.promise', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.DEMO_CENTER + 'promise', {
                 url: '/promise',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.DEMO_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('demo-center/promise.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.DEMO_CENTER + 'promise.html'),
                         controller: 'DemoPromiseController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.demo-center.promise')
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.DEMO_CENTER + 'promise')
                         }
                     }
                 }

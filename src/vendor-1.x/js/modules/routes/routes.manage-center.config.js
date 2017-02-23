@@ -39,7 +39,7 @@
                     },
                     "module-content": {
                         templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'dashboard.html'),
-                        controller: 'DashboardControllerOfManageCenterController',
+                        controller: 'DashboardManageCenterController',
                         resolve: {
                             instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'dashboard')
                         }
@@ -47,8 +47,8 @@
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'dashboard.js')
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-account-manage', {
-                url: '/travel-agency-account-manage',
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-account-manage', {
+                url: '/tenant-account-manage',
                 abstract: true,
                 views: {
                     "module-header": {
@@ -64,25 +64,25 @@
                 }
                 ,resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'tenant-account-manage.js')
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-account-manage.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-account-manage.list', {
                 url: '/list/:action',
                 templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-account-manage-list.html'),//复用页面
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 controller: MODEL_VARIABLES.CONTROLLER_NAMES.GRID,
                 resolve: {
-                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'travel-agency-account-manage.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'tenant-account-manage.list', {
                         modelName: 'pub-tenant',
                         searchForm: {"type": {"$in": ['A0001', 'A0002', 'A0003']}},
                         transTo: {
-                            "user": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-user-manage.list',
-                            "openFuncs": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-open-funcs',
-                            "order":MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-order-manage.list'
+                            "user": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-user-manage.list',
+                            "openFuncs": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-open-funcs',
+                            "order":MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-order-manage.list'
                         },
                         //切换客户端还是服务端分页
                         serverPaging: true,
                         columns: [
                             {
-                                label: '商户名称',
+                                label: '租户名称',
                                 name: 'name',
                                 type: 'string',
                                 width: 200,
@@ -137,13 +137,13 @@
                     })
                 }
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-account-manage.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-account-manage.details', {
                 url: '/details/:action/:_id',
                 templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-account-manage-details.html'),
                 controller: 'TenantAccountManageDetailsController',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 resolve: {
-                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'travel-agency-account-manage.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'tenant-account-manage.details', {
                         modelName: 'pub-tenant',
                         model: {
                             limit_to: 0
@@ -152,8 +152,8 @@
                     })
                 }
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-user-manage', {
-                url: '/travel-agency-user-manage',
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-user-manage', {
+                url: '/tenant-user-manage',
                 abstract: true,
                 views: {
                     "module-header": {
@@ -172,13 +172,13 @@
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'tenant-user-manage.js')
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-user-manage.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-user-manage.list', {
                 url: '/list/:action/:tenantId',
                 templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-user-manage-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 controller: 'TenantUserManageGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'travel-agency-user-manage.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'tenant-user-manage.list', {
                         modelName: 'pub-user',
                         searchForm: {"status": 1,"type": 'A0002'},//user.type 养老机构用户
                         //切换客户端还是服务端分页
@@ -238,13 +238,13 @@
                     })
                 }
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-user-manage.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-user-manage.details', {
                 url: '/details/:action/:_id/:tenantId',
                 templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-user-manage-details.html'),
                 controller: 'TenantUserManageDetailsController',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 resolve: {
-                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'travel-agency-user-manage.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'tenant-user-manage.details', {
                         modelName: 'pub-user',
                         model: {type:'A0002'},
                         blockUI: true,
@@ -253,8 +253,8 @@
                     //, deps: helper.resolveFor2('ui.select')
                 }
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-open-funcs', {
-                url: '/travel-agency-open-funcs/:tenantId',
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-open-funcs', {
+                url: '/tenant-open-funcs/:tenantId',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 views: {
                     "module-header": {
@@ -265,7 +265,7 @@
                         templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'func.html'),
                         controller: 'FuncController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'travel-agency-open-funcs'),
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'tenant-open-funcs'),
                             deps: helper.resolveFor2('angularjs-slider')
                         }
                     }
@@ -275,8 +275,8 @@
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'func.js')
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-order-manage', {
-                url: '/travel-agency-order-manage',
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-order-manage', {
+                url: '/tenant-order-manage',
                 abstract: true,
                 views: {
                     "module-header": {
@@ -295,13 +295,13 @@
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'tenant-order-manage.js')
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-order-manage.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-order-manage.list', {
                 url: '/list/:action/:tenantId',
                 templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-order-manage-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 controller: 'TenantOrderManageGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'travel-agency-order-manage.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'tenant-order-manage.list', {
                         modelName: 'pub-order',
                         searchForm: {"type": 'TP'},//养老机构产生的订单
                         //切换客户端还是服务端分页
@@ -377,13 +377,13 @@
                     })
                 }
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-order-manage.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-order-manage.details', {
                 url: '/details/:action/:_id/:tenantId',
                 templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-order-manage-details.html'),
                 controller: 'TenantOrderManageDetailsController',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 resolve: {
-                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'travel-agency-order-manage.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'tenant-order-manage.details', {
                         modelName: 'pub-order',
                         model: {
                             code: MODEL_VARIABLES.PRE_DEFINED.SERVER_GEN,
@@ -878,7 +878,7 @@
                         modelName: 'pub-order',
                         searchForm: {"order_status": {"$in": ['A1002', 'A1003', 'A1004']}},//等待客户付款,财务确认收款,交易成功
                         transTo: {
-                            "TP": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-order-manage.details',
+                            "TP": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-order-manage.details',
                             "TA": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-order-manage.details'
                         },
                         //切换客户端还是服务端分页
@@ -976,7 +976,7 @@
                         modelName: 'pub-order',
                         searchForm: {"order_status": {"$in": ['A1006', 'A1007']}},//等待退款,退款成功
                         transTo: {
-                            "TP": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-order-manage.details',
+                            "TP": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-order-manage.details',
                             "TA": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-order-manage.details'
                         },
                         //切换客户端还是服务端分页

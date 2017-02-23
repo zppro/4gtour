@@ -38,7 +38,6 @@
                 {name: 'locale_zh-cn', files: ['vendor/angular-i18n/angular-locale_zh-cn.js']},
                 {name: 'echarts-ng', files: ['vendor/echarts-ng/dist/echarts-ng.min.js']},
                 {name:'qiniu-ng',files:['app/js/lazy-modules/qiniu-ng.js']},
-                {name:'app.demo',files:['app/js/lazy-modules/demo.js']},
                 {name:'subsystem.shared.user-manage.js',files:['app/js/lazy-modules/shared/user-manage.js']},
                 {name:'subsystem.shared.wxa-config.js',files:['app/js/lazy-modules/shared/wxa-config.js']},
                 {name:'subsystem.shared.charge-standard.js',files:['app/js/lazy-modules/shared/charge-standard.js']},
@@ -69,7 +68,8 @@
                 {name:'subsystem.manage-center.order-receipt-confirmation.js',files:['app/js/lazy-modules/manage-center/order-receipt-confirmation.js']},
                 {name:'subsystem.manage-center.order-refund-confirmation.js',files:['app/js/lazy-modules/manage-center/order-refund-confirmation.js']},
                 {name:'subsystem.manage-center.app-serverside-update.js',files:['app/js/lazy-modules/manage-center/app-serverside-update.js']},
-                {name:'subsystem.manage-center.app-clientside-update.js',files:['app/js/lazy-modules/manage-center/app-clientside-update.js']}
+                {name:'subsystem.manage-center.app-clientside-update.js',files:['app/js/lazy-modules/manage-center/app-clientside-update.js']},
+                {name:'subsystem.demo-center.',files:['app/js/lazy-modules/demo.js']}
             ]
         })
     ;

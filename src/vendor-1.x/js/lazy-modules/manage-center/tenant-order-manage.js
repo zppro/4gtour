@@ -6,7 +6,7 @@
     'use strict';
 
     angular
-        .module('subsystem.manage-center.tenant-order-manage',[])
+        .module('subsystem.manage-center')
         .controller('TenantOrderManageGridController', TenantOrderManageGridController)
         .controller('TenantOrderManageDetailsController', TenantOrderManageDetailsController)
     ;

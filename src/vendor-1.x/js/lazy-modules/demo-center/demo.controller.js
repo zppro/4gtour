@@ -7,7 +7,7 @@
     'use strict';
 
     angular
-        .module('app.demo')
+        .module('subsystem.demo')
         .controller('DemoGridBasicController', DemoGridBasicController)
         .controller('DemoGridBasicDetailsController', DemoGridBasicDetailsController)
         .controller('DemoTreeBasicController', DemoTreeBasicController)

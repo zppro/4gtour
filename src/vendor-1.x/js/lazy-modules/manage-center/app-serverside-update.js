@@ -6,7 +6,7 @@
     'use strict';
 
     angular
-        .module('subsystem.manage-center.app-serverside-update',[])
+        .module('subsystem.manage-center')
         .controller('AppServerSideUpdateGridController', AppServerSideUpdateGridController)
         .controller('AppServerSideUpdateDetailsController', AppServerSideUpdateDetailsController)
     ;

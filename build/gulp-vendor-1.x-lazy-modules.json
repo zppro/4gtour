@@ -1,11 +1,11 @@
 [
   { "type":"js","path":"src/{{target}}/js/lazy-modules/qiniu-ng/" },
-  { "type":"js","path":"src/{{target}}/js/lazy-modules/demo/" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/shared/*.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/merchant-webstore/*.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/pension-agency-share/" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/pension-agency/*.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/health-center/*.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/organization-travel/*.js" },
-  { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/*.js" }
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/*.js" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/demo-center/*.js" }
 ]

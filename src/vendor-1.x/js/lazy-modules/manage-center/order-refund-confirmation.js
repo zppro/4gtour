@@ -6,7 +6,7 @@
     'use strict';
 
     angular
-        .module('subsystem.manage-center.order-refund-confirmation',[])
+        .module('subsystem.manage-center')
         .controller('OrderRefundConfirmationGridController', OrderRefundConfirmationGridController)
     ;
 

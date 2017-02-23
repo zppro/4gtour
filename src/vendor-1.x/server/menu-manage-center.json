@@ -1,24 +1,24 @@
 [
   {
-    "_id": "menu.manage-center.TRAVEL-AGENCY-MANAGE",
+    "_id": "menu.manage-center.TENANT-MANAGE",
     "name": "租户管理",
     "sref": "#",
     "icon": "icon-folder",
     "children": [
       {
-        "_id": "menu.manage-center.TRAVEL-AGENCY-ACCOUNT-MANAGE",
+        "_id": "menu.manage-center.TENANT-ACCOUNT-MANAGE",
         "name": "帐号管理",
-        "sref": "app.manage-center.travel-agency-account-manage.list"
+        "sref": "app.manage-center.tenant-account-manage.list"
       },
       {
-        "_id": "menu.manage-center.TRAVEL-AGENCY-USER-MANAGE",
+        "_id": "menu.manage-center.TENANT-USER-MANAGE",
         "name": "用户管理",
-        "sref": "app.manage-center.travel-agency-user-manage.list"
+        "sref": "app.manage-center.tenant-user-manage.list"
       },
       {
-        "_id": "menu.manage-center.TRAVEL-AGENCY-ORDER-MANAGE",
+        "_id": "menu.manage-center.TENANT-ORDER-MANAGE",
         "name": "订单管理",
-        "sref": "app.manage-center.travel-agency-order-manage.list"
+        "sref": "app.manage-center.tenant-order-manage.list"
       }
     ]
   },

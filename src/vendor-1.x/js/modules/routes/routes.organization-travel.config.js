@@ -9,10 +9,10 @@
 
     angular
         .module('app.routes')
-        .config(routesOrganizationPFTAConfig);
+        .config(routesOrganizationTravelConfig);
 
-    routesOrganizationPFTAConfig.$inject = ['$stateProvider', 'RouteHelpersProvider', 'AUTH_ACCESS_LEVELS','MODEL_VARIABLES'];
-    function routesOrganizationPFTAConfig($stateProvider, helper, AUTH_ACCESS_LEVELS,MODEL_VARIABLES) {
+    routesOrganizationTravelConfig.$inject = ['$stateProvider', 'RouteHelpersProvider', 'AUTH_ACCESS_LEVELS','MODEL_VARIABLES'];
+    function routesOrganizationTravelConfig($stateProvider, helper, AUTH_ACCESS_LEVELS,MODEL_VARIABLES) {
 
 
         // 商户开始

@@ -6,13 +6,13 @@
     'use strict';
 
     angular
-        .module('subsystem.manage-center.dashboard',[])
-        .controller('DashboardControllerOfManageCenterController', DashboardControllerOfManageCenterController)
+        .module('subsystem.manage-center')
+        .controller('DashboardManageCenterController', DashboardManageCenterController)
     ;
 
-    DashboardControllerOfManageCenterController.$inject = ['$parse','$scope','vmh', 'instanceVM'];
+    DashboardManageCenterController.$inject = ['$parse','$scope','vmh', 'instanceVM'];
 
-    function DashboardControllerOfManageCenterController($parse,$scope, vmh, vm) {
+    function DashboardManageCenterController($parse,$scope, vmh, vm) {
         $scope.vm = vm;
         init();
 

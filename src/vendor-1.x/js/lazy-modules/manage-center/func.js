@@ -6,7 +6,7 @@
     'use strict';
 
     angular
-        .module('subsystem.manage-center.func',[])
+        .module('subsystem.manage-center')
         .controller('FuncController', FuncController)
     ;
 
