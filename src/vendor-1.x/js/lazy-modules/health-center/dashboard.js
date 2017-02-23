@@ -7,12 +7,12 @@
 
     angular
         .module('subsystem.health-center')
-        .controller('DashboardControllerOfHealthCenterController', DashboardControllerOfHealthCenterController)
+        .controller('DashboardHealthCenterController', DashboardHealthCenterController)
     ;
 
-    DashboardControllerOfHealthCenterController.$inject = ['$scope', '$echarts','vmh', 'instanceVM'];
+    DashboardHealthCenterController.$inject = ['$scope', '$echarts','vmh', 'instanceVM'];
 
-    function DashboardControllerOfHealthCenterController($scope, $echarts, vmh, vm) {
+    function DashboardHealthCenterController($scope, $echarts, vmh, vm) {
         $scope.vm = vm;
 
         init();

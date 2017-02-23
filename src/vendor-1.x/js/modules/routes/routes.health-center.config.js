@@ -38,7 +38,7 @@
                     },
                     "module-content": {
                         templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.HEALTH_CENTER + 'dashboard.html'),
-                        controller: 'DashboardControllerOfHealthCenterController',
+                        controller: 'DashboardHealthCenterController',
                         resolve: {
                             instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.HEALTH_CENTER + 'dashboard')
                             , deps: helper.resolveFor2(MODEL_VARIABLES.RES_PREFIXS.HEALTH_CENTER + 'dashboard.js')
@@ -61,7 +61,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.health-center.USER-MANAGE'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.HEALTH_CENTER + 'USER-MANAGE'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'user-manage.js')
             })
@@ -150,7 +150,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.health-center.WXA-CONFIG'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.HEALTH_CENTER + 'WXA-CONFIG'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED +'wxa-config.js')
             })

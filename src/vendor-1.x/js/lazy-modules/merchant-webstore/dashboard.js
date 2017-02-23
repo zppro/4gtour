@@ -7,12 +7,12 @@
 
     angular
         .module('subsystem.merchant-webstore')
-        .controller('DashboardControllerOfMerchantOfWebstoreController', DashboardControllerOfMerchantOfWebstoreController)
+        .controller('DashboardMerchantWebstoreController', DashboardMerchantWebstoreController)
     ;
 
-    DashboardControllerOfMerchantOfWebstoreController.$inject = ['$scope', '$echarts','extensionOfDashboardOfTenantNode','vmh', 'instanceVM'];
+    DashboardMerchantWebstoreController.$inject = ['$scope', '$echarts','extensionOfDashboardOfTenantNode','vmh', 'instanceVM'];
 
-    function DashboardControllerOfMerchantOfWebstoreController($scope, $echarts,extensionOfDashboardOfTenantNode,vmh, vm) {
+    function DashboardMerchantWebstoreController($scope, $echarts,extensionOfDashboardOfTenantNode,vmh, vm) {
         $scope.vm = vm;
 
         init();

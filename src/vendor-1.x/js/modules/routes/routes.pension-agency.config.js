@@ -60,7 +60,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.pension-agency.ENTER'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'ENTER'//业务系统使用
                 }
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'enter.list', {
@@ -150,7 +150,7 @@
                     }
                 },
                 data: {
-                    func_id:'menu.pension-agency.ROOM',//业务系统使用
+                    func_id:MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'ROOM',//业务系统使用
                     selectFilterObject: {"districts": {"status": 1}}
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'room.js')
@@ -277,7 +277,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.pension-agency.DISTRICT'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'DISTRICT'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'district.js')
             })
@@ -341,7 +341,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.pension-agency.CHARGE-STANDARD'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'CHARGE-STANDARD'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'charge-standard.js')
             })
@@ -359,7 +359,7 @@
                     }
                 },
                 data: {
-                    func_id:'menu.pension-agency.CHARGE-ITEM-CUSTOMIZED'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'CHARGE-ITEM-CUSTOMIZED'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'charge-item-customized.js')
             })
@@ -435,7 +435,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.pension-agency.USER-MANAGE'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'USER-MANAGE'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'user-manage.js')
             })
@@ -524,7 +524,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.pension-agency.WXA-CONFIG'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'WXA-CONFIG'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'wxa-config.js')
             })

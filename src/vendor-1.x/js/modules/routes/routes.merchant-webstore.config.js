@@ -38,7 +38,7 @@
                     },
                     "module-content": {
                         templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MERCHANT_WEBSTORE + 'dashboard.html'),
-                        controller: 'DashboardControllerOfMerchantOfWebstoreController',
+                        controller: 'DashboardMerchantWebstoreController',
                         resolve: {
                             instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.MERCHANT_WEBSTORE + 'dashboard')
                             , deps: helper.resolveFor2(MODEL_VARIABLES.RES_PREFIXS.MERCHANT_WEBSTORE + 'dashboard.js')
@@ -61,7 +61,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.merchant-webstore.SPU'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.MERCHANT_WEBSTORE + 'SPU'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MERCHANT_WEBSTORE + 'spu.js')
             })
@@ -171,7 +171,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.merchant-webstore.ORDER'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.MERCHANT_WEBSTORE + 'ORDER'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MERCHANT_WEBSTORE + 'order.js')
             })
@@ -275,7 +275,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.merchant-webstore.AFTER-SALE'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.MERCHANT_WEBSTORE + 'AFTER-SALE'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MERCHANT_WEBSTORE + 'after-sale.js')
             })
@@ -368,7 +368,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.merchant-webstore.CHANNEL-UNIT'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.MERCHANT_WEBSTORE + 'CHANNEL-UNIT'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MERCHANT_WEBSTORE + 'channel-unit.js')
             })
@@ -448,7 +448,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.merchant-webstore.USER-MANAGE'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.MERCHANT_WEBSTORE + 'USER-MANAGE'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'user-manage.js')
             })
@@ -537,7 +537,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.merchant-webstore.WX-APP-CONFIG'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.MERCHANT_WEBSTORE + 'WX-APP-CONFIG'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MERCHANT_WEBSTORE + 'wx-app-config.js')
             })

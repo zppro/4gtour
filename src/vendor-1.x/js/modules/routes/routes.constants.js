@@ -4,7 +4,8 @@
     var APP ='app';
     var STATE_PREFIX = APP + DOT_CHAR,
         VM_PREFIX = APP + DOT_CHAR,
-        RES_PREFIX ='subsystem' + DOT_CHAR;
+        RES_PREFIX ='subsystem' + DOT_CHAR,
+        BIZ_FUNC_PREFIX ='menu' + DOT_CHAR;
     var MERCHANT_WEBSTORE = 'merchant-webstore',
         PENSION_AGENCY = 'pension-agency',
         HEALTH_CENTER = 'health-center',
@@ -60,6 +61,12 @@
                 MANAGE_CENTER: RES_PREFIX + MANAGE_CENTER + DOT_CHAR,
                 DEMO_CENTER: RES_PREFIX + DEMO_CENTER + DOT_CHAR,
                 SHARED: RES_PREFIX + SHARED + DOT_CHAR,
+            },
+            BIZ_FUNC_PREFIXS: {
+                MERCHANT_WEBSTORE: BIZ_FUNC_PREFIX + MERCHANT_WEBSTORE + DOT_CHAR,
+                PENSION_AGENCY: BIZ_FUNC_PREFIX + PENSION_AGENCY + DOT_CHAR,
+                HEALTH_CENTER: BIZ_FUNC_PREFIX + HEALTH_CENTER + DOT_CHAR,
+                ORGANIZATION_TRAVEL: BIZ_FUNC_PREFIX + ORGANIZATION_TRAVEL + DOT_CHAR,
             },
             URLS:{
                 MERCHANT_WEBSTORE: '/' + MERCHANT_WEBSTORE,

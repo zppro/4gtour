@@ -38,7 +38,7 @@
                     },
                     "module-content": {
                         templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.ORGANIZATION_TRAVEL + 'dashboard.html'),
-                        controller: 'DashboardControllerOfOrganizationOfTravelController',
+                        controller: 'DashboardOrganizationTravelController',
                         resolve: {
                             instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.ORGANIZATION_TRAVEL + 'dashboard')
                             , deps: helper.resolveFor2(MODEL_VARIABLES.RES_PREFIXS.ORGANIZATION_TRAVEL + 'dashboard.js')
@@ -61,7 +61,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.organization-travel.SCENERY-SPOT'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.ORGANIZATION_TRAVEL + 'SCENERY-SPOT'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.ORGANIZATION_TRAVEL + 'scenery-spot.js')
             })
@@ -158,7 +158,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.organization-travel.SCENIC-SPOT'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.ORGANIZATION_TRAVEL + 'SCENIC-SPOT'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.ORGANIZATION_TRAVEL + 'scenic-spot.js')
             })
@@ -247,7 +247,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.organization-travel.TICKET'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.ORGANIZATION_TRAVEL + 'TICKET'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.ORGANIZATION_TRAVEL + 'ticket.js')
             })
@@ -368,7 +368,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.organization-travel.ORDER'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.ORGANIZATION_TRAVEL + 'ORDER'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.ORGANIZATION_TRAVEL + 'order.js')
             })
@@ -481,7 +481,7 @@
                     }
                 },
                 data:{
-                    func_id:'menu.organization-travel.USER-MANAGE'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.ORGANIZATION_TRAVEL + 'USER-MANAGE'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'user-manage.js')
             })
