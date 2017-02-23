@@ -51,7 +51,8 @@
                 url: '/dashboard',
                 title: '数据面板',
                 templateUrl: helper.basepath('dashboard-dispatcher.html'),
-                access_level: AUTH_ACCESS_LEVELS.USER
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'DashboardDispatcherController'
             })
             .state('app.submenu', {
                 url: '/submenu',

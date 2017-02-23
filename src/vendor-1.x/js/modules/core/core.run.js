@@ -5,9 +5,9 @@
         .module('app.core')
         .run(appRun);
 
-    appRun.$inject = ['$rootScope', '$q','$state', '$stateParams',  '$window', '$translate','$templateCache','$timeout','cfpLoadingBar', 'Colors','Auth','Notify'];
+    appRun.$inject = ['$rootScope', '$q','$state', '$stateParams',  '$window', '$translate','$templateCache','$timeout','cfpLoadingBar', 'Colors','Auth','Notify','SETTING_KEYS','SettingsManager'];
     
-    function appRun($rootScope,$q, $state, $stateParams, $window,$translate, $templateCache,$timeout, cfpLoadingBar,Colors,Auth,Notify) {
+    function appRun($rootScope,$q, $state, $stateParams, $window,$translate, $templateCache,$timeout, cfpLoadingBar,Colors,Auth,Notify,SETTING_KEYS,SettingsManager) {
 
         // Set reference to access them from any scope
         $rootScope.$state = $state;
@@ -121,6 +121,21 @@
             });
 
 
+        $rootScope.$on('sidebar:subsystem:change', function ($event, sref) {
+            transferToDashboard();
+
+            function transferToDashboard(){
+                var settings = SettingsManager.getInstance();
+                var currentSystem = settings && settings.read(SETTING_KEYS.CURRENT_SUBSYSTEM);
+                console.log(currentSystem);
+                if (currentSystem) {
+                    $rootScope.$state.go(currentSystem.sref + '.dashboard');
+                }
+                else{
+                    console.log('no currentSubsystemSref');
+                }
+            }
+        });
 
         // Load a title dynamically
         //$rootScope.currTitle = $state.current.title;

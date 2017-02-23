@@ -68,7 +68,6 @@
                     var settings = SettingsManager.getSubsystemInstance($scope.subsystem.selected.sref);
                     settings &&  SettingsManager.setCurrentInstance(settings);
                     settings && settings.write(SETTING_KEYS.CURRENT_SUBSYSTEM,$scope.subsystem.selected);
-
                     $scope.subsystem.selected.mtype != 'demo' && $rootScope.$emit('sidebar:subsystem:change');
                 },
                 isActive: function (item) {
@@ -99,26 +98,11 @@
                 ///{"sref": "app.manage-center.tenant-account-manage.list","params": "{\"types\":[\"A0001\",\"A0002\"]}"}}
                 $scope.menuItems = permitItemsOfLevelOne;
 
-
-                //打开第一层
-                //$timeout(function(){
-                //    _.each($scope.menuItems,function(item,i){
-                //        if(item.children){
-                //            console.log(i);
-                //            if(i==0) {
-                //                console.log(item);
-                //                $scope.toggleCollapse(i, true);
-                //            }
-                //        }
-                //    });
-                //},2000);
-
             }
 
             $scope.$on('ngRepeatFinished:sidebar-group', function($event) {
-                if($state.current.name == 'app.dashboard') {
+                if($state.current.name.lastIndexOf('.dashboard') != -1) {
                     _.each($scope.menuItems, function (item, i) {
-
                         if (item.children) {
                             if (i == 0) {
                                 $scope.toggleCollapse(i, true);
