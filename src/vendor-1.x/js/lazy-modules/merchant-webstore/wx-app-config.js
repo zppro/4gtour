@@ -7,7 +7,7 @@
     'use strict';
 
     angular
-        .module('subsystem.merchant-webstore.wx-app-config',[])
+        .module('subsystem.merchant-webstore')
         .controller('MWS_wxAppConfigGridController', MWS_wxAppConfigGridController)
         .controller('MWS_wxAppConfigDetailsController', MWS_wxAppConfigDetailsController)
     ;

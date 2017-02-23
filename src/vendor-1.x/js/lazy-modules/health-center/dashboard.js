@@ -6,7 +6,7 @@
     'use strict';
 
     angular
-        .module('subsystem.health-center',[])
+        .module('subsystem.health-center')
         .controller('DashboardControllerOfHealthCenterController', DashboardControllerOfHealthCenterController)
     ;
 

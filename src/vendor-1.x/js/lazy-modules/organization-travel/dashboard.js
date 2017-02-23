@@ -6,7 +6,7 @@
     'use strict';
 
     angular
-        .module('subsystem.organization-travel.dashboard',[])
+        .module('subsystem.organization-travel')
         .controller('DashboardControllerOfOrganizationOfTravelController', DashboardControllerOfOrganizationOfTravelController)
     ;
 

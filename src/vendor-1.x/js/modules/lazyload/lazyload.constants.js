@@ -54,7 +54,6 @@
                 {name:'subsystem.pension-agency.district.js',files:['app/js/lazy-modules/pension-agency/district.js']},
                 {name:'subsystem.pension-agency.charge-item-customized.js',files:['app/js/lazy-modules/pension-agency/charge-item-customized.js']},
                 {name:'subsystem.health-center.dashboard.js',files:['app/js/lazy-modules/health-center/dashboard.js']},
-                {name:'subsystem.organization-travel',files:['app/js/lazy-modules/organization-travel-share.js']},
                 {name:'subsystem.organization-travel.dashboard.js',files:['app/js/lazy-modules/organization-travel/dashboard.js']},
                 {name:'subsystem.organization-travel.scenery-spot.js',files:['app/js/lazy-modules/organization-travel/scenery-spot.js']},
                 {name:'subsystem.organization-travel.scenic-spot.js',files:['app/js/lazy-modules/organization-travel/scenic-spot.js']},

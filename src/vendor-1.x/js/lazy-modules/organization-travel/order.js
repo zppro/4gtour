@@ -7,7 +7,7 @@
     'use strict';
 
     angular
-        .module('subsystem.organization-travel.order',[])
+        .module('subsystem.organization-travel')
         .controller('PFT_OrderGridController', PFT_OrderGridController)
         .controller('PFT_OrderDetailsController', PFT_OrderDetailsController)
     ;

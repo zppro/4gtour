@@ -7,7 +7,7 @@
     'use strict';
 
     angular
-        .module('subsystem.merchant-webstore.spu',[])
+        .module('subsystem.merchant-webstore')
         .controller('SPUGridController', SPUGridController)
         .controller('SPUDetailsController', SPUDetailsController)
     ;

@@ -7,7 +7,7 @@
     'use strict';
 
     angular
-        .module('subsystem.merchant-webstore.after-sale',[])
+        .module('subsystem.merchant-webstore')
         .controller('MWS_ChannelUnitGridController', MWS_ChannelUnitGridController)
         .controller('MWS_ChannelUnitWXAQRCodeDialogController', MWS_ChannelUnitWXAQRCodeDialogController)
         .controller('NWS_ChannelUnitDetailsController', NWS_ChannelUnitDetailsController)

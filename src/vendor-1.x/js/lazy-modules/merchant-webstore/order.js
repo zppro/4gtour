@@ -7,7 +7,7 @@
     'use strict';
 
     angular
-        .module('subsystem.merchant-webstore.order',[])
+        .module('subsystem.merchant-webstore')
         .controller('MWS_OrderGridController', MWS_OrderGridController)
         .controller('NWS_OrderDetailsController', NWS_OrderDetailsController)
     ;

@@ -6,7 +6,7 @@
     'use strict';
 
     angular
-        .module('subsystem.merchant-webstore.dashboard',[])
+        .module('subsystem.merchant-webstore')
         .controller('DashboardControllerOfMerchantOfWebstoreController', DashboardControllerOfMerchantOfWebstoreController)
     ;
 

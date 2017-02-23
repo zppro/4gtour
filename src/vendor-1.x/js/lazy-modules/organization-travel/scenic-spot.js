@@ -7,7 +7,7 @@
     'use strict';
 
     angular
-        .module('subsystem.organization-travel.scenic-spot',[])
+        .module('subsystem.organization-travel')
         .controller('PFT_ScenicSpotGridController', PFT_ScenicSpotGridController)
         .controller('PFT_ScenicSpotDetailsController', PFT_ScenicSpotDetailsController)
     ;

@@ -7,7 +7,7 @@
     'use strict';
 
     angular
-        .module('subsystem.organization-travel.scenery-spot',[])
+        .module('subsystem.organization-travel')
         .controller('ScenerySpotGridController', ScenerySpotGridController)
         .controller('ScenerySpotDetailsController', ScenerySpotDetailsController)
     ;

@@ -17,44 +17,44 @@
 
         // 商户开始
         $stateProvider
-            .state('app.organization-travel', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ROOT + MODEL_VARIABLES.SUBSYSTEM_NAMES.ORGANIZATION_TRAVEL, {
                 url: '/organization-travel',
                 abstract: true,
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 template: '<div class="module-header-wrapper" data-ui-view="module-header"></div><div class="module-content-wrapper" data-ui-view="module-content"></div>',
                 resolve: {
                     vmh: helper.buildVMHelper()
-                    , deps: helper.resolveFor2('subsystem.organization-travel')
+                    // , deps: helper.resolveFor2(MODEL_VARIABLES.RES_PREFIXS.ORGANIZATION_TRAVEL)
                 }
             })
-            .state('app.organization-travel.dashboard', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ORGANIZATION_TRAVEL + 'dashboard', {
                 url: '/dashboard',
                 title: '数据面板',
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/organization-travel/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.ORGANIZATION_TRAVEL),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('organization-travel/dashboard.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.ORGANIZATION_TRAVEL + 'dashboard.html'),
                         controller: 'DashboardControllerOfOrganizationOfTravelController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.organization-travel.dashboard')
-                            , deps: helper.resolveFor2('subsystem.organization-travel.dashboard.js')
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.ORGANIZATION_TRAVEL + 'dashboard')
+                            , deps: helper.resolveFor2(MODEL_VARIABLES.RES_PREFIXS.ORGANIZATION_TRAVEL + 'dashboard.js')
                         }
                     }
                 }
                 , resolve: helper.resolveFor('echarts.common','echarts-ng','classyloader')
             })
-            .state('app.organization-travel.scenery-spot', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ORGANIZATION_TRAVEL + 'scenery-spot', {
                 url: '/scenery-spot',
                 title: '景点',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/organization-travel/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.ORGANIZATION_TRAVEL),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -63,15 +63,15 @@
                 data:{
                     func_id:'menu.organization-travel.SCENERY-SPOT'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.organization-travel.scenery-spot.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.ORGANIZATION_TRAVEL + 'scenery-spot.js')
             })
-            .state('app.organization-travel.scenery-spot.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ORGANIZATION_TRAVEL + 'scenery-spot.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath('organization-travel/scenery-spot-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.ORGANIZATION_TRAVEL + 'scenery-spot-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'ScenerySpotGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.organization-travel.scenery-spot.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.ORGANIZATION_TRAVEL + 'scenery-spot.list', {
                         modelName: 'trv-scenerySpot',
                         searchForm: {"status": 1},
                         serverPaging: true,
@@ -128,13 +128,13 @@
                     })
                 }
             })
-            .state('app.organization-travel.scenery-spot.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ORGANIZATION_TRAVEL + 'scenery-spot.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('organization-travel/scenery-spot-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.ORGANIZATION_TRAVEL + 'scenery-spot-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'ScenerySpotDetailsController',
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.organization-travel.scenery-spot.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.ORGANIZATION_TRAVEL + 'scenery-spot.details', {
                         modelName: 'trv-scenerySpot',
                         model: {
                             code: MODEL_VARIABLES.PRE_DEFINED.SERVER_GEN,
@@ -144,14 +144,14 @@
                     }), deps: helper.resolveFor2('qiniu','qiniu-ng')
                 }
             })
-            .state('app.organization-travel.scenic-spot', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ORGANIZATION_TRAVEL + 'scenic-spot', {
                 url: '/scenic-spot',
                 title: '景区',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/organization-travel/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.ORGANIZATION_TRAVEL),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -160,19 +160,19 @@
                 data:{
                     func_id:'menu.organization-travel.SCENIC-SPOT'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.organization-travel.scenic-spot.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.ORGANIZATION_TRAVEL + 'scenic-spot.js')
             })
-            .state('app.organization-travel.scenic-spot.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ORGANIZATION_TRAVEL + 'scenic-spot.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath('organization-travel/scenic-spot-PFT-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.ORGANIZATION_TRAVEL + 'scenic-spot-PFT-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'PFT_ScenicSpotGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.organization-travel.scenic-spot.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.ORGANIZATION_TRAVEL + 'scenic-spot.list', {
                         modelName: 'idc-scenicSpot_PFT',
                         searchForm: {"status": 1},
                         transTo: {
-                            "ticket": 'app.organization-travel.ticket.list',
+                            "ticket": MODEL_VARIABLES.STATE_PREFIXS.ORGANIZATION_TRAVEL + 'ticket.list',
                         },
                         serverPaging: true,
                         blockUI: true,
@@ -221,26 +221,26 @@
                     })
                 }
             })
-            .state('app.organization-travel.scenic-spot.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ORGANIZATION_TRAVEL + 'scenic-spot.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('organization-travel/scenic-spot-PFT-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.ORGANIZATION_TRAVEL + 'scenic-spot-PFT-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'PFT_ScenicSpotDetailsController',
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.organization-travel.scenic-spot.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.ORGANIZATION_TRAVEL + 'scenic-spot.details', {
                         modelName: 'idc-scenicSpot_PFT',
                         blockUI: true
                     })
                 }
             })
-            .state('app.organization-travel.ticket', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ORGANIZATION_TRAVEL + 'ticket', {
                 url: '/ticket',
                 title: '票务',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/organization-travel/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.ORGANIZATION_TRAVEL),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -249,15 +249,15 @@
                 data:{
                     func_id:'menu.organization-travel.TICKET'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.organization-travel.ticket.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.ORGANIZATION_TRAVEL + 'ticket.js')
             })
-            .state('app.organization-travel.ticket.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ORGANIZATION_TRAVEL + 'ticket.list', {
                 url: '/list/:action/:scenicSpotId',
-                templateUrl: helper.basepath('organization-travel/ticket-PFT-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.ORGANIZATION_TRAVEL + 'ticket-PFT-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'PFT_TicketGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.organization-travel.ticket.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.ORGANIZATION_TRAVEL + 'ticket.list', {
                         modelName: 'idc-ticket_PFT',
                         searchForm: {"status": 1},
                         serverPaging: true,
@@ -342,26 +342,26 @@
                     })
                 }
             })
-            .state('app.organization-travel.ticket.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ORGANIZATION_TRAVEL + 'ticket.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('organization-travel/ticket-PFT-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.ORGANIZATION_TRAVEL + 'ticket-PFT-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'PFT_TicketDetailsController',
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.organization-travel.ticket.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.ORGANIZATION_TRAVEL + 'ticket.details', {
                         modelName: 'idc-ticket_PFT',
                         blockUI: true
                     })
                 }
             })
-            .state('app.organization-travel.order', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ORGANIZATION_TRAVEL + 'order', {
                 url: '/order',
                 title: '订单',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/organization-travel/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.ORGANIZATION_TRAVEL),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -370,15 +370,15 @@
                 data:{
                     func_id:'menu.organization-travel.ORDER'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.organization-travel.order.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.ORGANIZATION_TRAVEL + 'order.js')
             })
-            .state('app.organization-travel.order.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ORGANIZATION_TRAVEL + 'order.list', {
                 url: '/list/:action/:scenicSpotId',
-                templateUrl: helper.basepath('organization-travel/order-PFT-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.ORGANIZATION_TRAVEL + 'order-PFT-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'PFT_OrderGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.organization-travel.order.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.ORGANIZATION_TRAVEL + 'order.list', {
                         modelName: 'idc-order_PFT',
                         searchForm: {"status": 1},
                         serverPaging: true,
@@ -467,92 +467,14 @@
                     })
                 }
             })
-            .state('app.organization-travel.financial-org-receipts-and-disbursements-details', {
-                url: '/financial-org-receipts-and-disbursements-details',
-                title: '收支明细',
-                abstract: true,
-                views: {
-                    "module-header": {
-                        templateUrl: helper.basepath('partials/organization-travel/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
-                    },
-                    "module-content": {
-                        template: '<div class="data-ui-view"></div>'
-                    }
-                },
-                data:{
-                    func_id:'menu.organization-travel.ORG-RECEIPTS-AND-DISBURSEMENTS-DETAILS'//业务系统使用
-                }
-                , resolve: helper.resolveFor('subsystem.organization-travel.financial-org-receipts-and-disbursements-details.js')
-            })
-            .state('app.organization-travel.financial-org-receipts-and-disbursements-details.list', {
-                url: '/list/:action',
-                templateUrl: helper.basepath('organization-travel/financial-org-receipts-and-disbursements-details-list.html'),
-                access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'FinancialORGReceiptsAndDisbursementsDetailsGridController',
-                resolve: {
-                    entryVM: helper.buildEntryVM('app.organization-travel.financial-org-receipts-and-disbursements-details.list', {
-                        modelName: 'pub-tenantJournalAccount',
-                        searchForm: {"status": 1},
-                        serverPaging: true,
-                        columns: [
-                            {
-                                label: '记账日期',
-                                name: 'check_in_time',
-                                type: 'date',
-                                width: 60,
-                                sortable: true
-                            },
-                            {
-                                label: '记账凭证号',
-                                name: 'voucher_no',
-                                type: 'string',
-                                width: 60
-                            },
-                            {
-                                label: '科目',
-                                name: 'revenue_and_expenditure_type',
-                                type: 'string',
-                                width: 60,
-                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3001/object')
-                            },
-                            {
-                                label: '摘要',
-                                name: 'digest',
-                                type: 'string',
-                                width: 120
-                            },
-                            {
-                                label: '记账金额',
-                                name: 'amount',
-                                type: 'number',
-                                width: 40,
-                                sortable: true
-                            },
-                            {
-                                label: '结转',
-                                name: 'carry_over_flag',
-                                type: 'bool',
-                                width: 30
-                            },
-                            {
-                                label: '冲红',
-                                name: 'red_flag',
-                                type: 'bool',
-                                width: 30
-                            }
-                        ]
-                    })
-                }
-            })
-            .state('app.organization-travel.user-manage', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ORGANIZATION_TRAVEL + 'user-manage', {
                 url: '/user-manage',
                 title: '用户管理',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/organization-travel/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.ORGANIZATION_TRAVEL),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -561,15 +483,15 @@
                 data:{
                     func_id:'menu.organization-travel.USER-MANAGE'//业务系统使用
                 }
-                , resolve: helper.resolveFor('subsystem.shared.user-manage.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'user-manage.js')
             })
-            .state('app.organization-travel.user-manage.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ORGANIZATION_TRAVEL + 'user-manage.list', {
                 url: '/list/:action/:roles',
-                templateUrl: helper.basepath('shared/user-manage-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'user-manage-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'Shared_UserManageGridController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.USER_MANAGE_GRID,
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.organization-travel.user-manage.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.ORGANIZATION_TRAVEL + 'user-manage.list', {
                         modelName: 'pub-user',
                         searchForm: {"status": 1,"type": 'A0002'},//user.type 养老机构用户
                         serverPaging: true,
@@ -620,25 +542,19 @@
                     })
                 }
             })
-            .state('app.organization-travel.user-manage.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ORGANIZATION_TRAVEL + 'app.organization-travel.user-manage.details', {
                 url: '/details/:action/:_id/:roles',
-                templateUrl: helper.basepath('shared/user-manage-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'user-manage-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'Shared_UserManageDetailsController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.USER_MANAGE_DETAILS,
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.organization-travel.user-manage.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.ORGANIZATION_TRAVEL + 'user-manage.details', {
                         modelName: 'pub-user',
                         model: {type:'A0002'},
                         blockUI: true,
                         toList: ['roles']
                     })
                 }
-            })
-            .state('app.organization-travel.system-log', {
-                url: '/system-log',
-                title: '系统日志',
-                templateUrl: helper.basepath('organization-travel/system-log.html'),
-                access_level: AUTH_ACCESS_LEVELS.ADMIN
             })
         ;
 

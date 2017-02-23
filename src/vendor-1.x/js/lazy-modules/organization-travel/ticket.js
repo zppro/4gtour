@@ -7,7 +7,7 @@
     'use strict';
 
     angular
-        .module('subsystem.organization-travel.ticket',[])
+        .module('subsystem.organization-travel')
         .controller('PFT_TicketGridController', PFT_TicketGridController)
         .controller('PFT_TicketDetailsController', PFT_TicketDetailsController)
     ;
