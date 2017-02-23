@@ -1,7 +1,7 @@
 [
   {
     "_id": "menu.manage-center.TRAVEL-AGENCY-MANAGE",
-    "name": "机构管理",
+    "name": "租户管理",
     "sref": "#",
     "icon": "icon-folder",
     "children": [
@@ -93,24 +93,6 @@
         "_id": "menu.manage-center.DEVICE-ACCESS",
         "name": "访问设备",
         "sref": "app.manage-center.device-access.list"
-      }
-    ]
-  },
-  {
-    "_id": "menu.manage-center.METADATA-MANAGE",
-    "name": "Metadata",
-    "sref": "#",
-    "icon": "icon-folder",
-    "children": [
-      {
-        "_id": "menu.manage-center.DICTIONARY-MANAGE",
-        "name": "DictionaryManage",
-        "sref": "app.manage-center.metadata-dictionary-manage"
-      },
-      {
-        "_id": "menu.manage-center.PARAM",
-        "name": "Param",
-        "sref": "app.manage-center.metadata-param"
       }
     ]
   }

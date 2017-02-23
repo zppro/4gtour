@@ -6,7 +6,7 @@
     'use strict';
 
     angular
-        .module('subsystem.manage-center.tenant-account-manage',[])
+        .module('subsystem.manage-center')
         .controller('TenantAccountManageDetailsController', TenantAccountManageDetailsController)
     ;
 

@@ -60,7 +60,7 @@
                 {name:'subsystem.organization-travel.ticket.js',files:['app/js/lazy-modules/organization-travel/ticket.js']},
                 {name:'subsystem.organization-travel.order.js',files:['app/js/lazy-modules/organization-travel/order.js']},
                 {name:'subsystem.organization-travel.financial-org-receipts-and-disbursements-details.js',files:['app/js/lazy-modules/organization-travel/financial-org-receipts-and-disbursements-details.js']},
-                {name:'subsystem.manage-center', files: ['app/css/manage-center.css']},
+                {name:'subsystem.manage-center.', files: ['app/css/manage-center.css']},
                 {name:'subsystem.manage-center.dashboard.js',files:['app/js/lazy-modules/manage-center/dashboard.js']},
                 {name:'subsystem.manage-center.tenant-account-manage.js',files:['app/js/lazy-modules/manage-center/tenant-account-manage.js']},
                 {name:'subsystem.manage-center.tenant-order-manage.js',files:['app/js/lazy-modules/manage-center/tenant-order-manage.js']},

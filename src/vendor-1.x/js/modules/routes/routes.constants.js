@@ -19,7 +19,9 @@
                 SERVER_GEN: 'server-gen'
             },
             CONTROLLER_NAMES: {
+                MODULE_HEADER: 'ModuleHeaderController',
                 MODULE_HEADER_FOR_TENANT: 'ModuleHeaderForTenantController',
+                GRID: 'GridController',
                 USER_MANAGE_GRID: 'Shared_UserManageGridController',
                 USER_MANAGE_DETAILS: 'Shared_UserManageDetailsController',
                 WXACONFIG_GRID: 'Shared_wxaConfigGridController',

@@ -17,7 +17,7 @@
 
         // 管理中心开始
         $stateProvider
-            .state('app.manage-center', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.ROOT + MODEL_VARIABLES.SUBSYSTEM_NAMES.MANAGE_CENTER, {
                 url: '/manage-center',
                 abstract: true,
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
@@ -25,35 +25,35 @@
                 template: '<div class="module-header-wrapper" data-ui-view="module-header"></div><div class="module-content-wrapper" data-ui-view="module-content"></div>',
                 resolve: {
                     vmh: helper.buildVMHelper()
-                    , deps: helper.resolveFor2('subsystem.manage-center')
+                    , deps: helper.resolveFor2(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER)
                 }
             })
-            .state('app.manage-center.dashboard', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'dashboard', {
                 url: '/dashboard',
                 title: '数据面板',
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MANAGE_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('manage-center/dashboard.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'dashboard.html'),
                         controller: 'DashboardControllerOfManageCenterController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.manage-center.dashboard')
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'dashboard')
                         }
                     }
                 }
-                , resolve: helper.resolveFor('subsystem.manage-center.dashboard.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'dashboard.js')
             })
-            .state('app.manage-center.travel-agency-account-manage', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-account-manage', {
                 url: '/travel-agency-account-manage',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MANAGE_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -62,20 +62,21 @@
                 data: {
                     selectFilterObject: {"type": ['A0001', 'A0002', 'A0003']}
                 }
+                ,resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'tenant-account-manage.js')
             })
-            .state('app.manage-center.travel-agency-account-manage.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-account-manage.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath('manage-center/tenant-account-manage-list.html'),//复用页面
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-account-manage-list.html'),//复用页面
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
-                controller: 'GridController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.GRID,
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.manage-center.travel-agency-account-manage.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'travel-agency-account-manage.list', {
                         modelName: 'pub-tenant',
                         searchForm: {"type": {"$in": ['A0001', 'A0002', 'A0003']}},
                         transTo: {
-                            "user": 'app.manage-center.travel-agency-user-manage.list',
-                            "openFuncs": 'app.manage-center.travel-agency-open-funcs',
-                            "order":'app.manage-center.travel-agency-order-manage.list'
+                            "user": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-user-manage.list',
+                            "openFuncs": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-open-funcs',
+                            "order":MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-order-manage.list'
                         },
                         //切换客户端还是服务端分页
                         serverPaging: true,
@@ -136,29 +137,28 @@
                     })
                 }
             })
-            .state('app.manage-center.travel-agency-account-manage.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-account-manage.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('manage-center/tenant-account-manage-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-account-manage-details.html'),
                 controller: 'TenantAccountManageDetailsController',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.manage-center.travel-agency-account-manage.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'travel-agency-account-manage.details', {
                         modelName: 'pub-tenant',
                         model: {
                             limit_to: 0
                         }
                         , blockUI: true
                     })
-                    ,deps: helper.resolveFor2('subsystem.manage-center.tenant-account-manage.js')
                 }
             })
-            .state('app.manage-center.travel-agency-user-manage', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-user-manage', {
                 url: '/travel-agency-user-manage',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MANAGE_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -170,15 +170,15 @@
                     //treeFilterObject: {"type": ['A0001', 'A0002', 'A0003']}//使用tmg时的过滤 treeFilter[key]==treeNode[key]
                     treeFilterObject: {"type": {"$in": ['A0001', 'A0002', 'A0003']}} //使用tmp时的过滤
                 }
-                , resolve: helper.resolveFor('subsystem.manage-center.tenant-user-manage.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'tenant-user-manage.js')
             })
-            .state('app.manage-center.travel-agency-user-manage.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-user-manage.list', {
                 url: '/list/:action/:tenantId',
-                templateUrl: helper.basepath('manage-center/tenant-user-manage-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-user-manage-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 controller: 'TenantUserManageGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.manage-center.travel-agency-user-manage.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'travel-agency-user-manage.list', {
                         modelName: 'pub-user',
                         searchForm: {"status": 1,"type": 'A0002'},//user.type 养老机构用户
                         //切换客户端还是服务端分页
@@ -238,13 +238,13 @@
                     })
                 }
             })
-            .state('app.manage-center.travel-agency-user-manage.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-user-manage.details', {
                 url: '/details/:action/:_id/:tenantId',
-                templateUrl: helper.basepath('manage-center/tenant-user-manage-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-user-manage-details.html'),
                 controller: 'TenantUserManageDetailsController',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.manage-center.travel-agency-user-manage.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'travel-agency-user-manage.details', {
                         modelName: 'pub-user',
                         model: {type:'A0002'},
                         blockUI: true,
@@ -253,19 +253,19 @@
                     //, deps: helper.resolveFor2('ui.select')
                 }
             })
-            .state('app.manage-center.travel-agency-open-funcs', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-open-funcs', {
                 url: '/travel-agency-open-funcs/:tenantId',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MANAGE_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('manage-center/func.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'func.html'),
                         controller: 'FuncController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.manage-center.travel-agency-open-funcs'),
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'travel-agency-open-funcs'),
                             deps: helper.resolveFor2('angularjs-slider')
                         }
                     }
@@ -273,15 +273,15 @@
                 data: {
                     selectFilterObject: {"tenants": {"type": {"$in": ['A0001', 'A0002', 'A0003']}}}
                 }
-                , resolve: helper.resolveFor('subsystem.manage-center.func.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'func.js')
             })
-            .state('app.manage-center.travel-agency-order-manage', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-order-manage', {
                 url: '/travel-agency-order-manage',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MANAGE_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -293,15 +293,15 @@
                     //treeFilterObject: {"type": ['A0001', 'A0002', 'A0003']}//使用tmg时的过滤 treeFilter[key]==treeNode[key]
                     treeFilterObject: {"type": {"$in": ['A0001', 'A0002', 'A0003']}} //使用tmp时的过滤
                 }
-                , resolve: helper.resolveFor('subsystem.manage-center.tenant-order-manage.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'tenant-order-manage.js')
             })
-            .state('app.manage-center.travel-agency-order-manage.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-order-manage.list', {
                 url: '/list/:action/:tenantId',
-                templateUrl: helper.basepath('manage-center/tenant-order-manage-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-order-manage-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 controller: 'TenantOrderManageGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.manage-center.travel-agency-order-manage.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'travel-agency-order-manage.list', {
                         modelName: 'pub-order',
                         searchForm: {"type": 'TP'},//养老机构产生的订单
                         //切换客户端还是服务端分页
@@ -377,13 +377,13 @@
                     })
                 }
             })
-            .state('app.manage-center.travel-agency-order-manage.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-order-manage.details', {
                 url: '/details/:action/:_id/:tenantId',
-                templateUrl: helper.basepath('manage-center/tenant-order-manage-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-order-manage-details.html'),
                 controller: 'TenantOrderManageDetailsController',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.manage-center.travel-agency-order-manage.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'travel-agency-order-manage.details', {
                         modelName: 'pub-order',
                         model: {
                             code: MODEL_VARIABLES.PRE_DEFINED.SERVER_GEN,
@@ -397,13 +397,13 @@
                     //, deps: helper.resolveFor2('ui.select')
                 }
             })
-            .state('app.manage-center.agent-account-manage', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-account-manage', {
                 url: '/agent-account-manage',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MANAGE_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -412,20 +412,21 @@
                 data: {
                     selectFilterObject: {"type": ['A1001', 'A1002']}
                 }
+                ,resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'tenant-account-manage.js')
             })
-            .state('app.manage-center.agent-account-manage.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-account-manage.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath('manage-center/tenant-account-manage-list.html'),//复用页面
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-account-manage-list.html'),//复用页面
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
-                controller: 'GridController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.GRID,
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.manage-center.agent-account-manage.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'agent-account-manage.list', {
                         modelName: 'pub-tenant',
                         searchForm: {"type": {"$in": ['A1001', 'A1002']}},
                         transTo: {
-                            "user": 'app.manage-center.agent-user-manage.list',
-                            "openFuncs": 'app.manage-center.agent-open-funcs',
-                            "order": 'app.manage-center.agent-order-manage.list'
+                            "user": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-user-manage.list',
+                            "openFuncs": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-open-funcs',
+                            "order": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-order-manage.list'
                         },
                         //切换客户端还是服务端分页
                         serverPaging: true,
@@ -486,29 +487,28 @@
                     })
                 }
             })
-            .state('app.manage-center.agent-account-manage.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-account-manage.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('manage-center/tenant-account-manage-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-account-manage-details.html'),
                 controller: 'TenantAccountManageDetailsController',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.manage-center.agent-account-manage.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'agent-account-manage.details', {
                         modelName: 'pub-tenant',
                         model: {
                             limit_to: 0
                         }
                         , blockUI: true
                     })
-                    ,deps: helper.resolveFor2('subsystem.manage-center.tenant-account-manage.js')
                 }
             })
-            .state('app.manage-center.agent-user-manage', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-user-manage', {
                 url: '/agent-user-manage',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MANAGE_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -520,15 +520,15 @@
                     //treeFilterObject: {"type": ['A1001', 'A1002']}//使用tmg时的过滤 treeFilter[key]==treeNode[key]
                     treeFilterObject: {"type": {"$in": ['A1001', 'A1002']}} //使用tmp时的过滤
                 }
-                , resolve: helper.resolveFor('subsystem.manage-center.tenant-user-manage.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'tenant-user-manage.js')
             })
-            .state('app.manage-center.agent-user-manage.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-user-manage.list', {
                 url: '/list/:action/:tenantId',
-                templateUrl: helper.basepath('manage-center/tenant-user-manage-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-user-manage-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 controller: 'TenantUserManageGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.manage-center.agent-user-manage.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'agent-user-manage.list', {
                         modelName: 'pub-user',
                         searchForm: {"status": 1,"type": 'A0003'},//user.type 代理商用户
                         //切换客户端还是服务端分页
@@ -588,13 +588,13 @@
                     })
                 }
             })
-            .state('app.manage-center.agent-user-manage.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-user-manage.details', {
                 url: '/details/:action/:_id/:tenantId',
-                templateUrl: helper.basepath('manage-center/tenant-user-manage-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-user-manage-details.html'),
                 controller: 'TenantUserManageDetailsController',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.manage-center.agent-user-manage.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'agent-user-manage.details', {
                         modelName: 'pub-user',
                         model: {type: 'A0003'},//D1000
                         blockUI: true,
@@ -603,19 +603,19 @@
                     //, deps: helper.resolveFor2('ui.select')
                 }
             })
-            .state('app.manage-center.agent-open-funcs', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-open-funcs', {
                 url: '/agent-open-funcs/:tenantId',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MANAGE_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('manage-center/func.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'func.html'),
                         controller: 'FuncController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.manage-center.agent-open-funcs'),
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'agent-open-funcs'),
                             deps: helper.resolveFor2('angularjs-slider')
                         }
                     }
@@ -623,15 +623,15 @@
                 data: {
                     selectFilterObject: {"tenants": {"type": {"$in": ['A1001', 'A1002']}}}
                 }
-                , resolve: helper.resolveFor('subsystem.manage-center.func.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'func.js')
             })
-            .state('app.manage-center.agent-order-manage', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-order-manage', {
                 url: '/agent-order-manage',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MANAGE_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -642,15 +642,15 @@
                     //treeFilterObject: {"type": ['A1001', 'A1002']}//使用tmg时的过滤 treeFilter[key]==treeNode[key]
                     treeFilterObject: {"type": {"$in": ['A1001', 'A1002']}} //使用tmp时的过滤
                 }
-                , resolve: helper.resolveFor('subsystem.manage-center.tenant-order-manage.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'tenant-order-manage.js')
             })
-            .state('app.manage-center.agent-order-manage.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-order-manage.list', {
                 url: '/list/:action/:tenantId',
-                templateUrl: helper.basepath('manage-center/tenant-order-manage-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-order-manage-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 controller: 'TenantOrderManageGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.manage-center.agent-order-manage.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'agent-order-manage.list', {
                         modelName: 'pub-order',
                         searchForm: {"type": 'TA'},//代理产生的订单
                         //切换客户端还是服务端分页
@@ -724,13 +724,13 @@
                     })
                 }
             })
-            .state('app.manage-center.agent-order-manage.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-order-manage.details', {
                 url: '/details/:action/:_id/:tenantId',
-                templateUrl: helper.basepath('manage-center/tenant-order-manage-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-order-manage-details.html'),
                 controller: 'TenantOrderManageDetailsController',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.manage-center.agent-order-manage.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'agent-order-manage.details', {
                         modelName: 'pub-order',
                         model: {
                             code: MODEL_VARIABLES.PRE_DEFINED.SERVER_GEN,
@@ -744,27 +744,27 @@
                     //, deps: helper.resolveFor2('ui.select')
                 }
             })
-            .state('app.manage-center.platform-user-manage', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'platform-user-manage', {
                 url: '/platform-user-manage',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderForTenantController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MANAGE_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
                     }
                 }
-                , resolve: helper.resolveFor('subsystem.manage-center.tenant-user-manage.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'tenant-user-manage.js')
             })
-            .state('app.manage-center.platform-user-manage.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'platform-user-manage.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath('manage-center/tenant-user-manage-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-user-manage-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 controller: 'TenantUserManageGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.manage-center.platform-user-manage.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'platform-user-manage.list', {
                         modelName: 'pub-user',
                         searchForm: {"status": 1,"type": 'A0001'},//user.type 平台用户
                         //切换客户端还是服务端分页
@@ -821,13 +821,13 @@
                     })
                 }
             })
-            .state('app.manage-center.platform-user-manage.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'platform-user-manage.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('manage-center/tenant-user-manage-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'tenant-user-manage-details.html'),
                 controller: 'TenantUserManageDetailsController',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.manage-center.platform-user-manage.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'platform-user-manage.details', {
                         modelName: 'pub-user',
                         model: {type: 'A0001'},//D1000
                         blockUI: true
@@ -835,51 +835,51 @@
                     //, deps: helper.resolveFor2('ui.select')
                 }
             })
-            .state('app.manage-center.func', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'func', {
                 url: '/func',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MANAGE_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
-                        templateUrl: helper.basepath('manage-center/func.html'),
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'func.html'),
                         controller: 'FuncController',
                         resolve: {
-                            instanceVM: helper.buildInstanceVM('app.manage-center.func'),
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'func'),
                             deps: helper.resolveFor2('angularjs-slider')
                         }
                     }
                 }
-                , resolve: helper.resolveFor('subsystem.manage-center.func.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'func.js')
             })
-            .state('app.manage-center.order-receipt-confirmation', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'order-receipt-confirmation', {
                 url: '/order-receipt-confirmation',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MANAGE_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
                     }
                 }
-                , resolve: helper.resolveFor('subsystem.manage-center.order-receipt-confirmation.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'order-receipt-confirmation.js')
             })
-            .state('app.manage-center.order-receipt-confirmation.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'order-receipt-confirmation.list', {
                 url: '/list/:action/:tenantId',
-                templateUrl: helper.basepath('manage-center/order-receipt-confirmation-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'order-receipt-confirmation-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 controller: 'OrderReceiptConfirmationGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.manage-center.order-receipt-confirmation.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'order-receipt-confirmation.list', {
                         modelName: 'pub-order',
                         searchForm: {"order_status": {"$in": ['A1002', 'A1003', 'A1004']}},//等待客户付款,财务确认收款,交易成功
                         transTo: {
-                            "TP": 'app.manage-center.travel-agency-order-manage.details',
-                            "TA": 'app.manage-center.agent-order-manage.details'
+                            "TP": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-order-manage.details',
+                            "TA": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-order-manage.details'
                         },
                         //切换客户端还是服务端分页
                         serverPaging: true,
@@ -952,32 +952,32 @@
                     })
                 }
             })
-            .state('app.manage-center.order-refund-confirmation', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'order-refund-confirmation', {
                 url: '/order-refund-confirmation',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MANAGE_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
                     }
                 }
-                , resolve: helper.resolveFor('subsystem.manage-center.order-refund-confirmation.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'order-refund-confirmation.js')
             })
-            .state('app.manage-center.order-refund-confirmation.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'order-refund-confirmation.list', {
                 url: '/list/:action/:tenantId',
-                templateUrl: helper.basepath('manage-center/order-refund-confirmation-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'order-refund-confirmation-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 controller: 'OrderRefundConfirmationGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.manage-center.order-refund-confirmation.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'order-refund-confirmation.list', {
                         modelName: 'pub-order',
                         searchForm: {"order_status": {"$in": ['A1006', 'A1007']}},//等待退款,退款成功
                         transTo: {
-                            "TP": 'app.manage-center.travel-agency-order-manage.details',
-                            "TA": 'app.manage-center.agent-order-manage.details'
+                            "TP": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'travel-agency-order-manage.details',
+                            "TA": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'agent-order-manage.details'
                         },
                         //切换客户端还是服务端分页
                         serverPaging: true,
@@ -1050,27 +1050,27 @@
                     })
                 }
             })
-            .state('app.manage-center.app-serverside-update', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'app-serverside-update', {
                 url: '/app-serverside-update',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MANAGE_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
                     }
                 }
-                , resolve: helper.resolveFor('subsystem.manage-center.app-serverside-update.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'app-serverside-update.js')
             })
-            .state('app.manage-center.app-serverside-update.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'app-serverside-update.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath('manage-center/app-serverside-update-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'app-serverside-update-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 controller: 'AppServerSideUpdateGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.manage-center.app-serverside-update.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'app-serverside-update.list', {
                         modelName: 'pub-appServerSideUpdateHistory',
                         searchForm: {app_id: 'A0001'},
                         sortColumn: 'ver_order',
@@ -1123,13 +1123,13 @@
                     })
                 }
             })
-            .state('app.manage-center.app-serverside-update.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'app-serverside-update.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('manage-center/app-serverside-update-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'app-serverside-update-details.html'),
                 controller: 'AppServerSideUpdateDetailsController',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.manage-center.app-serverside-update.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'app-serverside-update.details', {
                         modelName: 'pub-appServerSideUpdateHistory',
                         model: {app_id: 'A0001'},
                         blockUI: true
@@ -1137,27 +1137,27 @@
                     //, deps: helper.resolveFor2('ui.select')
                 }
             })
-            .state('app.manage-center.app-clientside-update', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'app-clientside-update', {
                 url: '/app-clientside-update',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MANAGE_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
                     }
                 }
-                , resolve: helper.resolveFor('subsystem.manage-center.app-clientside-update.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'app-clientside-update.js')
             })
-            .state('app.manage-center.app-clientside-update.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'app-clientside-update.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath('manage-center/app-clientside-update-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'app-clientside-update-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 controller: 'AppClientSideUpdateGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.manage-center.app-clientside-update.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'app-clientside-update.list', {
                         modelName: 'pub-appClientSideUpdateHistory',
                         searchForm: {app_id: 'A0001'},
                         sortColumn: 'ver_order',
@@ -1224,13 +1224,13 @@
                     })
                 }
             })
-            .state('app.manage-center.app-clientside-update.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'app-clientside-update.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath('manage-center/app-clientside-update-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'app-clientside-update-details.html'),
                 controller: 'AppClientSideUpdateDetailsController',
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
                 resolve: {
-                    entityVM: helper.buildEntityVM('app.manage-center.app-clientside-update.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'app-clientside-update.details', {
                         modelName: 'pub-appClientSideUpdateHistory',
                         model: {app_id: 'A0001'},
                         blockUI: true
@@ -1238,13 +1238,13 @@
                     //, deps: helper.resolveFor2('ui.select')
                 }
             })
-            .state('app.manage-center.device-access', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'device-access', {
                 url: '/device-access',
                 abstract: true,
                 views: {
                     "module-header": {
-                        templateUrl: helper.basepath('partials/manage-center/module-header.html'),
-                        controller: 'ModuleHeaderController'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.MANAGE_CENTER),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER
                     },
                     "module-content": {
                         template: '<div class="data-ui-view"></div>'
@@ -1252,13 +1252,13 @@
                 }
                 // , resolve: helper.resolveFor('subsystem.manage-center.device-access.js')
             })
-            .state('app.manage-center.device-access.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'device-access.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath('manage-center/device-access-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.MANAGE_CENTER + 'device-access-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.ADMIN,
-                controller: 'GridController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.GRID,
                 resolve: {
-                    entryVM: helper.buildEntryVM('app.manage-center.device-access.list', {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'device-access.list', {
                         modelName: 'pub-deviceAccess',
                         //切换客户端还是服务端分页
                         serverPaging: true,

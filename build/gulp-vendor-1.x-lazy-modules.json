@@ -5,9 +5,7 @@
   { "type":"js","path":"src/{{target}}/js/lazy-modules/merchant-webstore/*.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/pension-agency-share/" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/pension-agency/*.js" },
-  { "type":"js","path":"src/{{target}}/js/lazy-modules/health-center/dashboard.js" },
-  { "type":"js","path":"src/{{target}}/js/lazy-modules/organization-travel-share/" },
+  { "type":"js","path":"src/{{target}}/js/lazy-modules/health-center/*.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/organization-travel/*.js" },
-  { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/dashboard.js" },
   { "type":"js","path":"src/{{target}}/js/lazy-modules/manage-center/*.js" }
 ]

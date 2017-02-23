@@ -217,7 +217,7 @@
       "LOG": "系统日志(暂缓)"
     },
     "manage-center": {
-      "TRAVEL-AGENCY-MANAGE": "商户管理",
+      "TRAVEL-AGENCY-MANAGE": "租户管理",
       "TRAVEL-AGENCY-ACCOUNT-MANAGE": "帐号管理",
       "TRAVEL-AGENCY-USER-MANAGE": "用户管理",
       "TRAVEL-AGENCY-ORDER-MANAGE": "订单管理",
