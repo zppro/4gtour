@@ -44,30 +44,39 @@ module.exports = {
             {
                 method: 'tenantChargeItemCustomizedAsTree',
                 verb: 'get',
-                url: this.service_url_prefix + "/tenantChargeItemCustomizedAsTree/:_id",
+                url: this.service_url_prefix + "/tenantChargeItemCustomizedAsTree/:id,:subsystem",
                 handler: function (app, options) {
                     return function * (next) {
                         try {
-                            var tenantId = this.params._id;
+                            var tenantId = this.params.id;
                             var tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
                             if (!tenant || tenant.status == 0) {
-                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                this.body = app.wrapper.res.error({message: '无法找到租户!'});
                                 yield next;
                                 return;
                             }
-
+                            var subsytem = this.params.subsystem;
+                            if (!subsytem || !app.modelVariables[subsytem]) {
+                                this.body = app.wrapper.res.error({message: '无法找到子系统!'});
+                                yield next;
+                                return;
+                            }
+                            var where = {
+                                status: 1,
+                                tenantId: tenantId
+                            };
+                            if(subsytem) {
+                                where['subsystem'] = subsytem;
+                            }
                             var chargeItems = yield app.modelFactory().model_query(app.models['pub_tenantChargeItemCustomized'], {
-                                where: {
-                                    status: 1,
-                                    tenantId: tenantId
-                                }
+                                where: where
                             });
 
-                            var charge_standard = (tenant.charge_standard || 'S1');
+                            var charge_standard = (tenant.charge_standard || subsytem + '-S1');
 
                             var ret = {
-                                _id: app.modelVariables['PENSION-AGENCY'].CHARGE_ITEM_CUSTOMIZED_CATAGORY._ID + '-' + charge_standard,
-                                name: app.modelVariables['PENSION-AGENCY'].CHARGE_ITEM_CUSTOMIZED_CATAGORY.NAME,
+                                _id: app.modelVariables[subsytem].CHARGE_ITEM_CUSTOMIZED_CATAGORY._ID + '-' + charge_standard,
+                                name: app.modelVariables[subsytem].CHARGE_ITEM_CUSTOMIZED_CATAGORY.NAME,
                                 children: []
                             };
 
@@ -82,6 +91,39 @@ module.exports = {
                                     });
                             }
                             this.body = app.wrapper.res.ret(ret);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'saveTenantChargeItemCustomized',//保存收费标准
+                verb: 'post',
+                url: this.service_url_prefix + "/saveTenantChargeItemCustomized/:id,:subsystem",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], this.params.id);
+                            if (!tenant || tenant.status == 0) {
+                                this.body = app.wrapper.res.error({message: '无法找到租户!'});
+                                yield next;
+                                return;
+                            }
+
+                            var index =  app._.indexOf(tenant.charge_standards, function (o) {
+                                return o.charge_standard === subsytem + '-S1'
+                            });
+                            if (index === -1) {
+                                tenant.charge_standards.push(this.request.body);
+                            } else {
+                                tenant.charge_standards.splice(index, 1, this.request.body);
+                            }
+                            console.log(tenant.charge_standards);
+                            yield tenant.save();
+                            this.body = app.wrapper.res.default();
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);

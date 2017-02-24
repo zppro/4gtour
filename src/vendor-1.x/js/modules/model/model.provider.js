@@ -234,35 +234,7 @@
                 return {
                     tenantInfo: tenantInfo,
                     tenantChargeItemCustomizedAsTree: tenantChargeItemCustomizedAsTree,
-                    roomStatusInfo: roomStatusInfo,
-                    updateRoomStatusInfo: updateRoomStatusInfo,
-                    submitApplicationToExit: submitApplicationToExit,
-                    submitToAuditItemReturn: submitToAuditItemReturn,
-                    submitToAuditSettlement: submitToAuditSettlement,
-                    submitToConfirmExit: submitToConfirmExit,
-                    advancePaymentItemsWhenExitSettlement: advancePaymentItemsWhenExitSettlement,
-                    chargeItemsRecordedWhenExitSettlement: chargeItemsRecordedWhenExitSettlement,
-                    chargeItemsUnRecordedWhenExitSettlement: chargeItemsUnRecordedWhenExitSettlement,
-                    exitSettlement: exitSettlement,
-                    completeExit: completeExit,
-                    completeEnter: completeEnter,
-                    disableEnterRelatedAction: disableEnterRelatedAction,
-                    checkBeforeAddEnter: checkBeforeAddEnter,
-                    queryElderly: queryElderly,
-                    elderlyInfo: elderlyInfo,
-                    changeElderlyRoomBed: changeElderlyRoomBed,
-                    changeElderlyChargeItem: changeElderlyChargeItem,
-                    changeElderlyChargeItemForOtherAndCustomized: changeElderlyChargeItemForOtherAndCustomized,
-                    checkCanChangeBookingOrUnbookingRecharge: checkCanChangeBookingOrUnbookingRecharge,
-                    bookingRecharge: bookingRecharge,
-                    disableRechargeAndUnbooking: disableRechargeAndUnbooking,
-                    changeRechargeBookingAmount: changeRechargeBookingAmount,
-                    queryVoucherNo: queryVoucherNo,
-                    checkCanBookingRed: checkCanBookingRed,
-                    bookingRed: bookingRed,
-                    checkCanChangeBookingOrUnbookingRed: checkCanChangeBookingOrUnbookingRed,
-                    disableRedAndUnbooking: disableRedAndUnbooking,
-                    changeRedBookingAmount: changeRedBookingAmount,
+                    saveTenantChargeItemCustomized: saveTenantChargeItemCustomized,
                     completeOrder: completeOrder,
                     refundOrder: refundOrder,
                     userChangePassword: userChangePassword,
@@ -275,155 +247,16 @@
                     return $http.get(baseUrl + 'tenantInfo/' + tenantId + '/' + select);
                 }
 
-                function tenantChargeItemCustomizedAsTree(tenantId){
-                    return $http.get(baseUrl + 'tenantChargeItemCustomizedAsTree/' + tenantId);
+                function tenantChargeItemCustomizedAsTree(tenantId, subsystemUpper){
+                    subsystemUpper = (subsystemUpper || '').toUpperCase();
+                    return $http.get(baseUrl + 'tenantChargeItemCustomizedAsTree/' + tenantId + ',' + subsystemUpper);
                 }
 
-                function roomStatusInfo(tenantId) {
-                    return $http.get(baseUrl + 'roomStatusInfo/' + tenantId);
+                function saveTenantChargeItemCustomized(tenantId, subsystemUpper, chargeStandard) {
+                    subsystemUpper = (subsystemUpper || '').toUpperCase();
+                    return $http.post(baseUrl + 'saveTenantChargeItemCustomized/' + tenantId + ',' + subsystemUpper, chargeStandard);
                 }
-
-                function updateRoomStatusInfo(tenantId,roomId,bed_no,elderlyId) {
-                    return $http.post(baseUrl + 'updateRoomStatusInfo', {
-                        tenantId: tenantId,
-                        roomId: roomId,
-                        bed_no: bed_no,
-                        elderlyId: elderlyId
-                    });
-                }
-
-                function submitApplicationToExit(elderlyId,data) {
-                    return $http.post(baseUrl + 'submitApplicationToExit/' + elderlyId, data);
-                }
-
-                function submitToAuditItemReturn(exitId){
-                    return $http.post(baseUrl + 'submitToAuditItemReturn/' + exitId);
-                }
-
-                function submitToAuditSettlement(exitId,data){
-                    return $http.post(baseUrl + 'submitToAuditSettlement/' + exitId, data);
-                }
-
-                function submitToConfirmExit(exitId,data){
-                    return $http.post(baseUrl + 'submitToConfirmExit/' + exitId, data);
-                }
-
-                function advancePaymentItemsWhenExitSettlement(exitId){
-                    return $http.get(baseUrl + 'advancePaymentItemsWhenExitSettlement/' + exitId);
-                }
-
-                function chargeItemsRecordedWhenExitSettlement(exitId){
-                    return $http.get(baseUrl + 'chargeItemsRecordedWhenExitSettlement/' + exitId);
-                }
-
-                function chargeItemsUnRecordedWhenExitSettlement(exitId){
-                    return $http.get(baseUrl + 'chargeItemsUnRecordedWhenExitSettlement/' + exitId);
-                }
-
-                function exitSettlement(exitId,data) {
-                    return $http.post(baseUrl + 'exitSettlement/' + exitId, data);
-                }
-
-                function completeExit(exitId, data) {
-                    return $http.post(baseUrl + 'completeExit/' + exitId, data);
-                }
-
-                function completeEnter(enterId, data) {
-                    return $http.post(baseUrl + 'completeEnter/' + enterId, data);
-                }
-
-                function disableEnterRelatedAction(enterId){
-                    return $http.post(baseUrl + 'disableEnterRelatedAction/' + enterId);
-                }
-
-                function checkBeforeAddEnter(id_no,tenantId) {
-                    return $http.get(baseUrl + 'checkBeforeAddEnter/' + tenantId + '/' + id_no);
-                }
-
-                function queryElderly(tenantId,keyword,where,select,sort) {
-                    return $http.post(baseUrl + 'q/elderly', {tenantId: tenantId, keyword: keyword,  data: {
-                        where: where,
-                        select: select,
-                        sort: sort
-                    }});
-                }
-
-                function elderlyInfo(elderlyId,select) {
-                    return $http.get(baseUrl + 'elderlyInfo/' + elderlyId + '/' + select);
-                }
-
-                function changeElderlyRoomBed(tenantId,elderlyId,roomId,bed_no) {
-                    return $http.post(baseUrl + 'changeElderlyRoomBed', {
-                        tenantId: tenantId,
-                        elderlyId: elderlyId,
-                        roomId: roomId,
-                        bed_no: bed_no
-                    });
-                }
-
-                function changeElderlyChargeItem(tenantId,elderlyId,charge_item_catalog_id,old_charge_item_id,new_charge_item) {
-                    return $http.post(baseUrl + 'changeElderlyChargeItem', {
-                        tenantId: tenantId,
-                        elderlyId: elderlyId,
-                        charge_item_catalog_id: charge_item_catalog_id,
-                        old_charge_item_id: old_charge_item_id,
-                        new_charge_item: new_charge_item
-                    });
-                }
-
-                function changeElderlyChargeItemForOtherAndCustomized(tenantId,elderlyId,charge_item_catalog_id,selectedOtherAndCustomized){
-                    return $http.post(baseUrl + 'changeElderlyChargeItemForOtherAndCustomized', {
-                        tenantId: tenantId,
-                        elderlyId: elderlyId,
-                        charge_item_catalog_id: charge_item_catalog_id,
-                        selectedOtherAndCustomized: selectedOtherAndCustomized
-                    });
-                }
-
-                function checkCanChangeBookingOrUnbookingRecharge(rechargeId){
-                    return $http.get(baseUrl + 'checkCanChangeBookingOrUnbookingRecharge/' + rechargeId);
-                }
-
-                function bookingRecharge(rechargeId,data){
-                    return $http.post(baseUrl + 'bookingRecharge/' + rechargeId, data);
-                }
-
-                function disableRechargeAndUnbooking(rechargeId,data){
-                    return $http.post(baseUrl + 'disableRechargeAndUnbooking/' + rechargeId, data);
-                }
-
-                function changeRechargeBookingAmount(rechargeId,data){
-                    return $http.post(baseUrl + 'changeRechargeBookingAmount/' + rechargeId, data);
-                }
-
-                function queryVoucherNo(tenantId,keyword,where,select,sort){
-                    return $http.post(baseUrl + 'q/voucher_no', {tenantId: tenantId, keyword: keyword,  data: {
-                        where: where,
-                        select: select,
-                        sort: sort
-                    }});
-                }
-
-                function checkCanBookingRed(data) {
-                    return $http.post(baseUrl + 'checkCanBookingRed', data);
-                }
-
-                function bookingRed(data){
-                    return $http.post(baseUrl + 'bookingRed', data);
-                }
-
-                function checkCanChangeBookingOrUnbookingRed(redId){
-                    return $http.get(baseUrl + 'checkCanChangeBookingOrUnbookingRed/' + redId);
-                }
-
-                function disableRedAndUnbooking(redId,data){
-                    return $http.post(baseUrl + 'disableRedAndUnbooking/' + redId, data);
-                }
-
-                function changeRedBookingAmount(redId,data){
-                    return $http.post(baseUrl + 'changeRedBookingAmount/' + redId, data);
-                }
-
+ 
                 function completeOrder(orderId) {
                     return $http.post(baseUrl + 'completeOrder/' + orderId);
                 }
@@ -598,41 +431,180 @@
             $get: ['$http', function ($http) {
 
                 return {
-                    orderShip: orderShip,
-                    spuPublish: spuPublish,
-                    spuUnPublish: spuUnPublish,
-                    afterSaleAccept: afterSaleAccept,
-                    genWXAQRCode: genWXAQRCode,
-                    accessTokens: accessTokens,
-                    requestAccessToken: requestAccessToken
+                    roomStatusInfo: roomStatusInfo,
+                    updateRoomStatusInfo: updateRoomStatusInfo,
+                    submitApplicationToExit: submitApplicationToExit,
+                    submitToAuditItemReturn: submitToAuditItemReturn,
+                    submitToAuditSettlement: submitToAuditSettlement,
+                    submitToConfirmExit: submitToConfirmExit,
+                    advancePaymentItemsWhenExitSettlement: advancePaymentItemsWhenExitSettlement,
+                    chargeItemsRecordedWhenExitSettlement: chargeItemsRecordedWhenExitSettlement,
+                    chargeItemsUnRecordedWhenExitSettlement: chargeItemsUnRecordedWhenExitSettlement,
+                    exitSettlement: exitSettlement,
+                    completeExit: completeExit,
+                    completeEnter: completeEnter,
+                    disableEnterRelatedAction: disableEnterRelatedAction,
+                    checkBeforeAddEnter: checkBeforeAddEnter,
+                    queryElderly: queryElderly,
+                    elderlyInfo: elderlyInfo,
+                    changeElderlyRoomBed: changeElderlyRoomBed,
+                    changeElderlyChargeItem: changeElderlyChargeItem,
+                    changeElderlyChargeItemForOtherAndCustomized: changeElderlyChargeItemForOtherAndCustomized,
+                    checkCanChangeBookingOrUnbookingRecharge: checkCanChangeBookingOrUnbookingRecharge,
+                    bookingRecharge: bookingRecharge,
+                    disableRechargeAndUnbooking: disableRechargeAndUnbooking,
+                    changeRechargeBookingAmount: changeRechargeBookingAmount,
+                    queryVoucherNo: queryVoucherNo,
+                    checkCanBookingRed: checkCanBookingRed,
+                    bookingRed: bookingRed,
+                    checkCanChangeBookingOrUnbookingRed: checkCanChangeBookingOrUnbookingRed,
+                    disableRedAndUnbooking: disableRedAndUnbooking,
+                    changeRedBookingAmount: changeRedBookingAmount,
                 };
 
-                function orderShip(orderId, data) {
-                    return $http.post(baseUrl + 'order/ship/' + orderId, data);
+                function roomStatusInfo(tenantId) {
+                    return $http.get(baseUrl + 'roomStatusInfo/' + tenantId);
                 }
 
-                function spuPublish(spuId, data) {
-                    return $http.post(baseUrl + 'spu/publish/' + spuId, data);
+                function updateRoomStatusInfo(tenantId,roomId,bed_no,elderlyId) {
+                    return $http.post(baseUrl + 'updateRoomStatusInfo', {
+                        tenantId: tenantId,
+                        roomId: roomId,
+                        bed_no: bed_no,
+                        elderlyId: elderlyId
+                    });
                 }
 
-                function spuUnPublish(spuId, data) {
-                    return $http.post(baseUrl + 'spu/unpublish/' + spuId, data);
+                function submitApplicationToExit(elderlyId,data) {
+                    return $http.post(baseUrl + 'submitApplicationToExit/' + elderlyId, data);
                 }
 
-                function afterSaleAccept(afterSaleId, data) {
-                    return $http.post(baseUrl + 'afterSale/accept/' + afterSaleId, data);
+                function submitToAuditItemReturn(exitId){
+                    return $http.post(baseUrl + 'submitToAuditItemReturn/' + exitId);
                 }
 
-                function genWXAQRCode(channelUnitId, data) {
-                    return $http.post(baseUrl + 'channelUnit/genWXAQRCode/' + channelUnitId, data);
+                function submitToAuditSettlement(exitId,data){
+                    return $http.post(baseUrl + 'submitToAuditSettlement/' + exitId, data);
                 }
 
-                function accessTokens(tenantId) {
-                    return $http.get(baseUrl + 'accessTokens/' + tenantId);
+                function submitToConfirmExit(exitId,data){
+                    return $http.post(baseUrl + 'submitToConfirmExit/' + exitId, data);
                 }
 
-                function requestAccessToken(app_id) {
-                    return $http.post(baseUrl + 'requestAccessToken', {appid: app_id});
+                function advancePaymentItemsWhenExitSettlement(exitId){
+                    return $http.get(baseUrl + 'advancePaymentItemsWhenExitSettlement/' + exitId);
+                }
+
+                function chargeItemsRecordedWhenExitSettlement(exitId){
+                    return $http.get(baseUrl + 'chargeItemsRecordedWhenExitSettlement/' + exitId);
+                }
+
+                function chargeItemsUnRecordedWhenExitSettlement(exitId){
+                    return $http.get(baseUrl + 'chargeItemsUnRecordedWhenExitSettlement/' + exitId);
+                }
+
+                function exitSettlement(exitId,data) {
+                    return $http.post(baseUrl + 'exitSettlement/' + exitId, data);
+                }
+
+                function completeExit(exitId, data) {
+                    return $http.post(baseUrl + 'completeExit/' + exitId, data);
+                }
+
+                function completeEnter(enterId, data) {
+                    return $http.post(baseUrl + 'completeEnter/' + enterId, data);
+                }
+
+                function disableEnterRelatedAction(enterId){
+                    return $http.post(baseUrl + 'disableEnterRelatedAction/' + enterId);
+                }
+
+                function checkBeforeAddEnter(id_no,tenantId) {
+                    return $http.get(baseUrl + 'checkBeforeAddEnter/' + tenantId + '/' + id_no);
+                }
+
+                function queryElderly(tenantId,keyword,where,select,sort) {
+                    return $http.post(baseUrl + 'q/elderly', {tenantId: tenantId, keyword: keyword,  data: {
+                        where: where,
+                        select: select,
+                        sort: sort
+                    }});
+                }
+
+                function elderlyInfo(elderlyId,select) {
+                    return $http.get(baseUrl + 'elderlyInfo/' + elderlyId + '/' + select);
+                }
+
+                function changeElderlyRoomBed(tenantId,elderlyId,roomId,bed_no) {
+                    return $http.post(baseUrl + 'changeElderlyRoomBed', {
+                        tenantId: tenantId,
+                        elderlyId: elderlyId,
+                        roomId: roomId,
+                        bed_no: bed_no
+                    });
+                }
+
+                function changeElderlyChargeItem(tenantId,elderlyId,charge_item_catalog_id,old_charge_item_id,new_charge_item) {
+                    return $http.post(baseUrl + 'changeElderlyChargeItem', {
+                        tenantId: tenantId,
+                        elderlyId: elderlyId,
+                        charge_item_catalog_id: charge_item_catalog_id,
+                        old_charge_item_id: old_charge_item_id,
+                        new_charge_item: new_charge_item
+                    });
+                }
+
+                function changeElderlyChargeItemForOtherAndCustomized(tenantId,elderlyId,charge_item_catalog_id,selectedOtherAndCustomized){
+                    return $http.post(baseUrl + 'changeElderlyChargeItemForOtherAndCustomized', {
+                        tenantId: tenantId,
+                        elderlyId: elderlyId,
+                        charge_item_catalog_id: charge_item_catalog_id,
+                        selectedOtherAndCustomized: selectedOtherAndCustomized
+                    });
+                }
+
+                function checkCanChangeBookingOrUnbookingRecharge(rechargeId){
+                    return $http.get(baseUrl + 'checkCanChangeBookingOrUnbookingRecharge/' + rechargeId);
+                }
+
+                function bookingRecharge(rechargeId,data){
+                    return $http.post(baseUrl + 'bookingRecharge/' + rechargeId, data);
+                }
+
+                function disableRechargeAndUnbooking(rechargeId,data){
+                    return $http.post(baseUrl + 'disableRechargeAndUnbooking/' + rechargeId, data);
+                }
+
+                function changeRechargeBookingAmount(rechargeId,data){
+                    return $http.post(baseUrl + 'changeRechargeBookingAmount/' + rechargeId, data);
+                }
+
+                function queryVoucherNo(tenantId,keyword,where,select,sort){
+                    return $http.post(baseUrl + 'q/voucher_no', {tenantId: tenantId, keyword: keyword,  data: {
+                        where: where,
+                        select: select,
+                        sort: sort
+                    }});
+                }
+
+                function checkCanBookingRed(data) {
+                    return $http.post(baseUrl + 'checkCanBookingRed', data);
+                }
+
+                function bookingRed(data){
+                    return $http.post(baseUrl + 'bookingRed', data);
+                }
+
+                function checkCanChangeBookingOrUnbookingRed(redId){
+                    return $http.get(baseUrl + 'checkCanChangeBookingOrUnbookingRed/' + redId);
+                }
+
+                function disableRedAndUnbooking(redId,data){
+                    return $http.post(baseUrl + 'disableRedAndUnbooking/' + redId, data);
+                }
+
+                function changeRedBookingAmount(redId,data){
+                    return $http.post(baseUrl + 'changeRedBookingAmount/' + redId, data);
                 }
 
             }]

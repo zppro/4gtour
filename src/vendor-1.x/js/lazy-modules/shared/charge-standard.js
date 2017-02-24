@@ -10,7 +10,7 @@
         .controller('ChargeStandardController', ChargeStandardController)
     ;
 
-    ChargeStandardController.$inject = ['$parse','$scope','vmh', 'instanceVM'];
+    ChargeStandardController.$inject = ['$parse','$scope', 'vmh', 'instanceVM'];
 
     function ChargeStandardController($parse,$scope, vmh, vm) {
         $scope.vm = vm;
@@ -38,7 +38,7 @@
                 vm.selectBinding.standards = items;
                 if (vm.selectBinding.standards.length > 0) {
                     return vmh.parallel([
-                        vmh.extensionService.tenantChargeItemCustomizedAsTree(vm.model['tenantId']),
+                        vmh.extensionService.tenantChargeItemCustomizedAsTree(vm.model['tenantId'], vm._subsystem_),
                         vmh.fetch(tenantService.query({_id: vm.model['tenantId']}, 'charge_standard charge_items'))
                     ]).then(function (results) {
                         //console.log(results[0]);
@@ -119,10 +119,16 @@
                     return _.contains(checkedIds,o.item_id);
                 });
 
-                vmh.exec(tenantService.update(vm.model['tenantId'], {
+
+                vmh.extensionService.saveTenantChargeItemCustomized(vm.model['tenantId'], vm._subsystem_, {
                     charge_standard: vm.selectedStandardId,
                     charge_items: _.values(vm.saveCharges)
-                }));
+                });
+
+                // vmh.exec(tenantService.update(vm.model['tenantId'], {
+                //     charge_standard: vm.selectedStandardId,
+                //     charge_items: _.values(vm.saveCharges)
+                // }));
             }
 
         }
