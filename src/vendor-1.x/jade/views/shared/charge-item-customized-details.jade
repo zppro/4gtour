@@ -13,11 +13,6 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         .col-md-10
                             input.form-control(type='text', name='name',ng-model='vm.model.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-NAME")|translate}}' ,required='')
                             span.text-danger(ng-show="utils.vinput(this.theForm,'name','required')") {{ "validator.REQUIRED" | translate}}
-                    fieldset(ng-if="vm.readonly || vm._action_=='edit'"): .form-group
-                        <!--服务老人数量-->
-                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-Served_Quantity') | translate}}:
-                        .col-md-10
-                            .form-readable {{vm.model.served_quantity}}
                     fieldset: .form-group
                         <!--备注-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-REMARK') | translate}}:

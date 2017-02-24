@@ -24,7 +24,6 @@
         //养老机构
         modelNode.factory('psn-district');
         modelNode.factory('psn-room');
-        modelNode.factory('psn-chargeItemCustomized');
 
 
         //商户机构
@@ -42,6 +41,7 @@
         modelNode.factory('pub-red');
         modelNode.factory('pub-tenant');
         modelNode.factory('pub-tenantJournalAccount');
+        modelNode.factory('pub-tenantChargeItemCustomized');
         modelNode.factory('pub-user');
         modelNode.factory('pub-func');
         modelNode.factory('pub-order');

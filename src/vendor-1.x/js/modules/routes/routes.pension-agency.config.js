@@ -361,16 +361,16 @@
                 data: {
                     func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'CHARGE-ITEM-CUSTOMIZED'//业务系统使用
                 }
-                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'charge-item-customized.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'charge-item-customized.js')
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'charge-item-customized.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'charge-item-customized-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'charge-item-customized-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'ChargeItemCustomizedGridController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.ChargeItemCustomizedGrid,
                 resolve: {
                     entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'charge-item-customized.list', {
-                        modelName: 'psn-chargeItemCustomized',
+                        modelName: 'pub-tenantChargeItemCustomized',
                         searchForm: {"status": 1},
                         serverPaging: true,
                         columns: [
@@ -382,10 +382,10 @@
                                 sortable: true
                             },
                             {
-                                label: '服务老人数量',
-                                name: 'served_quantity',
-                                type: 'number',
-                                width: 60,
+                                label: '子系统',
+                                name: 'subsystem',
+                                type: 'string',
+                                width: 100,
                                 sortable: true
                             },
                             {
@@ -406,15 +406,15 @@
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'charge-item-customized.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY +'charge-item-customized-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED +'charge-item-customized-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'ChargeItemCustomizedDetailsController',
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.ChargeItemCustomizedDetails,
                 resolve: {
                     entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'charge-item-customized.details', {
-                        modelName: 'psn-chargeItemCustomized',
+                        modelName: 'pub-tenantChargeItemCustomized',
                         model: {
-                            catagory: MODEL_VARIABLES.PRE_DEFINED.SERVER_GEN,
-                            served_quantity: 0
+                            subsystem: MODEL_VARIABLES.SUBSYSTEM_NAMES.PENSION_AGENCY.toUpperCase(),
+                            catagory: MODEL_VARIABLES.PRE_DEFINED.SERVER_GEN
                         }
                         , blockUI: true
                     })

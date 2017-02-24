@@ -19,7 +19,7 @@
     "RECHARGE": "psn_recharge",
     "RED": "pub_red"
   },
-  "PSN": {
+  "PENSION-AGENCY": {
     "ROOM_CATEGORIES": {
       "SINGLE-ROOM": 1,
       "DOUBLE-ROOM": 2,
@@ -27,11 +27,11 @@
       "DOMITORY-ROOM": [4,5,6,7,8,9,10,11,12,13]
     },
     "CHARGE_ITEM_CUSTOMIZED_CATAGORY": {
-      "_ID": "charge-item.organization-pension.CUSTOMIZED",
+      "_ID": "charge-item.pension-agency.CUSTOMIZED",
       "NAME": "特色服务"
     },
     "CHARGE_ITEM_OTHER_CATAGORY": {
-      "_ID": "charge-item.organization-pension.OTHER",
+      "_ID": "charge-item.pension-agency.OTHER",
       "NAME": "其他"
     }
   }

@@ -603,8 +603,8 @@ module.exports = {
                             old_elderly_journal_account = app.clone(elderly_json.journal_account);
                             old_elderly_charge_item_change_history =  app.clone(elderly_json.charge_item_change_history);
 
-                            var charge_item_catalog_id_of_cutomized = app.modelVariables.PSN.CHARGE_ITEM_CUSTOMIZED_CATAGORY._ID + '-' + elderly_json.charge_standard;
-                            var charge_item_catalog_id_of_other = app.modelVariables.PSN.CHARGE_ITEM_OTHER_CATAGORY._ID + '-' + elderly_json.charge_standard;
+                            var charge_item_catalog_id_of_cutomized = app.modelVariables['PENSION-AGENCY'].CHARGE_ITEM_CUSTOMIZED_CATAGORY._ID + '-' + elderly_json.charge_standard;
+                            var charge_item_catalog_id_of_other = app.modelVariables['PENSION-AGENCY'].CHARGE_ITEM_OTHER_CATAGORY._ID + '-' + elderly_json.charge_standard;
 
                             var charge_itemsForOtherAndCustomized = app._.filter(elderly_json.charge_items,function(o) {
                                 return app._.initial(o.item_id.split('.')).join('.') == charge_item_catalog_id_of_cutomized.toLowerCase() ||
@@ -3556,55 +3556,7 @@ module.exports = {
                 }
             },
             /**********************其他*****************************/
-            {
-                method: 'tenantChargeItemCustomizedAsTree',
-                verb: 'get',
-                url: this.service_url_prefix + "/tenantChargeItemCustomizedAsTree/:_id",
-                handler: function (app, options) {
-                    return function * (next) {
-                        try {
-                            var tenantId = this.params._id;
-                            var tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
-                            if (!tenant || tenant.status == 0) {
-                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
-                                yield next;
-                                return;
-                            }
-
-                            var chargeItems = yield app.modelFactory().model_query(app.models['psn_chargeItemCustomized'], {
-                                where: {
-                                    status: 1,
-                                    tenantId: tenantId
-                                }
-                            });
-
-                            var charge_standard = (tenant.charge_standard || 'S1');
-
-                            var ret = {
-                                _id: app.modelVariables.PSN.CHARGE_ITEM_CUSTOMIZED_CATAGORY._ID + '-' + charge_standard,
-                                name: app.modelVariables.CHARGE_ITEM_CUSTOMIZED_CATAGORY.NAME,
-                                children: []
-                            };
-
-                            var item_id_prefix = ret._id.toLowerCase() + '.';
-
-                            for (var i = 0; i < chargeItems.length; i++) {
-                                if ((chargeItems[i].catagory + '-' + charge_standard) == ret._id)
-                                    ret.children.push({
-                                        _id: item_id_prefix + chargeItems[i]._id,
-                                        name: chargeItems[i].name,
-                                        data: {manual_seletable: true}
-                                    });
-                            }
-                            this.body = app.wrapper.res.ret(ret);
-                        } catch (e) {
-                            self.logger.error(e.message);
-                            this.body = app.wrapper.res.error(e);
-                        }
-                        yield next;
-                    };
-                }
-            }
+            
         ];
 
         return this;

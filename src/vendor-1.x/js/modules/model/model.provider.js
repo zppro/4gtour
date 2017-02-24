@@ -588,6 +588,61 @@
         }
     }
 
+    function PSNNode() {
+        var baseUrl;
+        return {
+            // provider access level
+            setBaseUrl: setBaseUrl,
+
+            // controller access level
+            $get: ['$http', function ($http) {
+
+                return {
+                    orderShip: orderShip,
+                    spuPublish: spuPublish,
+                    spuUnPublish: spuUnPublish,
+                    afterSaleAccept: afterSaleAccept,
+                    genWXAQRCode: genWXAQRCode,
+                    accessTokens: accessTokens,
+                    requestAccessToken: requestAccessToken
+                };
+
+                function orderShip(orderId, data) {
+                    return $http.post(baseUrl + 'order/ship/' + orderId, data);
+                }
+
+                function spuPublish(spuId, data) {
+                    return $http.post(baseUrl + 'spu/publish/' + spuId, data);
+                }
+
+                function spuUnPublish(spuId, data) {
+                    return $http.post(baseUrl + 'spu/unpublish/' + spuId, data);
+                }
+
+                function afterSaleAccept(afterSaleId, data) {
+                    return $http.post(baseUrl + 'afterSale/accept/' + afterSaleId, data);
+                }
+
+                function genWXAQRCode(channelUnitId, data) {
+                    return $http.post(baseUrl + 'channelUnit/genWXAQRCode/' + channelUnitId, data);
+                }
+
+                function accessTokens(tenantId) {
+                    return $http.get(baseUrl + 'accessTokens/' + tenantId);
+                }
+
+                function requestAccessToken(app_id) {
+                    return $http.post(baseUrl + 'requestAccessToken', {appid: app_id});
+                }
+
+            }]
+        };
+
+        function setBaseUrl(url) {
+            baseUrl = url;
+        }
+    }
+    
     function PSNDashboardNode(){
         var baseUrl;
         return {

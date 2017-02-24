@@ -7,7 +7,7 @@
     'use strict';
 
     angular
-        .module('subsystem.pension-agency')
+        .module('subsystem.shared')
         .controller('ChargeItemCustomizedGridController', ChargeItemCustomizedGridController)
         .controller('ChargeItemCustomizedDetailsController', ChargeItemCustomizedDetailsController)
     ;

@@ -145,7 +145,6 @@
         "TAB1": "基本信息",
         "TAB1-LABEL-NAME": "服务名称",
         "TAB1-PLACEHOLDER-NAME": "每月体检..",
-        "TAB1-LABEL-Served_Quantity":"服务老人数量",
         "TAB1-LABEL-REMARK":"备注",
         "TAB1-PLACEHOLDER-REMARK":"补充说明一些情况"
       }

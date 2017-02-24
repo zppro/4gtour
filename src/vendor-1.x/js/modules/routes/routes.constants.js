@@ -23,6 +23,8 @@
                 MODULE_HEADER: 'ModuleHeaderController',
                 MODULE_HEADER_FOR_TENANT: 'ModuleHeaderForTenantController',
                 GRID: 'GridController',
+                ChargeItemCustomizedGrid: 'ChargeItemCustomizedGridController',
+                ChargeItemCustomizedDetails: 'ChargeItemCustomizedDetailsController',
                 USER_MANAGE_GRID: 'Shared_UserManageGridController',
                 USER_MANAGE_DETAILS: 'Shared_UserManageDetailsController',
                 WXACONFIG_GRID: 'Shared_wxaConfigGridController',
