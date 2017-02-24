@@ -104,39 +104,40 @@
                 console.log(error);
             });
         // Hook success
-        $rootScope.$on('$stateChangeSuccess',
-            function (event, toState, toParams, fromState, fromParams) {
-                // display new view from top
-                //console.log(toState);
-                $window.scrollTo(0, 0);
-                if($state.current.title){
-                    $rootScope.currTitle = $rootScope.app.name + ' - ' + $state.current.title;
-                }
-                else{
-                    $translate($state.current.name+'.TITLE').then(function(translated){
-                        $rootScope.currTitle = $rootScope.app.name + ' - ' + translated;
-                    });
-                }
-
-            });
-
-
-        $rootScope.$on('sidebar:subsystem:change', function ($event, sref) {
-            transferToDashboard();
-
-            function transferToDashboard(){
-                var settings = SettingsManager.getInstance();
-                var currentSystem = settings && settings.read(SETTING_KEYS.CURRENT_SUBSYSTEM);
-                if (currentSystem) {
-                    // console.log('sidebar:subsystem:change -> ' + currentSystem.sref + '.dashboard');
-                    $rootScope.$state.go(currentSystem.sref + '.dashboard');
-                }
-                else{
-                    console.log('no currentSubsystemSref');
-                }
+        $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+            // display new view from top
+            //console.log(toState);
+            $window.scrollTo(0, 0);
+            if($state.current.title){
+                $rootScope.currTitle = $rootScope.app.name + ' - ' + $state.current.title;
             }
+            else{
+                $translate($state.current.name+'.TITLE').then(function(translated){
+                    $rootScope.currTitle = $rootScope.app.name + ' - ' + translated;
+                });
+            }
+
         });
 
+        $rootScope.$on('sidebar:subsystem:change', function ($event, sref) {
+            sref && transferToStateInSameSubsystem(sref);
+        });
+
+        function transferToStateInSameSubsystem(sref){
+            var settings = SettingsManager.getInstance();
+            var currentSystem = settings && settings.read(SETTING_KEYS.CURRENT_SUBSYSTEM);
+            if (currentSystem) {
+                // console.log('sidebar:subsystem:change -> ' + currentSystem.sref + '.dashboard');
+                if (sref == currentSystem.sref + '.dashboard') {
+                    $rootScope.$state.go(sref);
+                } else if (sref == 'app.dashboard') {
+                    $rootScope.$state.go(currentSystem.sref + '.dashboard');
+                }
+            }
+            else{
+                console.log('no currentSubsystemSref');
+            }
+        }
         // Load a title dynamically
         //$rootScope.currTitle = $state.current.title;
         //$rootScope.pageTitle = function () {

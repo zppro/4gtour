@@ -55,8 +55,8 @@
                             var settings = SettingsManager.getSubsystemInstance($scope.subsystem.selected.sref);
                             settings &&  SettingsManager.setCurrentInstance(settings);
                             settings && settings.write(SETTING_KEYS.CURRENT_SUBSYSTEM,$scope.subsystem.selected);
-
-                            $scope.subsystem.selected.mtype != 'demo' && $rootScope.$emit('sidebar:subsystem:change');
+                            console.log('subsystem init:'+$scope.subsystem.selected.name);
+                            ($scope.subsystem.selected.mtype != 'demo' && $rootScope.$state.current.name == 'app.dashboard') && $rootScope.$emit('sidebar:subsystem:change', $rootScope.$state.current.name);
 
 
                         }
@@ -68,7 +68,7 @@
                     var settings = SettingsManager.getSubsystemInstance($scope.subsystem.selected.sref);
                     settings &&  SettingsManager.setCurrentInstance(settings);
                     settings && settings.write(SETTING_KEYS.CURRENT_SUBSYSTEM,$scope.subsystem.selected);
-                    $scope.subsystem.selected.mtype != 'demo' && $rootScope.$emit('sidebar:subsystem:change');
+                    $scope.subsystem.selected.mtype != 'demo' && $rootScope.$emit('sidebar:subsystem:change', $scope.subsystem.selected.sref + '.dashboard');
                 },
                 isActive: function (item) {
                     if (!item) return;
