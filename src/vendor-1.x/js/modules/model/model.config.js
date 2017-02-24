@@ -8,16 +8,16 @@
         .module('app.model')
         .config(modelConfig);
 
-    modelConfig.$inject = ['modelNodeProvider', 'shareNodeProvider','extensionNodeProvider','extOfOrganizationOfTravelNodeProvider','mwsNodeProvider', 'psnDashboardNodeProvider', 'idtNodeProvider','extensionOfDashboardOfTenantNodeProvider','qiniuNodeProvider','debugNodeProvider', 'clientDataProvider'];
-    function modelConfig(modelNodeProvider, shareNodeProvider,extensionNodeProvider,extOfOrganizationOfTravelNodeProvider, mwsNodeProvider, psnDashboardNodeProvider, idtNodeProvider,extensionOfDashboardOfTenantNodeProvider,qiniuNodeProvider, debugNodeProvider,clientDataProvider) {
+    modelConfig.$inject = ['modelNodeProvider', 'shareNodeProvider','extensionNodeProvider', 'mwsNodeProvider', 'psnDashboardNodeProvider', 'trvDashboardNodeProvider', 'idtNodeProvider','qiniuNodeProvider','debugNodeProvider', 'clientDataProvider'];
+    function modelConfig(modelNodeProvider, shareNodeProvider,extensionNodeProvider, mwsNodeProvider, psnDashboardNodeProvider, trvDashboardNodeProvider, idtNodeProvider,qiniuNodeProvider, debugNodeProvider,clientDataProvider) {
         modelNodeProvider.setBaseUrl('services/model/manage/');
         shareNodeProvider.setBaseUrl('services/share/');
         extensionNodeProvider.setBaseUrl('services/extension/');
-        extOfOrganizationOfTravelNodeProvider.setBaseUrl('services/ext/organizationOfTravel/');
         mwsNodeProvider.setBaseUrl('services/mws/');
         psnDashboardNodeProvider.setBaseUrl('services/dashboard/psn/');
+        trvDashboardNodeProvider.setBaseUrl('services/dashboard/trv/');
         idtNodeProvider.setBaseUrl('services/idt/');
-        extensionOfDashboardOfTenantNodeProvider.setBaseUrl('services/ext/dashboardOfTenant/');
+
         qiniuNodeProvider.setBaseUrl('services/qiniu/');
         debugNodeProvider.setBaseUrl('debug-services/debug/');
         clientDataProvider.setBaseUrl('server/');

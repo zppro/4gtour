@@ -178,6 +178,40 @@ module.exports = {
                         yield next;
                     };
                 }
+            },
+            {
+                method: 'saveIDCConfigInfo',
+                verb: 'post',
+                url: this.service_url_prefix + "/saveIDCConfigInfo",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+
+                            var rows = this.request.body;//[{where:{...},value:''},{where:{...},value:''}]
+                            console.log(rows);
+
+                            for(var i= 0;i< rows.length;i++) {
+                                var scenicSpot_config = yield app.modelFactory().model_one(app.models['idc_config'], {
+                                    where: rows[i].where
+                                });
+
+                                if (scenicSpot_config) {
+                                    scenicSpot_config.config_value = rows[i].value;
+                                    yield scenicSpot_config.save();
+                                }
+                                else {
+                                    yield app.modelFactory().model_create(app.models['idc_config'], app._.extend({}, rows[i].where, {config_value: rows[i].value}));
+                                }
+                            }
+
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
             }
         ];
 

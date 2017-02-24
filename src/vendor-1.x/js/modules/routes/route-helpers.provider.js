@@ -143,7 +143,7 @@
 
         function buildVMHelper() {
 
-            return ['$timeout', '$q', '$translate', '$http', 'Browser', 'blockUI', 'cfpLoadingBar', 'shareNode', 'extensionNode','extOfOrganizationOfTravelNode','mwsNode', 'idtNode', 'debugNode', 'clientData', 'treeFactory', 'Notify', 'GridUtils', 'ViewUtils', function ($timeout, $q, $translate, $http, Browser, blockUI, cfpLoadingBar, shareNode, extensionNode,extOfOrganizationOfTravelNode,mwsNode, idtNode, debugNode, clientData, treeFactory, Notify, GridUtils, ViewUtils) {
+            return ['$timeout', '$q', '$translate', '$http', 'Browser', 'blockUI', 'cfpLoadingBar', 'shareNode', 'extensionNode', 'mwsNode', 'idtNode', 'debugNode', 'clientData', 'treeFactory', 'Notify', 'GridUtils', 'ViewUtils', function ($timeout, $q, $translate, $http, Browser, blockUI, cfpLoadingBar, shareNode, extensionNode, mwsNode, idtNode, debugNode, clientData, treeFactory, Notify, GridUtils, ViewUtils) {
 
                 function promiseWrapper() {
                     if (arguments.length > 0) {
@@ -232,7 +232,6 @@
                     parallel: parallel,
                     shareService: shareNode,
                     extensionService: extensionNode,
-                    extOfOrganizationOfTravelService:extOfOrganizationOfTravelNode,
                     mwsService: mwsNode,
                     idtService: idtNode,
                     debugService: debugNode,

@@ -10,9 +10,9 @@
         .controller('DashboardOrganizationTravelController', DashboardOrganizationTravelController)
     ;
 
-    DashboardOrganizationTravelController.$inject = ['$scope', '$echarts','extensionOfDashboardOfTenantNode','vmh', 'instanceVM'];
+    DashboardOrganizationTravelController.$inject = ['$scope', 'trvDashboardNode','vmh', 'instanceVM'];
 
-    function DashboardOrganizationTravelController($scope, $echarts,extensionOfDashboardOfTenantNode,vmh, vm) {
+    function DashboardOrganizationTravelController($scope, trvDashboardNode,vmh, vm) {
         $scope.vm = vm;
 
         init();
@@ -25,7 +25,7 @@
         }
 
         function getDeviceStatInfo(){
-            extensionOfDashboardOfTenantNode.getDeviceStatInfo().then(function(ret){
+            trvDashboardNode.getDeviceStatInfo().then(function(ret){
                 console.log(ret);
                 vm.deviceStatInfo = ret;
             });

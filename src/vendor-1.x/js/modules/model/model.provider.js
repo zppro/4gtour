@@ -9,11 +9,10 @@
         .provider('modelNode', ModelNode)
         .provider('shareNode', ShareNode)
         .provider('extensionNode', ExtensionNode)
-        .provider('extOfOrganizationOfTravelNode',ExtOfOrganizationOfTravelNode)
         .provider('mwsNode', MWSNode)
         .provider('psnDashboardNode', PSNDashboardNode)
+        .provider('trvDashboardNode', TRVDashboardNode)
         .provider('idtNode',IDTNode)
-        .provider('extensionOfDashboardOfTenantNode',ExtensionOfDashboardOfTenantNode)
         .provider('qiniuNode',QiniuNode)
         .provider('debugNode',DebugNode)
         .provider('clientData',ClientData)
@@ -473,7 +472,9 @@
                     PFT$issueTicket: PFT$issueTicket,
                     PFT$refundForTicket: PFT$refundForTicket,
                     PFT$refreshOrderInfo: PFT$refreshOrderInfo,
-                    PFT$resendSmsForOrder: PFT$resendSmsForOrder
+                    PFT$resendSmsForOrder: PFT$resendSmsForOrder,
+                    saveIDCConfigItem: saveIDCConfigItem,
+                    saveIDCConfigItems: saveIDCConfigItems
                 };
 
                 function PFT$fetchScenicSpotList() {
@@ -507,6 +508,22 @@
 
                 function PFT$resendSmsForOrder(orderId) {
                     return $http.post(baseUrl + 'PFT$resendSmsForOrder/' + orderId);
+                }
+
+                function saveIDCConfigItem(idc_name, primary_key, primary_value, config_key, config_value) {
+                    return $http.post(baseUrl + 'saveIDCConfigInfo', [{
+                        where: {
+                            idc_name: idc_name,
+                            primary_key: primary_key,
+                            primary_value: primary_value,
+                            config_key: config_key
+                        }, value: config_value
+                    }]);
+                }
+
+                //items=>[{where:{idc_name: '...',primary_key: '...',primary_value: '...',config_key: '...'},value:'...'},{where:{...},value:''}]
+                function saveIDCConfigItems(items) {
+                    return $http.post(baseUrl + 'saveIDCConfigInfo', items);
                 }
             }]
         };
@@ -640,7 +657,7 @@
         }
     }
 
-    function ExtOfOrganizationOfTravelNode(){
+    function TRVDashboardNode(){
         var baseUrl;
         return {
             // provider access level
@@ -650,84 +667,13 @@
             $get: ['$http', function ($http) {
 
                 return {
-                    saveIDCConfigItem: saveIDCConfigItem,
-                    saveIDCConfigItems: saveIDCConfigItems
-                };
-
-                function saveIDCConfigItem(idc_name, primary_key, primary_value, config_key, config_value) {
-                    return $http.post(baseUrl + 'saveIDCConfigInfo', [{
-                        where: {
-                            idc_name: idc_name,
-                            primary_key: primary_key,
-                            primary_value: primary_value,
-                            config_key: config_key
-                        }, value: config_value
-                    }]);
-                }
-
-                //items=>[{where:{idc_name: '...',primary_key: '...',primary_value: '...',config_key: '...'},value:'...'},{where:{...},value:''}]
-                function saveIDCConfigItems(items) {
-                    return $http.post(baseUrl + 'saveIDCConfigInfo', items);
-                }
-
-            }]
-        };
-
-        function setBaseUrl(url) {
-            baseUrl = url;
-        }
-    }
-
-    function ExtensionOfDashboardOfTenantNode(){
-        var baseUrl;
-        return {
-            // provider access level
-            setBaseUrl: setBaseUrl,
-
-            // controller access level
-            $get: ['$http', function ($http) {
-
-                return {
-                    getDeviceStatInfo: getDeviceStatInfo,
-                    tenantAccountInfo: tenantAccountInfo,
-                    bedInfo: bedInfo,
-                    liveinAndAccountAndBedInfo:liveinAndAccountAndBedInfo,
-                    elderlyAgeGroups: elderlyAgeGroups,
-                    roomVacancyRateMonthly: roomVacancyRateMonthly,
-                    roomCatagoryOfManTime: roomCatagoryOfManTime,
-                    roomCatagoryOfManTimeMonthly: roomCatagoryOfManTimeMonthly
+                    getDeviceStatInfo: getDeviceStatInfo
                 };
 
                 function getDeviceStatInfo() {
                     return $http.get(baseUrl + 'deviceStatInfo');
                 }
-                function tenantAccountInfo(tenantId){
-                    return $http.get(baseUrl + 'tenantAccountInfo/' + tenantId);
-                }
 
-                function bedInfo(tenantId){
-                    return $http.get(baseUrl + 'bedInfo/' + tenantId);
-                }
-
-                function liveinAndAccountAndBedInfo(tenantId){
-                    return $http.get(baseUrl + 'liveinAndAccountAndBedInfo/' + tenantId);
-                }
-
-                function elderlyAgeGroups(tenantId){
-                    return $http.get(baseUrl + 'elderlyAgeGroups/' + tenantId+'/60/10');
-                }
-
-                function roomVacancyRateMonthly(tenantId,start,end) {
-                    return $http.get(baseUrl + 'roomVacancyRateMonthly/' + tenantId + '/' + start + '/' + end);
-                }
-
-                function roomCatagoryOfManTime(tenantId){
-                    return $http.get(baseUrl + 'roomCatagoryOfManTime/' + tenantId);
-                }
-
-                function roomCatagoryOfManTimeMonthly(tenantId,start,end){
-                    return $http.get(baseUrl + 'roomCatagoryOfManTimeMonthly/' + tenantId+ '/' + start + '/' + end);
-                }
             }]
         };
 

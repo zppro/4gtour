@@ -10,9 +10,9 @@
         .controller('DashboardMerchantWebstoreController', DashboardMerchantWebstoreController)
     ;
 
-    DashboardMerchantWebstoreController.$inject = ['$scope', '$echarts','extensionOfDashboardOfTenantNode','vmh', 'instanceVM'];
+    DashboardMerchantWebstoreController.$inject = ['$scope', 'vmh', 'instanceVM'];
 
-    function DashboardMerchantWebstoreController($scope, $echarts,extensionOfDashboardOfTenantNode,vmh, vm) {
+    function DashboardMerchantWebstoreController($scope, vmh, vm) {
         $scope.vm = vm;
 
         init();

@@ -1,5 +1,5 @@
 /**
- * ext_dashboardOfTenant Created by zppro on 17-2-22.
+ * dashboard_psn Created by zppro on 17-2-22.
  * Target:养老机构仪表盘 (移植自fsrok)
  */
 var statHelper = require('rfcore').factory('statHelper');

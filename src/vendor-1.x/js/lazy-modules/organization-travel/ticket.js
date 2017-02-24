@@ -94,7 +94,7 @@
         function doSubmit() {
 
             if ($scope.theForm.$valid) {
-                vm.save(false, vmh.extOfOrganizationOfTravelService.saveIDCConfigItems([
+                vm.save(false, vmh.idtService.saveIDCConfigItems([
                     {
                         where: {
                             idc_name: 'idc_ticket_PFT',
