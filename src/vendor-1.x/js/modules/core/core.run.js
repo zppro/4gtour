@@ -127,8 +127,8 @@
             function transferToDashboard(){
                 var settings = SettingsManager.getInstance();
                 var currentSystem = settings && settings.read(SETTING_KEYS.CURRENT_SUBSYSTEM);
-                console.log(currentSystem);
                 if (currentSystem) {
+                    // console.log('sidebar:subsystem:change -> ' + currentSystem.sref + '.dashboard');
                     $rootScope.$state.go(currentSystem.sref + '.dashboard');
                 }
                 else{
