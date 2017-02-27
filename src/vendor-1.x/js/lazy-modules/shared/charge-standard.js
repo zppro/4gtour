@@ -33,17 +33,28 @@
             };
 
             vm.charges = {};
+            vm.subsystemUpper = vm._subsystem_.toUpperCase();
 
             vm.chargeItemDataPromise = vmh.clientData.getJson('charge-standards-pension-agency').then(function (items) {
                 vm.selectBinding.standards = items;
                 if (vm.selectBinding.standards.length > 0) {
                     return vmh.parallel([
-                        vmh.extensionService.tenantChargeItemCustomizedAsTree(vm.model['tenantId'], vm._subsystem_),
-                        vmh.fetch(tenantService.query({_id: vm.model['tenantId']}, 'charge_standard charge_items'))
+                        vmh.extensionService.tenantChargeItemCustomizedAsTree(vm.model['tenantId'], vm.subsystemUpper),
+                        vmh.fetch(tenantService.query({_id: vm.model['tenantId']}, 'charge_standards'))
                     ]).then(function (results) {
-                        //console.log(results[0]);
-                        var ret = results[1];
-                        var selectedStandard = _.findWhere(vm.selectBinding.standards, {_id: ret[0].charge_standard});
+                        var tenantChargeStandard = _.find(results[1][0].charge_standards, function(o){
+                            console.log(o.subsystem )
+                            console.log(vm.subsystemUpper)
+                            return o.subsystem == vm.subsystemUpper
+                        });
+                        var selectedStandard;
+                        if (tenantChargeStandard){
+                            selectedStandard = _.find(vm.selectBinding.standards, function(o){
+                                return o._id == tenantChargeStandard.charge_standard
+                            });
+                            vm.chargeItems = tenantChargeStandard.charge_items;
+                        }
+
                         if (!selectedStandard) {
                             selectedStandard = vm.selectBinding.standards[0];
                         }
@@ -56,8 +67,6 @@
                             selectedStandard.children.push(results[0]);
                         }
 
-
-                        vm.chargeItems = ret[0].charge_items;
                         setCheckedChargeItems();
 
                         return vmh.promiseWrapper(selectedStandard.children);
@@ -119,16 +128,11 @@
                     return _.contains(checkedIds,o.item_id);
                 });
 
-
-                vmh.extensionService.saveTenantChargeItemCustomized(vm.model['tenantId'], vm._subsystem_, {
+                vmh.exec(vmh.extensionService.saveTenantChargeItemCustomized(vm.model['tenantId'], {
                     charge_standard: vm.selectedStandardId,
+                    subsystem: vm.subsystemUpper,
                     charge_items: _.values(vm.saveCharges)
-                });
-
-                // vmh.exec(tenantService.update(vm.model['tenantId'], {
-                //     charge_standard: vm.selectedStandardId,
-                //     charge_items: _.values(vm.saveCharges)
-                // }));
+                }));
             }
 
         }

@@ -62,6 +62,7 @@ module.exports = function(ctx,name) {
             }],
             charge_standards:[{
                 charge_standard: {type: String, required: true},
+                subsystem: {type: String, required: true},
                 charge_items: [{
                     check_in_time: {type: Date, default: Date.now},
                     item_id: {type: String, required: true},
@@ -102,7 +103,7 @@ module.exports = function(ctx,name) {
         });
 
 
-        tenantSchema.$$skipPaths = ['price_funcs', 'open_funcs','charge_items','subsidiary_ledger'];
+        tenantSchema.$$skipPaths = ['price_funcs', 'open_funcs', 'charge_standards','charge_items','subsidiary_ledger'];
 
         //tenantSchema.methods.needRefreshToken = function(){
         //    console.log(this);

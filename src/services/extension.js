@@ -102,7 +102,7 @@ module.exports = {
             {
                 method: 'saveTenantChargeItemCustomized',//保存收费标准
                 verb: 'post',
-                url: this.service_url_prefix + "/saveTenantChargeItemCustomized/:id,:subsystem",
+                url: this.service_url_prefix + "/saveTenantChargeItemCustomized/:id",
                 handler: function (app, options) {
                     return function * (next) {
                         try {
@@ -113,15 +113,16 @@ module.exports = {
                                 return;
                             }
 
-                            var index =  app._.indexOf(tenant.charge_standards, function (o) {
-                                return o.charge_standard === subsytem + '-S1'
+                            var charge_standard = this.request.body.charge_standard;
+                            var subsystem = this.request.body.subsystem;
+                            var index =  app._.findIndex(tenant.charge_standards, function (o) {
+                                return o.subsystem === subsystem && o.charge_standard === charge_standard
                             });
                             if (index === -1) {
                                 tenant.charge_standards.push(this.request.body);
                             } else {
                                 tenant.charge_standards.splice(index, 1, this.request.body);
                             }
-                            console.log(tenant.charge_standards);
                             yield tenant.save();
                             this.body = app.wrapper.res.default();
                         } catch (e) {

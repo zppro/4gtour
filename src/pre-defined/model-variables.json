@@ -20,6 +20,7 @@
     "RED": "pub_red"
   },
   "PENSION-AGENCY": {
+    "DEFAULT_CHARGE_STANDARD": "S1",
     "ROOM_CATEGORIES": {
       "SINGLE-ROOM": 1,
       "DOUBLE-ROOM": 2,
