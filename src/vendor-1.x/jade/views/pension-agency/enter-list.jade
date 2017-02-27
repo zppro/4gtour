@@ -29,7 +29,7 @@
                         td.text-left {{::row.elderly_summary}}
                         td {{::row.enter_on|date:'yyyy-MM-dd'}}
                         td.text-right {{::row.deposit|currency}}
-                        td {{row.current_register_step|formatter:'current_register_step':vm.columns}}
+                        td {{row.current_register_step_name}}
                         td
                             .btn-group(ng-if="row.current_register_step!='A0001'")
                                 a.btn.btn-primary.btn-xs(title="{{'button.READ'|translate}}",ng-click="vm.read(row._id)")

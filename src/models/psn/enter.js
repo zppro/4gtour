@@ -4,7 +4,7 @@
  */
 var mongoose = require('mongoose');
 module.isloaded = false;
-
+var D3000 = require('../../pre-defined/dictionary.json')['D3000'];
 
 module.exports = function(ctx,name) {
     if (module.isloaded) {
@@ -50,6 +50,13 @@ module.exports = function(ctx,name) {
 
         enterSchema.virtual('deposit').get(function () {
             return this.sum_period_price * this.period_value_in_advance;//押金,预收款
+        });
+
+        enterSchema.virtual('current_register_step_name').get(function () {
+            if (this.current_register_step) {
+                return D3000[this.current_register_step].name;
+            }
+            return '';
         });
 
         enterSchema.pre('update', function (next) {

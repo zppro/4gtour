@@ -10,6 +10,7 @@
         .provider('shareNode', ShareNode)
         .provider('extensionNode', ExtensionNode)
         .provider('mwsNode', MWSNode)
+        .provider('psnNode', PSNNode)
         .provider('psnDashboardNode', PSNDashboardNode)
         .provider('trvDashboardNode', TRVDashboardNode)
         .provider('idtNode',IDTNode)
@@ -838,6 +839,8 @@
                             name += '.json'
                         }
                         var promise = $http.get(baseUrl + name).then(function(res){
+                            console.log('----------------get json')
+                            console.log(res.data);
                             return res.data;
                         });
                         return promise;

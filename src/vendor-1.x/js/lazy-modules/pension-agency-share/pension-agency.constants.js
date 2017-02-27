@@ -6,7 +6,7 @@
 (function() {
     'use strict';
 
-    var CHARGE_ITEM_PREFIX = 'charge-item.pension-agency.'
+    var CHARGE_ITEM_PREFIX = 'ci.pension-agency.'
 
     angular
         .module('subsystem.pension-agency')

@@ -22,6 +22,8 @@
         modelNode.factory('mws-wxAppConfig');
 
         //养老机构
+        modelNode.factory('psn-elderly');
+        modelNode.factory('psn-enter');
         modelNode.factory('psn-district');
         modelNode.factory('psn-room');
 

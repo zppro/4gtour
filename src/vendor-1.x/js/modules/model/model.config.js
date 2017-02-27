@@ -8,12 +8,13 @@
         .module('app.model')
         .config(modelConfig);
 
-    modelConfig.$inject = ['modelNodeProvider', 'shareNodeProvider','extensionNodeProvider', 'mwsNodeProvider', 'psnDashboardNodeProvider', 'trvDashboardNodeProvider', 'idtNodeProvider','qiniuNodeProvider','debugNodeProvider', 'clientDataProvider'];
-    function modelConfig(modelNodeProvider, shareNodeProvider,extensionNodeProvider, mwsNodeProvider, psnDashboardNodeProvider, trvDashboardNodeProvider, idtNodeProvider,qiniuNodeProvider, debugNodeProvider,clientDataProvider) {
+    modelConfig.$inject = ['modelNodeProvider', 'shareNodeProvider','extensionNodeProvider', 'mwsNodeProvider', 'psnNodeProvider', 'psnDashboardNodeProvider', 'trvDashboardNodeProvider', 'idtNodeProvider','qiniuNodeProvider','debugNodeProvider', 'clientDataProvider'];
+    function modelConfig(modelNodeProvider, shareNodeProvider,extensionNodeProvider, mwsNodeProvider, psnNodeProvider, psnDashboardNodeProvider, trvDashboardNodeProvider, idtNodeProvider,qiniuNodeProvider, debugNodeProvider,clientDataProvider) {
         modelNodeProvider.setBaseUrl('services/model/manage/');
         shareNodeProvider.setBaseUrl('services/share/');
         extensionNodeProvider.setBaseUrl('services/extension/');
         mwsNodeProvider.setBaseUrl('services/mws/');
+        psnNodeProvider.setBaseUrl('services/psn/');
         psnDashboardNodeProvider.setBaseUrl('services/dashboard/psn/');
         trvDashboardNodeProvider.setBaseUrl('services/dashboard/trv/');
         idtNodeProvider.setBaseUrl('services/idt/');

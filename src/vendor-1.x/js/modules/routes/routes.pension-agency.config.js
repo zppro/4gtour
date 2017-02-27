@@ -62,12 +62,13 @@
                 data:{
                     func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'ENTER'//业务系统使用
                 }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'enter.js')
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'enter.list', {
                 url: '/list/:action',
                 templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'enter-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'EnterManageGridController',
+                controller: 'EnterGridController',
                 resolve: {
                     entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'enter.list', {
                         modelName: 'psn-enter',
@@ -104,10 +105,10 @@
                             },
                             {
                                 label: '当前步骤',
-                                name: 'current_register_step',
+                                name: 'current_register_step_name',
                                 type: 'string',
                                 width: 80,
-                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3000/object')
+                                sortable: true
                             },
                             {
                                 label: '',
@@ -122,7 +123,7 @@
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'enter.details', {
                 url: '/details/:action/:_id',
                 templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'enter-details.html'),
-                controller: 'EnterManageDetailsController',
+                controller: 'EnterDetailsController',
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 resolve: {
                     entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'enter.details', {
