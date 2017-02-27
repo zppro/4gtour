@@ -839,8 +839,8 @@
                             name += '.json'
                         }
                         var promise = $http.get(baseUrl + name).then(function(res){
-                            console.log('----------------get json')
-                            console.log(res.data);
+                            // console.log('----------------get json')
+                            // console.log(res.data);
                             return res.data;
                         });
                         return promise;

@@ -169,13 +169,13 @@
                 _.each(results[7], function (o) {
                     vm.period_map[o.value] = o.name;
                 });
-                vm.elderlyModel.charge_standard = (_.find(results[8].charge_standards, function(o){
+
+                var tenantChargeStandardObject = _.find(results[8].charge_standards, function(o){
                     return o.subsystem == vm.subsystemUpper
-                }) || {}).charge_standard;
-                var charge_items = results[8].charge_items;
-                console.log(results[9]);
+                }) || {};
+                vm.elderlyModel.charge_standard = tenantChargeStandardObject.charge_standard;
                 vm.selectedStandard = _.findWhere(results[9], {_id: vm.elderlyModel.charge_standard});
-                console.log(vm.selectedStandard)
+                console.log(vm.selectedStandard);
                 if (vm.selectedStandard) {
 
                     //增加特色服务
@@ -185,7 +185,7 @@
                     //将预订义收费标准模板替换为当前租户的收费标准
                     _.each(vm.selectedStandard.children, function (item) {
                         item.children = _.chain(item.children).map(function (o) {
-                            var theChargeItem = _.findWhere(charge_items, {item_id: o._id});
+                            var theChargeItem = _.findWhere(tenantChargeStandardObject.charge_items, {item_id: o._id});
                             if (o.data) {
                                 theChargeItem = _.defaults(theChargeItem, {data: o.data});
                             }
@@ -216,6 +216,7 @@
                 }
 
 
+                console.log(results[11]);
                 //vm.treeData = vmh.q.when(results[10]);
                 vm.treeData = results[11];
                 //vm.treeDataPromiseOfRoom = vmh.shareService.tmp('T3003', 'name', {

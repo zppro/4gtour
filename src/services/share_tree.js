@@ -207,7 +207,7 @@ module.exports = {
                                 //console.log(children);
                                 return {_id: o._id, name: o.name, children: children};
                             });
-
+                            console.log(districts);
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
