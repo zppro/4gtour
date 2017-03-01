@@ -44,7 +44,7 @@ module.exports = {
             {
                 method: 'tenantChargeItemCustomizedAsTree',
                 verb: 'get',
-                url: this.service_url_prefix + "/tenantChargeItemCustomizedAsTree/:id,:subsystem",
+                url: this.service_url_prefix + "/tenantChargeItemCustomizedAsTree/:id,:charge_standard,:subsystem",
                 handler: function (app, options) {
                     return function * (next) {
                         try {
@@ -55,8 +55,14 @@ module.exports = {
                                 yield next;
                                 return;
                             }
+                            var charge_standard = this.params.charge_standard;
+                            if (!charge_standard) {
+                                this.body = app.wrapper.res.error({message: '无法找到收费标准!'});
+                                yield next;
+                                return;
+                            }
                             var subsytem = this.params.subsystem;
-                            if (!subsytem || !app.modelVariables[subsytem]) {
+                            if (!subsytem || !app.modelVariables[subsytem.toUpperCase()]) {
                                 this.body = app.wrapper.res.error({message: '无法找到子系统!'});
                                 yield next;
                                 return;
@@ -71,25 +77,30 @@ module.exports = {
                             var chargeItems = yield app.modelFactory().model_query(app.models['pub_tenantChargeItemCustomized'], {
                                 where: where
                             });
-
-                            var charge_standard = (tenant.charge_standard || subsytem + '-S1');
-
+                            var charge_standard_object = app._.find(tenant.charge_standards, function(o) {
+                               return o.charge_standard == charge_standard && o.subsystem == subsytem;
+                            });
+                            if(!charge_standard_object) {
+                                charge_standard = app.modelVariables[subsytem.toUpperCase()].DEFAULT_CHARGE_STANDARD
+                            }
                             var ret = {
-                                _id: app.modelVariables[subsytem].CHARGE_ITEM_CUSTOMIZED_CATAGORY._ID + '-' + charge_standard,
-                                name: app.modelVariables[subsytem].CHARGE_ITEM_CUSTOMIZED_CATAGORY.NAME,
+                                _id: app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_CUSTOMIZED_CATAGORY._ID + '-' + charge_standard,
+                                name: app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_CUSTOMIZED_CATAGORY.NAME,
                                 children: []
                             };
-
+                            
                             var item_id_prefix = ret._id.toLowerCase() + '.';
 
                             for (var i = 0; i < chargeItems.length; i++) {
-                                if ((chargeItems[i].catagory + '-' + charge_standard) == ret._id)
+                                if ((app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_PREFIX + chargeItems[i].catagory + '-' + charge_standard) == ret._id){
                                     ret.children.push({
                                         _id: item_id_prefix + chargeItems[i]._id,
                                         name: chargeItems[i].name,
                                         data: {manual_seletable: true}
                                     });
+                                }
                             }
+                            
                             this.body = app.wrapper.res.ret(ret);
                         } catch (e) {
                             self.logger.error(e.message);

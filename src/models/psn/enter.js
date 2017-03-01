@@ -70,13 +70,15 @@ module.exports = function(ctx,name) {
                 //order.type+[年2月2日2]+6位随机数
                 var self = this;
                 if (this.tenantId) {
+                    console.log(ctx.modelVariables.SEQUENCE_DEFS.ENTER_TO_TENANT);
+                    console.log(this.tenantId)
+                    ctx.sequenceFactory.getSequenceVal(ctx.modelVariables.SEQUENCE_DEFS.ENTER_TO_TENANT, null, this.tenantId).then(function(ret){
 
-                    ctx.sequenceFactory.getSequenceVal(ctx.modelVariables.SEQUENCE_DEFS.ENTER_TO_TENANT,this.tenantId).then(function(ret){
                         self.code = ret;
                         console.log(self);
                         next();
                     });
-
+                    console.log('aaaa')
                     //var tenantModel = require('../pub/tenant')(ctx, 'pub_tenant');
                     //tenantModel.findById(this.tenantId,function(err,tenant){
                     //

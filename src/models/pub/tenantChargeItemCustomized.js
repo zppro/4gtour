@@ -30,8 +30,7 @@ module.exports = function(ctx,name) {
 
         tenantChargeItemCustomizedSchema.pre('validate', function (next) {
             if (this.catagory == ctx.modelVariables.SERVER_GEN) {
-                var subsystemShort = (this.subsystem || '').toUpperCase();
-                this.catagory = ctx.modelVariables[subsystemShort].CHARGE_ITEM_CUSTOMIZED_CATAGORY._ID;
+                this.catagory = ctx.modelVariables[this.subsystem.toUpperCase()].CHARGE_ITEM_CUSTOMIZED_CATAGORY._ID;
                 next();
             }
             else{

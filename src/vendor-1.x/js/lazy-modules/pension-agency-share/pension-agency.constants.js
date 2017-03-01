@@ -19,6 +19,7 @@
             'EXIT$ITEM_RETURN': 'EXIT-ITEM_RETURN',
             'EXIT$SETTLEMENT': 'EXIT-SETTLEMENT'
         })
+        .constant('PENSION_AGENCY_DEFAULT_CHARGE_STANDARD', "S1")
       ;
 
 })();

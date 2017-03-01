@@ -248,9 +248,8 @@
                     return $http.get(baseUrl + 'tenantInfo/' + tenantId + '/' + select);
                 }
 
-                function tenantChargeItemCustomizedAsTree(tenantId, subsystemUpper){
-                    subsystemUpper = (subsystemUpper || '').toUpperCase();
-                    return $http.get(baseUrl + 'tenantChargeItemCustomizedAsTree/' + tenantId + ',' + subsystemUpper);
+                function tenantChargeItemCustomizedAsTree(tenantId, charge_standard, subsystem){
+                    return $http.get(baseUrl + 'tenantChargeItemCustomizedAsTree/' + tenantId + ',' + charge_standard + ',' + subsystem);
                 }
 
                 function saveTenantChargeItemCustomized(tenantId, chargeStandard) {

@@ -1,0 +1,64 @@
+{
+  "ci": {
+    "pension-agency": {
+      "ROOM-S1": "床位费",
+      "room-s1": {
+        "SINGLE-ROOM": "单人间",
+        "DOUBLE-ROOM": "双人间",
+        "TRIPLE-ROOM": "三人间",
+        "DOMITORY-ROOM": "多人间"
+      },
+      "BOARD-S1": "伙食费",
+      "board-s1":{
+        "NUTRITION":"营养餐"
+      },
+      "NURSING-S1": "护理费",
+      "nursing-s1":{
+        "SELF-CARE":"自理老人",
+        "DEVICE-AIDED":"介助老人(半失能/半失智)",
+        "NURSING-CARD":"介护老人(失能/失智)"
+      },
+      "OTHER-S1": "其他费用",
+      "other-s1":{
+        "DEPOSIT":"押金/保证金",
+        "SHARE-BILLS":"水/电费",
+        "HEATING-COOLING":"空调/暖气费"
+      },
+      "ROOM-S2": "床位费",
+      "room-s2": {
+        "SINGLE-ROOM": "单人间",
+        "DOUBLE-ROOM": "双人间",
+        "TRIPLE-ROOM": "三人间",
+        "FOUR-ROOM": "四人间",
+        "FIVE-ROOM": "五人间",
+        "SIX-ROOM": "六人间",
+        "DOMITORY-ROOM": "多人间"
+      },
+      "BOARD-S2": "伙食费",
+      "board-s2":{
+        "ONE":"一类",
+        "TWO":"二类",
+        "THREE":"三类",
+        "FOUR":"四类"
+      },
+      "NURSING-S2": "护理费",
+      "nursing-s2":{
+        "GRADE-FOUR":"四级(全自理)",
+        "GRADE-THREE":"三级(半自理)",
+        "GRADE-TWO":"二级(半护理)",
+        "GRADE-ONE":"一级(全护理)",
+        "GRADE-SPECIAL":"特级(全卧床)"
+      },
+      "OTHER-S2": "其他费用",
+      "other-s2":{
+        "DEPOSIT":"押金/保证金",
+        "WATER":"水费",
+        "ELECTRIC":"电费",
+        "COOLING":"空调费",
+        "HEATING":"暖气费"
+      },
+      "CUSTOMIZED-S1": "特色服务",
+      "CUSTOMIZED-S2": "特色服务"
+    }
+  }
+}

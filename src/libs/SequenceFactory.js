@@ -42,7 +42,7 @@ module.exports = {
             //console.log(sequenceDef);
 
             var _date_area_period = '';
-            var _date_area_period_format =  sequenceDef.date_area_period_format;
+            var _date_area_period_format =  sequenceDef.date_area_period_format || sequenceDef.date_period_format;
             var matches = _date_area_period_format.toLowerCase().match(/pp|cc|aa/gi);
             if(matches && matches.length > 0){
                 for(var i=0;i<matches.length;i++) {
@@ -71,6 +71,7 @@ module.exports = {
                     date_area_period: sequenceDefInstance.date_area_period
                 }
             });
+
             var sequence;
             if (sequences.length == 1) {
                 sequence = sequences[0];
@@ -106,7 +107,7 @@ module.exports = {
                 }
             }
 
-
+            console.log(sequence);
             if (sequence.close_flag) {
                 assert('sequence overflow!');
                 return null;
@@ -120,10 +121,12 @@ module.exports = {
             sequence.current = sequence.current + sequence.step;
             yield sequence.save();//self update to current
 
-            //console.log(no);
+            console.log(no);
             //console.log(sequence.current);
 
             return no;
+        }).catch(function(err){
+            console.log(err)
         });
     }
 };

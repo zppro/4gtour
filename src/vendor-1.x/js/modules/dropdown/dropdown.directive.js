@@ -38,8 +38,6 @@
 
             // Bring in changes from outside:
             scope.$watch('model', function(newValue,oldValue) {
-                console.log(newValue)
-                console.log(oldValue)
                 if (newValue != oldValue) {
                     scope.$eval(attrs.ngModel + ' = model');
                     setShowText();

@@ -17,6 +17,7 @@
                     {prefix: 'app/i18n/pension-agency-standard-', suffix: '.json'},
                     {prefix: 'app/i18n/health-center-standard-', suffix: '.json'},
                     {prefix: 'app/i18n/organization-travel-standard-', suffix: '.json'},
+                    {prefix: 'app/i18n/shared-charge-items-', suffix: '.json'},
                     {prefix: 'app/i18n/manage-center-', suffix: '.json'},
                     {prefix: 'app/i18n/demo-center-', suffix: '.json'}
                 ]

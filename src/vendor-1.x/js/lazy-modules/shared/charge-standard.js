@@ -10,9 +10,9 @@
         .controller('ChargeStandardController', ChargeStandardController)
     ;
 
-    ChargeStandardController.$inject = ['$parse','$scope', 'vmh', 'instanceVM'];
+    ChargeStandardController.$inject = ['$parse','$scope', 'PENSION_AGENCY_DEFAULT_CHARGE_STANDARD', 'vmh', 'instanceVM'];
 
-    function ChargeStandardController($parse,$scope, vmh, vm) {
+    function ChargeStandardController($parse,$scope, PENSION_AGENCY_DEFAULT_CHARGE_STANDARD, vmh, vm) {
         $scope.vm = vm;
         var tenantService = vm.modelNode.services['pub-tenant'];
 
@@ -33,19 +33,18 @@
             };
 
             vm.charges = {};
-            vm.subsystemUpper = vm._subsystem_.toUpperCase();
 
             vm.chargeItemDataPromise = vmh.clientData.getJson('charge-standards-pension-agency').then(function (items) {
                 vm.selectBinding.standards = items;
                 if (vm.selectBinding.standards.length > 0) {
                     return vmh.parallel([
-                        vmh.extensionService.tenantChargeItemCustomizedAsTree(vm.model['tenantId'], vm.subsystemUpper),
+                        vmh.extensionService.tenantChargeItemCustomizedAsTree(vm.model['tenantId'], PENSION_AGENCY_DEFAULT_CHARGE_STANDARD, vm._subsystem_),
                         vmh.fetch(tenantService.query({_id: vm.model['tenantId']}, 'charge_standards'))
                     ]).then(function (results) {
                         var tenantChargeStandard = _.find(results[1][0].charge_standards, function(o){
                             console.log(o.subsystem )
-                            console.log(vm.subsystemUpper)
-                            return o.subsystem == vm.subsystemUpper
+                            console.log(vm._subsystem_)
+                            return o.subsystem == vm._subsystem_
                         });
                         var selectedStandard;
                         if (tenantChargeStandard){
@@ -130,7 +129,7 @@
 
                 vmh.exec(vmh.extensionService.saveTenantChargeItemCustomized(vm.model['tenantId'], {
                     charge_standard: vm.selectedStandardId,
-                    subsystem: vm.subsystemUpper,
+                    subsystem: vm._subsystem_,
                     charge_items: _.values(vm.saveCharges)
                 }));
             }

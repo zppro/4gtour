@@ -94,14 +94,14 @@
         }
     }
 
-    EnterDetailsController.$inject = ['$scope','ngDialog','PENSION_AGENCY_CHARGE_ITEM', 'vmh', 'entityVM'];
+    EnterDetailsController.$inject = ['$scope','ngDialog','PENSION_AGENCY_DEFAULT_CHARGE_STANDARD', 'PENSION_AGENCY_CHARGE_ITEM', 'vmh', 'entityVM'];
 
-    function EnterDetailsController($scope, ngDialog,PENSION_AGENCY_CHARGE_ITEM, vmh, vm) {
+    function EnterDetailsController($scope, ngDialog,PENSION_AGENCY_DEFAULT_CHARGE_STANDARD, PENSION_AGENCY_CHARGE_ITEM, vmh, vm) {
 
         var vm = $scope.vm = vm;
         $scope.utils = vmh.utils.v;
 
-        var elderlyService = vm.modelNode.services['pub-elderly'];
+        var elderlyService = vm.modelNode.services['psn-elderly'];
 
         vm.elderlyModel = {};//id_no:'330501198106150610'
 
@@ -137,7 +137,6 @@
             vm.tab3 = {cid: 'contentTab3'};
             vm.tab4 = {cid: 'contentTab4'};
 
-            vm.subsystemUpper = vm._subsystem_.toUpperCase();
 
             vmh.parallel([
                 vmh.shareService.d('D1006'),
@@ -150,7 +149,7 @@
                 vmh.shareService.d('D1015'),
                 vmh.extensionService.tenantInfo(vm.tenantId, 'charge_standards'),
                 vmh.clientData.getJson('charge-standards-pension-agency'),
-                vmh.extensionService.tenantChargeItemCustomizedAsTree(vm.tenantId, vm.subsystemUpper),
+                vmh.extensionService.tenantChargeItemCustomizedAsTree(vm.tenantId, PENSION_AGENCY_DEFAULT_CHARGE_STANDARD, vm._subsystem_),
                 vmh.shareService.tmp('T3003', 'name', {
                     tenantId: vm.tenantId,
                     floorSuffix: 'F',
@@ -171,7 +170,7 @@
                 });
 
                 var tenantChargeStandardObject = _.find(results[8].charge_standards, function(o){
-                    return o.subsystem == vm.subsystemUpper
+                    return o.subsystem == vm._subsystem_
                 }) || {};
                 vm.elderlyModel.charge_standard = tenantChargeStandardObject.charge_standard;
                 vm.selectedStandard = _.findWhere(results[9], {_id: vm.elderlyModel.charge_standard});
@@ -495,11 +494,11 @@
                 }
 
                 promise_elderly.then(function (ret) {
-
+                    console.log('updateRoomStatusInfo...')
                     var promise_roomStatus = vmh.psnService.updateRoomStatusInfo(vm.model.tenantId, vm.elderlyModel.room_value.roomId, vm.elderlyModel.room_value.bed_no, vm.model.elderlyId);
 
                     promise_roomStatus.then(function (ret) {
-                        console.dir(ret);
+                        console.log('updateRoomStatusInfo done...');
                         if (!vm.model.agent_info && vm.elderlyModel.family_members.length > 0) {
                             vm.model.agent_info = _.omit(vm.elderlyModel.family_members[0], '_id');
                         }

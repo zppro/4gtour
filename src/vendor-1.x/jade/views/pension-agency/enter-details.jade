@@ -134,7 +134,7 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         <!--备注-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-REMARK') | translate}}:
                         .col-md-10(ng-if="!vm.readonly")
-                            textarea.form-control(name='remark',ng-model='vm.model.remark',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-REMARK")|translate}}',maxlength="400")
+                            textarea.form-control(name='remark',ng-model='vm.elderlyModel.remark',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-REMARK")|translate}}',maxlength="400")
                         .col-md-10(ng-if="vm.readonly")
                             .form-readable {{vm.model.remark}}
                     .panel.panel-default.panel-grid
@@ -263,7 +263,7 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                                             .checkbox.c-checkbox(ng-if="!vm.readonly && charge_item_level_two.data && charge_item_level_two.data.manual_seletable")
                                                 label
                                                     input(type='checkbox',ng-model="vm.selectionOfManualSelectable[charge_item_level_two.item_id]" )
-                                                    span.fa.fa-check
+                                                    span.dark.fa.fa-check
                                         .col-md-5
                                             span {{ (charge_item_level_two.item_id | translate) == charge_item_level_two.item_id ? charge_item_level_two.item_name: (charge_item_level_two.item_id | translate) }}
                                         .col-md-6

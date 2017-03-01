@@ -137,6 +137,81 @@
                     })
                 }
             })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'enter-payment', {
+                url: '/enter-payment',
+                title: '老人入院缴费',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'ENTER-PAYMENT'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'enter-payment.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'enter-payment.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'enter-payment-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'EnterPaymentGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'enter-payment.list', {
+                        modelName: 'psn-enter',
+                        searchForm: {"status": 1,"current_register_step": {"$in": ['A0003', 'A0005', 'A0007']}},
+                        transTo: MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'enter-manage.details',
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '入院登记号',
+                                name: 'code',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '老人',
+                                name: 'elderly_summary',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '入院日期',
+                                name: 'enter_on',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '预付款',
+                                name: 'deposit',
+                                type: 'number',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '当前步骤',
+                                name: 'current_register_step_name',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 40
+                            }
+                        ]
+                    })
+                }
+            })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'room', {
                 url: '/room',
                 title: '房间管理',
@@ -414,7 +489,7 @@
                     entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'charge-item-customized.details', {
                         modelName: 'pub-tenantChargeItemCustomized',
                         model: {
-                            subsystem: MODEL_VARIABLES.SUBSYSTEM_NAMES.PENSION_AGENCY.toUpperCase(),
+                            subsystem: MODEL_VARIABLES.SUBSYSTEM_NAMES.PENSION_AGENCY,
                             catagory: MODEL_VARIABLES.PRE_DEFINED.SERVER_GEN
                         }
                         , blockUI: true
