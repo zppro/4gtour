@@ -293,8 +293,8 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
         button.btn.btn-danger.pull-left(ng-if="vm.model.current_register_step=='A0001'",type="button",ng-click="vm.disable(vm.disableEnterRelatedAction)") {{'button.REMOVE'|translate}}
         button.btn.btn-warning(ng-if="!vm.readonly",type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
         button.btn.btn-success(ng-if="!vm.readonly",type="submit") {{'button.SAVE'|translate}}
-        button.btn.btn-danger(ng-if="vm.model.current_register_step=='A0001'",type="button",ng-click="vm.submitEnterFinancialAudit()") {{vm.viewTranslatePath('SUBMIT-ENTER-FINANCIAL-AUDIT')|translate}}
-        button.btn.btn-danger(ng-if="vm.model.current_register_step=='A0003'||vm.model.current_register_step=='A0005'",type="button",ng-click="vm.undoEnterFinancialAudit()") {{vm.viewTranslatePath('UNDO-ENTER-FINANCIAL-AUDIT')|translate}}
-        button.btn.btn-success(ng-if="vm.model.current_register_step=='A0003'",type="button",ng-click="vm.comfirmEnterReceipt()") {{'button.CONFIRM-RECEIPT'|translate}}
-        button.btn.btn-success(ng-if="vm.model.current_register_step=='A0005'",type="button",ng-click="vm.completeEnter()") {{vm.viewTranslatePath('COMPLETE-ENTER')|translate}}
+        button.btn.btn-danger(ng-if="vm.isFromTheSameRoute && vm.model.current_register_step=='A0001'",type="button",ng-click="vm.submitEnterFinancialAudit()") {{vm.viewTranslatePath('SUBMIT-ENTER-FINANCIAL-AUDIT')|translate}}
+        button.btn.btn-danger(ng-if="vm.isFromTheSameRoute && (vm.model.current_register_step=='A0003'||vm.model.current_register_step=='A0005')",type="button",ng-click="vm.undoEnterFinancialAudit()") {{vm.viewTranslatePath('UNDO-ENTER-FINANCIAL-AUDIT')|translate}}
+        button.btn.btn-success(ng-if="!vm.isFromTheSameRoute && vm.model.current_register_step=='A0003'",type="button",ng-click="vm.comfirmEnterReceipt()") {{'button.CONFIRM-RECEIPT'|translate}}
+        button.btn.btn-success(ng-if="vm.isFromTheSameRoute && vm.model.current_register_step=='A0005'",type="button",ng-click="vm.completeEnter()") {{vm.viewTranslatePath('COMPLETE-ENTER')|translate}}
         button.btn.btn-primary(ng-if="vm.readonly",type="button",ng-click="vm.cancel()") {{'button.RETURN'|translate}}

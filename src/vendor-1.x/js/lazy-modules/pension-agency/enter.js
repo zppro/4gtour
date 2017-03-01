@@ -101,6 +101,7 @@
         var vm = $scope.vm = vm;
         $scope.utils = vmh.utils.v;
 
+
         var elderlyService = vm.modelNode.services['psn-elderly'];
 
         vm.elderlyModel = {};//id_no:'330501198106150610'
@@ -130,8 +131,7 @@
             vm.comfirmEnterReceipt = comfirmEnterReceipt;
             vm.disableEnterRelatedAction = disableEnterRelatedAction;
             vm.completeEnter = completeEnter;
-
-
+  
             vm.tab1 = {cid: 'contentTab1'};
             vm.tab2 = {cid: 'contentTab2'};
             vm.tab3 = {cid: 'contentTab3'};

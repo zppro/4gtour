@@ -79,6 +79,11 @@
         "COMPLETE-ENTER":"确认完成入院"
       }
     },
+    "enter-payment":{
+      "list":{
+        "TITLE": "养老机构-财务管理-入院缴费-列表"
+      }
+    },
     "room": {
       "list": {
         "TITLE": "养老机构-基础设置-房间-列表"

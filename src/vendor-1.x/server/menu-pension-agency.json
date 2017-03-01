@@ -42,7 +42,7 @@
       {
         "_id": "menu.pension-agency.ENTER-PAYMENT",
         "name": "老人入院缴费",
-        "sref": "app.pension-agency.financial-enter-payment.list"
+        "sref": "app.pension-agency.enter-payment.list"
       },
       {
         "_id": "menu.pension-agency.RECHARGE",
