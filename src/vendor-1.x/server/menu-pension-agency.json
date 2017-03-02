@@ -61,13 +61,13 @@
       },
       {
         "_id": "menu.pension-agency.RED",
-        "name": "机构冲红明细",
+        "name": "冲红明细",
         "sref": "app.pension-agency.red.list"
       },
       {
-        "_id": "menu.pension-agency.ORG-RECEIPTS-AND-DISBURSEMENTS-DETAILS",
-        "name": "机构收支明细",
-        "sref": "app.pension-agency.financial-org-receipts-and-disbursements-details.list"
+        "_id": "menu.pension-agency.RECEIPTS-AND-DISBURSEMENTS",
+        "name": "收支明细",
+        "sref": "app.pension-agency.receipts-and-disbursements.list"
       }
     ]
   },

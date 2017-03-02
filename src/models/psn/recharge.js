@@ -28,6 +28,13 @@ module.exports = function(ctx,name) {
             voucher_no:{type: String},//记账凭证 对应elderly.journal_account
             remark: {type: String,maxLength:400},
             tenantId: {type: mongoose.Schema.Types.ObjectId, required: true,ref:'pub_tenant'}
+        }, {
+            toObject: {
+                virtuals: true
+            }
+            , toJSON: {
+                virtuals: true
+            }
         });
 
         rechargeSchema.pre('update', function (next) {

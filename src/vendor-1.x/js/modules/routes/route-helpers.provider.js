@@ -377,7 +377,7 @@
                     
                 }
 
-                function edit(id,params) {
+                function edit(id, params) {
                     // $state.go(this.moduleRoute('details'), _.defaults({
                     //     action: 'edit',
                     //     _id: id
@@ -554,7 +554,8 @@
                 }
 
                 function dblclickRow(id) {
-                    edit(id);
+                    console.log(id);
+                    this.edit(id);
                 }
 
                 var vm;

@@ -323,14 +323,14 @@
         "INVALID-VOUCHER_NO-TO-RED":"凭证号无效或者还没有结转，请确认"
       }
     },
-    "receipts-and-disbursements-details":{
+    "receipts-and-disbursements":{
       "list":{
-        "TITLE": "机构养老云-财务管理-机构收支明细-列表"
+        "TITLE": "养老机构-财务管理-收支明细-列表"
       }
     },
     "material-exit-item-return": {
       "list": {
-        "TITLE": "机构养老云-物资管理-出院物品归还-列表",
+        "TITLE": "养老机构-物资管理-出院物品归还-列表",
         "AUDIT-ITEM_RETURN": "归还物品检查"
       }
     },

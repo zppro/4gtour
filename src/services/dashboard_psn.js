@@ -241,33 +241,12 @@ module.exports = {
                                 return;
                             }
 
-                            var arrTotals = yield app.modelFactory().model_aggregate(app.models['psn_room'], [
-                                {
-                                    $match: {
-                                        stop_flag: false,
-                                        tenantId: tenant._id,
-                                        status: 1
-                                    }
-                                },
-                                {
-                                    $group: {
-                                        _id: null,
-                                        count: {$sum: '$capacity'}
-                                    }
-                                },
-                                {
-                                    $project: {
-                                        count: '$count',
-                                        _id: 0
-                                    }
-                                }
-                            ]);
-
                             var s = app.moment(this.params.start);
                             var e = app.moment(this.params.end);
 
                             var rangeMonth = statHelper.rangeDateAsMonth(s, e);
                             yield app.psn_room_vacancy_stat_service.makeTenantSettlementMonthly(tenant, self.logger);
+                            
                             var tenantRoomVacancyStatMonthly = yield app.modelFactory().model_query(app.models['psn_roomVacancyStat'], {
                                 where: {
                                     status: 1,

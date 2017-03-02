@@ -871,6 +871,84 @@
                     , deps: helper.resolveFor2('angucomplete-alt')
                 }
             })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'receipts-and-disbursements', {
+                url: '/receipts-and-disbursements',
+                title: '收支明细',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'RECEIPTS-AND-DISBURSEMENTS'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'receipts-and-disbursements.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'receipts-and-disbursements.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'receipts-and-disbursements-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'ReceiptsAndDisbursementsGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'receipts-and-disbursements.list', {
+                        modelName: 'pub-tenantJournalAccount',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '记账日期',
+                                name: 'check_in_time',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '记账凭证号',
+                                name: 'voucher_no',
+                                type: 'string',
+                                width: 60
+                            },
+                            {
+                                label: '科目',
+                                name: 'revenue_and_expenditure_type',
+                                type: 'string',
+                                width: 60,
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3001/object')
+                            },
+                            {
+                                label: '摘要',
+                                name: 'digest',
+                                type: 'string',
+                                width: 120
+                            },
+                            {
+                                label: '记账金额',
+                                name: 'amount',
+                                type: 'number',
+                                width: 40,
+                                sortable: true
+                            },
+                            {
+                                label: '结转',
+                                name: 'carry_over_flag',
+                                type: 'bool',
+                                width: 30
+                            },
+                            {
+                                label: '冲红',
+                                name: 'red_flag',
+                                type: 'bool',
+                                width: 30
+                            }
+                        ]
+                    })
+                }
+            })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'room', {
                 url: '/room',
                 title: '房间管理',

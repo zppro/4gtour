@@ -243,6 +243,8 @@ module.exports = {
                             var keyword = this.request.body.keyword;
                             var data = this.request.body.data;
 
+                            console.log(this.request.body);
+
                             app._.extend(data.where,{
                                 status: 1,
                                 //carry_over_flag:true,

@@ -19,7 +19,7 @@
                      | {{column.label}}
                      i.glyphicon(ng-if="column.name === vm.sort.column && vm.sort.direction",ng-class="vm.sort.direction|orderClass")
             tbody
-               tr(ng-repeat="row in vm.rows|filter:vm.filter|orderBy:vm.sort.column:vm.sort.direction===-1|paging:vm" , ng-click="vm.selectRow($event,row)",ng-dblclick="vm.dblclickRow(row.id)")
+               tr(ng-repeat="row in vm.rows|filter:vm.filter|orderBy:vm.sort.column:vm.sort.direction===-1|paging:vm" , ng-click="vm.selectRow($event,row)")
                   td
                      .checkbox.c-checkbox
                         label
@@ -40,9 +40,9 @@
             .row
                .col-md-4.text-left
                   .btn-toolbar
-                     .btn-group
-                        a.btn.btn-primary.btn-sm(title="{{'button.ADD'|translate}}",ng-click="vm.add()")
-                           i.glyphicon.glyphicon-plus
+                     //.btn-group(ng-if="false")
+                     //   a.btn.btn-primary.btn-sm(title="{{'button.ADD'|translate}}",ng-click="vm.add()")
+                     //      i.glyphicon.glyphicon-plus
                         //a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.disable()")
                         //   i.glyphicon.glyphicon-minus
                .col-md-8

@@ -80,6 +80,7 @@ module.exports = {
 
             var check_in_groups,check_out_groups;
             var amount_brought_forward = 0;
+            console.log('-----------tenantRoomVacancyStat.length ----------- ' + tenantRoomVacancyStat.length);
             if(tenantRoomVacancyStat.length==0) {
                 //从头开始结算
                 var tenantRoomOccupancyChangeHistory = yield self.ctx.modelFactory().model_query(self.ctx.models['psn_roomOccupancyChangeHistory'], {
@@ -281,12 +282,9 @@ module.exports = {
                         }
                     ]);
 
-                    //console.log(check_in_groups);
-                    //console.log(check_out_groups);
-
                     amount_brought_forward = item.amount_brought_forward;
-                    item.amount_check_in = check_in_groups[0].count;
-                    item.amount_check_out = check_out_groups[0].count;
+                    item.amount_check_in = check_in_groups.length > 0 ? check_in_groups[0].count : 0;
+                    item.amount_check_out = check_out_groups.length > 0 ? check_out_groups[0].count : 0;
                     item.settlement_flag = item.period_value != current_period_value;
 
                     //settlement_flag && (item.amount = amount_brought_forward + amount_check_in - amount_check_out);
