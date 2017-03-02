@@ -137,6 +137,111 @@
                     })
                 }
             })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'in-manage', {
+                url: '/in',
+                title: '在院管理',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'IN-MANAGE'//业务系统使用
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'in.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'in-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'InGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'in.list', {
+                        modelName: 'psn-elderly',
+                        searchForm: {"status": 1,"live_in_flag":true},
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '老人',
+                                name: 'name',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '入院登记号',
+                                name: 'enter_code',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '性别',
+                                name: 'sex',
+                                type: 'string',
+                                width: 40,
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D1006/object')
+                            },
+                            {
+                                label: '年龄',
+                                name: 'birthday',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '饮食套餐',
+                                name: 'board_summary',
+                                type: 'string',
+                                width: 80
+                            },
+                            {
+                                label: '房间床位',
+                                name: 'room_summary',
+                                type: 'string',
+                                width: 120
+                            },
+                            {
+                                label: '护理信息',
+                                name: 'nursing_summary',
+                                type: 'string',
+                                width: 80
+                            },
+                            {
+                                label: '状态',
+                                name: 'begin_exit_flow',
+                                type: 'string',
+                                width: 80,
+                                formatter: function () {
+                                    return {"true": "正在出院", "false": "在院", "undefined": "在院"}
+                                }
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 40
+                            }
+                        ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'in.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'in-details.html'),
+                controller: 'InDetailsController',
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'in-manage.details', {
+                        modelName: 'psn-elderly',
+                        blockUI: true
+                    })
+                }
+            })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'enter-payment', {
                 url: '/enter-payment',
                 title: '老人入院缴费',

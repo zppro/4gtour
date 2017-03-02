@@ -1,6 +1,6 @@
 /**
  * enter-manage.controller Created by zppro on 17-2-27.
- * Target:老人入院管理
+ * Target:老人入院管理  (移植自fsrok)
  */
 
 (function() {
