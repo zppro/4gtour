@@ -29,24 +29,15 @@
                         td.text-left {{::row.enter_code}}
                         td {{::row.enter_on|date:'yyyy-MM-dd'}}
                         td {{::row.application_date|date:'yyyy-MM-dd'}}
-                        td {{row.current_step_name}}
-                        td {{row.exit_on|date:'yyyy-MM-dd'}}
+                        td {{::row.current_step_name}}
+                        td {{::row.exit_on|date:'yyyy-MM-dd'}}
                         td
                             .btn-group
-                                a.btn.btn-primary.btn-xs(title="{{'button.READ'|translate}}",ng-click="vm.read(row._id)")
+                                a.btn.btn-primary.btn-xs(title="{{'button.READ'|translate}}",ng-click="$state.go(vm.transTo,{action:'read',_id:row._id})")
                                     i.glyphicon.glyphicon-search
-                            .btn-group(ng-if="row.current_step=='A0001'")
-                                a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
-                                    i.glyphicon.glyphicon-pencil
-                            //.btn-group(ng-if="row.current_step=='A0003'")
-                            //   a.btn.btn-primary.btn-xs(title="{{vm.viewTranslatePath('AUDIT-ITEM_RETURN')|translate}}",ng-click="vm.edit(row._id,{autoSetTab:'tab2'})")
-                            //      i.glyphicon.glyphicon-hand-right
-                            //.btn-group(ng-if="row.current_step=='A0005'")
-                            //   a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id,{autoSetTab:'tab3'})")
-                            //      i.glyphicon.glyphicon-usd
-                            .btn-group(ng-if="row.current_step=='A0007'")
-                                a.btn.btn-primary.btn-xs(title="{{vm.viewTranslatePath('COMPLETE-EXIT')|translate}}",ng-click="vm.completeExit(row)")
-                                    i.glyphicon.glyphicon-saved
+                            .btn-group(ng-if="row.current_step=='A0003'")
+                                a.btn.btn-primary.btn-xs(title="{{vm.viewTranslatePath('AUDIT-ITEM_RETURN')|translate}}",ng-click="$state.go(vm.transTo,{action:'edit',_id:row._id,autoSetTab:'tab2'})")
+                                    i.glyphicon.glyphicon-hand-right
                     tr(ng-if="vm.paged.length==0")
                         td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}
             .panel-footer

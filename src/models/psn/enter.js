@@ -3,8 +3,9 @@
  * 养老机构 入院实体 (移植自fsrok)
  */
 var mongoose = require('mongoose');
-module.isloaded = false;
 var D3000 = require('../../pre-defined/dictionary.json')['D3000'];
+
+module.isloaded = false;
 
 module.exports = function(ctx,name) {
     if (module.isloaded) {

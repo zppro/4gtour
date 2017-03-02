@@ -27,6 +27,12 @@
 
             vm.completeExit = completeExit;
 
+            vmh.parallel([
+                vmh.shareService.d('D3004')
+            ]).then(function (results) {
+                vm.exitSteps = results[0]
+            });
+
             vm.query();
         }
 
@@ -38,11 +44,11 @@
                     $scopeConfirm.message = vm.viewTranslatePath('COMPLETE-EXIT-CONFIRM-MESSAGE')
                 }]
             }).then(function () {
-                vmh.extensionService.completeExit(row._id, {
+                vmh.psnService.completeExit(row._id, {
                     operated_by: vm.operated_by,
                     operated_by_name: vm.operated_by_name
                 }).then(function (ret) {
-                    row.current_step = ret.current_step;
+                    row.current_step_name =  (_.find(vm.exitSteps, function(o) { return ret.current_step === o.value; }) || {}).name;
                     row.exit_on = ret.exit_on;
                     vmh.alertSuccess();
                 });
@@ -109,35 +115,6 @@
                 if (vm.model.current_step == 'A0005' && !vm.model.settlement_audit) {
                     vm.model.settlement_audit = {pass_flag: false};
                 }
-
-                //vm.addSubGrid('journal_account', {
-
-                //    sortColumn: 'check_in_time',
-                //    model: vmh.q.when(vm.model.journal_account)
-                //}).then(function (grid) {
-                //    grid.query();
-                //});
-                //
-                //vm.refreshRoomOccupancyChangeHistory();
-                //
-                //
-                //var selectedBoard = _.find(vm.model.charge_items, function (item) {
-                //    return item.item_id.indexOf((PENSION_AGENCY_CHARGE_ITEM.BOARD + '-' + vm.model.charge_standard).toLowerCase()) != -1;
-                //});
-                //selectedBoard && (vm.selectedBoard = angular.copy(selectedBoard));
-                //
-                //var selectedNursing = _.find(vm.model.charge_items, function (item) {
-                //    return item.item_id.indexOf((PENSION_AGENCY_CHARGE_ITEM.NURSING + '-' + vm.model.charge_standard).toLowerCase()) != -1;
-                //});
-                //selectedNursing && (vm.selectedNursing = angular.copy(selectedNursing));
-                //
-                //var selectedRoom = _.find(vm.model.charge_items, function (item) {
-                //    return item.item_id.indexOf((PENSION_AGENCY_CHARGE_ITEM.ROOM + '-' + vm.model.charge_standard).toLowerCase()) != -1;
-                //});
-                //selectedRoom && (vm.selectedRoom = angular.copy(selectedRoom));
-                //
-                //vm.selectedRoomInfo = vm.model.room_value.districtId + '$' + vm.model.room_value.roomId + '$' + vm.model.room_value.bed_no;
-
             });
 
 
@@ -154,7 +131,7 @@
                     $scopeConfirm.message = vm.viewTranslatePath('TO-AUDIT-ITEM_RETURN-CONFIRM-MESSAGE')
                 }]
             }).then(function () {
-                vmh.extensionService.submitToAuditItemReturn(vm.model._id).then(function () {
+                vmh.psnService.submitToAuditItemReturn(vm.model._id).then(function () {
                     vmh.alertSuccess();
                     vm.returnBack();
                 });
@@ -170,7 +147,7 @@
                     $scopeConfirm.message = vm.viewTranslatePath('TO-AUDIT-SETTLEMENT-CONFIRM-MESSAGE')
                 }]
             }).then(function () {
-                vmh.extensionService.submitToAuditSettlement(vm.model._id, {
+                vmh.psnService.submitToAuditSettlement(vm.model._id, {
                     operated_by: vm.operated_by,
                     operated_by_name: vm.operated_by_name,
                     comment: vm.model.item_return_audit.comment
@@ -195,7 +172,7 @@
                     $scopeConfirm.message = vm.viewTranslatePath('TO-CONFIRM-EXIT-CONFIRM-MESSAGE')
                 }]
             }).then(function () {
-                vmh.extensionService.submitToConfirmExit(vm.model._id, {
+                vmh.psnService.submitToConfirmExit(vm.model._id, {
                     operated_by: vm.operated_by,
                     operated_by_name: vm.operated_by_name,
                     comment: vm.model.settlement_audit.comment
@@ -214,7 +191,7 @@
                     $scopeConfirm.message = vm.viewTranslatePath('TO-COMPLETE-EXIT-CONFIRM-MESSAGE')
                 }]
             }).then(function () {
-                vmh.extensionService.completeExit(vm.model._id, {
+                vmh.psnService.completeExit(vm.model._id, {
                     operated_by: vm.operated_by,
                     operated_by_name: vm.operated_by_name
                 }).then(function (ret) {

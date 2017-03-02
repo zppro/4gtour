@@ -3,8 +3,9 @@
  * 养老机构 出院实体(移植自fsrok)
  */
 var mongoose = require('mongoose');
-module.isloaded = false;
+var D3004 = require('../../pre-defined/dictionary.json')['D3004'];
 
+module.isloaded = false;
 
 module.exports = function(ctx,name) {
     if (module.isloaded) {
@@ -108,9 +109,22 @@ module.exports = function(ctx,name) {
             },
             remark: {type: String,maxLength:400},
             tenantId: {type: mongoose.Schema.Types.ObjectId, required: true,ref:'pub_tenant'}
+        }, {
+            toObject: {
+                virtuals: true
+            }
+            , toJSON: {
+                virtuals: true
+            }
         });
 
-
+        exitSchema.virtual('current_step_name').get(function () {
+            if (this.current_step) {
+                return D3004[this.current_step].name;
+            }
+            return '';
+        });
+        
         exitSchema.pre('update', function (next) {
             var $setObj = {operated_on: new Date()};
             if(this._update && this._update.$set){

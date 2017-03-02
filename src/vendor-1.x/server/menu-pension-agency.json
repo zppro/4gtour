@@ -80,7 +80,7 @@
       {
         "_id": "menu.pension-agency.EXIT-ITEM-RETURN",
         "name": "出院物品归还",
-        "sref": "app.pension-agency.material-exit-item-return.list"
+        "sref": "app.pension-agency.exit-item-return.list"
       },
       {
         "_id": "menu.pension-agency.EX-WAREHOUSE-MANAGE",

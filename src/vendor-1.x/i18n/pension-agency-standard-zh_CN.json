@@ -328,7 +328,7 @@
         "TITLE": "养老机构-财务管理-收支明细-列表"
       }
     },
-    "material-exit-item-return": {
+    "exit-item-return": {
       "list": {
         "TITLE": "养老机构-物资管理-出院物品归还-列表",
         "AUDIT-ITEM_RETURN": "归还物品检查"

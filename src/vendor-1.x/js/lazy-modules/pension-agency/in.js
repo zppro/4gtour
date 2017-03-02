@@ -323,7 +323,7 @@
                     $scopeConfirm.message = vm.viewTranslatePath('EXIT-CONFIRM-MESSAGE')
                 }]
             }).then(function () {
-                vmh.extensionService.submitApplicationToExit(vm.model._id, {
+                vmh.psnService.submitApplicationToExit(vm.model._id, {
                     operated_by: vm.operated_by,
                     operated_by_name: vm.operated_by_name
                 }).then(function (ret) {

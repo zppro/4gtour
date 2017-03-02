@@ -302,10 +302,10 @@
                             },
                             {
                                 label: '当前步骤',
-                                name: 'current_step',
+                                name: 'current_step_name',
                                 type: 'string',
                                 width: 80,
-                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3004/object')
+                                sortable: true
                             },
                             {
                                 label: '出院日期',
@@ -732,7 +732,7 @@
                     entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'exit-settlement.list', {
                         modelName: 'psn-exit',
                         searchForm: {"status": 1,"current_step": {"$in": ['A0005', 'A0007','A0009']}},
-                        transTo: MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'exit-manage.details',
+                        transTo: MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'exit.details',
                         serverPaging: true,
                         columns: [
                             {
@@ -765,10 +765,10 @@
                             },
                             {
                                 label: '当前步骤',
-                                name: 'current_step',
+                                name: 'current_step_name',
                                 type: 'string',
                                 width: 80,
-                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3004/object')
+                                sortable: true
                             },
                             {
                                 label: '出院日期',
@@ -944,6 +944,88 @@
                                 name: 'red_flag',
                                 type: 'bool',
                                 width: 30
+                            }
+                        ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'exit-item-return', {
+                url: '/exit-item-return',
+                title: '出院物品归还',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'EXIT-ITEM-RETURN'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'exit-item-return.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'exit-item-return.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'exit-item-return-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'ExitItemReturnGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'exit-item-return.list', {
+                        modelName: 'psn-exit',
+                        searchForm: {"status": 1,"current_step": {"$in": ['A0003', 'A0005', 'A0007','A0009']}},
+                        transTo: MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'exit.details',
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '老人',
+                                name: 'elderly_name',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '入院登记号',
+                                name: 'code',
+                                type: 'string',
+                                width: 100,
+                                sortable: true
+                            },
+                            {
+                                label: '入院日期',
+                                name: 'enter_on',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '申请出院日期',
+                                name: 'application_date',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '当前步骤',
+                                name: 'current_step_name',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '出院日期',
+                                name: 'exit_on',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 40
                             }
                         ]
                     })
