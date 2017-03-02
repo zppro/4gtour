@@ -1,0 +1,361 @@
+
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .row
+        .col-md-1.control-label {{ vm.viewTranslatePath('HEAD-LABEL-ELDERLY_NAME') | translate}}:
+        .col-md-2
+            input.read-control-underline(readonly,ng-model="vm.model.elderly_name")
+        .col-md-6
+        .col-md-1.control-label {{ vm.viewTranslatePath('HEAD-LABEL-APPLICATION_DATE') | translate}}:
+        .col-md-2
+            input.read-control-underline(readonly,value="{{vm.model.application_date|date}}")
+    .row-split
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        <!--入院登记号-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ENTER_CODE') | translate}}:
+                        .col-md-10
+                            .form-readable {{vm.model.enter_code}}
+                    fieldset: .form-group
+                        <!--入院日期-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ENTER_ON') | translate}}:
+                        .col-md-2
+                            .form-readable {{vm.model.enter_on|date}}
+                    fieldset: .form-group
+                        <!--申请代理人/陪同出院人 姓名-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-AGENT_INFO-NAME') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm.model.current_step=='A0001' ")
+                            input.form-control(type='text', name='agent_info$name',ng-model='vm.model.agent_info.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-AGENT_INFO-NAME")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'agent_info$name','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly || vm.model.current_step!='A0001' ")
+                            .form-readable {{vm.model.agent_info.name}}
+                    fieldset: .form-group
+                        <!--申请代理人/陪同出院人 身份证-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-AGENT_INFO-ID_NO') | translate}}:
+                        .col-md-10
+                            input(type='text',name='agent_info$id_no', ng-model='vm.model.agent_info.id_no',required='',maxlength="18",box-input,box-readonly="vm.readonly || vm.currentStepReadonly",  id-no2)
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'agent_info$id_no','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'agent_info$id_no','IDNo')") {{ "validator.ID-NO" | translate}}
+                    fieldset: .form-group
+                        <!--申请代理人/陪同出院人 性别-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-AGENT_INFO-SEX') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm.model.current_step=='A0001' ")
+                            .btn-group
+                                .btn.btn-primary(name='agent_info$sex',ng-repeat='sex in vm.selectBinding.sex',ng-model='vm.model.agent_info.sex',btn-radio="sex.value",required='',extract-sex="vm.model.agent_info.id_no") {{sex.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'agent_info$sex','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly || vm.model.current_step!='A0001' ")
+                            .btn-group
+                                .btn.btn-primary.cursor-not-allowed(name='agent_info$sex',ng-repeat='sex in vm.selectBinding.sex',ng-class="{'active':vm.model.agent_info.sex==sex.value}") {{sex.name}}
+                    fieldset: .form-group
+                        <!--申请代理人/陪同出院人 与老人关系-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-AGENT_INFO-RELATION_WITH') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm.model.current_step=='A0001' ")
+                            .btn-group
+                                .btn.btn-primary(name='agent_info$relation_with',ng-repeat='relation in vm.selectBinding.relationsWithTheElderly',ng-model='vm.model.agent_info.relation_with',btn-radio="relation.value",required='') {{relation.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'agent_info$relation_with','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly || vm.model.current_step!='A0001' ")
+                            .btn-group
+                                .btn.btn-primary.cursor-not-allowed(name='agent_info$relation_with',ng-repeat='relation in vm.selectBinding.relationsWithTheElderly',ng-class="{'active':vm.model.agent_info.relation_with==relation.value}") {{relation.name}}
+                    fieldset: .form-group
+                        <!--申请代理人/陪同出院人 联系电话-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-AGENT_INFO-PHONE') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm.model.current_step=='A0001' ")
+                            input.form-control(type='text', name='agent_info$phone',ng-model='vm.model.agent_info.phone',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-AGENT_INFO-PHONE")|translate}}',required='',ui-validate="{phone: 'utils.isPhone($value)'}" )
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'agent_info$phone','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'agent_info$phone','phone')") {{ "validator.FORMAT" | translate:{item:"手机号码"} }}
+                        .col-md-10(ng-if="vm.readonly || vm.model.current_step!='A0001' ")
+                            .form-readable {{vm.model.agent_info.phone}}
+                    fieldset: .form-group
+                        <!--申请代理人/陪同出院人 联系地址-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-AGENT_INFO-ADDRESS') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm.model.current_step=='A0001' ")
+                            input.form-control(type='text', name='agent_info$address',ng-model='vm.model.agent_info.address',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-AGENT_INFO-ADDRESS")|translate}}')
+                        .col-md-10(ng-if="vm.readonly || vm.model.current_step!='A0001' ")
+                            .form-readable {{vm.model.agent_info.address}}
+                    fieldset: .form-group
+                        <!--备注-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-REMARK') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm.model.current_step=='A0001' ")
+                            textarea.form-control(name='remark',ng-model='vm.model.remark',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-REMARK")|translate}}',maxlength="400")
+                        .col-md-10(ng-if="vm.readonly || vm.model.current_step!='A0001' ")
+                            .form-readable {{vm.model.remark}}
+                    .panel.panel-default.panel-grid
+                        .panel-heading-normal
+                            a {{ vm.viewTranslatePath('TAB1-LABEL-EXIT_MATERIAL') | translate}}
+                        table.grid.table.table-bordered.table-hover.table-striped
+                            thead
+                                tr
+                                    th.text-center(check-all,width="30")
+                                        .checkbox.c-checkbox(data-toggle="tooltip",data-title="Check All")
+                                            label(ng-click="vm.checkExitMaterialAll($event)")
+                                                input(type='checkbox')
+                                                span.fa.fa-check
+                                    th.text-center(width="200")
+                                        | {{vm.viewTranslatePath("TAB1-LABEL-EXIT_MATERIAL-NAME")|translate}}
+                                    th.text-center(width="50")
+                            tbody
+                                tr(ng-repeat="row in vm.model.exit_material" ng-click="vm.grid.selectRow($event,row)")
+                                    td
+                                        .checkbox.c-checkbox
+                                            label
+                                                input(type='checkbox' data="trBubble" ng-model="row.checked" )
+                                                span.fa.fa-check(data="trBubble")
+                                    td.text-left
+                                        a(ng-if="!row.$editing",href="{{::row.url}}") {{::row.address}}
+                                        input.form-control(type="text",ng-if="row.$editing",ng-model='row.name' ,required='')
+                                    td
+                                        .btn-group(ng-if="!vm.readonly && !row.$editing")
+                                            a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.editExitMaterial(row)")
+                                                i.glyphicon.glyphicon-pencil
+                                        .btn-group(ng-if="row.$editing")
+                                            a.btn.btn-primary.btn-xs(title="{{'button.SAVE'|translate}}",ng-click="vm.saveExitMaterial(row)")
+                                                i.glyphicon.glyphicon-ok-sign
+                                        .btn-group(ng-if="row.$editing")
+                                            a.btn.btn-primary.btn-xs(title="{{'button.CANCEL'|translate}}",ng-click="vm.cancelExitMaterial(row)")
+                                                i.glyphicon.glyphicon-remove-sign
+                        .panel-footer
+                            .row
+                                .col-md-4.text-left
+                                    .btn-toolbar(ng-if="!vm.readonly")
+                                        .btn-group
+                                            a.btn.btn-primary.btn-sm(title="{{'button.ADD'|translate}}",ng-click="vm.addExitMaterial()")
+                                                i.glyphicon.glyphicon-plus
+                                            a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.removeExitMaterial()")
+                                                i.glyphicon.glyphicon-minus
+                    fieldset: .form-group
+                    .panel.panel-default.panel-grid
+                        .panel-heading-normal
+                            a {{ vm.viewTranslatePath('TAB1-LABEL-FLOW_AUDIT') | translate}}
+                        table.grid.table.table-bordered.table-hover.table-striped
+                            thead
+                                tr
+                                    th.text-center(width="80")
+                                        | {{vm.viewTranslatePath("TAB1-LABEL-FLOW_AUDIT-NAME")|translate}}
+                                    th.text-center(width="80")
+                                        | {{vm.viewTranslatePath("TAB1-LABEL-FLOW_AUDIT-OPERATED_ON")|translate}}
+                                    th.text-center(width="40")
+                                        | {{vm.viewTranslatePath("TAB1-LABEL-FLOW_AUDIT-OPERATED_BY_NAME")|translate}}
+                                    th.text-center(width="120")
+                                        | {{vm.viewTranslatePath("TAB1-LABEL-FLOW_AUDIT-COMMENT")|translate}}
+                                    th.text-center(width="50")
+                            tbody
+                                tr(ng-repeat="row in vm.all_flow_audit" ng-click="vm.grid.selectRow($event,row)")
+                                    td {{::vm.viewTranslatePath(row.name)|translate}}
+                                        i(ng-class='{"glyphicon-ok-sign": row.pass_flag == true,"glyphicon-remove-sign":row.pass_flag == false }').glyphicon
+                                    td.text-center {{::row.operated_on|date:'yyyy-MM-dd HH:mm:ss'}}
+                                    td.text-center {{::row.operated_by_name}}
+                                    td {{::row.comment}}
+                                    td.text-center
+                                        .btn-group(ng-if="!row.readonly")
+                                            a.btn.btn-primary.btn-xs(title="{{'button.AUDIT'|translate}}",ng-click="vm.submitFlowAudit(row)")
+                                                i.glyphicon.glyphicon-pencil
+                        .panel-footer
+                            .row
+                                .col-md-4.text-left
+            tab(active="vm.tab2.active",ng-if="vm.readonly || (vm.autoSetTabOnLoad && vm.autoSetTab == 'tab2') ")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB2') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab2')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab2
+                    fieldset: .form-group
+                        <!--归还物品清单-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-ITEM_RETURN_LIST') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                        .col-md-10(ng-if="vm.readonly")
+                    fieldset: .form-group
+                        <!--归还物品-审核时间-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-ITEM_RETURN_AUDIT-OPERATED_ON') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm.autoSetTabOnLoad")
+                            .form-readable {{ 'label.AUTO-GEN' | translate }}
+                        .col-md-10(ng-if="!(!vm.readonly && vm.autoSetTabOnLoad)")
+                            .form-readable {{vm.model.item_return_audit.operated_on|date}}
+                    fieldset: .form-group
+                        <!--归还物品-审核人-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-ITEM_RETURN_AUDIT-OPERATED_BY_NAME') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm.autoSetTabOnLoad")
+                            .form-readable {{vm.operated_by_name}}
+                        .col-md-10(ng-if="!(!vm.readonly && vm.autoSetTabOnLoad)")
+                            .form-readable {{vm.model.item_return_audit.operated_by_name}}
+                    fieldset: .form-group
+                        <!--归还物品-审核结果-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-ITEM_RETURN_AUDIT-PASS_FLAG') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm.autoSetTabOnLoad")
+                            .btn-group
+                                .btn.btn-primary(name='item_return_audit$pass_flag',ng-repeat='pass_flag_option in vm.selectBinding.pass_flag_options',ng-model='vm.model.item_return_audit.pass_flag',btn-radio="pass_flag_option.value",required='') {{pass_flag_option.name|translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'item_return_audit$pass_flag','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="!(!vm.readonly && vm.autoSetTabOnLoad)")
+                            .form-readable {{ (vm.model.item_return_audit.pass_flag?'button.AUDIT-TRUE':'button.AUDIT-FALSE') | translate}}
+                    fieldset: .form-group
+                        <!--归还物品-审核意见-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB2-LABEL-ITEM_RETURN_AUDIT-COMMENT') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm.autoSetTabOnLoad")
+                            textarea.form-control(ng-model='vm.model.item_return_audit.comment',placeholder='{{vm.viewTranslatePath("TAB2-PLACEHOLDER-ITEM_RETURN_AUDIT-COMMENT")|translate}}',maxlength="100")
+                        .col-md-10(ng-if="!(!vm.readonly && vm.autoSetTabOnLoad)")
+                            .form-readable {{vm.model.item_return_audit.comment}}
+            tab(active="vm.tab3.active",ng-if="vm.readonly || (vm.autoSetTabOnLoad && vm.autoSetTab == 'tab3') ")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB3') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab3')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab3
+                    fieldset: .form-group
+                        <!--在院费用汇总-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO') | translate}}:
+                        .col-md-10
+                            .row
+                                .col-md-1(ng-if="!vm.readonly && !vm.model.settlement_info.settlement_flag")
+                                    button.btn.btn-primary.pull-left(type="button",ng-click="vm.exitSettlement()") {{'button.EXIT-SETTLEMENT'|translate}}
+                                .col-md-1(ng-if="vm.model.settlement_info.settlement_flag")
+                                    button.btn.btn-primary.pull-left(type="button",ng-click="vm.chargeList()") {{'button.CHARGE-LIST'|translate}}
+                                .col-md-3
+                                    .input-group
+                                        label.input-group-addon {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-ADVANCE_PAYMENT_AMOUNT') | translate}}
+                                        .form-control
+                                            span.text-primary {{vm.model.settlement_info.advance_payment_amount | currency}}
+                                .col-md-1
+                                    .form-control.form-control-no-border —
+                                .col-md-3
+                                    .input-group
+                                        label.input-group-addon {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-CHARGE_TOTAL') | translate}}
+                                        .form-control
+                                            span.text-danger {{vm.model.settlement_info.charge_total | currency}}
+                                .col-md-1
+                                    .form-control.form-control-no-border =
+                                .col-md-3
+                                    .input-group
+                                        label.input-group-addon {{ ((vm.model.settlement_info.advance_payment_amount - vm.model.settlement_info.charge_total) >= 0 ? vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-BALANCE_TO_RETURN'):vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-BALANCE_TO_PAY')) | translate}}
+                                        .form-control
+                                            span(ng-class='{"text-primary":(vm.model.settlement_info.advance_payment_amount - vm.model.settlement_info.charge_total) >= 0,"text-danger":(vm.model.settlement_info.advance_payment_amount - vm.model.settlement_info.charge_total)<0}') {{ vm.model.settlement_info.advance_payment_amount&&(vm.model.settlement_info.advance_payment_amount - vm.model.settlement_info.charge_total) | currency}}
+                    fieldset: .form-group
+                        <!--出院结算-审核时间-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_AUDIT-OPERATED_ON') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm.autoSetTabOnLoad")
+                            .form-readable {{ 'label.AUTO-GEN' | translate }}
+                        .col-md-10(ng-if="!(!vm.readonly && vm.autoSetTabOnLoad)")
+                            .form-readable {{vm.model.settlement_audit.operated_on|date}}
+                    fieldset: .form-group
+                        <!--出院结算-审核人-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_AUDIT-OPERATED_BY_NAME') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm.autoSetTabOnLoad")
+                            .form-readable {{vm.operated_by_name}}
+                        .col-md-10(ng-if="!(!vm.readonly && vm.autoSetTabOnLoad)")
+                            .form-readable {{vm.model.settlement_audit.operated_by_name}}
+                    fieldset: .form-group
+                        <!--出院结算-审核结果-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_AUDIT-PASS_FLAG') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm.autoSetTabOnLoad")
+                            .btn-group
+                                .btn.btn-primary(name='settlement_audit$pass_flag',ng-repeat='pass_flag_option in vm.selectBinding.pass_flag_options',ng-model='vm.model.settlement_audit.pass_flag',btn-radio="pass_flag_option.value",required='') {{pass_flag_option.name|translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'settlement_audit$pass_flag','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="!(!vm.readonly && vm.autoSetTabOnLoad)")
+                            .form-readable {{ (vm.model.settlement_audit.pass_flag?'button.AUDIT-TRUE':'button.AUDIT-FALSE') | translate}}
+                    fieldset: .form-group
+                        <!--出院结算-审核意见-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_AUDIT-COMMENT') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly && vm.autoSetTabOnLoad")
+                            textarea.form-control(name='settlement_audit$comment',ng-model='vm.model.settlement_audit.comment',placeholder='{{vm.viewTranslatePath("TAB3-PLACEHOLDER-SETTLEMENT_AUDIT-COMMENT")|translate}}',maxlength="100")
+                        .col-md-10(ng-if="!(!vm.readonly && vm.autoSetTabOnLoad)")
+                            .form-readable {{vm.model.settlement_audit.comment}}
+    .text-right.mt-lg
+        button.btn.btn-danger.pull-left(ng-if="vm.model.current_register_step=='A0001'",type="button",ng-click="vm.disable(vm.disableEnterRelatedAction)") {{'button.REMOVE'|translate}}
+        button.btn.btn-danger.pull-left(ng-if="vm.model.current_register_step=='A0007'",type="button",ng-click="vm.completeExit()") {{'button.REMOVE'|translate}}
+        button.btn.btn-warning(ng-if="!vm.readonly && vm.model.current_step=='A0001' && vm.submit_source",type="submit") {{vm.viewTranslatePath('TO-AUDIT-ITEM_RETURN')|translate}}
+        button.btn.btn-warning(ng-if="!vm.readonly && vm.model.current_step=='A0003' && vm.model.item_return_audit.pass_flag == true ",type="button",ng-click="vm.submitToAuditSettlement()") {{vm.viewTranslatePath('TO-AUDIT-SETTLEMENT')|translate}}
+        button.btn.btn-warning(ng-if="!vm.readonly && vm.model.current_step=='A0005' && vm.model.settlement_audit.pass_flag == true ",type="button",ng-click="vm.submitToConfirmExit()") {{vm.viewTranslatePath('TO-CONFIRM-EXIT')|translate}}
+        button.btn.btn-success(ng-if="vm.model.current_register_step=='A0005'",type="button",ng-click="vm.completeEnter()") {{vm.viewTranslatePath('COMPLETE-ENTER')|translate}}
+        button.btn.btn-warning(ng-if="!vm.readonly && vm.model.current_step=='A0001' ",type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(ng-if="!vm.readonly && (vm.model.current_step=='A0001'|| (vm.model.current_step=='A0003'&& vm.model.item_return_audit.pass_flag == false) || (vm.model.current_step=='A0005' && vm.model.settlement_audit.pass_flag == false ) ) ",type="submit" ,ng-click="vm.submit_source='save'") {{'button.SAVE'|translate}}
+        button.btn.btn-primary(ng-if="vm.readonly || vm.model.current_step!='A0001' ",type="button",ng-click="vm.cancel()") {{'button.RETURN'|translate}}
+script(type="text/ng-template", id="exit-settlement.html")
+    form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+        .ngdialog-message
+            h3.mt0 {{ vm.title | translate}}
+        .ngdialog-input
+            fieldset: .form-group
+                .col-md-4
+                    .panel-heading.bg-primary {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-ADVANCE_PAYMENT_AMOUNT') | translate}}
+                        span.pull-right.text-white.text-sm.text-italic {{'label.TOTAL1'|translate}}：{{vm.advancePayment|currency}}
+                    table.grid.table.table-bordered.table-white(ng-init="vm.advancePayment=0")
+                        tbody
+                            tr(ng-repeat="row in vm.advancePaymentItems" ng-click="vm.grid.selectRow($event,row)",ng-init="vm.advancePayment=vm.advancePayment+row.amount")
+                                td.text-left.text-sm(width="160") {{::row.digest}}
+                                td.text-right.text-primary.text-italic(width="80") {{::row.amount|currency}}
+                .col-md-4
+                    .panel-heading.bg-danger {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-RECORDED_CHARGE_TOTAL') | translate}}
+                        span.pull-right.text-white.text-sm.text-italic {{'label.TOTAL1'|translate}}：{{vm.recorded_charge_total|currency}}
+                    table.grid.table.table-bordered.table-white(ng-init="vm.recorded_charge_total=0")
+                        tbody
+                            tr(ng-repeat="row in vm.chargeItemsRecorded" ng-click="vm.grid.selectRow($event,row)",ng-init="vm.recorded_charge_total=vm.recorded_charge_total+row.amount")
+                                td.text-left.text-sm(width="160") {{::row.digest}}
+                                td.text-right.text-italic(width="80",ng-class='{"text-danger":row.amount>=0,"text-primary":row.amount<0}') {{::row.amount|currency}}
+                .col-md-4
+                    .panel-heading.bg-danger {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-UNRECORDED_CHARGE_TOTAL') | translate}}
+                        span.pull-right.text-white.text-sm.text-italic {{'label.TOTAL1'|translate}}：{{vm.unrecorded_charge_total|currency}}
+                    table.grid.table.table-bordered.table-white(ng-init="vm.unrecorded_charge_total=0")
+                        tbody
+                            tr(ng-repeat="row in vm.chargeItemsUnRecorded" ng-click="vm.grid.selectRow($event,row)",ng-init="vm.unrecorded_charge_total=vm.unrecorded_charge_total+row.amount")
+                                td.text-left.text-sm(width="160") {{::row.digest}}
+                                td.text-right.text-italic(width="80",ng-class='{"text-danger":row.amount>=0,"text-primary":row.amount<0}') {{::row.amount|currency}}
+        .ngdialog-input2
+            .row
+                .col-md-12
+                    .panel-heading.bg-primary 老人总账：
+            .row
+                .col-md-3
+                    .input-group
+                        label.input-group-addon {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-ADVANCE_PAYMENT_AMOUNT') | translate}}
+                        .form-control
+                            span.text-primary {{vm.advancePayment|currency}}
+                .col-md-2
+                    label.input-group-addon.form-control.form-control-no-border.text-center —
+                .col-md-3
+                    .input-group
+                        label.input-group-addon {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-CHARGE_TOTAL') | translate}}
+                        .form-control
+                            span.text-danger {{ (vm.recorded_charge_total + vm.unrecorded_charge_total) |currency}}
+                .col-md-1
+                    label.input-group-addon.form-control.form-control-no-border.text-center =
+                .col-md-3
+                    .input-group
+
+                        label.input-group-addon {{ ((vm.advancePayment - (vm.recorded_charge_total + vm.unrecorded_charge_total)) >= 0 ? vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-BALANCE_TO_RETURN'):vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-BALANCE_TO_PAY')) | translate}}
+                        .form-control
+                            span(ng-class='{"text-primary":(vm.advancePayment - (vm.recorded_charge_total + vm.unrecorded_charge_total)) >= 0,"text-danger":(vm.advancePayment - (vm.recorded_charge_total + vm.unrecorded_charge_total))<0}') {{ (vm.advancePayment - (vm.recorded_charge_total + vm.unrecorded_charge_total)) | currency}}
+        .ngdialog-input3
+            .row
+                .col-md-12
+                    .panel-heading.bg-primary 老人分类账：
+            .row
+                .col-md-3
+                    .input-group
+                        label.input-group-addon {{ vm.viewTranslatePath('TAB3-LABEL-SUBSIDIARY_LEDGER') | translate}}
+                        .form-control
+                            span.text-primary {{(vm.subsidiary_ledger.self + vm.subsidiary_ledger.gov_subsidy) | currency}}
+                .col-md-2
+                    label.input-group-addon.form-control.form-control-no-border.text-center —
+                .col-md-3
+                    .input-group
+                        label.input-group-addon {{ vm.viewTranslatePath('TAB3-LABEL-UNRECORDED_CHARGE_TOTAL') | translate}}
+                        .form-control
+                            span.text-danger {{vm.unrecorded_charge_total | currency}}
+                .col-md-1
+                    label.input-group-addon.form-control.form-control-no-border.text-center =
+                .col-md-3
+                    .input-group
+                        label.input-group-addon {{ ((vm.subsidiary_ledger.self + vm.subsidiary_ledger.gov_subsidy - vm.unrecorded_charge_total) >= 0 ? vm.viewTranslatePath('TAB3-LABEL-SUBSIDIARY_LEDGER-BALANCE_TO_RETURN'): vm.viewTranslatePath('TAB3-LABEL-SUBSIDIARY_LEDGER-BALANCE_TO_PAY')) | translate}}
+                        .form-control
+                            span(ng-class='{"text-primary":(vm.subsidiary_ledger.self + vm.subsidiary_ledger.gov_subsidy - vm.unrecorded_charge_total) >= 0,"text-danger":(vm.subsidiary_ledger.self + vm.subsidiary_ledger.gov_subsidy - vm.unrecorded_charge_total)<0}') {{ (vm.subsidiary_ledger.self + vm.subsidiary_ledger.gov_subsidy - vm.unrecorded_charge_total) | currency}}
+        .ngdialog-buttons
+            .row
+                .col-md-9
+                    .alert.alert-danger.text-center(ng-show='vm.authMsg') {{vm.authMsg}}
+                .col-md-3
+                    button.btn.btn-warning(type='button',ng-click="vm.cancel()") {{ "button.CANCEL" | translate}}
+                    button.btn.btn-success(type='submit') {{ "button.CONFIRM" | translate}}

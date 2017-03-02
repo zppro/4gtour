@@ -230,6 +230,42 @@ module.exports = {
                     };
                 }
             },
+            /**********************冲红相关*****************************/
+            {
+                method: 'queryVoucherNo',
+                verb: 'post',
+                url: this.service_url_prefix + "/q/voucher_no",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            var modelName = this.request.body.modelName;
+                            var keyword = this.request.body.keyword;
+                            var data = this.request.body.data;
+
+                            app._.extend(data.where,{
+                                status: 1,
+                                //carry_over_flag:true,
+                                tenantId: tenantId
+                            });
+
+                            if(keyword){
+                                data.where.voucher_no = new RegExp(keyword);
+                            }
+                            var rows_in_recharge = yield app.modelFactory().model_query(app.models[modelName], data);
+                            var rows_in_tenantJournalAccount = yield app.modelFactory().model_query(app.models['pub_tenantJournalAccount'], data);
+
+                            var rows = app._.union(rows_in_recharge,rows_in_tenantJournalAccount);
+
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
             /**********************用户密码相关*****************************/
             {
                 method: 'userChangePassword',//用户修改密码

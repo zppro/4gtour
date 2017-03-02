@@ -137,7 +137,7 @@
                     })
                 }
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'in-manage', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'in', {
                 url: '/in',
                 title: '在院管理',
                 abstract: true,
@@ -151,8 +151,9 @@
                     }
                 },
                 data:{
-                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'IN-MANAGE'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'IN'//业务系统使用
                 }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'in.js')
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'in.list', {
                 url: '/list/:action',
@@ -236,10 +237,287 @@
                 controller: 'InDetailsController',
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 resolve: {
-                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'in-manage.details', {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'in.details', {
                         modelName: 'psn-elderly',
                         blockUI: true
                     })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'exit', {
+                url: '/exit-manage',
+                title: '出院管理',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'EXIT'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'exit.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'exit.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'exit-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'ExitGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'exit.list', {
+                        modelName: 'psn-exit',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '老人',
+                                name: 'elderly_name',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '入院登记号',
+                                name: 'code',
+                                type: 'string',
+                                width: 100,
+                                sortable: true
+                            },
+                            {
+                                label: '入院日期',
+                                name: 'enter_on',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '申请出院日期',
+                                name: 'application_date',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '当前步骤',
+                                name: 'current_step',
+                                type: 'string',
+                                width: 80,
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3004/object')
+                            },
+                            {
+                                label: '出院日期',
+                                name: 'exit_on',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 40
+                            }
+                        ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'exit.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'exit-details.html'),
+                controller: 'ExitDetailsController',
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                params:{autoSetTab:null},
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'exit.details', {
+                        modelName: 'psn-exit',
+                        model: {},
+                        blockUI: true
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'reception', {
+                url: '/reception',
+                title: '接待管理',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'RECEPTION'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'reception.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'reception.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'reception-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'ReceptionGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'reception.list', {
+                        modelName: 'psn-reception',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '接待登记号',
+                                name: 'code',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '探望老人',
+                                name: 'elderly_name',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '探望日期',
+                                name: 'begin_on',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '探望时段',
+                                name: 'end_on',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '访客',
+                                name: 'visit_summary',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 40
+                            }
+                        ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'reception.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'reception-details.html'),
+                controller: 'ReceptionDetailsController',
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'reception.details', {
+                        modelName: 'psn-reception',
+                        model: {
+                            code: MODEL_VARIABLES.PRE_DEFINED.SERVER_GEN,
+                            begin_on: new Date()
+                        },
+                        blockUI: true
+                    })
+                    , deps: helper.resolveFor2('angucomplete-alt')
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'leave', {
+                url: '/leave',
+                title: '外出管理',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'LEAVE'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'leave.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'leave.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'leave-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'LeaveGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'leave.list', {
+                        modelName: 'psn-leave',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '外出登记号',
+                                name: 'code',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '外出老人',
+                                name: 'elderly_name',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '外出时间',
+                                name: 'begin_on',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '归还时间',
+                                name: 'end_on',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '陪同人',
+                                name: 'accompany_summary',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 40
+                            }
+                        ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'leave.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'leave-details.html'),
+                controller: 'LeaveDetailsController',
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'leave.details', {
+                        modelName: 'psn-leave',
+                        model: {
+                            code: MODEL_VARIABLES.PRE_DEFINED.SERVER_GEN,
+                            begin_on: new Date()
+                        },
+                        blockUI: true
+                    })
+                    , deps: helper.resolveFor2('angucomplete-alt')
                 }
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'enter-payment', {
@@ -315,6 +593,282 @@
                             }
                         ]
                     })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'recharge', {
+                url: '/recharge',
+                title: '老人账户充值',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'RECHARGE'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'recharge.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'recharge.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'recharge-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'RechargeGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'recharge.list', {
+                        modelName: 'psn-recharge',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '充值日期',
+                                name: 'check_in_time',
+                                type: 'date',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '充值对象',
+                                name: 'elderly_name',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '充值金额',
+                                name: 'amount',
+                                type: 'number',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '充值方式',
+                                name: 'type',
+                                type: 'string',
+                                width: 60,
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3005/object')
+                            },
+                            {
+                                label: '备注',
+                                name: 'remark',
+                                type: 'string',
+                                width: 180
+                            },
+                            {
+                                label: '记账凭证号',
+                                name: 'voucher_no',
+                                type: 'string',
+                                width: 60
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 60
+                            }
+                        ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'recharge.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'recharge-details.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'RechargeDetailsController',
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'recharge.details', {
+                        modelName: 'psn-recharge'
+                        , blockUI: true
+                    })
+                    , deps: helper.resolveFor2('angucomplete-alt')
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'arrearage', {
+                url: '/arrearage',
+                title: '老人账户充值',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'ARREARAGE'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'arrearage.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'exit-settlement', {
+                url: '/exit-settlement',
+                title: '老人出院结算',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'EXIT-SETTLEMENT'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'exit-settlement.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'exit-settlement.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'exit-settlement-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'ExitSettlementGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'exit-settlement.list', {
+                        modelName: 'psn-exit',
+                        searchForm: {"status": 1,"current_step": {"$in": ['A0005', 'A0007','A0009']}},
+                        transTo: MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'exit-manage.details',
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '老人',
+                                name: 'elderly_name',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '入院登记号',
+                                name: 'code',
+                                type: 'string',
+                                width: 100,
+                                sortable: true
+                            },
+                            {
+                                label: '入院日期',
+                                name: 'enter_on',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '申请出院日期',
+                                name: 'application_date',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '当前步骤',
+                                name: 'current_step',
+                                type: 'string',
+                                width: 80,
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3004/object')
+                            },
+                            {
+                                label: '出院日期',
+                                name: 'exit_on',
+                                type: 'date',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 40
+                            }
+                        ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'red', {
+                url: '/red',
+                title: '冲红明细',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'RED'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'red.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'red.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'red-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'RedGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'red.list', {
+                        modelName: 'pub-red',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '冲红日期',
+                                name: 'check_in_time',
+                                type: 'date',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '记账凭证号',
+                                name: 'voucher_no',
+                                type: 'string',
+                                width: 60
+                            },
+                            {
+                                label: '冲红凭证号',
+                                name: 'voucher_no_to_red',
+                                type: 'string',
+                                width: 60
+                            },
+                            {
+                                label: '冲红金额',
+                                name: 'amount',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '备注',
+                                name: 'remark',
+                                type: 'string',
+                                width: 180
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 60
+                            }
+                        ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'red.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'red-details.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'RedDetailsController',
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'red.details', {
+                        modelName: 'pub-red'
+                        , blockUI: true
+                    })
+                    , deps: helper.resolveFor2('angucomplete-alt')
                 }
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'room', {

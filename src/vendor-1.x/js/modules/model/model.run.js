@@ -24,9 +24,13 @@
         //养老机构
         modelNode.factory('psn-elderly');
         modelNode.factory('psn-enter');
+        modelNode.factory('psn-exit');
+        modelNode.factory('psn-reception');
+        modelNode.factory('psn-leave');
+        modelNode.factory('psn-recharge');
         modelNode.factory('psn-district');
         modelNode.factory('psn-room');
-
+        modelNode.factory('psn-roomOccupancyChangeHistory');
 
         //商户机构
         modelNode.factory('trv-scenerySpot');

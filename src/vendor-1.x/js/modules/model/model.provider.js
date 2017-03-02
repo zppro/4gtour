@@ -236,6 +236,7 @@
                     tenantInfo: tenantInfo,
                     tenantChargeItemCustomizedAsTree: tenantChargeItemCustomizedAsTree,
                     saveTenantChargeItemCustomized: saveTenantChargeItemCustomized,
+                    queryVoucherNo: queryVoucherNo,
                     completeOrder: completeOrder,
                     refundOrder: refundOrder,
                     userChangePassword: userChangePassword,
@@ -255,7 +256,16 @@
                 function saveTenantChargeItemCustomized(tenantId, chargeStandard) {
                     return $http.post(baseUrl + 'saveTenantChargeItemCustomized/' + tenantId, chargeStandard);
                 }
- 
+
+                function queryVoucherNo(tenantId, modelName, keyword, where, select, sort){
+                    return $http.post(baseUrl + 'q/voucher_no', {tenantId: tenantId, modelName: modelName, keyword: keyword,  data: {
+                        where: where,
+                        select: select,
+                        sort: sort
+                    }});
+                }
+
+
                 function completeOrder(orderId) {
                     return $http.post(baseUrl + 'completeOrder/' + orderId);
                 }
@@ -449,16 +459,17 @@
                     changeElderlyRoomBed: changeElderlyRoomBed,
                     changeElderlyChargeItem: changeElderlyChargeItem,
                     changeElderlyChargeItemForOtherAndCustomized: changeElderlyChargeItemForOtherAndCustomized,
+                    receptionVisiterSyncElderlyFamilyMembers: receptionVisiterSyncElderlyFamilyMembers,
+                    leaveAccompanierSyncElderlyFamilyMembers: leaveAccompanierSyncElderlyFamilyMembers,
                     checkCanChangeBookingOrUnbookingRecharge: checkCanChangeBookingOrUnbookingRecharge,
                     bookingRecharge: bookingRecharge,
                     disableRechargeAndUnbooking: disableRechargeAndUnbooking,
                     changeRechargeBookingAmount: changeRechargeBookingAmount,
-                    queryVoucherNo: queryVoucherNo,
-                    checkCanBookingRed: checkCanBookingRed,
-                    bookingRed: bookingRed,
-                    checkCanChangeBookingOrUnbookingRed: checkCanChangeBookingOrUnbookingRed,
-                    disableRedAndUnbooking: disableRedAndUnbooking,
-                    changeRedBookingAmount: changeRedBookingAmount,
+                    checkCanBookingRedToElderlyRecharge: checkCanBookingRedToElderlyRecharge,
+                    bookingRedToElderlyRecharge: bookingRedToElderlyRecharge,
+                    checkCanChangeBookingOrUnbookingRedToElderlyRecharge: checkCanChangeBookingOrUnbookingRedToElderlyRecharge,
+                    disableRedAndUnbookingToElderlyRecharge: disableRedAndUnbookingToElderlyRecharge,
+                    changeRedBookingAmountToElderlyRecharge: changeRedBookingAmountToElderlyRecharge,
                 };
 
                 function roomStatusInfo(tenantId) {
@@ -562,6 +573,16 @@
                     });
                 }
 
+
+                function receptionVisiterSyncElderlyFamilyMembers(receptionId) {
+                    return $http.post(baseUrl + 'receptionVisiterSyncElderlyFamilyMembers/' + receptionId);
+                }
+
+                function leaveAccompanierSyncElderlyFamilyMembers(leaveId){
+                    return $http.post(baseUrl + 'leaveAccompanierSyncElderlyFamilyMembers/' + leaveId);
+                }
+
+
                 function checkCanChangeBookingOrUnbookingRecharge(rechargeId){
                     return $http.get(baseUrl + 'checkCanChangeBookingOrUnbookingRecharge/' + rechargeId);
                 }
@@ -577,33 +598,25 @@
                 function changeRechargeBookingAmount(rechargeId,data){
                     return $http.post(baseUrl + 'changeRechargeBookingAmount/' + rechargeId, data);
                 }
-
-                function queryVoucherNo(tenantId,keyword,where,select,sort){
-                    return $http.post(baseUrl + 'q/voucher_no', {tenantId: tenantId, keyword: keyword,  data: {
-                        where: where,
-                        select: select,
-                        sort: sort
-                    }});
+                
+                function checkCanBookingRedToElderlyRecharge(data) {
+                    return $http.post(baseUrl + 'checkCanBookingRedToElderlyRecharge', data);
                 }
 
-                function checkCanBookingRed(data) {
-                    return $http.post(baseUrl + 'checkCanBookingRed', data);
+                function bookingRedToElderlyRecharge(data){
+                    return $http.post(baseUrl + 'bookingRedToElderlyRecharge', data);
                 }
 
-                function bookingRed(data){
-                    return $http.post(baseUrl + 'bookingRed', data);
+                function checkCanChangeBookingOrUnbookingRedToElderlyRecharge(redId){
+                    return $http.get(baseUrl + 'checkCanChangeBookingOrUnbookingRedToElderlyRecharge/' + redId);
                 }
 
-                function checkCanChangeBookingOrUnbookingRed(redId){
-                    return $http.get(baseUrl + 'checkCanChangeBookingOrUnbookingRed/' + redId);
+                function disableRedAndUnbookingToElderlyRecharge(redId,data){
+                    return $http.post(baseUrl + 'disableRedAndUnbookingToElderlyRecharge/' + redId, data);
                 }
 
-                function disableRedAndUnbooking(redId,data){
-                    return $http.post(baseUrl + 'disableRedAndUnbooking/' + redId, data);
-                }
-
-                function changeRedBookingAmount(redId,data){
-                    return $http.post(baseUrl + 'changeRedBookingAmount/' + redId, data);
+                function changeRedBookingAmountToElderlyRecharge(redId,data){
+                    return $http.post(baseUrl + 'changeRedBookingAmountToElderlyRecharge/' + redId, data);
                 }
 
             }]

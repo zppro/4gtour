@@ -1242,43 +1242,9 @@ module.exports = {
             },
             /**********************冲红相关*****************************/
             {
-                method: 'queryVoucherNo',
+                method: 'checkCanBookingRedToElderlyRecharge',//检查是否是系统内部记账，如果是则需要在前台做好提醒不需要冲红，但不强制禁止冲红
                 verb: 'post',
-                url: this.service_url_prefix + "/q/voucher_no",
-                handler: function (app, options) {
-                    return function * (next) {
-                        try {
-                            var tenantId = this.request.body.tenantId;
-                            var keyword = this.request.body.keyword;
-                            var data = this.request.body.data;
-
-                            app._.extend(data.where,{
-                                status: 1,
-                                //carry_over_flag:true,
-                                tenantId: tenantId
-                            });
-
-                            if(keyword){
-                                data.where.voucher_no = new RegExp(keyword);
-                            }
-                            var rows_in_recharge = yield app.modelFactory().model_query(app.models['psn_recharge'], data);
-                            var rows_in_tenantJournalAccount = yield app.modelFactory().model_query(app.models['pub_tenantJournalAccount'], data);
-
-                            var rows = app._.union(rows_in_recharge,rows_in_tenantJournalAccount);
-
-                            this.body = app.wrapper.res.rows(rows);
-                        } catch (e) {
-                            self.logger.error(e.message);
-                            this.body = app.wrapper.res.error(e);
-                        }
-                        yield next;
-                    };
-                }
-            },
-            {
-                method: 'checkCanBookingRed',//检查是否是系统内部记账，如果是则需要在前台做好提醒不需要冲红，但不强制禁止冲红
-                verb: 'post',
-                url: this.service_url_prefix + "/checkCanBookingRed",
+                url: this.service_url_prefix + "/checkCanBookingRedToElderlyRecharge",
                 handler: function (app, options) {
                     return function * (next) {
                         var recharge_to_red,tenantJournalAccount_to_red, elderly,tenant;
@@ -1367,9 +1333,9 @@ module.exports = {
                 }
             },
             {
-                method: 'bookingRed',
+                method: 'bookingRedToElderlyRecharge',
                 verb: 'post',
-                url: this.service_url_prefix + "/bookingRed",
+                url: this.service_url_prefix + "/bookingRedToElderlyRecharge",
                 handler: function (app, options) {
                     return function * (next) {
                         var steps;
@@ -1611,9 +1577,9 @@ module.exports = {
                 }
             },
             {
-                method: 'checkCanChangeBookingOrUnbookingRed',//检测是否能够修改或撤销冲红记录
+                method: 'checkCanChangeBookingOrUnbookingRedToElderlyRecharge',//检测是否能够修改或撤销冲红记录
                 verb: 'get',
-                url: this.service_url_prefix + "/checkCanChangeBookingOrUnbookingRed/:_id",
+                url: this.service_url_prefix + "/checkCanChangeBookingOrUnbookingRedToElderlyRecharge/:_id",
                 handler: function (app, options) {
                     return function * (next) {
                         var steps;
@@ -1690,9 +1656,9 @@ module.exports = {
                 }
             },
             {
-                method: 'disableRedAndUnbooking',
+                method: 'disableRedAndUnbookingToElderlyRecharge',
                 verb: 'post',
-                url: this.service_url_prefix + "/disableRedAndUnbooking/:_id",
+                url: this.service_url_prefix + "/disableRedAndUnbookingToElderlyRecharge/:_id",
                 handler: function (app, options) {
                     return function * (next) {
                         var steps;
@@ -1925,9 +1891,9 @@ module.exports = {
                 }
             },
             {
-                method: 'changeRedBookingAmount',
+                method: 'changeRedBookingAmountToElderlyRecharge',
                 verb: 'post',
-                url: this.service_url_prefix + "/changeRedBookingAmount/:_id",
+                url: this.service_url_prefix + "/changeRedBookingAmountToElderlyRecharge/:_id",
                 handler: function (app, options) {
                     return function * (next) {
                         var steps;
@@ -3555,6 +3521,119 @@ module.exports = {
                     };
                 }
             },
+            /**********************接待管理*****************************/
+            {
+                method: 'receptionVisiterSyncElderlyFamilyMembers',
+                verb: 'post',
+                url: this.service_url_prefix + "/receptionVisiterSyncElderlyFamilyMembers/:_id",
+                handler: function (app, options) {
+                    return function * (next) {
+                        var reception,elderly;
+                        try {
+                            reception = yield app.modelFactory().model_read(app.models['psn_reception'], this.params._id);
+                            if (!reception || reception.status == 0) {
+                                this.body = app.wrapper.res.error({message: '无法找到接待记录!'});
+                                yield next;
+                                return;
+                            }
+
+                            elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], reception.elderlyId);
+                            if (!elderly || elderly.status == 0) {
+                                this.body = app.wrapper.res.error({message: '无法找到老人!'});
+                                yield next;
+                                return;
+                            }
+
+                            console.log('receptionVisiterSyncElderlyFamilyMembers 前置检查完成');
+
+                            var member;
+                            for(var i=0;i< elderly.family_members.length;i++) {
+                                if (elderly.family_members[i].name == reception.visit_info.name) {
+                                    member = elderly.family_members[i];
+                                    break;
+                                }
+                            }
+
+                            if(!member) {
+                                elderly.family_members.push(app._.extend({}, reception.toObject().visit_info));
+                            }
+                            else{
+
+                                reception.visit_info.id_no && (member.id_no = reception.visit_info.id_no);
+                                reception.visit_info.sex && (member.sex = reception.visit_info.sex);
+                                reception.visit_info.relation_with && (member.relation_with = reception.visit_info.relation_with);
+                                reception.visit_info.phone && (member.phone = reception.visit_info.phone);
+                                reception.visit_info.address && (member.address = reception.visit_info.address);
+                            }
+
+                            yield elderly.save();
+
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            /**********************外出管理*****************************/
+            {
+                method: 'leaveAccompanierSyncElderlyFamilyMembers',
+                verb: 'post',
+                url: this.service_url_prefix + "/leaveAccompanierSyncElderlyFamilyMembers/:_id",
+                handler: function (app, options) {
+                    return function * (next) {
+                        var leave,elderly;
+                        try {
+                            leave = yield app.modelFactory().model_read(app.models['psn_leave'], this.params._id);
+                            if (!leave || leave.status == 0) {
+                                this.body = app.wrapper.res.error({message: '无法找到外出记录!'});
+                                yield next;
+                                return;
+                            }
+
+                            elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], leave.elderlyId);
+                            if (!elderly || elderly.status == 0) {
+                                this.body = app.wrapper.res.error({message: '无法找到老人!'});
+                                yield next;
+                                return;
+                            }
+
+                            console.log('receptionAccompanierSyncElderlyFamilyMembers 前置检查完成');
+
+
+                            var member;
+                            for(var i=0;i< elderly.family_members.length;i++) {
+                                if (elderly.family_members[i].name == leave.accompany_info.name) {
+                                    member = elderly.family_members[i];
+                                    break;
+                                }
+                            }
+
+                            if(!member) {
+                                elderly.family_members.push(app._.extend({}, leave.toObject().accompany_info));
+                            }
+                            else{
+
+                                leave.accompany_info.id_no && (member.id_no = leave.accompany_info.id_no);
+                                leave.accompany_info.sex && (member.sex = leave.accompany_info.sex);
+                                leave.accompany_info.relation_with && (member.relation_with = leave.accompany_info.relation_with);
+                                leave.accompany_info.phone && (member.phone = leave.accompany_info.phone);
+                                leave.accompany_info.address && (member.address = leave.accompany_info.address);
+                            }
+
+                            yield elderly.save();
+
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            }
             /**********************其他*****************************/
             
         ];

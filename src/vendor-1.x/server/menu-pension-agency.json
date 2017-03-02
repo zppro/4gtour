@@ -47,22 +47,22 @@
       {
         "_id": "menu.pension-agency.RECHARGE",
         "name": "老人账户充值",
-        "sref": "app.pension-agency.financial-recharge.list"
+        "sref": "app.pension-agency.recharge.list"
       },
       {
         "_id": "menu.pension-agency.ARREARAGE",
         "name": "老人欠费管理",
-        "sref": "app.pension-agency.financial-arrearage"
+        "sref": "app.pension-agency.arrearage"
       },
       {
         "_id": "menu.pension-agency.EXIT-SETTLEMENT",
         "name": "老人出院结算",
-        "sref": "app.pension-agency.financial-exit-settlement.list"
+        "sref": "app.pension-agency.exit-settlement.list"
       },
       {
         "_id": "menu.pension-agency.RED",
         "name": "机构冲红明细",
-        "sref": "app.pension-agency.financial-red.list"
+        "sref": "app.pension-agency.red.list"
       },
       {
         "_id": "menu.pension-agency.ORG-RECEIPTS-AND-DISBURSEMENTS-DETAILS",

@@ -1,5 +1,5 @@
 /**
- * in-manage.controller Created by zppro on 17-3-2.
+ * in Created by zppro on 17-3-2.
  * Target:老人在院管理  (移植自fsrok)
  */
 (function() {
