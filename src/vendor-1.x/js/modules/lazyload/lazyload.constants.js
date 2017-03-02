@@ -51,6 +51,7 @@
                 {name:'subsystem.pension-agency.',files:['app/js/lazy-modules/pension-agency-share.js','app/css/pension-agency.css']},
                 {name:'subsystem.pension-agency.dashboard.js',files:['app/js/lazy-modules/pension-agency/dashboard.js']},
                 {name:'subsystem.pension-agency.enter.js',files:['app/js/lazy-modules/pension-agency/enter.js']},
+                {name:'subsystem.pension-agency.enter-payment.js',files:['app/js/lazy-modules/pension-agency/enter-payment.js']},
                 {name:'subsystem.pension-agency.room.js',files:['app/js/lazy-modules/pension-agency/room.js']},
                 {name:'subsystem.pension-agency.district.js',files:['app/js/lazy-modules/pension-agency/district.js']},
                 {name:'subsystem.health-center.dashboard.js',files:['app/js/lazy-modules/health-center/dashboard.js']},

@@ -88,13 +88,11 @@ module.exports = {
                                 name: app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_CUSTOMIZED_CATAGORY.NAME,
                                 children: []
                             };
-                            
-                            var item_id_prefix = ret._id.toLowerCase() + '.';
 
                             for (var i = 0; i < chargeItems.length; i++) {
-                                if ((app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_PREFIX + chargeItems[i].catagory + '-' + charge_standard) == ret._id){
+                                if ((chargeItems[i].catagory + '-' + charge_standard) == ret._id){
                                     ret.children.push({
-                                        _id: item_id_prefix + chargeItems[i]._id,
+                                        _id: app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_PREFIX + chargeItems[i]._id,
                                         name: chargeItems[i].name,
                                         data: {manual_seletable: true}
                                     });

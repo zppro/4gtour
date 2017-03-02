@@ -262,14 +262,14 @@
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'enter-payment.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'enter-payment-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'enter-payment-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'EnterPaymentGridController',
                 resolve: {
                     entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'enter-payment.list', {
                         modelName: 'psn-enter',
                         searchForm: {"status": 1,"current_register_step": {"$in": ['A0003', 'A0005', 'A0007']}},
-                        transTo: MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'enter-manage.details',
+                        transTo: MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'enter.details',
                         serverPaging: true,
                         columns: [
                             {

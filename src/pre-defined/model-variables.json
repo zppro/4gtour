@@ -29,11 +29,11 @@
     },
     "CHARGE_ITEM_PREFIX": "ci.pension-agency.",
     "CHARGE_ITEM_CUSTOMIZED_CATAGORY": {
-      "_ID": "ci.pension-agency.CUSTOMIZED",
+      "_ID": "CUSTOMIZED",
       "NAME": "特色服务"
     },
     "CHARGE_ITEM_OTHER_CATAGORY": {
-      "_ID": "ci.pension-agency.OTHER",
+      "_ID": "OTHER",
       "NAME": "其他"
     }
   }

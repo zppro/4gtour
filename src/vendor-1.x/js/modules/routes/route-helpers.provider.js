@@ -256,7 +256,7 @@
         function buildEntryVM(name, option) {
             option = option || {};
             var arrNames = name.split('.');
-            return ['$state', '$stateParams', '$window', '$q', '$translate', '$timeout', '$http', 'blockUI', 'Auth', 'modelNode', 'Notify', 'GridDemoModelSerivce', function ($state, $stateParams, $window, $q, $translate, $timeout, $http, blockUI, Auth, modelNode, Notify, GridDemoModelSerivce) {
+            return ['$rootScope', '$state', '$stateParams', '$window', '$q', '$translate', '$timeout', '$http', 'blockUI', 'Auth', 'modelNode', 'Notify', 'GridDemoModelSerivce', function ($rootScope, $state, $stateParams, $window, $q, $translate, $timeout, $http, blockUI, Auth, modelNode, Notify, GridDemoModelSerivce) {
                 var modelService = option.modelName ? modelNode.services[option.modelName] : GridDemoModelSerivce;
 
                 function getParam(name) {
@@ -267,6 +267,7 @@
                     var self = this;
                     this.size = calcWH($window);
 
+                    this.isFromTheSameRoute = !$rootScope.$fromState.name ||  moduleParse($state.current.name) === moduleParse($rootScope.$fromState.name);
 
                     //设置searchForm
                     if (option.omitStateParamToSearchForm) {
@@ -567,6 +568,7 @@
                     systemRoute: systemRoute,
                     subsystemRoute: subsystemRoute,
                     moduleRoute: moduleRoute,
+                    moduleParse: moduleParse,
                     viewRoute: viewRoute,
                     viewTranslatePath: viewTranslatePath,
                     modelService: modelService,
@@ -640,6 +642,9 @@
                     var self = this;
 
                     this.readonly = this._action_ == 'read';
+
+                    console.log($rootScope.$fromState.name);
+                    this.isFromTheSameRoute = !$rootScope.$fromState.name || moduleParse($state.current.name) === moduleParse($rootScope.$fromState.name);
                     //this.model = option.model;
 
                     this.size = calcWH($window);
@@ -979,6 +984,7 @@
                     systemRoute: systemRoute,
                     subsystemRoute: subsystemRoute,
                     moduleRoute: moduleRoute,
+                    moduleParse: moduleParse,
                     viewRoute: viewRoute,
                     viewTranslatePath: viewTranslatePath,
                     fieldConvert: fieldConvert,
@@ -1021,7 +1027,7 @@
         function buildInstanceVM(name,option) {
             option = option || {};
             var arrNames = name.split('.');
-            return ['$state', '$stateParams', '$window', '$q', '$timeout', '$translate', 'blockUI', 'modelNode', 'Notify','Auth', function ($state, $stateParams, $window, $q, $timeout, $translate, blockUI, modelNode, Notify,Auth) {
+            return ['$rootScope','$state', '$stateParams', '$window', '$q', '$timeout', '$translate', 'blockUI', 'modelNode', 'Notify','Auth', function ($rootScope, $state, $stateParams, $window, $q, $timeout, $translate, blockUI, modelNode, Notify,Auth) {
                 //var modelService = modelNode.services[option.modelName];
 
                 function getParam(name) {
@@ -1030,7 +1036,7 @@
 
                 function init(initOption) {
                     this.size = calcWH($window);
-
+                    this.isFromTheSameRoute = !$rootScope.$fromState.name || moduleParse($state.current.name) === moduleParse($rootScope.$fromState.name);
                     //设置selectFilterObject
                     this.selectFilterObject = _.defaults(this.selectFilterObject, $state.current.data && $state.current.data.selectFilterObject);
 
@@ -1062,6 +1068,7 @@
                     systemRoute: systemRoute,
                     subsystemRoute: subsystemRoute,
                     moduleRoute: moduleRoute,
+                    moduleParse: moduleParse,
                     moduleTranslatePath: moduleTranslatePath,
                     name: name || 'no-instanceName',
                     size: {w: 0, h: 0},
@@ -1107,6 +1114,11 @@
 
         function moduleRoute() {
             return _.union([this._system_, this._subsystem_, this._module_], Array.prototype.slice.call(arguments, 0)).join('.');
+        }
+
+        function moduleParse(stateName) {
+            var arr = stateName.split('.');
+            return arr.slice(0, 3).join('.')
         }
 
         function viewRoute() {
