@@ -55,10 +55,10 @@
             vm.doSubmit = doSubmit;
 
             vmh.parallel([
-                vmh.extensionService.advancePaymentItemsWhenExitSettlement(vm.exitId),
-                vmh.extensionService.chargeItemsRecordedWhenExitSettlement(vm.exitId),
-                vmh.extensionService.chargeItemsUnRecordedWhenExitSettlement(vm.exitId),
-                vmh.extensionService.elderlyInfo(vm.elderlyId,'subsidiary_ledger')
+                vmh.psnService.advancePaymentItemsWhenExitSettlement(vm.exitId),
+                vmh.psnService.chargeItemsRecordedWhenExitSettlement(vm.exitId),
+                vmh.psnService.chargeItemsUnRecordedWhenExitSettlement(vm.exitId),
+                vmh.psnService.elderlyInfo(vm.elderlyId,'subsidiary_ledger')
             ]).then(function (results) {
                 vm.advancePaymentItems = results[0];
                 vm.chargeItemsRecorded = results[1];
@@ -89,7 +89,7 @@
                     //};
                     //$scope.closeThisDialog(ret);
 
-                    vmh.extensionService.exitSettlement(vm.exitId, {
+                    vmh.psnService.exitSettlement(vm.exitId, {
                         operated_by: vm.operated_by,
                         operated_by_name: vm.operated_by_name
                     }).then(function (ret) {

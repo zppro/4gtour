@@ -211,27 +211,27 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         .col-md-10
                             .row
                                 .col-md-1(ng-if="!vm.readonly && !vm.model.settlement_info.settlement_flag")
-                                    button.btn.btn-primary.pull-left(type="button",ng-click="vm.exitSettlement()") {{'button.EXIT-SETTLEMENT'|translate}}
+                                    a.btn.btn-primary.pull-left(type="button",ng-click="vm.exitSettlement()") {{'button.EXIT-SETTLEMENT'|translate}}
                                 .col-md-1(ng-if="vm.model.settlement_info.settlement_flag")
                                     button.btn.btn-primary.pull-left(type="button",ng-click="vm.chargeList()") {{'button.CHARGE-LIST'|translate}}
                                 .col-md-3
                                     .input-group
                                         label.input-group-addon {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-ADVANCE_PAYMENT_AMOUNT') | translate}}
-                                        .form-control
+                                        .form-control.text-right
                                             span.text-primary {{vm.model.settlement_info.advance_payment_amount | currency}}
                                 .col-md-1
                                     .form-control.form-control-no-border —
                                 .col-md-3
                                     .input-group
                                         label.input-group-addon {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-CHARGE_TOTAL') | translate}}
-                                        .form-control
+                                        .form-control.text-right
                                             span.text-danger {{vm.model.settlement_info.charge_total | currency}}
                                 .col-md-1
                                     .form-control.form-control-no-border =
                                 .col-md-3
                                     .input-group
                                         label.input-group-addon {{ ((vm.model.settlement_info.advance_payment_amount - vm.model.settlement_info.charge_total) >= 0 ? vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-BALANCE_TO_RETURN'):vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-BALANCE_TO_PAY')) | translate}}
-                                        .form-control
+                                        .form-control.text-right
                                             span(ng-class='{"text-primary":(vm.model.settlement_info.advance_payment_amount - vm.model.settlement_info.charge_total) >= 0,"text-danger":(vm.model.settlement_info.advance_payment_amount - vm.model.settlement_info.charge_total)<0}') {{ vm.model.settlement_info.advance_payment_amount&&(vm.model.settlement_info.advance_payment_amount - vm.model.settlement_info.charge_total) | currency}}
                     fieldset: .form-group
                         <!--出院结算-审核时间-->
@@ -311,14 +311,14 @@ script(type="text/ng-template", id="exit-settlement.html")
                 .col-md-3
                     .input-group
                         label.input-group-addon {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-ADVANCE_PAYMENT_AMOUNT') | translate}}
-                        .form-control
+                        .form-control.text-right
                             span.text-primary {{vm.advancePayment|currency}}
                 .col-md-2
                     label.input-group-addon.form-control.form-control-no-border.text-center —
                 .col-md-3
                     .input-group
                         label.input-group-addon {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-CHARGE_TOTAL') | translate}}
-                        .form-control
+                        .form-control.text-right
                             span.text-danger {{ (vm.recorded_charge_total + vm.unrecorded_charge_total) |currency}}
                 .col-md-1
                     label.input-group-addon.form-control.form-control-no-border.text-center =
@@ -326,7 +326,7 @@ script(type="text/ng-template", id="exit-settlement.html")
                     .input-group
 
                         label.input-group-addon {{ ((vm.advancePayment - (vm.recorded_charge_total + vm.unrecorded_charge_total)) >= 0 ? vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-BALANCE_TO_RETURN'):vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-BALANCE_TO_PAY')) | translate}}
-                        .form-control
+                        .form-control.text-right
                             span(ng-class='{"text-primary":(vm.advancePayment - (vm.recorded_charge_total + vm.unrecorded_charge_total)) >= 0,"text-danger":(vm.advancePayment - (vm.recorded_charge_total + vm.unrecorded_charge_total))<0}') {{ (vm.advancePayment - (vm.recorded_charge_total + vm.unrecorded_charge_total)) | currency}}
         .ngdialog-input3
             .row
@@ -336,21 +336,21 @@ script(type="text/ng-template", id="exit-settlement.html")
                 .col-md-3
                     .input-group
                         label.input-group-addon {{ vm.viewTranslatePath('TAB3-LABEL-SUBSIDIARY_LEDGER') | translate}}
-                        .form-control
+                        .form-control.text-right
                             span.text-primary {{(vm.subsidiary_ledger.self + vm.subsidiary_ledger.gov_subsidy) | currency}}
                 .col-md-2
                     label.input-group-addon.form-control.form-control-no-border.text-center —
                 .col-md-3
                     .input-group
                         label.input-group-addon {{ vm.viewTranslatePath('TAB3-LABEL-UNRECORDED_CHARGE_TOTAL') | translate}}
-                        .form-control
+                        .form-control.text-right
                             span.text-danger {{vm.unrecorded_charge_total | currency}}
                 .col-md-1
                     label.input-group-addon.form-control.form-control-no-border.text-center =
                 .col-md-3
                     .input-group
                         label.input-group-addon {{ ((vm.subsidiary_ledger.self + vm.subsidiary_ledger.gov_subsidy - vm.unrecorded_charge_total) >= 0 ? vm.viewTranslatePath('TAB3-LABEL-SUBSIDIARY_LEDGER-BALANCE_TO_RETURN'): vm.viewTranslatePath('TAB3-LABEL-SUBSIDIARY_LEDGER-BALANCE_TO_PAY')) | translate}}
-                        .form-control
+                        .form-control.text-right
                             span(ng-class='{"text-primary":(vm.subsidiary_ledger.self + vm.subsidiary_ledger.gov_subsidy - vm.unrecorded_charge_total) >= 0,"text-danger":(vm.subsidiary_ledger.self + vm.subsidiary_ledger.gov_subsidy - vm.unrecorded_charge_total)<0}') {{ (vm.subsidiary_ledger.self + vm.subsidiary_ledger.gov_subsidy - vm.unrecorded_charge_total) | currency}}
         .ngdialog-buttons
             .row
