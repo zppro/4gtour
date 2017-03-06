@@ -51,13 +51,13 @@
             .col-md-2.col-sm-3.col-xs-6.bg-info.pv-xl
                em.fa-rmb.fa.fa-4x
             .col-md-4.col-sm-3.col-xs-6.pv.br
-               .h1.m0.text-bold.text-primary {{vm.liveinAndAccountAndBedInfo.account.self || 0}}
+               .h1.m0.text-bold.text-primary {{vm.liveinAndAccountAndBedInfo.account.self || 0 |currency}}
                | {{ vm.moduleTranslatePath('SUBSIDIARY_LEDGER-SELF') | translate}}
             .col-md-3.col-sm-3.col-xs-6.pv.br
-               .h1.m0.text-bold.text-primary {{vm.liveinAndAccountAndBedInfo.account.gov_subsidy || 0}}
+               .h1.m0.text-bold.text-primary {{vm.liveinAndAccountAndBedInfo.account.gov_subsidy || 0 |currency}}
                | {{ vm.moduleTranslatePath('SUBSIDIARY_LEDGER-GOV_SUBSIDY') | translate}}
             .col-md-3.col-sm-3.col-xs-6.pv.br
-               .h1.m0.text-bold.text-primary {{vm.liveinAndAccountAndBedInfo.account.social_donation || 0}}
+               .h1.m0.text-bold.text-primary {{vm.liveinAndAccountAndBedInfo.account.social_donation || 0 |currency}}
                | {{ vm.moduleTranslatePath('SUBSIDIARY_LEDGER-SOCIAL_DONATION') | translate}}
    .col-lg-6
       .panel.widget

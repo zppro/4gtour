@@ -291,7 +291,7 @@ module.exports = {
                             }).populate('roomId','capacity');
 
                             var roomCatagoryInfo = [];
-                            var room_catagories = app.modelVariables.ROOM_CATEGORIES;
+                            var room_catagories = app.modelVariables["PENSION-AGENCY"].ROOM_CATEGORIES;
                             for(var key in room_catagories) {
 
                                 var catagory = room_catagories[key];
@@ -399,7 +399,7 @@ module.exports = {
                             //console.log(liveinGroups);
 
                             var roomCatalogSeries = [];
-                            var room_catagories = app.modelVariables.ROOM_CATEGORIES;
+                            var room_catagories = app.modelVariables["PENSION-AGENCY"].ROOM_CATEGORIES;
                             for (var key in room_catagories) {
                                 var catagory = room_catagories[key];
                                 var roomCatagoryInfo = [];
