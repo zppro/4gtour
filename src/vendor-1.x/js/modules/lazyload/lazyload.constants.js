@@ -61,6 +61,8 @@
                 {name:'subsystem.pension-agency.recharge.js',files:['app/js/lazy-modules/pension-agency/recharge.js']},
                 {name:'subsystem.pension-agency.exit-settlement.js',files:['app/js/lazy-modules/pension-agency/exit-settlement.js']},
                 {name:'subsystem.pension-agency.exit-item-return.js',files:['app/js/lazy-modules/pension-agency/exit-item-return.js']},
+                {name:'subsystem.pension-agency.nursing-worker.js',files:['app/js/lazy-modules/pension-agency/nursing-worker.js']},
+                {name:'subsystem.pension-agency.nursing-robot.js',files:['app/js/lazy-modules/pension-agency/nursing-robot.js']},
                 {name:'subsystem.pension-agency.room.js',files:['app/js/lazy-modules/pension-agency/room.js']},
                 {name:'subsystem.pension-agency.district.js',files:['app/js/lazy-modules/pension-agency/district.js']},
                 {name:'subsystem.health-center.dashboard.js',files:['app/js/lazy-modules/health-center/dashboard.js']},

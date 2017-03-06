@@ -3,6 +3,10 @@
  * Target:老人实体 (移植自fsrok)
  */
 var mongoose = require('mongoose');
+var D3006 = require('../../pre-defined/dictionary.json')['D3006'];
+var D3007 = require('../../pre-defined/dictionary.json')['D3007'];
+var D3008 = require('../../pre-defined/dictionary.json')['D3008'];
+
 module.isloaded = false;
 
 module.exports = function(ctx,name) {
@@ -62,6 +66,11 @@ module.exports = function(ctx,name) {
             exit_on: {type: Date},//出院时间
             remark: {type: String,maxLength:400},//如果为空则正式入院后从入院单中复制过来
             general_ledger:{type: Number, default: 0.00},//一般在通过流水月结转
+            nursing_assessment_level: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3006"])},
+            nursing_assessment_data: {
+                disease_evaluation_level: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3007"])},
+                adl_level: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3008"])}
+            },
             subsidiary_ledger:{
                 self:{type: Number, default: 0.00},//自费账户
                 gov_subsidy:{type: Number, default: 0.00} //政府补助
@@ -89,6 +98,20 @@ module.exports = function(ctx,name) {
             }],//2种情况：1对于吃、住、护理类别，必须old_item和new_item都有数据，表明无论如何会选择类别中的一项收费；2、对于其他和自定义项目可以old_item为空也可以new_item为空分别表示新增收费和删除收费
             py: {type: String},
             tenantId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'pub_tenant'}
+        }, {
+            toObject: {
+                virtuals: true
+            }
+            , toJSON: {
+                virtuals: true
+            }
+        });
+
+        elderlySchema.virtual('nursing_assessment_level_name').get(function () {
+            if (this.nursing_assessment_level) {
+                return D3006[this.nursing_assessment_level].name;
+            }
+            return '';
         });
 
         elderlySchema.pre('update', function (next) {

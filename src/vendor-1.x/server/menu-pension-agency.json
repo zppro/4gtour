@@ -132,6 +132,16 @@
     "icon": "fa fa-file-o",
     "children": [
       {
+        "_id": "menu.pension-agency.NURSING-WORKER",
+        "name": "护工",
+        "sref": "app.pension-agency.nursing-worker.list"
+      },
+      {
+        "_id": "menu.pension-agency.NURSING-ROBOT",
+        "name": "机器人",
+        "sref": "app.pension-agency.nursing-robot.list"
+      },
+      {
         "_id": "menu.pension-agency.ROOM",
         "name": "房间",
         "sref": "app.pension-agency.room.list"

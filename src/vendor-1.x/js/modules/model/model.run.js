@@ -28,6 +28,8 @@
         modelNode.factory('psn-reception');
         modelNode.factory('psn-leave');
         modelNode.factory('psn-recharge');
+        modelNode.factory('psn-nursingWorker');
+        modelNode.factory('psn-nursingRobot');
         modelNode.factory('psn-district');
         modelNode.factory('psn-room');
         modelNode.factory('psn-roomOccupancyChangeHistory');
