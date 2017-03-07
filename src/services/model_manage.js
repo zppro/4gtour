@@ -140,7 +140,20 @@ module.exports = {
                     return function * (next) {
                         try {
                             var modelOption = app.getModelOption(this);
-                            this.body = app.wrapper.res.rows(yield app.modelFactory().query(modelOption.model_name, modelOption.model_path, this.request.body));
+                            var rows =  app.modelFactory().query(modelOption.model_name, modelOption.model_path, this.request.body);
+                            var populates = this.request.body.populates;
+                            if (populates) {
+                                console.log('populates:');
+                                console.log(populates);
+                                if (app._.isArray(populates)) {
+                                    app._.each(populates, function(row) {
+                                        rows = rows.populate(row);
+                                    });
+                                } else {
+                                    rows = rows.populate(populates);
+                                }
+                            }
+                            this.body = app.wrapper.res.rows(yield rows);
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);

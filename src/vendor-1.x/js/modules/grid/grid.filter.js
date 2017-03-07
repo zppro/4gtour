@@ -15,6 +15,7 @@
         .filter('revertNumber',revertNumber)
         .filter('calcAge',calcAge)
         .filter('formatter',formatter)
+        .filter('populateFilter',populateFilter)
         .filter('boolFilter',boolFilter)
         .filter('diFilter',diFilter)
         .filter('orFilter',orFilter)
@@ -28,6 +29,7 @@
     revertNumber.$inject = ['GridUtils'];
     calcAge.$inject = ['GridUtils'];
     formatter.$inject = ['GridUtils'];
+    populateFilter.$inject = ['GridUtils'];
     boolFilter.$inject = ['GridUtils'];
     diFilter.$inject = ['GridUtils'];
     orFilter.$inject = ['GridUtils'];
@@ -62,6 +64,10 @@
 
     function formatter(GridUtils){
         return GridUtils.formatter;
+    }
+
+    function populateFilter(GridUtils) {
+        return GridUtils.populateFilter;
     }
 
     function boolFilter(GridUtils) {

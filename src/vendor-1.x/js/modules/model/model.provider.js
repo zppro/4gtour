@@ -57,15 +57,16 @@
                         this.services[name].one = function (params, successFn, errorFn) {
                             return this.get(_.extend(params, {_id: '$one'}), successFn, errorFn)
                         };
-                        this.services[name].page = function (page, where, select, sort, successFn, errorFn) {
+                        this.services[name].page = function (page, where, select, sort, populates, successFn, errorFn) {
                             return this._query({_id: '$query'}, {
                                 page: page,
                                 where: where,
                                 select: select,
-                                sort: sort
+                                sort: sort,
+                                populates: populates
                             }, successFn, errorFn);
                         };
-                        this.services[name].query = function (where, select, sort, successFn, errorFn) {
+                        this.services[name].query = function (where, select, sort, populates, successFn, errorFn) {
                             return this._query({_id: '$query'}, {
                                 where: where,
                                 select: select,

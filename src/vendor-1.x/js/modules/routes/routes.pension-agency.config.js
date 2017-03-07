@@ -1223,12 +1223,13 @@
                             "roomConfig": MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'room.config'
                         },
                         serverPaging: true,
+                        // populates: [{path:'nursing_workers', select:'-_id name'}, {path:'nursing_robots', select:'-_id name'}],
                         columns: [
                             {
                                 label: '片区',
                                 name: 'districtId',
                                 type: 'string',
-                                width: 200,
+                                width: 80,
                                 //sortable: true,
                                 formatter: 'model-related:psn-district'
                             },
@@ -1236,7 +1237,7 @@
                                 label: '房间名称',
                                 name: 'name',
                                 type: 'string',
-                                width: 200,
+                                width: 80,
                                 sortable: true
                             },
                             {
@@ -1258,6 +1259,20 @@
                                 name: 'stop_flag',
                                 type: 'bool',
                                 width: 40
+                            },
+                            {
+                                label: '护工',
+                                name: 'nursing_workers',
+                                type: 'string',
+                                width: 120,
+                                formatter: {type:'populate' ,options: {path:'nursing_workers', select:'-_id name'}}
+                            },
+                            {
+                                label: '机器人',
+                                name: 'nursing_robots',
+                                type: 'string',
+                                width: 120,
+                                formatter: {type:'populate' ,options: {path:'nursing_robots', select:'-_id name'}}
                             },
                             {
                                 label: '',

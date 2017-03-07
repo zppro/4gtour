@@ -188,6 +188,7 @@
             revertNumber: revertNumber,
             calcAge: calcAge,
             formatter: formatter,
+            populateFilter: populateFilter,
             boolFilter: boolFilter,
             diFilter: diFilter,
             orFilter: orFilter
@@ -278,6 +279,19 @@
                         return one.formatterData[rowValue];
                     }
                 }
+            }
+            return rowValue;
+        }
+
+        function populateFilter(rowValue, key) {
+            key = key || 'name';
+            if(_.isArray(rowValue)){
+                return _.map(rowValue,function(o){
+                    return o[key];
+                });
+            }
+            else{
+                return rowValue[key];
             }
             return rowValue;
         }

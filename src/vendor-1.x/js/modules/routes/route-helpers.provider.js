@@ -314,8 +314,7 @@
                                 var f = column.formatter
                                 if (_.isFunction(f)) {
                                     column.formatterData = f();
-                                }
-                                else if (_.isString(f)) {
+                                } else if (_.isString(f)) {
                                     if (f.indexOf('dictionary-local:') == 0) {
                                         ///dictionary-remote:{v1:k1,v2:k2}
                                         var jsonStr = _.rest(f.split(':')).join(':'); 
@@ -336,6 +335,13 @@
                                                 column.formatterData[row._id] = row.name;
                                             });
                                         });
+                                    }
+                                }  else if(_.isObject(f)) {
+                                    if (f.type === 'populate'){
+                                        if (!self.populates) {
+                                            self.populates = [];
+                                        }
+                                        self.populates.push(f.options)
                                     }
                                 }
                             }
@@ -486,7 +492,7 @@
                         if (self.blocker) {
                             self.blocker.start();
                         }
-                        self.rows = modelService.page(self.page, self.searchForm, null, (self.sort.direction > 0 ? '' : '-') + self.sort.column);
+                        self.rows = modelService.page(self.page, self.searchForm, null, (self.sort.direction > 0 ? '' : '-') + self.sort.column, self.populates);
                         //服务端totals在查询数据时计算
                         modelService.totals(self.searchForm).$promise.then(function (ret) {
                             self.page.totals = ret.totals;
