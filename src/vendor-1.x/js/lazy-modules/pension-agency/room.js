@@ -12,6 +12,7 @@
         .controller('RoomDetailsController', RoomDetailsController)
         .controller('RoomDetailsBatchAddController',RoomDetailsBatchAddController)
         .controller('RoomDetailsBatchEditController',RoomDetailsBatchEditController)
+        .controller('RoomConfigController',RoomConfigController)
     ;
 
 
@@ -325,6 +326,61 @@
                 var batchModel = {capacity: vm.model.capacity, stop_flag: !!vm.model.stop_flag};
                 console.log(batchModel);
                 vm.saveWhenBatchEdit(conditions, batchModel);
+            }
+            else {
+                if ($scope.utils.vtab(vm.tab1.cid)) {
+                    vm.tab1.active = true;
+                }
+            }
+        }
+    }
+
+    RoomConfigController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
+
+    function RoomConfigController($scope, ngDialog, vmh, vm) {
+
+        var vm = $scope.vm = vm;
+        $scope.utils = vmh.utils.v;
+
+
+        init();
+
+        function init() {
+
+            vm.init({removeDialog: ngDialog});
+            vm.doSubmit = doSubmit;
+            vm.tab1 = {cid: 'contentTab1'};
+
+            console.log('treeDataPromiseOfNursing_workers');
+            vm.treeDataPromiseOfNursingWorkers = vmh.shareService.tmp('T3005', 'name', {tenantId:vm.tenantId, roomId: vm.getParam('_id')}, true).then(function(nodes){
+                return nodes;
+            });
+            vm.treeDataPromiseOfNursingRobots = vmh.shareService.tmp('T3007', 'name', {tenantId:vm.tenantId, roomId: vm.getParam('_id')}, true).then(function(nodes){
+                return nodes;
+            });
+            // vmh.shareService.tmp('T3005', 'name', {tenantId:vm.tenantId, roomId: vm.getParam('roomId')}).then(function (treeNodes) {
+            //     vm.trees = [new vmh.treeFactory.sTree('tree1', treeNodes, {mode: 'check'})];
+            // });
+
+            vm.load();
+
+        }
+
+        function doSubmit() {
+
+            //if(vm.model.name) {
+            //    if (!vm.model.floor)
+            //        vm.model.floor = Number(vm.model.name.substr(0, (vm.model.name.length == 3 ? 1 : 2)));
+            //
+            //    if (!vm.model.number_in_floor)
+            //        vm.model.number_in_floor = Number(vm.model.name.substr(vm.model.name.length - 2, 2));
+            //    console.log(vm.model);
+            //
+            //}
+
+            if ($scope.theForm.$valid) {
+
+                vm.save();
             }
             else {
                 if ($scope.utils.vtab(vm.tab1.cid)) {

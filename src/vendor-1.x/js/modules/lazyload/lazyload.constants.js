@@ -81,7 +81,7 @@
                 {name:'subsystem.manage-center.order-refund-confirmation.js',files:['app/js/lazy-modules/manage-center/order-refund-confirmation.js']},
                 {name:'subsystem.manage-center.app-serverside-update.js',files:['app/js/lazy-modules/manage-center/app-serverside-update.js']},
                 {name:'subsystem.manage-center.app-clientside-update.js',files:['app/js/lazy-modules/manage-center/app-clientside-update.js']},
-                {name:'subsystem.demo-center.',files:['app/js/lazy-modules/demo.js']}
+                {name:'subsystem.demo-center.',files:['app/js/lazy-modules/demo-center/demo.js']}
             ]
         })
     ;

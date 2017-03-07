@@ -116,6 +116,47 @@ module.exports = {
                         yield next;
                     };
                 }
+            },
+            {
+                method: 'fetch-T3005',
+                verb: 'post',
+                url: this.service_url_prefix + "/T3005", // 房间可选护工树
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+
+                            var data = this.request.body;
+                            console.log(data);
+                            var tenantId = data.tenantId;
+                            var roomId = data.roomId;
+
+                            var rooms = yield app.modelFactory().model_query(app.models['psn_room'], {
+                                where: {
+                                    status: 1,
+                                    roomId: {$ne: roomId},
+                                    tenantId: tenantId
+                                }, select: 'nursing_workers '
+                            });
+                            var assignedNursingWorkers = []
+                            app._.each(rooms,function(o) {
+                                assignedNursingWorkers = app._.union(assignedNursingWorkers, o.nursing_workers)
+                            });
+
+                            var nursingWorkers = yield app.modelFactory().model_query(app.models['psn_nursingWorker'], {
+                                where: {
+                                    status: 1,
+                                    _id: {$nin: assignedNursingWorkers}
+                                }, select: 'name'
+                            });
+                            console.log(nursingWorkers);
+                            this.body = app.wrapper.res.rows(nursingWorkers);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
             }
         ];
 

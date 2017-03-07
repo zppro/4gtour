@@ -5,5 +5,5 @@
     'use strict';
 
     angular
-        .module('subsystem.demo', []);
+        .module('subsystem.demo-center', []);
 })();

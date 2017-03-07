@@ -6,7 +6,7 @@ script(type='text/ng-template', id="tree-directive-demo-node-renderer.html")
     .tree-node(s-tree-node)
         i(ng-if="node.children",class="fa",ng-class="{'fa-caret-right':!$tree.isExpanded(nIndex),'fa-caret-down':$tree.isExpanded(nIndex)}",ng-click="$tree.toggle(nIndex,$event)")
         i(ng-if="!node.children",class="fa",ng-class="{'fa-caret-right':$tree.mode=='grid'}")
-        .checkbox.c-checkbox(ng-if="$tree.mode=='check'")
+        .checkbox.c-checkbox(ng-if="$tree.mode=='check' && !node.disableCheck ")
             label
                 input(type='checkbox',ng-click="$tree.toggleCheck(node,$event)",ng-model="$tree.inputCheckedIndex[nIndex]")
                 span.fa.fa-check(ng-class="{'undetermined':$tree.isUndetermined(nIndex)}")

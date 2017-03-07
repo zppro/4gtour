@@ -39,7 +39,8 @@
     "PICK-FIELS":"挑选文件",
     "SYNC-INTERFACE-DATA":"同步接口数据",
     "PREVIEW":"预览",
-    "SHIP":"发货"
+    "SHIP":"发货",
+    "CONFIG": "配置"
   },
   "label": {
     "NONE": "无",

@@ -65,6 +65,7 @@
       {
         "_id": "1202",
         "name": "嘉兴市",
+        "disableCheck": true,
         "children": [
           {
             "_id": "120201",

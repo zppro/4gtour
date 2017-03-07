@@ -23,8 +23,7 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         <!--身份证号-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ID_NO') | translate}}:
                         .col-md-10
-                            input(type='text',name='id_no',ng-model='vm.model.id_no',required='',maxlength="18",box-input,box-input-option="{readonly:{{vm.readonly}} }",ng-model-options="{debounce:500}",box-readonly="vm.readonly",id-no2="{successEvent:true}")
-                            span.text-danger(ng-show="utils.vinput(this.theForm,'id_no','required')") {{ "validator.REQUIRED" | translate}}
+                            input(type='text',name='id_no',ng-model='vm.model.id_no', maxlength="18",box-input,box-input-option="{readonly:{{vm.readonly}} }",ng-model-options="{debounce:500}",box-readonly="vm.readonly",id-no2="{successEvent:true}")
                             span.text-danger(ng-show="utils.vinput(this.theForm,'id_no','IDNo')") {{ "validator.ID-NO" | translate}}
                     fieldset: .form-group
                         <!--手机-->

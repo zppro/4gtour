@@ -1219,6 +1219,9 @@
                     entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'room.list', {
                         modelName: 'psn-room',
                         searchForm: {"status": 1},
+                        transTo: {
+                            "roomConfig": MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'room.config'
+                        },
                         serverPaging: true,
                         columns: [
                             {
@@ -1315,6 +1318,18 @@
                         },
                         blockUI: true,
                         toList: ['districtId']
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'room.config', {
+                url: '/config/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'room-config.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'RoomConfigController',
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'room.config', {
+                        modelName: 'psn-room',
+                        blockUI: true
                     })
                 }
             })

@@ -23,6 +23,8 @@ module.exports = function(ctx,name) {
             capacity: {type: Number, required: true, min: 1},
             stop_flag: {type: Boolean, default: false},
             districtId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'psn_district'},
+            nursing_workers:[{type: mongoose.Schema.Types.ObjectId}],
+            nursing_robots:[{type: mongoose.Schema.Types.ObjectId}],
             tenantId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'pub_tenant'}
         });
 

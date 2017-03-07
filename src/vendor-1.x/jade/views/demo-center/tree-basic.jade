@@ -24,7 +24,7 @@ script(type='text/ng-template', id="tree-demo-baisc-renderer.html")
     .tree-node.no-select(tree-index="{{tIndex}}",node-index="{{nIndex}}",node-id="{{node._id}}",support-pre-select-or-check,ng-click="vm.trees[tIndex].select(node,$event)",ng-dblclick="vm.trees[tIndex].toggle(nIndex,$event)",ng-init="vm.trees[tIndex].addIndex(nIndex)")
         i(ng-if="node.children",class="fa",ng-class="{'fa-caret-right':!vm.trees[tIndex].isExpanded(nIndex),'fa-caret-down':vm.trees[tIndex].isExpanded(nIndex)}",ng-click="vm.trees[tIndex].toggle(nIndex,$event)")
         i(ng-if="!node.children",class="fa",ng-class="{'fa-caret-right':vm.trees[tIndex].mode=='grid'}")
-        .checkbox.c-checkbox(ng-if="vm.trees[tIndex].mode=='check'")
+        .checkbox.c-checkbox(ng-if="vm.trees[tIndex].mode=='check' && !node.disableCheck ")
             label
                 input(type='checkbox',ng-click="vm.trees[tIndex].toggleCheck(nIndex,$event)",ng-model="vm.trees[tIndex].inputCheckedIndex[nIndex]")
                 span.fa.fa-check(ng-class="{'undetermined':vm.trees[tIndex].isUndetermined(nIndex)}")
