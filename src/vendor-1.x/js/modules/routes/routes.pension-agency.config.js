@@ -1061,7 +1061,7 @@
                         serverPaging: true,
                         columns: [
                             {
-                                label: '用户编码',
+                                label: '护工编号',
                                 name: 'code',
                                 type: 'string',
                                 width: 120,
@@ -1071,21 +1071,21 @@
                                 label: '护工名称',
                                 name: 'name',
                                 type: 'string',
-                                width: 320,
+                                width: 120,
                                 sortable: true
                             },
                             {
                                 label: '手机号码',
                                 name: 'phone',
                                 type: 'string',
-                                width: 60,
+                                width: 120,
                                 sortable: true
                             },
                             {
                                 label: '停用',
                                 name: 'stop_flag',
                                 type: 'bool',
-                                width: 40
+                                width: 80
                             },
                             {
                                 label: '',
@@ -1105,6 +1105,87 @@
                 resolve: {
                     entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-worker.details', {
                         modelName: 'psn-nursingWorker'
+                        , blockUI: true
+                    })
+                    //, deps: helper.resolveFor2('ui.select')
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-robot', {
+                url: '/nursing-robot',
+                title: '机器人管理',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'NURSING-ROBOT'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'nursing-robot.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-robot.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-robot-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'NursingRobotGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-robot.list', {
+                        modelName: 'psn-nursingRobot',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '机器人编号',
+                                name: 'code',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '机器人名称',
+                                name: 'name',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '机器人状态',
+                                name: 'robot_status_name',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '机器人电量',
+                                name: 'power',
+                                type: 'number',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 60
+                            }
+                        ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-robot.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-robot-details.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'NursingRobotDetailsController',
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-robot.details', {
+                        modelName: 'psn-nursingRobot',
+                        model:{ robot_status: 'A0003' }
                         , blockUI: true
                     })
                     //, deps: helper.resolveFor2('ui.select')

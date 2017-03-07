@@ -3,6 +3,7 @@
  * 养老机构 护工机器人
  */
 var mongoose = require('mongoose');
+var D3009 = require('../../pre-defined/dictionary.json')['D3009'];
 
 module.isloaded = false;
 
@@ -19,12 +20,25 @@ module.exports = function(ctx,name) {
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
-            code: {type: String, required: true, maxlength: 30, index: {unique: true}},
+            code: {type: String, required: true, maxlength: 30},
             name: {type: String, required: true, maxlength: 30},
             power: {type: Number, min: 0, max: 100, default: 0},
-            phone: {type: String, maxlength: 20},
-            robot_status: {type: String, minlength: 1, maxlength: 1, enum: ctx._.rest(ctx.dictionary.keys["D3009"])},//机器人状态
+            robot_status: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3009"])},//机器人状态
             tenantId: {type: mongoose.Schema.Types.ObjectId}
+        }, {
+            toObject: {
+                virtuals: true
+            }
+            , toJSON: {
+                virtuals: true
+            }
+        });
+
+        nursingRobotSchema.virtual('robot_status_name').get(function () {
+            if (this.robot_status) {
+                return D3009[this.robot_status].name;
+            }
+            return '';
         });
 
         nursingRobotSchema.pre('update', function (next) {

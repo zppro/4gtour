@@ -19,7 +19,7 @@ module.exports = function(ctx,name) {
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
-            code: {type: String, required: true, maxlength: 30, index: {unique: true}},
+            code: {type: String, required: true, maxlength: 30},
             name: {type: String, required: true, maxlength: 30},
             id_no: {type: String, minlength: 18, maxlength: 18},
             phone: {type: String, maxlength: 20},
@@ -27,6 +27,13 @@ module.exports = function(ctx,name) {
             stoped_on: {type: Date},
             py: {type: String},
             tenantId: {type: mongoose.Schema.Types.ObjectId}
+        }, {
+            toObject: {
+                virtuals: true
+            }
+            , toJSON: {
+                virtuals: true
+            }
         });
 
         nursingWorkerSchema.pre('update', function (next) {

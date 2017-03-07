@@ -25,7 +25,10 @@
                                 label
                                     input(type='checkbox' data="trBubble" ng-model="row.checked" )
                                     span.fa.fa-check(data="trBubble")
-                        td.text-left {{::row.name}}
+                        td {{::row.code}}
+                        td {{::row.name}}
+                        td {{::row.robot_status_name}}
+                        td.text-right {{::row.power}}%
                         td
                             .btn-group
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
