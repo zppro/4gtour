@@ -2310,6 +2310,144 @@ module.exports = {
                     };
                 }
             },
+            /**********************房间配置相关*****************************/
+            {
+                method: 'nursingRobotRemoveRoomConfig',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingRobotRemoveRoomConfig",
+                handler: function (app, options) {
+                    return function * (next) {
+                        var steps;
+                        var tenant,robot,rooms,room,nursing_robots;
+                        try {
+                            //this.request.body
+                            var tenantId = this.request.body.tenantId;
+                            var robotId = this.request.body.robotId;
+
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            robot =  yield app.modelFactory().model_read(app.models['psn_nursingRobot'], robotId);
+                            if(!robot || robot.status == 0 ){
+                                this.body = app.wrapper.res.error({message: '无法找到机器人!'});
+                                yield next;
+                                return;
+                            }
+
+                            rooms = yield app.modelFactory().model_query(app.models['psn_room'], {
+                                where:{
+                                    nursing_robots: {$elemMatch:{$eq: robotId}},
+                                    tenantId: tenantId
+                                }
+                            });
+                            console.log(rooms);
+                            if(rooms.length == 0){
+                                this.body = app.wrapper.res.default();
+                                yield next;
+                                return;
+                            }
+
+                            console.log('前置检查完成');
+
+                            for (var i=0, len=rooms.length;i<len;i++) {
+                                room = rooms[i];
+                                nursing_robots = room.toObject().nursing_robots;
+                                var inIndex = nursing_robots.findIndex((o) => {
+                                    return o == robotId
+                                });
+
+                                if(inIndex != -1) {
+                                    nursing_robots.splice(inIndex, 1);
+                                }
+                                console.log(inIndex)
+                                room.nursing_robots =  nursing_robots;
+                                console.log(room.nursing_robots)
+                                yield room.save();
+                            }
+
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'nursingBedMonitorRemoveRoomConfig',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingBedMonitorRemoveRoomConfig",
+                handler: function (app, options) {
+                    return function * (next) {
+                        var steps;
+                        var tenant,bedMonitor,rooms,room,nursing_bedMonitors;
+                        try {
+                            //this.request.body
+                            var tenantId = this.request.body.tenantId;
+                            var bedMonitorId = this.request.body.bedMonitorId;
+
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            bedMonitor =  yield app.modelFactory().model_read(app.models['psn_nursingBedMonitor'], bedMonitorId);
+                            if(!bedMonitor || bedMonitor.status == 0 ){
+                                this.body = app.wrapper.res.error({message: '无法找到睡眠带!'});
+                                yield next;
+                                return;
+                            }
+
+                            rooms = yield app.modelFactory().model_query(app.models['psn_room'], {
+                                where:{
+                                    "nursing_bedMonitors.nursingBedMonitorId": bedMonitorId, // nursing_bedMonitors: {$elemMatch:{nursingBedMonitorId: bedMonitorId}},
+                                    tenantId: tenantId
+                                }
+                            });
+
+                            console.log(rooms);
+                            if(rooms.length == 0){
+                                this.body = app.wrapper.res.default();
+                                yield next;
+                                return;
+                            }
+
+
+                            console.log('前置检查完成');
+                            for (var i=0, len=rooms.length;i<len;i++) {
+                                room = rooms[i];
+                                nursing_bedMonitors = room.toObject().nursing_bedMonitors;
+                                var inIndex = nursing_bedMonitors.findIndex((o) => {
+                                    return o.nursingBedMonitorId == bedMonitorId
+                                });
+
+                                if(inIndex != -1) {
+                                    nursing_bedMonitors.splice(inIndex, 1);
+                                }
+                                room.nursing_bedMonitors =  nursing_bedMonitors;
+                                yield room.save();
+                            }
+
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
             /**********************入院相关*****************************/
             {
                 method: 'completeEnter',//完成入院

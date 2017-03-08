@@ -46,7 +46,9 @@
             vm.doSubmit = doSubmit;
             vm.tab1 = {cid: 'contentTab1'};
 
-            vm.load();
+            vm.load().then(function(){
+                vm.raw$stop_flag = !!vm.model.stop_flag;
+            });
 
         }
 
@@ -54,7 +56,15 @@
         function doSubmit() {
 
             if ($scope.theForm.$valid) {
-                vm.save();
+                var p;
+                if(vm.raw$stop_flag === false && vm.model.stop_flag === true) {
+                    p = vmh.fetch(vmh.psnService.nursingRobotRemoveRoomConfig(vm.tenantId, vm.model.id));
+                } else {
+                    p = vmh.promiseWrapper();
+                }
+                p.then(function(){
+                    vm.save();
+                });
             }
             else {
                 if ($scope.utils.vtab(vm.tab1.cid)) {

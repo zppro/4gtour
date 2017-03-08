@@ -12,12 +12,34 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         .col-md-10
                             .form-readable {{vm.model.name}}
                     fieldset: .form-group
-                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NURSING_WORKER') | translate}}:
-                        .col-md-4
-                            .tree.tree-basic(s-tree,s-tree-data="vm.treeDataPromiseOfNursingWorkers",s-tree-height="300", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check'}",ng-model="vm.model.nursing_workers")
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NURSING_ROBOT') | translate}}:
                         .col-md-4
                             .tree.tree-basic(s-tree,s-tree-data="vm.treeDataPromiseOfNursingRobots",s-tree-height="300", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check'}",ng-model="vm.model.nursing_robots")
+                        label.col-md-2.control-label.text-right {{ vm.viewTranslatePath('TAB1-LABEL-NURSING_BED_MONITOR') | translate}}:
+                        .col-md-4
+                            .tree.tree-basic(s-tree,s-tree-data="vm.treeDataPromiseOfNursingBedMonitors",s-tree-height="300", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check', selectNodeFormat:'object'}",ng-model="vm.model.nursing_bedMonitors")
+                    fieldset: .form-group
+                        .panel.panel-default.panel-grid
+                            .panel-heading-normal
+                                a {{ vm.viewTranslatePath('TAB1-LABEL-NURSING_BED_MONITOR_TO_BED_NO') | translate}}
+                            table.grid.table.table-bordered.table-hover.table-striped
+                                thead
+                                    tr
+                                        th.text-center(width="60")
+                                            | 睡眠带
+                                        th.text-center(width="50")
+                                            | 床位
+                                tbody
+                                    tr(ng-repeat="bedMonitor in vm.model.nursing_bedMonitors" )
+                                        td.text-left
+                                            span {{::bedMonitor.name}}
+                                        td.text-center
+                                            input.form-control(name="row$bed_no{{$index}}",type="number",ng-model='bedMonitor.bed_no',required='' , ui-validate="{min:'$value>=1', max:'$value<=vm.model.capacity'}")
+                                            span.text-danger(ng-show="utils.vinput(this.theForm,'row$bed_no{{$index}}','required')") {{ "validator.REQUIRED" | translate}}
+                                            span.text-danger(ng-show="utils.vinput(this.theForm,'row$bed_no{{$index}}','number')") {{ "validator.NUMBER" | translate}}
+                                            span.text-danger(ng-show="utils.vinput(this.theForm,'row$bed_no{{$index}}','min')") {{ "validator.MIN" | translate:{min:1} }}
+                                            span.text-danger(ng-show="utils.vinput(this.theForm,'row$bed_no{{$index}}','max')") {{ "validator.MAX" | translate:{max:vm.model.capacity} }}
+
     .text-right.mt-lg
         button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
         button.btn.btn-success(type="submit") {{'button.SAVE'|translate}}

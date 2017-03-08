@@ -1168,6 +1168,12 @@
                                 sortable: true
                             },
                             {
+                                label: '停用',
+                                name: 'stop_flag',
+                                type: 'bool',
+                                width: 40
+                            },
+                            {
                                 label: '',
                                 name: 'actions',
                                 sortable: false,
@@ -1240,6 +1246,12 @@
                                 type: 'string',
                                 width: 120,
                                 sortable: true
+                            },
+                            {
+                                label: '停用',
+                                name: 'stop_flag',
+                                type: 'bool',
+                                width: 40
                             },
                             {
                                 label: '',
@@ -1335,18 +1347,18 @@
                                 width: 40
                             },
                             {
-                                label: '护工',
-                                name: 'nursing_workers',
-                                type: 'string',
-                                width: 120,
-                                formatter: {type:'populate' ,options: {path:'nursing_workers', select:'-_id name'}}
-                            },
-                            {
                                 label: '机器人',
                                 name: 'nursing_robots',
                                 type: 'string',
                                 width: 120,
                                 formatter: {type:'populate' ,options: {path:'nursing_robots', select:'-_id name'}}
+                            },
+                            {
+                                label: '睡眠带',
+                                name: 'nursing_bedMonitors',
+                                type: 'string',
+                                width: 120,
+                                formatter: {type:'populate' ,options: {path:'nursing_bedMonitors', select:'-_id name'}}
                             },
                             {
                                 label: '',

@@ -351,16 +351,13 @@
             vm.doSubmit = doSubmit;
             vm.tab1 = {cid: 'contentTab1'};
 
-            console.log('treeDataPromiseOfNursing_workers');
-            vm.treeDataPromiseOfNursingWorkers = vmh.shareService.tmp('T3005', 'name', {tenantId:vm.tenantId, roomId: vm.getParam('_id')}, true).then(function(nodes){
+            vm.treeDataPromiseOfNursingRobots = vmh.shareService.tmp('T3005', 'name', {tenantId:vm.tenantId, roomId: vm.getParam('_id')}, true).then(function(nodes){
                 return nodes;
             });
-            vm.treeDataPromiseOfNursingRobots = vmh.shareService.tmp('T3007', 'name', {tenantId:vm.tenantId, roomId: vm.getParam('_id')}, true).then(function(nodes){
+
+            vm.treeDataPromiseOfNursingBedMonitors = vmh.shareService.tmp('T3007', 'name', {tenantId:vm.tenantId, roomId: vm.getParam('_id')}, true).then(function(nodes){
                 return nodes;
             });
-            // vmh.shareService.tmp('T3005', 'name', {tenantId:vm.tenantId, roomId: vm.getParam('roomId')}).then(function (treeNodes) {
-            //     vm.trees = [new vmh.treeFactory.sTree('tree1', treeNodes, {mode: 'check'})];
-            // });
 
             vm.load();
 

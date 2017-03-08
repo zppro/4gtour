@@ -443,6 +443,8 @@
                 return {
                     roomStatusInfo: roomStatusInfo,
                     updateRoomStatusInfo: updateRoomStatusInfo,
+                    nursingRobotRemoveRoomConfig: nursingRobotRemoveRoomConfig,
+                    nursingBedMonitorRemoveRoomConfig: nursingBedMonitorRemoveRoomConfig,
                     submitApplicationToExit: submitApplicationToExit,
                     submitToAuditItemReturn: submitToAuditItemReturn,
                     submitToAuditSettlement: submitToAuditSettlement,
@@ -483,6 +485,20 @@
                         roomId: roomId,
                         bed_no: bed_no,
                         elderlyId: elderlyId
+                    });
+                }
+
+                function nursingRobotRemoveRoomConfig(tenantId, robotId) {
+                    return $http.post(baseUrl + 'nursingRobotRemoveRoomConfig', {
+                        tenantId: tenantId,
+                        robotId: robotId
+                    });
+                }
+
+                function nursingBedMonitorRemoveRoomConfig(tenantId, bedMonitorId) {
+                    return $http.post(baseUrl + 'nursingBedMonitorRemoveRoomConfig', {
+                        tenantId: tenantId,
+                        bedMonitorId: bedMonitorId
                     });
                 }
 

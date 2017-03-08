@@ -220,62 +220,7 @@ module.exports = {
             {
                 method: 'fetch-T3005',
                 verb: 'post',
-                url: this.service_url_prefix + "/T3005", // 房间可选护工树
-                handler: function (app, options) {
-                    return function * (next) {
-                        try {
-
-                            var data = this.request.body;
-                            var tenantId = data.where.tenantId;
-                            var roomId = data.where.roomId;
-
-                            var rooms = yield app.modelFactory().model_query(app.models['psn_room'], {
-                                where: {
-                                    status: 1,
-                                    tenantId: tenantId
-                                }, select: 'name nursing_workers'
-                            });
-                            rooms = app._.reject(rooms, function(o){return o.id == roomId;})
-                            var assignedNursingWorkers = [];
-                            var dicNursingWorkerToRoom = {};
-                            app._.each(rooms, function(o){
-                                app._.each(o.nursing_workers,function (o2) {
-                                    var nursingWorkerId = o2.toString();
-                                    assignedNursingWorkers.push(nursingWorkerId);
-                                    dicNursingWorkerToRoom[nursingWorkerId] = o.name;
-                                });
-                            });
-
-                            var nursingWorkers = yield app.modelFactory().model_query(app.models['psn_nursingWorker'], {
-                                where: {
-                                    status: 1,
-                                }, select: data.select || 'name'
-                            });
-
-                            var rows = app._.map(nursingWorkers, function(o){
-                                var nursingWorker = o.toObject();
-
-                                nursingWorker.disableCheck = app._.contains(assignedNursingWorkers, nursingWorker.id);
-                                if (nursingWorker.disableCheck ) {
-                                    nursingWorker.name += ' (正服务于' + dicNursingWorkerToRoom[nursingWorker.id] + ')';
-                                }
-                                return nursingWorker;
-                            });
-                            // console.log(rows);
-                            this.body = app.wrapper.res.rows(rows);
-
-                        } catch (e) {
-                            self.logger.error(e.message);
-                            this.body = app.wrapper.res.error(e);
-                        }
-                        yield next;
-                    };
-                }
-            },
-            {
-                method: 'fetch-T3007',
-                verb: 'post',
-                url: this.service_url_prefix + "/T3007", // 房间可选机器人树
+                url: this.service_url_prefix + "/T3005", // 房间可选机器人树
                 handler: function (app, options) {
                     return function * (next) {
                         try {
@@ -304,6 +249,7 @@ module.exports = {
                             var nursingRobots = yield app.modelFactory().model_query(app.models['psn_nursingRobot'], {
                                 where: {
                                     status: 1,
+                                    stop_flag: false
                                 }, select: data.select || 'name'
                             });
 
@@ -315,6 +261,63 @@ module.exports = {
                                     nursingRobot.name += ' (正服务于' + dicNursingRobotToRoom[nursingRobot.id] + ')';
                                 }
                                 return nursingRobot;
+                            });
+                            // console.log(rows);
+                            this.body = app.wrapper.res.rows(rows);
+
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'fetch-T3007',
+                verb: 'post',
+                url: this.service_url_prefix + "/T3007", // 房间可选睡眠带树
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+
+                            var data = this.request.body;
+                            var tenantId = data.where.tenantId;
+                            var roomId = data.where.roomId;
+
+                            var rooms = yield app.modelFactory().model_query(app.models['psn_room'], {
+                                where: {
+                                    status: 1,
+                                    tenantId: tenantId
+                                }, select: 'name nursing_bedMonitors'
+                            });
+                            rooms = app._.reject(rooms, function(o){return o.id == roomId;})
+                            var assignedNursingBedMonitors = [];
+                            var dicNursingBedMonitorToRoom = {};
+                            app._.each(rooms, function(o){
+                                app._.each(o.nursing_bedMonitors,function (o2) {
+                                    var nursingBedMonitorId = o2.nursingBedMonitorId.toString();
+                                    assignedNursingBedMonitors.push(nursingBedMonitorId);
+                                    dicNursingBedMonitorToRoom[nursingBedMonitorId] = o.name + '-' + o2.bed_no +'#床';
+                                });
+                            });
+
+                            var nursingBedMonitors = yield app.modelFactory().model_query(app.models['psn_nursingBedMonitor'], {
+                                where: {
+                                    status: 1,
+                                    stop_flag: false
+                                }, select: data.select || 'name'
+                            });
+
+                            var rows = app._.map(nursingBedMonitors, function(o){
+                                var nursingBedMonitor = o.toObject();
+                                nursingBedMonitor.disableCheck = app._.contains(assignedNursingBedMonitors, nursingBedMonitor.id);
+                                if (nursingBedMonitor.disableCheck ) {
+                                    nursingBedMonitor.name += ' (正服务于' + dicNursingBedMonitorToRoom[nursingBedMonitor.id] + ')';
+                                }
+                                nursingBedMonitor.nursingBedMonitorId = nursingBedMonitor.id;
+
+                                return nursingBedMonitor;
                             });
                             // console.log(rows);
                             this.body = app.wrapper.res.rows(rows);

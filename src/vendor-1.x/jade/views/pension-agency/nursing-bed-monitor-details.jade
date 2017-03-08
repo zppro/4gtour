@@ -19,11 +19,19 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         .col-md-10
                             input.form-control(type='text', name='name',ng-model='vm.model.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-NAME")|translate}}' ,required='')
                             span.text-danger(ng-show="utils.vinput(this.theForm,'name','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-FLAG-COLLECTION') | translate}}:
+                        .col-md-2
+                            .checkbox.c-checkbox
+                                label
+                                    input#stopFlag(type='checkbox',ng-model='vm.model.stop_flag')
+                                    span.fa.fa-check
+                            label(for="stopFlag") {{ vm.viewTranslatePath('TAB1-LABEL-STOP_FLAG') | translate}}
                     fieldset: .form-group(ng-if="vm._action_ !== 'add' ")
-                        <!--机器人状态-->
-                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ROBOT_STATUS') | translate}}:
+                        <!--设备状态-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-DEVICE_STATUS') | translate}}:
                         .col-md-10
-                            .form-readable {{vm.model.robot_status_name}}
+                            .form-readable {{vm.model.device_status_name}}
     .text-right.mt-lg
         button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
         button.btn.btn-success(type="submit") {{'button.SAVE'|translate}}

@@ -24,6 +24,7 @@ module.exports = function(ctx,name) {
             name: {type: String, required: true, maxlength: 30},
             power: {type: Number, min: 0, max: 100, default: 0},
             robot_status: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3009"])},//机器人状态
+            stop_flag: {type: Boolean, default: false},//停用标志 机器是否停用,停用则接触与房间的绑定
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {
             toObject: {

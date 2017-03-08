@@ -23,6 +23,7 @@ module.exports = function(ctx,name) {
             code: {type: String, required: true, maxlength: 30},
             name: {type: String, required: true, maxlength: 30},
             device_status: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3009"])},//设备状态 在线 离线
+            stop_flag: {type: Boolean, default: false},//停用标志 机器是否停用,停用则接触与房间床位的绑定
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {
             toObject: {
