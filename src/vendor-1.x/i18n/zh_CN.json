@@ -184,6 +184,7 @@
       "BASIC-SETTINGS": "基础设置",
       "NURSING-WORKER": "护工管理",
       "NURSING-ROBOT": "机器人管理",
+      "NURSING-BED-MONITOR": "睡眠带管理",
       "ROOM": "房间管理",
       "DISTRICT": "片区管理",
       "CHARGE-STANDARD": "收费标准",

@@ -1191,6 +1191,80 @@
                     //, deps: helper.resolveFor2('ui.select')
                 }
             })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-bed-monitor', {
+                url: '/nursing-bed-monitor',
+                title: '睡眠带管理',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'NURSING-BED-MONITOR'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'nursing-bed-monitor.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-bed-monitor.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-bed-monitor-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'NursingBedMonitorGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-bed-monitor.list', {
+                        modelName: 'psn-nursingBedMonitor',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '睡眠带编号',
+                                name: 'code',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '名称',
+                                name: 'name',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '设备状态',
+                                name: 'device_status_name',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 60
+                            }
+                        ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-bed-monitor.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-bed-monitor-details.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'NursingBedMonitorDetailsController',
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-bed-monitor.details', {
+                        modelName: 'psn-nursingBedMonitor',
+                        model:{ device_status: 'A0003' }
+                        , blockUI: true
+                    })
+                    //, deps: helper.resolveFor2('ui.select')
+                }
+            })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'room', {
                 url: '/room',
                 title: '房间管理',

@@ -23,8 +23,11 @@ module.exports = function(ctx,name) {
             capacity: {type: Number, required: true, min: 1},
             stop_flag: {type: Boolean, default: false},
             districtId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'psn_district'},
-            nursing_workers:[{type: mongoose.Schema.Types.ObjectId, ref: 'psn_nursingWorker'}],
             nursing_robots:[{type: mongoose.Schema.Types.ObjectId, ref: 'psn_nursingRobot'}],
+            nursing_bedMonitors:[
+                {bed_no: {type: Number, min: 1}}, 
+                {type: mongoose.Schema.Types.ObjectId, ref: 'psn_nursingBedMonitor'}
+            ],
             tenantId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'pub_tenant'}
         });
 

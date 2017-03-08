@@ -1,6 +1,6 @@
 /**
- * district Created by zppro on 17-3-6.
- * Target:养老机构 机器人
+ * district Created by zppro on 17-3-8.
+ * Target:养老机构 睡眠带
  */
 
 (function() {
@@ -8,14 +8,14 @@
     
     angular
         .module('subsystem.pension-agency')
-        .controller('NursingRobotGridController', NursingRobotGridController)
-        .controller('NursingRobotDetailsController', NursingRobotDetailsController)
+        .controller('NursingBedMonitorGridController', NursingBedMonitorGridController)
+        .controller('NursingBedMonitorDetailsController', NursingBedMonitorDetailsController)
     ;
 
 
-    NursingRobotGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
+    NursingBedMonitorGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
 
-    function NursingRobotGridController($scope, ngDialog, vmh, vm) {
+    function NursingBedMonitorGridController($scope, ngDialog, vmh, vm) {
 
         $scope.vm = vm;
         $scope.utils = vmh.utils.g;
@@ -28,9 +28,9 @@
         }
     }
 
-    NursingRobotDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
+    NursingBedMonitorDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
 
-    function NursingRobotDetailsController($scope, ngDialog, vmh, vm) {
+    function NursingBedMonitorDetailsController($scope, ngDialog, vmh, vm) {
 
         var vm = $scope.vm = vm;
         $scope.utils = vmh.utils.v;

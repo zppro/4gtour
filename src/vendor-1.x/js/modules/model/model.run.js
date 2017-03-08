@@ -30,6 +30,7 @@
         modelNode.factory('psn-recharge');
         modelNode.factory('psn-nursingWorker');
         modelNode.factory('psn-nursingRobot');
+        modelNode.factory('psn-nursingBedMonitor');
         modelNode.factory('psn-district');
         modelNode.factory('psn-room');
         modelNode.factory('psn-roomOccupancyChangeHistory');

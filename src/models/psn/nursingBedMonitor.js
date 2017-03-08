@@ -1,6 +1,6 @@
 /**
- * Created by zppro on 17-3-6.
- * 养老机构 护理机器人
+ * Created by zppro on 17-3-8.
+ * 养老机构 护理离床监测
  */
 var mongoose = require('mongoose');
 var D3009 = require('../../pre-defined/dictionary.json')['D3009'];
@@ -16,14 +16,13 @@ module.exports = function(ctx,name) {
     else {
         module.isloaded = true;
 
-        var nursingRobotSchema = new mongoose.Schema({
+        var nursingBedMonitorSchema = new mongoose.Schema({
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
             code: {type: String, required: true, maxlength: 30},
             name: {type: String, required: true, maxlength: 30},
-            power: {type: Number, min: 0, max: 100, default: 0},
-            robot_status: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3009"])},//机器人状态
+            device_status: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3009"])},//设备状态 在线 离线
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {
             toObject: {
@@ -34,18 +33,18 @@ module.exports = function(ctx,name) {
             }
         });
 
-        nursingRobotSchema.virtual('robot_status_name').get(function () {
-            if (this.robot_status) {
-                return D3009[this.robot_status].name;
+        nursingBedMonitorSchema.virtual('device_status_name').get(function () {
+            if (this.device_status) {
+                return D3009[this.device_status].name;
             }
             return '';
         });
 
-        nursingRobotSchema.pre('update', function (next) {
+        nursingBedMonitorSchema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();
         });
 
-        return mongoose.model(name, nursingRobotSchema, name);
+        return mongoose.model(name, nursingBedMonitorSchema, name);
     }
 }

@@ -367,6 +367,20 @@
         "TAB1-LABEL-ROBOT_STATUS": "机器人状态"
       }
     },
+    "nursing-bed-monitor": {
+      "list": {
+        "TITLE": "养老机构-基础设置-睡眠带-列表"
+      },
+      "details": {
+        "TITLE": "养老机构-基础设置-睡眠带-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-CODE": "睡眠带编号",
+        "TAB1-PLACEHOLDER-CODE": "睡眠带S/N",
+        "TAB1-LABEL-NAME": "睡眠带名称",
+        "TAB1-PLACEHOLDER-NAME": "SMD001XX..",
+        "TAB1-LABEL-DEVICE_STATUS": "设备状态"
+      }
+    },
     "room": {
       "list": {
         "TITLE": "养老机构-基础设置-房间-列表"
