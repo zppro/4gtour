@@ -27,6 +27,8 @@
         modelNode.factory('psn-exit');
         modelNode.factory('psn-reception');
         modelNode.factory('psn-leave');
+        modelNode.factory('psn-nursingPlan');
+        modelNode.factory('psn-nursingPlanTemplate');
         modelNode.factory('psn-recharge');
         modelNode.factory('psn-nursingWorker');
         modelNode.factory('psn-nursingRobot');

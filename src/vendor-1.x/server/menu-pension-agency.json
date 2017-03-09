@@ -34,6 +34,29 @@
     ]
   },
   {
+    "_id": "menu.pension-agency.NURSING-MANAGE",
+    "name": "护理管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.pension-agency.ASSESSMENT-RESULT-IMPORT",
+        "name": "评估结果导入",
+        "sref": "app.pension-agency.assessment-result-import"
+      },
+      {
+        "_id": "menu.pension-agency.NURSING-PLAN",
+        "name": "护理计划",
+        "sref": "app.pension-agency.nursing-plan"
+      },
+      {
+        "_id": "menu.pension-agency.NURSING-PLAN-TEMPLATE",
+        "name": "护理计划模版",
+        "sref": "app.pension-agency.nursing-plan-template.list"
+      }
+    ]
+  },
+  {
     "_id": "menu.pension-agency.FINANCIAL",
     "name": "财务管理",
     "sref": "#",

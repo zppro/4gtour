@@ -520,6 +520,86 @@
                     , deps: helper.resolveFor2('angucomplete-alt')
                 }
             })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-plan-template', {
+            url: '/nursing-plan-template',
+            title: '护理计划模版',
+            abstract: true,
+            views: {
+                "module-header": {
+                    templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                    controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                },
+                "module-content": {
+                    template: '<div class="data-ui-view"></div>'
+                }
+            },
+            data:{
+                func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'NURSING-PLAN-TEMPLATE'//业务系统使用
+            }
+            , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'nursing-plan-template.js')
+        })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-plan-template.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-plan-template-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'NursingPlanTemplateGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-plan-template.list', {
+                        modelName: 'psn-nursingPlanTemplate',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '模版名称',
+                                name: 'name',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '类型',
+                                name: 'type_name',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '停用',
+                                name: 'stop_flag',
+                                type: 'bool',
+                                width: 80
+                            },
+                            {
+                                label: '停用原因',
+                                name: 'stop_result_name',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 60
+                            }
+                        ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-plan-template.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-plan-template-details.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'NursingPlanTemplateDetailsController',
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-plan-template.details', {
+                        modelName: 'psn-nursingPlanTemplate',
+                        model:{ type: 'A0001', stop_result: "A0001" }
+                        , blockUI: true
+                    })
+                    //, deps: helper.resolveFor2('ui.select')
+                }
+            })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'enter-payment', {
                 url: '/enter-payment',
                 title: '老人入院缴费',

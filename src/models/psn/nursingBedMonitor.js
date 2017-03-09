@@ -21,7 +21,7 @@ module.exports = function(ctx,name) {
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
             code: {type: String, required: true, maxlength: 30},
-            name: {type: String, required: true, maxlength: 30},
+            name: {type: String, required: true, maxlength: 100},
             device_status: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3009"])},//设备状态 在线 离线
             stop_flag: {type: Boolean, default: false},//停用标志 机器是否停用,停用则接触与房间床位的绑定
             tenantId: {type: mongoose.Schema.Types.ObjectId}
