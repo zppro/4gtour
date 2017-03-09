@@ -24,10 +24,10 @@ module.exports = function(ctx,name) {
             stop_flag: {type: Boolean, default: false},
             districtId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'psn_district'},
             nursing_robots:[{type: mongoose.Schema.Types.ObjectId, ref: 'psn_nursingRobot'}],
-            nursing_bedMonitors:[
-                {bed_no: {type: Number, min: 1}}, 
-                {nursingBedMonitorId: {type: mongoose.Schema.Types.ObjectId, ref: 'psn_nursingBedMonitor'}}
-            ],
+            nursing_bedMonitors:[{
+                bed_no: {type: Number, min: 1},
+                nursingBedMonitorId: {type: mongoose.Schema.Types.ObjectId, ref: 'psn_nursingBedMonitor'}
+            }],
             tenantId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'pub_tenant'}
         });
 

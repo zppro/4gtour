@@ -1358,7 +1358,7 @@
                                 name: 'nursing_bedMonitors',
                                 type: 'string',
                                 width: 120,
-                                formatter: {type:'populate' ,options: {path:'nursing_bedMonitors', select:'-_id name'}}
+                                formatter: {type:'populate' ,options: {path:'nursing_bedMonitors.nursingBedMonitorId', select:'-_id name'}}
                             },
                             {
                                 label: '',

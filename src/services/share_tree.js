@@ -306,14 +306,18 @@ module.exports = {
                                 where: {
                                     status: 1,
                                     stop_flag: false
-                                }, select: data.select || 'name'
+                                },
+                                select: data.select || 'name'
                             });
 
                             var rows = app._.map(nursingBedMonitors, function(o){
                                 var nursingBedMonitor = o.toObject();
                                 nursingBedMonitor.disableCheck = app._.contains(assignedNursingBedMonitors, nursingBedMonitor.id);
+
                                 if (nursingBedMonitor.disableCheck ) {
-                                    nursingBedMonitor.name += ' (正服务于' + dicNursingBedMonitorToRoom[nursingBedMonitor.id] + ')';
+                                    nursingBedMonitor.name = nursingBedMonitor.name + ' (正服务于' + dicNursingBedMonitorToRoom[nursingBedMonitor.id] + ')';
+                                } else {
+                                    nursingBedMonitor.name = nursingBedMonitor.code + ' [' + nursingBedMonitor.name + ']'
                                 }
                                 nursingBedMonitor.nursingBedMonitorId = nursingBedMonitor.id;
 

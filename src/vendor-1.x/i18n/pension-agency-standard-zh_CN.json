@@ -429,7 +429,9 @@
         "TAB1-LABEL-NAME": "房间名称",
         "TAB1-LABEL-NURSING_ROBOT": "机器人",
         "TAB1-LABEL-NURSING_BED_MONITOR": "睡眠带",
-        "TAB1-LABEL-NURSING_BED_MONITOR_TO_BED_NO": "睡眠带绑定床位"
+        "TAB1-LABEL-NURSING_BED_MONITOR_TO_BED_NO": "睡眠带绑定床位",
+        "TAB1-LABEL-CAPACITY": "床位数量",
+        "MSG-OVER-CAPACITY": "睡眠带数量不能超过床位数量"
       }
     },
     "district": {

@@ -349,18 +349,36 @@
 
             vm.init({removeDialog: ngDialog});
             vm.doSubmit = doSubmit;
+            vm.onNursingBedMonitorCheckChange = onNursingBedMonitorCheckChange;
             vm.tab1 = {cid: 'contentTab1'};
 
             vm.treeDataPromiseOfNursingRobots = vmh.shareService.tmp('T3005', 'name', {tenantId:vm.tenantId, roomId: vm.getParam('_id')}, true).then(function(nodes){
                 return nodes;
             });
 
-            vm.treeDataPromiseOfNursingBedMonitors = vmh.shareService.tmp('T3007', 'name', {tenantId:vm.tenantId, roomId: vm.getParam('_id')}, true).then(function(nodes){
+            vm.treeDataPromiseOfNursingBedMonitors = vmh.shareService.tmp('T3007', 'code name', {tenantId:vm.tenantId, roomId: vm.getParam('_id')}, true).then(function(nodes){
                 return nodes;
             });
 
             vm.load();
 
+
+
+        }
+
+        function onNursingBedMonitorCheckChange(checkedNodes) {
+
+            var nursing_bedMonitors = vm.model.nursing_bedMonitors;
+            for(var i=0,len=checkedNodes.length;i<len;i++) {
+                var index = _.findIndex(nursing_bedMonitors, function (bedMonitor) {
+                    return bedMonitor.nursingBedMonitorId == checkedNodes[i].nursingBedMonitorId;
+                });
+                if (index != -1) {
+                    nursing_bedMonitors[index].name = checkedNodes[i].name;
+                }
+            }
+
+            console.log(vm.model.nursing_bedMonitors);
         }
 
         function doSubmit() {
@@ -376,7 +394,14 @@
             //}
 
             if ($scope.theForm.$valid) {
-
+                if (vm.model.nursing_bedMonitors.length > vm.model.capacity) {
+                    vmh.alertWarning(vm.viewTranslatePath('MSG-OVER-CAPACITY'), true);
+                    return;
+                }
+                // var nursing_bedMonitors = vm.model.nursing_bedMonitors;
+                // vm.model.nursing_bedMonitors = nursing_bedMonitors.map(function(o){
+                //    return {nursingBedMonitorId: o.id,bed_no: o.bed_no};
+                // });
                 vm.save();
             }
             else {

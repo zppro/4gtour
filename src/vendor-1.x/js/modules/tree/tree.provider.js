@@ -66,7 +66,6 @@
         }
 
         function attrs(nodes, level, levelSplitChar, parentOrderNo, parentIndex) {
-
             nodes = angular.isArray(nodes) ? nodes : [nodes];
             if (!level) {
                 level = 1;
@@ -359,6 +358,31 @@
                     this.selectedNode;
                     this.checkedNodes = [];
                     this.inputCheckedIndex = {};
+                    this.eventNames = ['select', 'checkChange'];
+                    this.eventHanders = {}
+
+                    this._addEventListener = function (eventName, eventHanler) {
+                        if(this.eventNames.indexOf(eventName) != -1){
+                            if (!this.eventHanders[eventName]) {
+                                this.eventHanders[eventName] = [];
+                            }
+                            this.eventHanders[eventName].push(eventHanler);
+                        }
+                    }
+
+                    this._removeEventListener = function (eventName, eventHanler) {
+                        if (this.eventHanders[eventName]) {
+                            var handlers = this.eventHanders[eventName];
+                            if (eventHanler) {
+                                var index = handlers.indexOf(eventHanler);
+                                if (index != -1) {
+                                    handlers.splice(index, 1);
+                                }
+                            } else {
+                                handlers.length = 0;
+                            }
+                        }
+                    }
 
                     this.getSelectedNode = function(){
                         return this.selectedNode;
@@ -481,8 +505,15 @@
                             //console.log(angular.element(target).parents().filter('.tree-group').children('.cascade-selectable'));
                             angular.element(target).parents().filter('.tree-group').children('.cascade-selectable').addClass('tree-node-cascade-selected')
                         }
-
+                        var handlers = this.eventHanders['select'];
+                        if(handlers) {
+                            for (var i=0,len=handlers.length;i<len;i++) {
+                                handlers[i]({selectedNode:this.selectedNode});
+                            }
+                        }
                         $rootScope.$broadcast('tree:node:select', this.selectedNode, this);
+
+
 
                         if($event && $event.currentTarget)
                             $event && $event.stopPropagation();
@@ -512,6 +543,12 @@
                             //手工动作重新设置checked节点
                             if ($event && $event.currentTarget) {
                                 this.checkedNodes = this._getCheckedNodes();
+                                var handlers = this.eventHanders['checkChange'];
+                                if(handlers) {
+                                    for (var i=0,len=handlers.length;i<len;i++) {
+                                        handlers[i]({checkedNodes:this.checkedNodes});
+                                    }
+                                }
                                 $rootScope.$broadcast('tree:node:checkChange', this.checkedNodes, this);
                             }
                         }
@@ -533,6 +570,12 @@
                             //手工动作重新设置checked节点
                             if ($event && $event.currentTarget) {
                                 this.checkedNodes = this._getCheckedNodes();
+                                var handlers = this.eventHanders['checkChange'];
+                                if(handlers) {
+                                    for (var i=0,len=handlers.length;i<len;i++) {
+                                        handlers[i]({checkedNodes:this.checkedNodes});
+                                    }
+                                }
                                 $rootScope.$broadcast('tree:node:checkChange', this.checkedNodes, this);
                             }
                         }
@@ -551,6 +594,12 @@
                             //手工动作重新设置checked节点
                             if ($event && $event.currentTarget) {
                                 this.checkedNodes = this._getCheckedNodes();
+                                var handlers = this.eventHanders['checkChange'];
+                                if(handlers) {
+                                    for (var i=0,len=handlers.length;i<len;i++) {
+                                        handlers[i]({checkedNodes:this.checkedNodes});
+                                    }
+                                }
                                 $rootScope.$broadcast('tree:node:checkChange', this.checkedNodes, this);
                             }
                         }

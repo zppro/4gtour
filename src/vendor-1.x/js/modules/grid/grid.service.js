@@ -283,15 +283,18 @@
             return rowValue;
         }
 
+        
+        
         function populateFilter(rowValue, key) {
             key = key || 'name';
             if(_.isArray(rowValue)){
                 return _.map(rowValue,function(o){
-                    return o[key];
+                    console.log(o);
+                    return ViewUtils.getPropery(o, key);
                 });
             }
             else{
-                return rowValue[key];
+                return ViewUtils.getPropery(o, key);
             }
             return rowValue;
         }

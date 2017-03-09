@@ -236,7 +236,9 @@
             vinput: vinput,
             isPhone: isPhone,
             changeProperyName: changeProperyName,
-            unescapeHTML: unescapeHTML
+            unescapeHTML: unescapeHTML,
+            indexObj: indexObj,
+            getPropery: getPropery
         };
 
         function now(){
@@ -291,6 +293,19 @@
             return str.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'\"').replace(/&amp;#39;/g,'\'').replace(/&amp;/g,'&');
         }
 
+        function indexObj(obj,k) {
+            console.log(k)
+            console.log(obj)
+            return obj[k]
+        }
+
+        function getPropery(obj, k) {
+            if (k.indexOf('.') != -1) {
+                return k.split('.').reduce(indexObj, obj)
+            } else {
+                return indexObj(obj, k);
+            }
+        }
     }
 
 

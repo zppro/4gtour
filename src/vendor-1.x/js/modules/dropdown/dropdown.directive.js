@@ -65,7 +65,7 @@
                     }, 0);
                 }
             };
-            $q.when(data).then(function (items) {
+            $q.when(data).then(function (itemchanges) {
                 scope.items = items;
 
                 setShowText();

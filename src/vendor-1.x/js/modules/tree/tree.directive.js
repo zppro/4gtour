@@ -35,6 +35,9 @@
                     angular.forEach(properyNames, function (properyName) {
                         self[properyName] = ctx[properyName];
                     });
+                    $scope.onSelect && $scope._tree._addEventListener('select', $scope.onSelect);
+                    $scope.onCheckChange && $scope._tree._addEventListener('checkChange', $scope.onCheckChange);
+
 
                     this.linked = 0;
                     this.totals = ctx.totalNodeCounts;
@@ -147,7 +150,7 @@
             templateUrl: function (elem, attrs) {
                 return attrs.sTreeTemplateUrl || 'tree-directive-default-renderer.html'
             },
-            scope: {treeData: '=sTreeData', treeHeight: '=sTreeHeight', ngModel: '=', isDisabled:'&sTreeNodeIsDisabled', treeNodeFunc: '&sTreeNodeFunc'}
+            scope: {treeData: '=sTreeData', treeHeight: '=sTreeHeight', ngModel: '=', onSelect: '&', onCheckChange: '&',  isDisabled:'&sTreeNodeIsDisabled', treeNodeFunc: '&sTreeNodeFunc'}
         };
         return directive;
 
@@ -186,6 +189,7 @@
             var height = Number(scope.treeHeight);
             option.height = height;
             var dropdownValue =  option.dropdownValue || 'name';
+            var nodeIdKey = option.nodeIdKey || '_id';
 
             // Bring in changes from outside:
             scope.$watch('ngModel', function(newValue,oldValue) {
@@ -200,12 +204,18 @@
                             return;
 
                         scope._tree.checkedNodes = [];
+                        var checkedNodeValue;
                         for(var i=0;i<newValue.length;i++) {
-                            if(angular.isString(newValue[i])){
-                                scope._tree.checkedNodes.push($tree.findNodeById(newValue[i]));
+                            checkedNodeValue = newValue[i];
+                            if(angular.isString(checkedNodeValue)){
+                                scope._tree.checkedNodes.push($tree.findNodeById(checkedNodeValue));
                             }
                             else{
-                                scope._tree.checkedNodes.push(newValue[i]);
+                                if (checkedNodeValue.level && checkedNodeValue.index && checkedNodeValue.orderNo) {
+                                    scope._tree.checkedNodes.push(newValue[i]);
+                                } else {
+                                    scope._tree.checkedNodes.push($tree.findNodeById(checkedNodeValue[nodeIdKey]));
+                                }
                             }
                         }
                         angular.forEach(scope._tree.checkedNodes,function(node){
@@ -244,7 +254,6 @@
 
                 }).then(function(){
                     $tree._bindTree();
-
                     if(option.layout == 'dropdown') {
 
                         var dropdownInput = element.children('.input-group').children('input');
