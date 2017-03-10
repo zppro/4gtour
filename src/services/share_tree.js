@@ -357,19 +357,26 @@ module.exports = {
                             var rooms = yield app.modelFactory().model_query(app.models['psn_room'], {
                                 where: {
                                     status: 1,
-                                    districtId: o.districtId,
                                     tenantId: tenantId
                                 }, select: 'name floor districtId'
                             });
 
                             rows = districts.map((o) => {
-                                var districtNode = {id: o.id, name: o.name ,children:[]};
-
-                                districtNode.children = _.union(rooms.where((o1) => {
+                                var districtNode = {id: o.id, name: o.name};
+                                districtNode.children = app._.uniq(app._.where(rooms, (o1) => {
                                     return o1.districtId == districtNode.id;
                                 }).map((o2) => {
-                                   return o2.floor
-                                }));
+                                    return o2.floor;
+
+                                })).map((o3) => {
+                                    var floorNode = {id: o3, name: o3  + '层'};
+                                    floorNode.children = app._.where(rooms, (o4) => {
+                                        return o4.districtId == districtNode.id && o4.floor == floorNode.id;
+                                    }).map((o5) => {
+                                        return {id: o5.id, name:o5.name}
+                                    })
+                                    return floorNode;
+                                });
                                 return districtNode;
                             })
 
@@ -377,6 +384,7 @@ module.exports = {
                             this.body = app.wrapper.res.rows(rows);
 
                         } catch (e) {
+                            console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
                         }

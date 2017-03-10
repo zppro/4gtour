@@ -62,6 +62,10 @@ var source = {
         watch: paths.src_client + 'i18n/*',
         app: paths.src_client + 'i18n/*'
     },
+    font: {
+        watch: [paths.src_client + 'font/**/*'],
+        app: paths.src_client + 'font/**/*'
+    },
     css: {
         watch: [paths.src_client + 'css/**/*.css'],
         app: paths.src_client + 'css/**/*.css'
@@ -113,6 +117,7 @@ var build = {
     develop: {
         images: paths.pub_client_app_develop + 'img/',
         i18n: paths.pub_client_app_develop + 'i18n/',
+        fonts: paths.pub_client_app_develop + 'fonts/',
         styles: paths.pub_client_app_develop + 'css/',
         scripts: paths.pub_client_app_develop + 'js/',
         lazyModules: {
@@ -128,6 +133,7 @@ var build = {
     production: {
         images: paths.pub_client_app_production + 'img/',
         i18n: paths.pub_client_app_production + 'i18n/',
+        fonts: paths.pub_client_app_production + 'fonts/',
         styles: paths.pub_client_app_production + 'css/',
         scripts: paths.pub_client_app_production + 'js/',
         lazyModules: {
@@ -226,6 +232,19 @@ gulp.task('i18n:app',function() {
 
 gulp.task('i18n',[
     'i18n:app'
+]);
+
+// Styles:less subsystem
+gulp.task('font:app', function() {
+    log('copying thirdparty font file for app..');
+    return gulp.src(source.font.app)
+        .pipe(gulp.dest(isProduction ? build.production.fonts : build.develop.fonts))
+        .pipe($plugins.livereload())
+        ;
+});
+
+gulp.task('font',[
+    'font:app'
 ]);
 
 // Styles:less subsystem
@@ -474,6 +493,7 @@ gulp.task('watch', function() {
     gulp.watch(serverdata.watch,['server']);
     gulp.watch(source.images.watch, ['images']);
     gulp.watch(source.i18n.watch, ['i18n']);
+    gulp.watch(source.font.watch, ['font']);
     gulp.watch(source.jade.watch, ['jade']);
     gulp.watch(source.css.watch, ['styles:css:app']);
     gulp.watch(source.less.watch, ['styles:less:app', 'styles:less:app-rtl','styles:less:subsystem']);
@@ -527,6 +547,7 @@ gulp.task('production', gulpsync.sync([
     'server',
     'images',
     'i18n',
+    'font',
     'styles',
     'scripts',
     'lazy-modules',
@@ -547,6 +568,7 @@ gulp.task('develop', gulpsync.sync([
     'server',
     'images',
     'i18n',
+    'font',
     'styles',
     'scripts',
     'lazy-modules',

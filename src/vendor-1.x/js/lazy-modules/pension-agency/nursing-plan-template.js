@@ -56,14 +56,9 @@
                 vmh.clientData.getJson(x_axis).then(function (data) {
                     vm.xAxisData = data;
                 });
-                vm.yAxisData = [];
-
-                vm.yAxisDataPromise = vmh.shareService.d('D1013').then(function (hobbies) {
-                    vmh.utils.v.changeProperyName(hobbies, [{o: 'value', n: '_id'}]);
-                    return hobbies;
-                });
 
                 vm.yAxisDataPromise = vmh.shareService.tmp('T3009', null, {tenantId:vm.tenantId}).then(function(nodes){
+                    console.log(nodes);
                     return nodes;
                 });
             });
