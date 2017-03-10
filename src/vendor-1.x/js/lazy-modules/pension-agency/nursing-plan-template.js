@@ -46,11 +46,26 @@
             vm.doSubmit = doSubmit;
             vm.tab1 = {cid: 'contentTab1'};
 
+
+            //vm.modelService['psn_room']
+
             vm.load().then(function(){
                 vm.raw$stop_flag = !!vm.model.stop_flag;
-
                 //构造类型表格
-                vm.xAxisData = _.range
+                var x_axis = vm.model.type == 'A0001' ? 'weekAxis' :'monthAxis';
+                vmh.clientData.getJson(x_axis).then(function (data) {
+                    vm.xAxisData = data;
+                });
+                vm.yAxisData = [];
+
+                vm.yAxisDataPromise = vmh.shareService.d('D1013').then(function (hobbies) {
+                    vmh.utils.v.changeProperyName(hobbies, [{o: 'value', n: '_id'}]);
+                    return hobbies;
+                });
+
+                vm.yAxisDataPromise = vmh.shareService.tmp('T3009', null, {tenantId:vm.tenantId}).then(function(nodes){
+                    return nodes;
+                });
             });
 
         }

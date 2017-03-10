@@ -405,7 +405,8 @@ co(function*() {
         app.use(staticCache(app.conf.dir.static_production + app.conf.client.bulidtarget, {alias :{'/':'/index.html'}}));
     }
     else {
-        app.use(koaStatic(app.conf.dir.static_develop + app.conf.client.bulidtarget));
+        // app.use(koaStatic(app.conf.dir.static_develop + app.conf.client.bulidtarget));
+        app.use(staticCache(app.conf.dir.static_develop + app.conf.client.bulidtarget, {alias :{'/':'/index-dev.html'}}));
         app.use(require('koa-livereload')());
     }
 

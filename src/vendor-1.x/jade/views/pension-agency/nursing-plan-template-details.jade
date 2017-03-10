@@ -24,6 +24,11 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         .col-md-8
                             .form-readable(ng-if="vm.model.stop_flag") {{vm.model.stop_result_name}}
                     fieldset: .form-group
+                        <!--纵轴数据-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-YAXIS') | translate}}:
+                        .col-md-10
+                            .tree.tree-dropdown(name='yAxisData',s-tree,s-tree-data="vm.yAxisDataPromise",s-tree-height="200", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',layout:'dropdown'}",ng-model="vm.yAxisData",required='')
+                    fieldset: .form-group
                         <!--模版内容-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-CONTENT') | translate}}:
                         .col-md-10
@@ -31,6 +36,8 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                                 table.grid.table.table-bordered.table-hover.table-striped
                                     thead
                                         tr
+                                            th
+
                                             th.text-center(ng-repeat="column in vm.xAxisData",width="100") {{column.label}}
                                     tbody
                                         tr(ng-repeat="row in vm.yAxisData")

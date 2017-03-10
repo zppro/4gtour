@@ -333,6 +333,56 @@ module.exports = {
                         yield next;
                     };
                 }
+            },
+            {
+                method: 'fetch-T3009',
+                verb: 'post',
+                url: this.service_url_prefix + "/T3009", // 区域,楼层,房间树
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+
+                            var data = this.request.body;
+                            var tenantId = data.where.tenantId;
+
+                            var rows = [];
+
+                            var districts = yield app.modelFactory().model_query(app.models['psn_district'], {
+                                where: {
+                                    status: 1,
+                                    tenantId: tenantId
+                                }, select: 'name'
+                            });
+
+                            var rooms = yield app.modelFactory().model_query(app.models['psn_room'], {
+                                where: {
+                                    status: 1,
+                                    districtId: o.districtId,
+                                    tenantId: tenantId
+                                }, select: 'name floor districtId'
+                            });
+
+                            rows = districts.map((o) => {
+                                var districtNode = {id: o.id, name: o.name ,children:[]};
+
+                                districtNode.children = _.union(rooms.where((o1) => {
+                                    return o1.districtId == districtNode.id;
+                                }).map((o2) => {
+                                   return o2.floor
+                                }));
+                                return districtNode;
+                            })
+
+                            console.log(rows);
+                            this.body = app.wrapper.res.rows(rows);
+
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
             }
         ];
 

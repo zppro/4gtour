@@ -281,6 +281,7 @@
         "TAB1-PLACEHOLDER-NAME": "1#楼周计划..",
         "TAB1-LABEL-FLAG-COLLECTION": "标志集合",
         "TAB1-LABEL-STOP_FLAG": "停用",
+        "TAB1-LABEL-YAXIS": "Y轴数据",
         "TAB1-LABEL-CONTENT": "模版内容"
       }
     },
