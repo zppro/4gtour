@@ -5,7 +5,7 @@
 var co = require('co');
 var soap = require('soap');
 var xml2js = require('xml2js');
-var pftConfig = require('../pre-defined/pft-config.json');
+var pftConfig = require('../../pre-defined/pft-config.json');
 
 module.exports = {
     init: function (ctx) {

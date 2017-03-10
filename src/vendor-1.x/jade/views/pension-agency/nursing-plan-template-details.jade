@@ -23,6 +23,18 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                             label(for="stopFlag") {{ vm.viewTranslatePath('TAB1-LABEL-STOP_FLAG') | translate}}
                         .col-md-8
                             .form-readable(ng-if="vm.model.stop_flag") {{vm.model.stop_result_name}}
+                    fieldset: .form-group
+                        <!--模版内容-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-CONTENT') | translate}}:
+                        .col-md-10
+                            .panel.panel-default.panel-grid
+                                table.grid.table.table-bordered.table-hover.table-striped
+                                    thead
+                                        tr
+                                            th.text-center(ng-repeat="column in vm.xAxisData",width="100") {{column.label}}
+                                    tbody
+                                        tr(ng-repeat="row in vm.yAxisData")
+                                            td.text-center(ng-repeat="col in vm.xAxisData",width="100") {{vm.aggrData[row][col]}}
     .text-right.mt-lg
         button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
         button.btn.btn-success(type="submit") {{'button.SAVE'|translate}}

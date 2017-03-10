@@ -48,6 +48,9 @@
 
             vm.load().then(function(){
                 vm.raw$stop_flag = !!vm.model.stop_flag;
+
+                //构造类型表格
+                vm.xAxisData = _.range
             });
 
         }

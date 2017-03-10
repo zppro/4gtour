@@ -4,8 +4,8 @@
  */
 var co = require('co');
 var nodemailer = require('nodemailer');
-var IDC02 = require('../pre-defined/dictionary.json')['IDC02'];
-var mailConfig = require('../pre-defined/mail-config.json');
+var IDC02 = require('../../pre-defined/dictionary.json')['IDC02'];
+var mailConfig = require('../../pre-defined/mail-config.json');
 
 module.exports = {
     transporters : {},
