@@ -111,13 +111,13 @@ module.exports = {
                 handler: function (app, options) {
                     return function * (next) {
                         try {
-                            var modelOption = app.getModelOption(this);
+                            // var modelOption = app.getModelOption(this);
                             var data = this.request.body;
                             if (!data.where)
                                 data.where = {status: 1};
                             if (!data.select)
                                 data.select = '_id name';
-                            this.body = app.wrapper.res.rows(yield app.modelFactory().query(modelOption.model_name, modelOption.model_path, data));
+                            this.body = app.wrapper.res.rows(yield app.modelFactory().model_query(app.models[this.params.model], data));
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -367,14 +367,13 @@ module.exports = {
                                     return o1.districtId == districtNode.id;
                                 }).map((o2) => {
                                     return o2.floor;
-
                                 })).map((o3) => {
                                     var floorNode = {id: o3, name: o3  + '层'};
-                                    floorNode.children = app._.where(rooms, (o4) => {
+                                    floorNode.children = app._.filter(rooms, (o4) => {
                                         return o4.districtId == districtNode.id && o4.floor == floorNode.id;
                                     }).map((o5) => {
                                         return {id: o5.id, name:o5.name}
-                                    })
+                                    });
                                     return floorNode;
                                 });
                                 return districtNode;

@@ -27,7 +27,7 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         <!--纵轴数据-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-YAXIS') | translate}}:
                         .col-md-10
-                            .tree.tree-dropdown(name='yAxisData',s-tree,s-tree-data="vm.yAxisDataPromise",s-tree-height="200", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',layout:'dropdown'}",ng-model="vm.yAxisData",required='')
+                            .tree.tree-dropdown(name='yAxisData',s-tree,s-tree-data="vm.yAxisDataPromise",s-tree-height="400", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',layout:'dropdown',selectNodeFormat:'object'}",ng-model="vm.yAxisData",required='')
                     fieldset: .form-group
                         <!--模版内容-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-CONTENT') | translate}}:
@@ -36,12 +36,28 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                                 table.grid.table.table-bordered.table-hover.table-striped
                                     thead
                                         tr
-                                            th
-
-                                            th.text-center(ng-repeat="column in vm.xAxisData",width="100") {{column.label}}
+                                            th.text-center {{ vm.viewTranslatePath('TAB1-LABEL-YAXIS_LABEL') | translate}}
+                                            th.text-center(ng-repeat="column in vm.xAxisData",width="100") {{::column.label}}
                                     tbody
                                         tr(ng-repeat="row in vm.yAxisData")
-                                            td.text-center(ng-repeat="col in vm.xAxisData",width="100") {{vm.aggrData[row][col]}}
+                                            td.text-center
+                                                | {{::row.name}}
+                                                a.btn.btn-primary.btn-xs(ng-show="vm.gridEditing", title="{{vm.viewTranslatePath('TAB1-LABEL-PICK_NURSING_WORKER')|translate}}",ng-click="vm.add()")
+                                                    i.glyphicon.glyphicon-user
+                                            td.text-center(ng-repeat="col in vm.xAxisData",width="100" )
+                                                span(ng-show="!vm.gridEditing") {{vm.aggrData[row][col]}}
+                                                a.btn.btn-primary.btn-xs(ng-show="vm.gridEditing", title="{{vm.viewTranslatePath('TAB1-LABEL-PICK_NURSING_WORKER')|translate}}",ng-click="vm.add()")
+                                                    i.glyphicon.glyphicon-user
+                                        tr(ng-if="vm.yAxisData.length==0")
+                                            td.text-center(colspan="{{vm.xAxisData.length + 1}}") {{ 'grid.NO-RESULTS' | translate}}
+                                .panel-footer
+                                    .row
+                                        .col-md-4.text-left
+                                            .btn-toolbar
+                                                .btn-group(ng-show="!vm.gridEditing")
+                                                    a.btn.btn-primary.btn-sm(ng-click="vm.gridEditing = true") {{vm.viewTranslatePath('TAB1-LABEL-ENTER_EDIT_MODE')|translate}}
+                                                .btn-group(ng-show="vm.gridEditing")
+                                                    a.btn.btn-danger.btn-sm(ng-click="vm.gridEditing = false") {{vm.viewTranslatePath('TAB1-LABEL-CANCEL_EDIT_MODE')|translate}}
     .text-right.mt-lg
         button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
         button.btn.btn-success(type="submit") {{'button.SAVE'|translate}}

@@ -46,8 +46,16 @@
             vm.doSubmit = doSubmit;
             vm.tab1 = {cid: 'contentTab1'};
 
-
-            //vm.modelService['psn_room']
+            
+            vm.dropdownDataPromise = vmh.clientData.getJson('subsystem').then(function (items) {
+                console.log(items)
+                vm.selectBinding.subsystems = _.where(items, {mtype: 'business'});
+                if (vm.selectBinding.subsystems && vm.selectBinding.subsystems.length > 0) {
+                    vmc.selectedSubsystem = vm.selectBinding.subsystems[0];
+                    onSubsystemChanged();
+                }
+                return vm.selectBinding.subsystems
+            });
 
             vm.load().then(function(){
                 vm.raw$stop_flag = !!vm.model.stop_flag;
