@@ -238,6 +238,10 @@
                     var rowId = vm.yAxisData[i]._id;
                     for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
                         var colId = vm.xAxisData[j].value;
+                        if (!vm.aggrData[rowId] || !vm.aggrData[rowId][colId]) {
+                            vmh.alertWarning(vm.viewTranslatePath('MSG-NO-NURSING-WORKER-FOR-ROOM'), true);
+                            return;
+                        }
                         vm.model.content.push({x_axis: colId, y_axis: rowId, aggr_value: vm.aggrData[rowId][colId]});
                     }
                 }

@@ -290,7 +290,8 @@
         "TAB1-PLACEHOLDER-PICK_NURSING_WORKER": "挑选护工",
         "TAB1-TITLE-ROW": "点此选中整行",
         "TAB1-TITLE-COL": "点此选中整列",
-        "MSG-NO-PICK-NURSING": "没有挑选护工,无法应用"
+        "MSG-NO-PICK-NURSING": "没有挑选护工,无法应用",
+        "MSG-NO-NURSING-WORKER-FOR-ROOM": "部分房间没有设置护工"
       }
     },
     "enter-payment":{
