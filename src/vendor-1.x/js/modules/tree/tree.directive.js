@@ -210,11 +210,11 @@
                     if (newValue != oldValue && oldValue!=undefined) {
                         if(!angular.isArray(newValue))
                             return;
-
                         scope._tree.checkedNodes = [];
                         var checkedNodeValue;
                         for(var i=0;i<newValue.length;i++) {
                             checkedNodeValue = newValue[i];
+
                             if(angular.isString(checkedNodeValue)){
                                 scope._tree.checkedNodes.push($tree.findNodeById(checkedNodeValue));
                             }
@@ -222,7 +222,11 @@
                                 if (checkedNodeValue.level && checkedNodeValue.index && checkedNodeValue.orderNo) {
                                     scope._tree.checkedNodes.push(newValue[i]);
                                 } else {
-                                    scope._tree.checkedNodes.push($tree.findNodeById(checkedNodeValue[nodeIdKey]));
+                                    var node = $tree.findNodeById(checkedNodeValue[nodeIdKey]);
+                                    if (!checkedNodeValue.name) {
+                                        checkedNodeValue.name = node.name;
+                                    }
+                                    scope._tree.checkedNodes.push(node);
                                 }
                             }
                         }

@@ -53,8 +53,11 @@
             vm.applyToSelected = applyToSelected;
             vm.tab1 = {cid: 'contentTab1'};
 
+            vmh.shareService.tmp('T3001/psn-nursingWorker', 'name', {tenantId: vm.tenantId, status: 1, stop_flag: false}).then(function (treeNodes) {
+                vm.selectBinding.nursingWorkers = treeNodes;
+            });
 
-            vm.selectBinding.nursingWorkers = vm.modelNode.services['psn-nursingWorker'].query({tenantId: vm.tenantId, status: 1}, 'name');
+
             vm.yAxisDataPromise = vmh.shareService.tmp('T3009', null, {tenantId:vm.tenantId}).then(function(nodes){
                 console.log(nodes);
                 return nodes;
@@ -81,8 +84,8 @@
 
         function parseTemplateContent() {
             console.log('parse content');
-            console.log(vm.yAxisData);
-            vm.yAxisData = vm.yAxisData || [];
+            var nursingWorkers = vm.selectBinding.nursingWorkers
+            var yAxisData = [];
             vm.aggrData = {};
             for(var i=0,len=vm.model.content.length;i<len;i++) {
                 var aggrPoint = vm.model.content[i];
@@ -90,10 +93,14 @@
                 if (!aggrY){
                     aggrY = vm.aggrData[aggrPoint.y_axis] = {};
 
-                    vm.yAxisData.push({_id: aggrPoint.y_axis, name: ''});
+                    yAxisData.push({_id: aggrPoint.y_axis});
                 }
-                aggrY[aggrPoint.x_axis] = aggrPoint.aggr_value;
+                var nursingWorkerObject = _.find(nursingWorkers, function(o){
+                    return o._id == aggrPoint.aggr_value
+                })
+                aggrY[aggrPoint.x_axis] = nursingWorkerObject;
             }
+            vm.yAxisData = yAxisData;
         }
         
         function enterGridEditMode () {

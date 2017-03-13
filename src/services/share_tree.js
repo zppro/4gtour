@@ -111,13 +111,13 @@ module.exports = {
                 handler: function (app, options) {
                     return function * (next) {
                         try {
-                            // var modelOption = app.getModelOption(this);
+                            var modelOption = app.getModelOption(this);
                             var data = this.request.body;
                             if (!data.where)
                                 data.where = {status: 1};
                             if (!data.select)
                                 data.select = '_id name';
-                            this.body = app.wrapper.res.rows(yield app.modelFactory().model_query(app.models[this.params.model], data));
+                            this.body = app.wrapper.res.rows(yield app.modelFactory().model_query(app.models[modelOption.model_name], data));
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);

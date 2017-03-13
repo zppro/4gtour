@@ -660,7 +660,7 @@
                         this.dropdownOpened = true;
                     }
 
-                    this.closeDropdown = function () {
+                    this.closeDropdown = function ($event) {
                         if(this.readonly && !$event.source)
                             return;
                         if (!this.dropdownOpened)
