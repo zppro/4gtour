@@ -627,14 +627,20 @@
 
                     //dropdown
                     this.toggleDropdown = function () {
-                        if(this.readonly && !$event.source )
-                            return;
+                        if(this.readonly){
+                            if(!$event || !$event.source) {
+                                return;
+                            }
+                        }
                         this.dropdownOpened ? this.closeDropdown() : this.openDropdown();
                     }
 
                     this.openDropdown = function () {
-                        if(this.readonly && !$event.source)
-                            return;
+                        if(this.readonly){
+                            if(!$event || !$event.source) {
+                                return;
+                            }
+                        }
 
                         if (this.dropdownOpened)
                             return;
@@ -661,8 +667,11 @@
                     }
 
                     this.closeDropdown = function ($event) {
-                        if(this.readonly && !$event.source)
-                            return;
+                        if(this.readonly){
+                            if(!$event || !$event.source) {
+                                return;
+                            }
+                        }
                         if (!this.dropdownOpened)
                             return;
                         this.el_ulc.addClass('tree-hidden');
