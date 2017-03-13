@@ -286,7 +286,11 @@
         "TAB1-LABEL-YAXIS_LABEL": "房间",
         "TAB1-LABEL-ENTER_EDIT_MODE": "进入编辑模式",
         "TAB1-LABEL-CANCEL_EDIT_MODE": "退出编辑模式",
-        "TAB1-LABEL-PICK_NURSING_WORKER": "挑选护工"
+        "TAB1-LABEL-PICK_NURSING_WORKER": "挑选护工",
+        "TAB1-PLACEHOLDER-PICK_NURSING_WORKER": "挑选护工",
+        "TAB1-TITLE-ROW": "点此选中整行",
+        "TAB1-TITLE-COL": "点此选中整列",
+        "MSG-NO-PICK-NURSING": "没有挑选护工,无法应用"
       }
     },
     "enter-payment":{

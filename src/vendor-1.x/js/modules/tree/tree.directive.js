@@ -79,6 +79,8 @@
                             }
                             console.log('tree load finished');
                             self.treeLoadFinished = true;
+                            $scope.onLoadFinished && $scope.onLoadFinished();
+
                         }
                         else {
                             self.treeLoadFinished = false;
@@ -150,7 +152,7 @@
             templateUrl: function (elem, attrs) {
                 return attrs.sTreeTemplateUrl || 'tree-directive-default-renderer.html'
             },
-            scope: {treeData: '=sTreeData', treeHeight: '=sTreeHeight', ngModel: '=', onSelect: '&', onCheckChange: '&',  isDisabled:'&sTreeNodeIsDisabled', treeNodeFunc: '&sTreeNodeFunc'}
+            scope: {treeData: '=sTreeData', treeHeight: '=sTreeHeight', treeDisabled: '=sTreeDisabled', ngModel: '=', onLoadFinished: '&',  onSelect: '&', onCheckChange: '&',  isDisabled:'&sTreeNodeIsDisabled', treeNodeFunc: '&sTreeNodeFunc'}
         };
         return directive;
 
@@ -182,6 +184,12 @@
                         }, 0);
                         console.log('recreate end')
                     }
+                }
+            });
+
+            scope.$watch("treeDisabled",function(newValue,oldValue) {
+                if (newValue != oldValue) {
+                    diabledDropDownTree(!!newValue);
                 }
             });
 
@@ -219,7 +227,6 @@
                             }
                         }
                         angular.forEach(scope._tree.checkedNodes,function(node){
-
                             $tree._check(node, {currentTarget: true, stopPropagation: angular.noop,source:'directive'});
                             $tree.expand(node.attrs.index);
                         });
@@ -246,7 +253,21 @@
 
             });
 
-
+            function diabledDropDownTree(disabled) {
+                var dropdownInput = element.children('.input-group').children('input');
+                var dropdownButton = element.children('.input-group').find('button');
+                if(scope._tree) {
+                    scope._tree.readonly = disabled    
+                }
+                
+                if (disabled) {
+                    dropdownInput.addClass('tree-input-readable').prop('readonly',true);
+                    dropdownButton.prop('disabled',true);
+                } else {
+                    dropdownInput.removeClass('tree-input-readable').prop('readonly',false);
+                    dropdownButton.prop('disabled',false);
+                }
+            }
 
             function createTree(data){
                 $q.when(data).then(function (treeNodes) {

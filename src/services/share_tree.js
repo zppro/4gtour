@@ -362,17 +362,17 @@ module.exports = {
                             });
 
                             rows = districts.map((o) => {
-                                var districtNode = {id: o.id, name: o.name};
+                                var districtNode = {_id: o.id, name: o.name};
                                 districtNode.children = app._.uniq(app._.where(rooms, (o1) => {
-                                    return o1.districtId == districtNode.id;
+                                    return o1.districtId == districtNode._id;
                                 }).map((o2) => {
                                     return o2.floor;
                                 })).map((o3) => {
-                                    var floorNode = {id: o3, name: o3  + '层'};
+                                    var floorNode = {_id: "floor" +o3 + '#', name: o3  + '层'};
                                     floorNode.children = app._.filter(rooms, (o4) => {
-                                        return o4.districtId == districtNode.id && o4.floor == floorNode.id;
+                                        return o4.districtId == districtNode._id && o4.floor == o3;
                                     }).map((o5) => {
-                                        return {id: o5.id, name:o5.name}
+                                        return {_id: o5.id, name:o5.name}
                                     });
                                     return floorNode;
                                 });
