@@ -3770,6 +3770,70 @@ module.exports = {
                         yield next;
                     };
                 }
+            },
+            /**********************护理计划*****************************/
+            {
+                method: 'nursingPlanSave',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingPlanSave",
+                handler: function (app, options) {
+                    return function * (next) {
+                        var steps;
+                        var tenant,robot,rooms,room,nursing_robots;
+                        try {
+                            //this.request.body
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            var toSavedRows = this.request.body.rows;
+
+
+                            rooms = yield app.modelFactory().model_query(app.models['psn_room'], {
+                                where:{
+                                    nursing_robots: {$elemMatch:{$eq: robotId}},
+                                    tenantId: tenantId
+                                }
+                            });
+                            console.log(rooms);
+                            if(rooms.length == 0){
+                                this.body = app.wrapper.res.default();
+                                yield next;
+                                return;
+                            }
+
+                            console.log('前置检查完成');
+
+                            for (var i=0, len=rooms.length;i<len;i++) {
+                                room = rooms[i];
+                                nursing_robots = room.toObject().nursing_robots;
+                                var inIndex = nursing_robots.findIndex((o) => {
+                                    return o == robotId
+                                });
+
+                                if(inIndex != -1) {
+                                    nursing_robots.splice(inIndex, 1);
+                                }
+                                console.log(inIndex)
+                                room.nursing_robots =  nursing_robots;
+                                console.log(room.nursing_robots)
+                                yield room.save();
+                            }
+
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
             }
             /**********************其他*****************************/
             

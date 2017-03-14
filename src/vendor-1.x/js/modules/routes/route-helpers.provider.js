@@ -1036,7 +1036,7 @@
             var arrNames = name.split('.');
             return ['$rootScope','$state', '$stateParams', '$window', '$q', '$timeout', '$translate', 'blockUI', 'modelNode', 'Notify','Auth', function ($rootScope, $state, $stateParams, $window, $q, $timeout, $translate, blockUI, modelNode, Notify,Auth) {
                 //var modelService = modelNode.services[option.modelName];
-
+                var modelService = option.modelName ? modelNode.services[option.modelName] : {};
                 function getParam(name) {
                     return $stateParams[name];
                 }
@@ -1044,9 +1044,22 @@
                 function init(initOption) {
                     this.size = calcWH($window);
                     this.isFromTheSameRoute = !$rootScope.$fromState.name || moduleParse($state.current.name) === moduleParse($rootScope.$fromState.name);
+
+                    //设置searchForm
+                    if (option.omitStateParamToSearchForm) {
+                        // StateParam中的参数不作为查询条件
+                        this.searchForm = _.defaults(this.searchForm, option.searchForm);
+                    } else {
+                        this.searchForm = _.defaults(this.searchForm, processStateParamToSearchForm($stateParams, 'action'), option.searchForm);
+                    }
+                    
                     //设置selectFilterObject
                     this.selectFilterObject = _.defaults(this.selectFilterObject, $state.current.data && $state.current.data.selectFilterObject);
-
+                    //设置treeFilterObject
+                    this.treeFilterObject = _.defaults(this.treeFilterObject, $state.current.data && $state.current.data.treeFilterObject);
+                   
+ 
+                    
                     var user = Auth.getUser();
                     if(user) {
                         this.operated_by = this.model['operated_by'] = user._id;
@@ -1077,6 +1090,7 @@
                     moduleRoute: moduleRoute,
                     moduleParse: moduleParse,
                     moduleTranslatePath: moduleTranslatePath,
+                    modelService: modelService,
                     name: name || 'no-instanceName',
                     size: {w: 0, h: 0},
                     blocker: option.blockUI ? blockUI.instances.get('module-block') : false,

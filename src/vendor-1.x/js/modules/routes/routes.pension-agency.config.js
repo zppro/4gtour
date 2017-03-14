@@ -520,24 +520,49 @@
                     , deps: helper.resolveFor2('angucomplete-alt')
                 }
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-plan-template', {
-            url: '/nursing-plan-template',
-            title: '护理计划模版',
-            abstract: true,
-            views: {
-                "module-header": {
-                    templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
-                    controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-plan', {
+                url: '/nursing-plan',
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-plan.html'),
+                        controller: 'NursingPlanController',
+                        resolve: {
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-plan',{
+                                modelName: 'psn-nursingPlan',
+                                searchForm: {"status": 1},
+                                switches: {leftTree: true}
+                            })
+                        }
+                    }
                 },
-                "module-content": {
-                    template: '<div class="data-ui-view"></div>'
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'NURSING-PLAN'//业务系统使用
                 }
-            },
-            data:{
-                func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'NURSING-PLAN-TEMPLATE'//业务系统使用
-            }
-            , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'nursing-plan-template.js')
-        })
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'nursing-plan.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-plan-template', {
+                url: '/nursing-plan-template',
+                title: '护理计划模版',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'NURSING-PLAN-TEMPLATE'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'nursing-plan-template.js')
+            })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-plan-template.list', {
                 url: '/list/:action',
                 templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-plan-template-list.html'),
@@ -594,7 +619,7 @@
                 resolve: {
                     entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-plan-template.details', {
                         modelName: 'psn-nursingPlanTemplate',
-                        model:{ type: 'A0001', stop_result: "A0001" }
+                        model:{ type: 'A0001' }
                         , blockUI: true
                     })
                     //, deps: helper.resolveFor2('ui.select')
@@ -769,7 +794,7 @@
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'arrearage', {
                 url: '/arrearage',
-                title: '老人账户充值',
+                title: '欠费管理',
                 abstract: true,
                 views: {
                     "module-header": {

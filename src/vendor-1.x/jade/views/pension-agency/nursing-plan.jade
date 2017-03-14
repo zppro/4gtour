@@ -1,0 +1,51 @@
+.col-xs-2(ng-if="vm.switches.leftTree")
+    .tree.tree-basic(name='yAxisData',s-tree, s-tree-data="vm.yAxisDataPromise",s-tree-height="vm.size.h-15", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',selectNodeFormat:'object'}",ng-model="vm.yAxisData",required='', on-check-change="vm.onRoomChange()")
+.text-left(ng-class='{"col-xs-10":vm.switches.leftTree,"col-xs-12":!vm.switches.leftTree}')
+    .row
+        .col-md-5.text-left
+            .btn-toolbar
+                .btn-group
+                    ui-select(name="nursingPlanTemplates",theme='bootstrap', ng-Model="vm.selectedNursingPlanTemplate" ,ng-style='{width: "180px"}')
+                        ui-select-match(placeholder='{{vm.moduleTranslatePath("PLACEHOLDER-PICK_NURSING_PLAN_TEMPLATE")|translate}}') {{$select.selected.name}}
+                        ui-select-choices(repeat='nursingPlanTemplates in vm.selectBinding.nursingPlanTemplates | filter: {name: $select.search}')
+                            div(ng-bind-html='nursingPlanTemplates.name | highlight: $select.search')
+                .btn-group
+                    a.btn.btn-warning.btn-sm(ng-click="vm.applyToSelected()") {{ vm.moduleTranslatePath('BTN-IMPORT-TEMPLATE') | translate}}
+                .btn-group
+                    a.btn.btn-success.btn-sm(ng-click="vm.saveToTemplate()") {{ vm.moduleTranslatePath('BTN-SAVE-TEMPLATE') |translate}}
+        .col-md-7
+            .btn-toolbar.pull-right
+                .btn-group
+                    a.btn.btn-primary.btn-sm(title="{{vm.moduleTranslatePath('BTN-PRE-WEEK')|translate}}",ng-click="vm.preWeek()")
+                        i.glyphicon.glyphicon-chevron-left
+                        | {{vm.moduleTranslatePath('BTN-PRE-WEEK')|translate}}
+                .btn-group
+                    a.btn.btn-primary.btn-sm(title="{{vm.moduleTranslatePath('BTN-NEXT-WEEK')|translate}}",ng-click="vm.nextWeek()")
+                        i.glyphicon.glyphicon-chevron-right
+                        | {{vm.moduleTranslatePath('BTN-NEXT-WEEK')|translate}}
+                .btn-group
+                    ui-select(name="nursingWorkers",theme='bootstrap', ng-Model="vm.selectedNursingWorker" ,ng-style='{width: "120px"}')
+                        ui-select-match(placeholder='{{vm.moduleTranslatePath("PLACEHOLDER-PICK_NURSING_WORKER")|translate}}') {{$select.selected.name}}
+                        ui-select-choices(repeat='nursingWorker in vm.selectBinding.nursingWorkers | filter: {name: $select.search}')
+                            div(ng-bind-html='nursingWorker.name | highlight: $select.search')
+                .btn-group
+                    a.btn.btn-primary.btn-sm(ng-click="vm.applyToSelected()") {{'button.SAVE'|translate}}
+                .btn-group
+                    a.btn.btn-danger.btn-sm(ng-click="vm.removeToSelected()") {{'button.REMOVE'|translate}}
+    .row-split
+    .panel.panel-default.panel-grid
+        table.grid.table.table-bordered.table-striped.nursing-plan-table
+            thead
+                tr
+                    th.text-center(ng-click="vm.selectGrid()" width="100") {{ vm.moduleTranslatePath('LABEL-YAXIS_LABEL') | translate}}
+                    th.text-center(title="{{vm.moduleTranslatePath('TITLE-COL')|translate}}",ng-repeat="column in vm.xAxisData",width="100",ng-click="vm.selectGridCol(column._id)") {{::column.name}}
+            tbody
+                tr(ng-repeat="row in vm.yAxisData")
+                    td.text-center(title="{{vm.moduleTranslatePath('TITLE-ROW')|translate}}",ng-click="vm.selectGridRow(row._id)")
+                        | {{::row.name}}
+                    td.text-center(ng-repeat="col in vm.xAxisData",width="100", ng-class='{"grid-cell-selected": vm.cells[row._id][col._id] }',ng-click="vm.selectGridCell(row._id,col._id)" )
+                        span {{(vm.aggrData[row._id][col._id] || {}).name }}
+                tr(ng-if="vm.yAxisData.length==0")
+                    td.text-center(colspan="{{vm.xAxisData.length + 1}}") {{ 'grid.NO-RESULTS' | translate}}
+
+

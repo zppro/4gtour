@@ -449,7 +449,7 @@ co(function*() {
     // console.log('test app.spu_service');
     // var order = yield app.modelFactory().model_read(app.models['mws_order'], '587dc6891d1a8d552e7ed09e');
     // yield app.spu_service.appendSaleInfoByOrderPaySuccess(order);
-
+   
 
 }).catch(app.coOnError);
 

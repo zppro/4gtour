@@ -1,6 +1,6 @@
 /**
- * district Created by zppro on 17-3-6.
- * Target:养老机构 模版
+ * district Created by zppro on 17-3-14.
+ * Target:养老机构 模版计划
  */
 
 (function() {
@@ -8,44 +8,26 @@
     
     angular
         .module('subsystem.pension-agency')
-        .controller('NursingPlanTemplateGridController', NursingPlanTemplateGridController)
-        .controller('NursingPlanTemplateDetailsController', NursingPlanTemplateDetailsController)
+        .controller('NursingPlanController', NursingPlanController)
     ;
 
+    NursingPlanController.$inject = ['$scope', 'ngDialog', 'vmh', 'instanceVM'];
 
-    NursingPlanTemplateGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
-
-    function NursingPlanTemplateGridController($scope, ngDialog, vmh, vm) {
-
-        $scope.vm = vm;
-        $scope.utils = vmh.utils.g;
-
-        init();
-
-        function init() {
-            vm.init({removeDialog: ngDialog});
-            vm.query();
-        }
-    }
-
-    NursingPlanTemplateDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
-
-    function NursingPlanTemplateDetailsController($scope, ngDialog, vmh, vm) {
+    function NursingPlanController($scope, ngDialog, vmh, vm) {
 
         var vm = $scope.vm = vm;
         $scope.utils = vmh.utils.v;
 
-
         init();
 
         function init() {
 
             vm.init({removeDialog: ngDialog});
 
-
             vm.doSubmit = doSubmit;
-            vm.enterGridEditMode = enterGridEditMode;
-            vm.exitGridEditMode = exitGridEditMode;
+            vm.preWeek = preWeek;
+            vm.nextWeek = nextWeek;
+            vm.onRoomChange = onRoomChange;
             vm.selectGrid = selectGrid;
             vm.selectGridCol = selectGridCol;
             vm.selectGridRow = selectGridRow;
@@ -53,33 +35,42 @@
             vm.applyToSelected = applyToSelected;
             vm.tab1 = {cid: 'contentTab1'};
 
+            vmh.shareService.tmp('T3001/psn-nursingPlanTemplate', 'name', {tenantId: vm.tenantId, status: 1, stop_flag: false}).then(function (treeNodes) {
+                vm.selectBinding.nursingPlanTemplates = treeNodes;
+            });
             vmh.shareService.tmp('T3001/psn-nursingWorker', 'name', {tenantId: vm.tenantId, status: 1, stop_flag: false}).then(function (treeNodes) {
                 vm.selectBinding.nursingWorkers = treeNodes;
             });
 
-
-            vm.yAxisDataPromise = vmh.shareService.tmp('T3009', null, {tenantId:vm.tenantId}).then(function(nodes){
-                console.log(nodes);
+            vm.baseWeek = 0;
+            var p1 = loadWeek();
+            var p2 = vm.yAxisDataPromise = vmh.shareService.tmp('T3009', null, {tenantId:vm.tenantId}).then(function(nodes){
+                console.log('yAxisDataPromise');
                 return nodes;
             });
-            vm.load().then(function(){
-                vm.raw$stop_flag = !!vm.model.stop_flag;
-                //构造类型表格
-                var x_axis = vm.model.type == 'A0001' ? 'weekAxis' :'monthAxis';
-                vmh.clientData.getJson(x_axis).then(function (data) {
-                    vm.xAxisData = data;
-                    vm.cols = {};
-                    for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
-                        var colId = vm.xAxisData[j]._id;
-                        vm.cols[colId] = false;//selectedCol control variable
-                    }
-                });
-
-                if (vm.model.content) {
-                    parseTemplateContent();
+            // vmh.parallel([p1,p2]).then(function(){
+            //     enterGridEditMode()
+            // });
+        }
+        
+        function preWeek() {
+            loadWeek(-1);
+        }
+        function nextWeek() {
+            loadWeek(1);
+        }
+        function loadWeek(delta) {
+            vm.baseWeek += delta || 0;
+            console.log(vm.baseWeek);
+            return vmh.shareService.tmp('T0100', null, {delta: vm.baseWeek}, true).then(function (treeNodes) {
+                vm.xAxisData = treeNodes;
+                vm.cols = {};
+                for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
+                    var colId = vm.xAxisData[j]._id;
+                    vm.cols[colId] = false;//selectedCol control variable
                 }
+                console.log('loadWeek');
             });
-
         }
 
         function parseTemplateContent() {
@@ -103,6 +94,11 @@
             vm.yAxisData = yAxisData;
         }
         
+        function onRoomChange () {
+            exitGridEditMode();
+            enterGridEditMode()
+        }
+
         function enterGridEditMode () {
             vm.gridEditing = true;
             if (!vm.aggrData) {
@@ -145,10 +141,10 @@
                 var rowId = vm.yAxisData[i]._id;
                 if (vm.cells[rowId]) {
                     vm.cells[rowId]['row-selected'] = false;
-                    for (var j = 0, xlen = vm.xAxisData.length; j < xlen; j++) {
+                    for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
                         var colId = vm.xAxisData[j]._id;
-                        vm.cells[rowId][colId] = false;
-                        if (vm.cols[colId]) {
+                        vm.cells[rowId][colId] = false
+                        if (vm.cols[colId]){
                             vm.cols[colId] = false;
                         }
                     }
@@ -209,7 +205,9 @@
         }
 
         function selectGridCell (rowId, colId) {
+            console.log(vm.gridEditing)
             if(!vm.gridEditing) return;
+
             vm.cells[rowId][colId] = !vm.cells[rowId][colId];
             vm.cells[rowId]['row-selected'] = _checkWholeRowIsSelected(rowId);
             vm.cols[colId] = _checkWholeColIsSelected(colId);
@@ -220,12 +218,21 @@
                 vmh.alertWarning(vm.viewTranslatePath('MSG-NO-PICK-NURSING'), true);
                 return;
             }
+            var rows = [];
+            var removeWhere = {
+                x_axis: {},
+                y_axis: {$in: []}
+            };
+            var selectedRows = [];
             for(var i=0, ylen = vm.yAxisData.length;i< ylen;i++) {
                 var rowId = vm.yAxisData[i]._id;
+
                 for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
                     var colId = vm.xAxisData[j]._id;
+                    var date = vm.xAxisData[j].value;
                     if (vm.cells[rowId][colId]) {
                         console.log(vm.selectedNursingWorker);
+                        rows.push({ x_axis: date, y_axis: rowId, aggr_value: vm.selectedNursingWorker.id });
                         vm.aggrData[rowId][colId] = vm.selectedNursingWorker;
                         vm.cells[rowId][colId] = false;
                         vm.cells[rowId]['row-selected'] = _checkWholeRowIsSelected(rowId);
@@ -233,7 +240,9 @@
                     }
                 }
             }
-
+            if(rows.length > 0) {
+                
+            }
         }
 
         function doSubmit() {

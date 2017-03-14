@@ -1,30 +1,30 @@
 [
   {
-    "label": "周一",
-    "value": 1
+    "_id": 1,
+    "name": "周1"
   },
   {
-    "label": "周二",
-    "value": 2
+    "_id": 2,
+    "name": "周2"
   },
   {
-    "label": "周三",
-    "value": 3
+    "_id": 3,
+    "name": "周3"
   },
   {
-    "label": "周四",
-    "value": 4
+    "_id": 4,
+    "name": "周4"
   },
   {
-    "label": "周五",
-    "value": 5
+    "_id": 5,
+    "name": "周5"
   },
   {
-    "label": "周六",
-    "value": 6
+    "_id": 6,
+    "name": "周6"
   },
   {
-    "label": "周日",
-    "value": 0
+    "_id": 0,
+    "name": "周日"
   }
 ]

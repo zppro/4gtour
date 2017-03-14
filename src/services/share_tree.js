@@ -3,6 +3,8 @@
  * 参考字典D1003-预定义树
  */
 
+var statHelper = require('rfcore').factory('statHelper');
+
 module.exports = {
     init: function (option) {
         var self = this;
@@ -32,6 +34,41 @@ module.exports = {
                         try {
                             var districts = require('../pre-defined/' + this.params.id + '.json');
                             this.body = app.wrapper.res.rows(districts);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'fetch-T0100',//周时间段
+                verb: 'post',
+                url: this.service_url_prefix + "/T0100",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var delta = this.request.body.where.delta || 0;
+                            var f = (this.request.body.select || {}).format || 'MMDD(周E)';
+                            var step = 7; //周段
+
+                            console.log(this.request.body);
+
+                            // var base = app.moment().add(delta*step,'days');
+                            // console.log(base.day());
+                            // var start = base.add(-1 * base.day(), 'days');
+                            // console.log(start.format('E'));
+                            // console.log(start.format('YYYYMMDD'));
+                            var start = app.moment().weekday(delta* step);
+                            console.log(start.format('YYYYMMDD'));
+                            var rows = [{_id: start.day(), name: start.format(f), value: start.toDate()}];
+                            for(var i=1,len=step;i<len;i++) {
+                                var d = start.add(1, 'days');
+                                rows.push({_id: d.day(), name: d.format(f).replace(/周7/, '周日'), value: d.toDate()});
+                            }
+                            console.log(rows);
+                            this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -379,7 +416,7 @@ module.exports = {
                                 return districtNode;
                             })
 
-                            console.log(rows);
+                            // console.log(rows);
                             this.body = app.wrapper.res.rows(rows);
 
                         } catch (e) {
