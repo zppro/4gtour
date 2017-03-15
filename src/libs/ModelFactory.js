@@ -71,10 +71,10 @@ var ModelFactory = function(conn) {
             return ModelFactory._bulkUpdate(model, data);
         },
         bulkDelete: function (name, path, where) {
-            return ModelFactory._bulkDelete(ModelFactory.getModel(conn, name, path), where);
+            return ModelFactory._remove(ModelFactory.getModel(conn, name, path), where);
         },
         model_bulkDelete: function (model, where) {
-            return ModelFactory._bulkDelete(model, where);
+            return ModelFactory._remove(model, where);
         },
         distinct: function (name, path, data) {
             return ModelFactory._distinct(ModelFactory.getModel(conn, name, path), data);
