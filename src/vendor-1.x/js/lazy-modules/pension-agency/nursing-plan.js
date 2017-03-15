@@ -23,8 +23,7 @@
         function init() {
 
             vm.init({removeDialog: ngDialog});
-
-            vm.doSubmit = doSubmit;
+ 
             vm.preWeek = preWeek;
             vm.nextWeek = nextWeek;
             vm.onRoomChange = onRoomChange;
@@ -32,7 +31,8 @@
             vm.selectGridCol = selectGridCol;
             vm.selectGridRow = selectGridRow;
             vm.selectGridCell = selectGridCell;
-            vm.applyToSelected = applyToSelected;
+            vm.saveSelected = saveSelected;
+            vm.removeSelected = removeSelected;
             vm.tab1 = {cid: 'contentTab1'};
 
             vmh.shareService.tmp('T3001/psn-nursingPlanTemplate', 'name', {tenantId: vm.tenantId, status: 1, stop_flag: false}).then(function (treeNodes) {
@@ -48,9 +48,6 @@
                 console.log('yAxisDataPromise');
                 return nodes;
             });
-            // vmh.parallel([p1,p2]).then(function(){
-            //     enterGridEditMode()
-            // });
         }
         
         function preWeek() {
@@ -70,31 +67,38 @@
                     vm.cols[colId] = false;//selectedCol control variable
                 }
                 console.log('loadWeek');
+                queryNursingPlan();
             });
         }
+        
+        function queryNursingPlan() {
+            var start = vm.xAxisData[0].value;
+            var end = vm.xAxisData[vm.xAxisData.length-1].value;
+            var p3 = vmh.psnService.nursingPlanWeekly(vm.tenantId, start, end).then(parseNursingPlan);
+        }
 
-        function parseTemplateContent() {
-            console.log('parse content');
-            var nursingWorkers = vm.selectBinding.nursingWorkers
-            var yAxisData = [];
+        function parseNursingPlan(nursingPlan) {
+            console.log('parse nursingPlanItems');
+            var nursingPlanItems = nursingPlan.items;
+            vm.yAxisData = nursingPlan.yAxisData;
+            var nursingWorkers = vm.selectBinding.nursingWorkers;
             vm.aggrData = {};
-            for(var i=0,len=vm.model.content.length;i<len;i++) {
-                var aggrPoint = vm.model.content[i];
-                var aggrY = vm.aggrData[aggrPoint.y_axis];
-                if (!aggrY){
-                    aggrY = vm.aggrData[aggrPoint.y_axis] = {};
-
-                    yAxisData.push({_id: aggrPoint.y_axis});
-                }
+            for(var i=0,len=nursingPlanItems.length;i<len;i++) {
+                var nursingPlanItem = nursingPlanItems[i];
                 var nursingWorkerObject = _.find(nursingWorkers, function(o){
-                    return o._id == aggrPoint.aggr_value
-                })
-                aggrY[aggrPoint.x_axis] = nursingWorkerObject;
+                    return o._id == nursingPlanItem.aggr_value
+                });
+                if (nursingWorkerObject) {
+                    if (!vm.aggrData[nursingPlanItem.y_axis]) {
+                        vm.aggrData[nursingPlanItem.y_axis] = {};
+                    }
+                    vm.aggrData[nursingPlanItem.y_axis][nursingPlanItem.x_axis_value] = nursingWorkerObject;
+                }
             }
-            vm.yAxisData = yAxisData;
         }
         
         function onRoomChange () {
+            console.log('onRoomChange');
             exitGridEditMode();
             enterGridEditMode()
         }
@@ -139,7 +143,7 @@
         function _unSelectAll () {
             for(var i=0, ylen = vm.yAxisData.length;i< ylen;i++) {
                 var rowId = vm.yAxisData[i]._id;
-                if (vm.cells[rowId]) {
+                if (vm.cells && vm.cells[rowId]) {
                     vm.cells[rowId]['row-selected'] = false;
                     for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
                         var colId = vm.xAxisData[j]._id;
@@ -213,72 +217,58 @@
             vm.cols[colId] = _checkWholeColIsSelected(colId);
         }
 
-        function applyToSelected () {
+        function saveSelected () {
             if (!vm.selectedNursingWorker) {
                 vmh.alertWarning(vm.viewTranslatePath('MSG-NO-PICK-NURSING'), true);
                 return;
             }
-            var rows = [];
-            var removeWhere = {
-                x_axis: {},
-                y_axis: {$in: []}
-            };
-            var selectedRows = [];
+            var toSaveRows = [];
             for(var i=0, ylen = vm.yAxisData.length;i< ylen;i++) {
                 var rowId = vm.yAxisData[i]._id;
-
                 for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
                     var colId = vm.xAxisData[j]._id;
                     var date = vm.xAxisData[j].value;
                     if (vm.cells[rowId][colId]) {
                         console.log(vm.selectedNursingWorker);
-                        rows.push({ x_axis: date, y_axis: rowId, aggr_value: vm.selectedNursingWorker.id });
                         vm.aggrData[rowId][colId] = vm.selectedNursingWorker;
                         vm.cells[rowId][colId] = false;
                         vm.cells[rowId]['row-selected'] = _checkWholeRowIsSelected(rowId);
                         vm.cols[colId] = _checkWholeColIsSelected(colId);
+                        toSaveRows.push({ x_axis: date, y_axis: rowId, aggr_value: vm.selectedNursingWorker.id });
                     }
                 }
             }
-            if(rows.length > 0) {
-                
-            }
-        }
-
-        function doSubmit() {
-            if ($scope.theForm.$valid) {
-
-                vm.model.content = [];
-                for(var i=0, ylen = vm.yAxisData.length;i< ylen;i++) {
-                    var rowId = vm.yAxisData[i]._id;
-                    for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
-                        var colId = vm.xAxisData[j]._id;
-                        if (!vm.aggrData[rowId] || !vm.aggrData[rowId][colId]) {
-                            vmh.alertWarning(vm.viewTranslatePath('MSG-NO-NURSING-WORKER-FOR-ROOM'), true);
-                            return;
-                        }
-                        vm.model.content.push({x_axis: colId, y_axis: rowId, aggr_value: vm.aggrData[rowId][colId]});
-                    }
-                }
-
-                var p;
-                if(vm.raw$stop_flag === false && vm.model.stop_flag === true) {
-                    p = vmh.fetch(vmh.psnService.nursingRobotRemoveRoomConfig(vm.tenantId, vm.model.id));
-                } else {
-                    p = vmh.promiseWrapper();
-                }
-                p.then(function(){
-                    vm.save();
+            if(toSaveRows.length > 0) {
+                vmh.psnService.nursingPlanSave(vm.tenantId, toSaveRows).then(function(){
+                    vmh.alertSuccess();
                 });
             }
-            else {
-                if ($scope.utils.vtab(vm.tab1.cid)) {
-                    vm.tab1.active = true;
-                }
-            }
         }
 
+        function removeSelected () {
+            var toRemoveRows = [];
+            for(var i=0, ylen = vm.yAxisData.length;i< ylen;i++) {
+                var rowId = vm.yAxisData[i]._id;
+                for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
+                    var colId = vm.xAxisData[j]._id;
+                    var date = vm.xAxisData[j].value;
+                    if (vm.cells[rowId][colId]) {
+                        vm.cells[rowId][colId] = false;
+                        vm.cells[rowId]['row-selected'] = _checkWholeRowIsSelected(rowId);
+                        vm.cols[colId] = _checkWholeColIsSelected(colId);
 
+                        if (vm.aggrData[rowId][colId]) {
+                            vm.aggrData[rowId][colId] = null;
+                            toRemoveRows.push({ x_axis: date, y_axis: rowId });
+                        }
+                    }
+                }
+            }
+            if(toRemoveRows.length > 0) {
+                vmh.psnService.nursingPlanRemove(vm.tenantId, toRemoveRows).then(function(){
+                    vmh.alertSuccess();
+                });
+            }
+        }
     }
-
 })();

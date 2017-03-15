@@ -3773,6 +3773,62 @@ module.exports = {
             },
             /**********************护理计划*****************************/
             {
+                method: 'nursingPlanWeekly',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingPlanWeekly", //按周查找护理计划
+                handler: function (app, options) {
+                    return function * (next) {
+                        var steps;
+                        var tenant,robot,rooms,room,nursing_robots;
+                        try {
+                            //this.request.body
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            var xAxisRangePoints = this.request.body.x_axis_range_points;
+                            xAxisValueStart = app.moment(xAxisRangePoints.start);
+                            xAxisValueEnd = app.moment(xAxisRangePoints.end);
+
+                            console.log('xAxisRangePoints:');
+                            console.log(xAxisRangePoints);
+
+                            console.log('前置检查完成');
+
+                            var rows = yield app.modelFactory().model_query(app.models['psn_nursingPlan'],{
+                                select: 'x_axis y_axis aggr_value',
+                                where:{
+                                    tenantId: tenantId,
+                                    x_axis: {'$gte': xAxisValueStart.toDate(), '$lt': xAxisValueEnd.add(1, 'days').toDate()}
+                                }
+                            });
+
+                            var yAxisData = app._.map(app._.uniq(app._.map(rows,(o) => {
+                                return o.y_axis.toString();
+                            })), (o) => {
+                                return {_id: o};
+                            });
+                            // console.log(yAxisData);
+                            // console.log(rows);
+                            this.body = app.wrapper.res.ret({
+                                yAxisData: yAxisData,
+                                items: rows
+                            });
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'nursingPlanSave',
                 verb: 'post',
                 url: this.service_url_prefix + "/nursingPlanSave",
@@ -3790,40 +3846,91 @@ module.exports = {
                                 return;
                             }
 
-                            var toSavedRows = this.request.body.rows;
-
-
-                            rooms = yield app.modelFactory().model_query(app.models['psn_room'], {
-                                where:{
-                                    nursing_robots: {$elemMatch:{$eq: robotId}},
-                                    tenantId: tenantId
-                                }
+                            var toSaveRows = this.request.body.toSaveRows;
+                            app._.each(toSaveRows, (o) => {
+                                o.tenantId = tenantId
                             });
-                            console.log(rooms);
-                            if(rooms.length == 0){
-                                this.body = app.wrapper.res.default();
+
+                            // 查找x_axis range & y_axis_range
+                            var xAxisValue;
+                            var xAxisRange = app._.uniq(app._.map(toSaveRows, (o) => {
+                                xAxisValue = app.moment(o.x_axis);
+                                return {'x_axis': {'$gte': xAxisValue.toDate(), '$lt': xAxisValue.add(1, 'days').toDate()}}
+                            }));
+                            var yAxisRange = app._.uniq(app._.map(toSaveRows, (o) => {
+                                return o.y_axis;
+                            }));
+
+                            var removeWhere = {
+                                tenantId: tenantId,
+                                y_axis: {$in: yAxisRange},
+                                $or: xAxisRange
+                            };
+
+                            console.log('xAxisRange:');
+                            console.log(xAxisRange);
+                            console.log('yAxisRange:');
+                            console.log(yAxisRange);
+
+                            console.log('前置检查完成');
+
+                            var ret = yield app.modelFactory().model_bulkInsert(app.models['psn_nursingPlan'],{
+                                rows: toSaveRows,
+                                removeWhere: removeWhere
+                            });
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'nursingPlanRemove',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingPlanRemove",
+                handler: function (app, options) {
+                    return function * (next) {
+                        var steps;
+                        var tenant,robot,rooms,room,nursing_robots;
+                        try {
+                            //this.request.body
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
                                 yield next;
                                 return;
                             }
 
+                            var toRemoveRows = this.request.body.toRemoveRows;
+                             
+
+                            console.log('toRemoveRows:');
+                            console.log(toRemoveRows);
+
+                            var xAxisValue;
+                            var xAxisRange = app._.uniq(app._.map(toRemoveRows, (o) => {
+                                xAxisValue = app.moment(o.x_axis);
+                                return {'x_axis': {'$gte': xAxisValue.toDate(), '$lt': xAxisValue.add(1, 'days').toDate()}}
+                            }));
+                            var yAxisRange = app._.uniq(app._.map(toRemoveRows, (o) => {
+                                return o.y_axis;
+                            }));
+
+                            var removeWhere = {
+                                tenantId: tenantId,
+                                y_axis: {$in: yAxisRange},
+                                $or: xAxisRange
+                            };
+                           
                             console.log('前置检查完成');
-
-                            for (var i=0, len=rooms.length;i<len;i++) {
-                                room = rooms[i];
-                                nursing_robots = room.toObject().nursing_robots;
-                                var inIndex = nursing_robots.findIndex((o) => {
-                                    return o == robotId
-                                });
-
-                                if(inIndex != -1) {
-                                    nursing_robots.splice(inIndex, 1);
-                                }
-                                console.log(inIndex)
-                                room.nursing_robots =  nursing_robots;
-                                console.log(room.nursing_robots)
-                                yield room.save();
-                            }
-
+                            
+                            var ret = yield app.modelFactory().model_remove(app.models['psn_nursingPlan'], removeWhere);
                             this.body = app.wrapper.res.default();
                         }
                         catch (e) {

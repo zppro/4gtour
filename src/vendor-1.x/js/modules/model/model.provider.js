@@ -473,6 +473,9 @@
                     checkCanChangeBookingOrUnbookingRedToElderlyRecharge: checkCanChangeBookingOrUnbookingRedToElderlyRecharge,
                     disableRedAndUnbookingToElderlyRecharge: disableRedAndUnbookingToElderlyRecharge,
                     changeRedBookingAmountToElderlyRecharge: changeRedBookingAmountToElderlyRecharge,
+                    nursingPlanWeekly: nursingPlanWeekly,
+                    nursingPlanSave: nursingPlanSave,
+                    nursingPlanRemove: nursingPlanRemove
                 };
 
                 function roomStatusInfo(tenantId) {
@@ -636,6 +639,23 @@
                     return $http.post(baseUrl + 'changeRedBookingAmountToElderlyRecharge/' + redId, data);
                 }
 
+                function nursingPlanWeekly(tenantId, start, end) {
+                    return $http.post(baseUrl + 'nursingPlanWeekly', {
+                        tenantId: tenantId,
+                        x_axis_range_points: {
+                            start: start,
+                            end: end
+                        }
+                    });
+                }
+                
+                function nursingPlanSave(tenantId, toSaveRows) {
+                    return $http.post(baseUrl + 'nursingPlanSave', {tenantId: tenantId, toSaveRows: toSaveRows});
+                }
+                
+                function nursingPlanRemove(tenantId, toRemoveRows) {
+                    return $http.post(baseUrl + 'nursingPlanRemove', {tenantId: tenantId, toRemoveRows: toRemoveRows});
+                }
             }]
         };
 

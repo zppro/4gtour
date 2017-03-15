@@ -29,9 +29,9 @@
                         ui-select-choices(repeat='nursingWorker in vm.selectBinding.nursingWorkers | filter: {name: $select.search}')
                             div(ng-bind-html='nursingWorker.name | highlight: $select.search')
                 .btn-group
-                    a.btn.btn-primary.btn-sm(ng-click="vm.applyToSelected()") {{'button.SAVE'|translate}}
+                    a.btn.btn-primary.btn-sm(ng-click="vm.saveSelected()") {{'button.SAVE'|translate}}
                 .btn-group
-                    a.btn.btn-danger.btn-sm(ng-click="vm.removeToSelected()") {{'button.REMOVE'|translate}}
+                    a.btn.btn-danger.btn-sm(ng-click="vm.removeSelected()") {{'button.REMOVE'|translate}}
     .row-split
     .panel.panel-default.panel-grid
         table.grid.table.table-bordered.table-striped.nursing-plan-table
