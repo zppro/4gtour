@@ -34,6 +34,12 @@ var ModelFactory = function(conn) {
         model_delete: function (model, id) {
             return ModelFactory._delete(model, id);
         },
+        remove: function (name, path, data) {
+            return ModelFactory._remove(ModelFactory.getModel(conn, name, path), data);
+        },
+        model_remove: function (model, data) {
+            return ModelFactory._remove(model, data);
+        },
         query: function (name, path, data,options) {
             return ModelFactory._query(ModelFactory.getModel(conn, name, path), data, options);
         },
@@ -125,6 +131,22 @@ ModelFactory._update =function (model,id,data) {
 
 ModelFactory._delete =function (model,id) {
     return model.remove({_id: id});
+};
+
+ModelFactory._remove =function (model, data) {
+    var canRemove = false;
+    for(var p in data) {
+        if(data.hasOwnProperty(p)) {
+            canRemove = true;
+            break;
+        }
+    }
+    if(canRemove) {
+        return model.remove(data);
+    } else {
+        throw new Error('cant remove whole');
+    }
+
 };
 
 ModelFactory._query =function (model,data,options) {
