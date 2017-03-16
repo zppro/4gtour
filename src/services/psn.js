@@ -4042,19 +4042,20 @@ module.exports = {
                             });
 
                             console.log('前置检查完成');
-                            if (nursingPlanTemplate) {
-                                nursingPlanTemplate.content = toSaveRows;
-                                yield nursingPlanTemplate.save();
-                            } else {
+                            var isCreate = !nursingPlanTemplate;
+                            if (isCreate) {
                                 yield app.modelFactory().model_create(app.models['psn_nursingPlanTemplate'],{
                                     name: nursingPlanTemplateName,
                                     type: DIC.D3010.WEEKLY,
                                     content: toSaveRows,
                                     tenantId: tenantId
                                 });
+                            } else {
+                                nursingPlanTemplate.content = toSaveRows;
+                                yield nursingPlanTemplate.save();
                             }
 
-                            this.body = app.wrapper.res.default();
+                            this.body = app.wrapper.res.ret(isCreate);
                         }
                         catch (e) {
                             console.log(e);

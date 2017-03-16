@@ -1085,7 +1085,7 @@
                     //remote data get
 
                     //需要的对象传入，2 通过init(option)传入到entry
-                    this.removeDialog = initOption.removeDialog;
+                    initOption && (this.removeDialog = initOption.removeDialog);
                 }
 
 

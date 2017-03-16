@@ -53,7 +53,7 @@
 
 
         function fetchNursingPlanTemplates () {
-            vmh.shareService.tmp('T3001/psn-nursingPlanTemplate', 'name', {tenantId: vm.tenantId, status: 1, stop_flag: false}).then(function (treeNodes) {
+            vmh.shareService.tmp('T3001/psn-nursingPlanTemplate', 'name', {tenantId: vm.tenantId, status: 1, stop_flag: false}, true).then(function (treeNodes) {
                 vm.selectBinding.nursingPlanTemplates = treeNodes;
             });
         }
@@ -333,7 +333,11 @@
                 }
             }).closePromise.then(function (ret) {
                 if(ret.value!='$document' && ret.value!='$closeButton' && ret.value!='$escape' ) {
-                    fetchNursingPlanTemplates();
+                    console.log(ret.value)
+                    if(ret.value === true){
+                        console.log('fetchNursingPlanTemplates')
+                        fetchNursingPlanTemplates();
+                    }
                 }
             });
         }
@@ -384,8 +388,8 @@
                         $scopeConfirm.message = vm.moduleTranslatePath('CONFIRM-MESSAGE-SAVE-AS-TEMPLATE')
                     }]
                 }).then(function () {
-                    vmh.psnService.nursingPlanSaveAsTemplateWeekly(vm.tenantId, vm.nursingPlanTemplateName, vm.toSaveRows).then(function () {
-                        $scope.closeThisDialog();
+                    vmh.psnService.nursingPlanSaveAsTemplateWeekly(vm.tenantId, vm.nursingPlanTemplateName, vm.toSaveRows).then(function (isCreate) {
+                        $scope.closeThisDialog(isCreate);
                         vmh.alertSuccess();
                     });
                 });

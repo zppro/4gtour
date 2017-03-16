@@ -84,13 +84,13 @@ module.exports = {
                                 charge_standard = app.modelVariables[subsytem.toUpperCase()].DEFAULT_CHARGE_STANDARD
                             }
                             var ret = {
-                                _id: app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_CUSTOMIZED_CATAGORY._ID + '-' + charge_standard,
+                                _id: app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_PREFIX + app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_CUSTOMIZED_CATAGORY._ID + '-' + charge_standard,
                                 name: app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_CUSTOMIZED_CATAGORY.NAME,
                                 children: []
                             };
 
                             for (var i = 0; i < chargeItems.length; i++) {
-                                if ((chargeItems[i].catagory + '-' + charge_standard) == ret._id){
+                                if ((app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_PREFIX + chargeItems[i].catagory + '-' + charge_standard) == ret._id){
                                     ret.children.push({
                                         _id: app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_PREFIX + chargeItems[i]._id,
                                         name: chargeItems[i].name,
@@ -98,6 +98,8 @@ module.exports = {
                                     });
                                 }
                             }
+
+                            console.log(ret);
                             
                             this.body = app.wrapper.res.ret(ret);
                         } catch (e) {
