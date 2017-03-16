@@ -475,7 +475,8 @@
                     changeRedBookingAmountToElderlyRecharge: changeRedBookingAmountToElderlyRecharge,
                     nursingPlanWeekly: nursingPlanWeekly,
                     nursingPlanSave: nursingPlanSave,
-                    nursingPlanRemove: nursingPlanRemove
+                    nursingPlanRemove: nursingPlanRemove,
+                    nursingPlanTemplateImport: nursingPlanTemplateImport
                 };
 
                 function roomStatusInfo(tenantId) {
@@ -655,6 +656,10 @@
                 
                 function nursingPlanRemove(tenantId, toRemoveRows) {
                     return $http.post(baseUrl + 'nursingPlanRemove', {tenantId: tenantId, toRemoveRows: toRemoveRows});
+                }
+
+                function nursingPlanTemplateImport(nursingPlanTemplateId, toImportXAxisRange) {
+                    return $http.post(baseUrl + 'nursingPlanTemplateImport', {nursingPlanTemplateId: nursingPlanTemplateId, toImportXAxisRange: toImportXAxisRange});
                 }
             }]
         };

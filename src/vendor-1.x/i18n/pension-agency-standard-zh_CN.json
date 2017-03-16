@@ -277,6 +277,8 @@
       "PLACEHOLDER-PICK_NURSING_WORKER": "挑选护工..",
       "TITLE-ROW": "点此选中整行",
       "TITLE-COL": "点此选中整列",
+      "DIALOG-IMPORT-MESSAGE": "导入模版有可能会覆盖已有的排班,您确定要导入吗？",
+      "MSG-NO-PICK-NURSING_PLAN_TEMPLATE": "没有选择模版,无法导入",
       "MSG-NO-PICK-NURSING": "没有挑选护工,无法应用",
       "MSG-NO-NURSING-WORKER-FOR-ROOM": "部分房间没有设置护工",
       "BTN-IMPORT-TEMPLATE": "导入模版",

@@ -3779,7 +3779,7 @@ module.exports = {
                 handler: function (app, options) {
                     return function * (next) {
                         var steps;
-                        var tenant,robot,rooms,room,nursing_robots;
+                        var tenant;
                         try {
                             //this.request.body
                             var tenantId = this.request.body.tenantId;
@@ -3835,7 +3835,7 @@ module.exports = {
                 handler: function (app, options) {
                     return function * (next) {
                         var steps;
-                        var tenant,robot,rooms,room,nursing_robots;
+                        var tenant;
                         try {
                             //this.request.body
                             var tenantId = this.request.body.tenantId;
@@ -3896,7 +3896,7 @@ module.exports = {
                 handler: function (app, options) {
                     return function * (next) {
                         var steps;
-                        var tenant,robot,rooms,room,nursing_robots;
+                        var tenant;
                         try {
                             //this.request.body
                             var tenantId = this.request.body.tenantId;
@@ -3931,6 +3931,73 @@ module.exports = {
                             console.log('前置检查完成');
                             
                             var ret = yield app.modelFactory().model_remove(app.models['psn_nursingPlan'], removeWhere);
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'nursingPlanTemplateImport',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingPlanTemplateImport",
+                handler: function (app, options) {
+                    return function * (next) {
+                        var steps;
+                        var nursingPlanTemplate;
+                        try {
+                            //this.request.body
+                            var nursingPlanTemplateId = this.request.body.nursingPlanTemplateId;
+                            nursingPlanTemplate = yield app.modelFactory().model_read(app.models['psn_nursingPlanTemplate'], nursingPlanTemplateId);
+                            if(!nursingPlanTemplate || nursingPlanTemplate.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到护理模版!'});
+                                yield next;
+                                return;
+                            }
+
+                            var toImportXAxisRange = this.request.body.toImportXAxisRange;
+
+
+                            console.log('toImportXAxisRange:');
+                            console.log(toImportXAxisRange);
+
+                            var xAxisValue, xAxisDate;
+                            var xAxisDayDateMap = {};
+                            var xAxisRange = app._.map(toImportXAxisRange, (o) => {
+                                xAxisValue = app.moment(o);
+                                xAxisDate = xAxisValue.toDate();
+                                xAxisDayDateMap[xAxisValue.day()] = xAxisDate;
+                                return {'x_axis': {'$gte': xAxisDate, '$lt': xAxisValue.add(1, 'days').toDate()}}
+                            });
+
+                            var templateItems = nursingPlanTemplate.content;
+                            var yAxisRange = app._.uniq(app._.map(templateItems, (o) => {
+                                return o.y_axis;
+                            }));
+
+                            var removeWhere = {
+                                tenantId: nursingPlanTemplate.tenantId,
+                                y_axis: {$in: yAxisRange},
+                                $or: xAxisRange
+                            };
+
+                            var toSaveRows = app._.map(templateItems, (o) => {
+                                var x_axis = xAxisDayDateMap[o.x_axis];
+                                return {x_axis: x_axis, y_axis: o.y_axis, aggr_value: o.aggr_value, tenantId: nursingPlanTemplate.tenantId};
+                            });
+
+
+                            console.log('前置检查完成');
+
+                            var ret = yield app.modelFactory().model_bulkInsert(app.models['psn_nursingPlan'],{
+                                rows: toSaveRows,
+                                removeWhere: removeWhere
+                            });
                             this.body = app.wrapper.res.default();
                         }
                         catch (e) {

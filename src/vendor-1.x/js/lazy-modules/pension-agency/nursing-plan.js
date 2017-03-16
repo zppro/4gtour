@@ -33,6 +33,7 @@
             vm.selectGridCell = selectGridCell;
             vm.saveSelected = saveSelected;
             vm.removeSelected = removeSelected;
+            vm.importTemplate = importTemplate;
             vm.tab1 = {cid: 'contentTab1'};
 
             vmh.shareService.tmp('T3001/psn-nursingPlanTemplate', 'name', {tenantId: vm.tenantId, status: 1, stop_flag: false}).then(function (treeNodes) {
@@ -219,7 +220,7 @@
 
         function saveSelected () {
             if (!vm.selectedNursingWorker) {
-                vmh.alertWarning(vm.viewTranslatePath('MSG-NO-PICK-NURSING'), true);
+                vmh.alertWarning(vm.moduleTranslatePath('MSG-NO-PICK-NURSING'), true);
                 return;
             }
             var toSaveRows = [];
@@ -246,29 +247,56 @@
         }
 
         function removeSelected () {
-            var toRemoveRows = [];
-            for(var i=0, ylen = vm.yAxisData.length;i< ylen;i++) {
-                var rowId = vm.yAxisData[i]._id;
-                for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
-                    var colId = vm.xAxisData[j]._id;
-                    var date = vm.xAxisData[j].value;
-                    if (vm.cells[rowId][colId]) {
-                        vm.cells[rowId][colId] = false;
-                        vm.cells[rowId]['row-selected'] = _checkWholeRowIsSelected(rowId);
-                        vm.cols[colId] = _checkWholeColIsSelected(colId);
+            ngDialog.openConfirm({
+                template: 'removeConfirmDialog.html',
+                className: 'ngdialog-theme-default'
+            }).then(function () {
+                var toRemoveRows = [];
+                for(var i=0, ylen = vm.yAxisData.length;i< ylen;i++) {
+                    var rowId = vm.yAxisData[i]._id;
+                    for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
+                        var colId = vm.xAxisData[j]._id;
+                        var date = vm.xAxisData[j].value;
+                        if (vm.cells[rowId][colId]) {
+                            vm.cells[rowId][colId] = false;
+                            vm.cells[rowId]['row-selected'] = _checkWholeRowIsSelected(rowId);
+                            vm.cols[colId] = _checkWholeColIsSelected(colId);
 
-                        if (vm.aggrData[rowId][colId]) {
-                            vm.aggrData[rowId][colId] = null;
-                            toRemoveRows.push({ x_axis: date, y_axis: rowId });
+                            if (vm.aggrData[rowId][colId]) {
+                                vm.aggrData[rowId][colId] = null;
+                                toRemoveRows.push({ x_axis: date, y_axis: rowId });
+                            }
                         }
                     }
                 }
+                if(toRemoveRows.length > 0) {
+                    vmh.psnService.nursingPlanRemove(vm.tenantId, toRemoveRows).then(function(){
+                        vmh.alertSuccess('notification.REMOVE-SUCCESS', true);
+                    });
+                }
+            });
+        }
+        
+        function importTemplate () {
+            if (!vm.selectedNursingPlanTemplate) {
+                vmh.alertWarning(vm.moduleTranslatePath('MSG-NO-PICK-NURSING_PLAN_TEMPLATE'), true);
+                return;
             }
-            if(toRemoveRows.length > 0) {
-                vmh.psnService.nursingPlanRemove(vm.tenantId, toRemoveRows).then(function(){
-                    vmh.alertSuccess();
+
+            ngDialog.openConfirm({
+                template: 'customConfirmDialog.html',
+                className: 'ngdialog-theme-default',
+                controller: ['$scope', function ($scopeConfirm) {
+                    $scopeConfirm.message = vm.moduleTranslatePath('DIALOG-IMPORT-MESSAGE')
+                }]
+            }).then(function () {
+                var toImportXAxisRange = vm.xAxisData.map(function (o) {return o.value });
+                console.log(vm.selectedNursingPlanTemplate._id);
+                vmh.psnService.nursingPlanTemplateImport(vm.selectedNursingPlanTemplate._id, toImportXAxisRange).then(function(){
+                    vmh.alertSuccess('notification.NORMAL-SUCCESS', true);
+                    loadWeek();
                 });
-            }
+            });
         }
     }
 })();

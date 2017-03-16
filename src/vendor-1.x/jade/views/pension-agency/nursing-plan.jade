@@ -10,7 +10,7 @@
                         ui-select-choices(repeat='nursingPlanTemplates in vm.selectBinding.nursingPlanTemplates | filter: {name: $select.search}')
                             div(ng-bind-html='nursingPlanTemplates.name | highlight: $select.search')
                 .btn-group
-                    a.btn.btn-warning.btn-sm(ng-click="vm.applyToSelected()") {{ vm.moduleTranslatePath('BTN-IMPORT-TEMPLATE') | translate}}
+                    a.btn.btn-warning.btn-sm(ng-click="vm.importTemplate()") {{ vm.moduleTranslatePath('BTN-IMPORT-TEMPLATE') | translate}}
                 .btn-group
                     a.btn.btn-success.btn-sm(ng-click="vm.saveToTemplate()") {{ vm.moduleTranslatePath('BTN-SAVE-TEMPLATE') |translate}}
         .col-md-7
@@ -47,5 +47,4 @@
                         span {{(vm.aggrData[row._id][col._id] || {}).name }}
                 tr(ng-if="vm.yAxisData.length==0")
                     td.text-center(colspan="{{vm.xAxisData.length + 1}}") {{ 'grid.NO-RESULTS' | translate}}
-
 
