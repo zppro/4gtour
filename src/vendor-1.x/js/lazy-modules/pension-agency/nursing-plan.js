@@ -9,6 +9,7 @@
     angular
         .module('subsystem.pension-agency')
         .controller('NursingPlanController', NursingPlanController)
+        .controller('NursingPlanSaveAsTemplateController', NursingPlanSaveAsTemplateController)
     ;
 
     NursingPlanController.$inject = ['$scope', 'ngDialog', 'vmh', 'instanceVM'];
@@ -37,9 +38,7 @@
             vm.saveAsTemplate = saveAsTemplate;
             vm.tab1 = {cid: 'contentTab1'};
 
-            vmh.shareService.tmp('T3001/psn-nursingPlanTemplate', 'name', {tenantId: vm.tenantId, status: 1, stop_flag: false}).then(function (treeNodes) {
-                vm.selectBinding.nursingPlanTemplates = treeNodes;
-            });
+            fetchNursingPlanTemplates();
             vmh.shareService.tmp('T3001/psn-nursingWorker', 'name', {tenantId: vm.tenantId, status: 1, stop_flag: false}).then(function (treeNodes) {
                 vm.selectBinding.nursingWorkers = treeNodes;
             });
@@ -51,6 +50,13 @@
                 return nodes;
             });
         }
+
+
+        function fetchNursingPlanTemplates () {
+            vmh.shareService.tmp('T3001/psn-nursingPlanTemplate', 'name', {tenantId: vm.tenantId, status: 1, stop_flag: false}).then(function (treeNodes) {
+                vm.selectBinding.nursingPlanTemplates = treeNodes;
+            });
+        }
         
         function preWeek() {
             loadWeek(-1);
@@ -60,17 +66,15 @@
         }
         function loadWeek(delta) {
             vm.baseWeek += delta || 0;
-            console.log(vm.baseWeek);
-            return vmh.shareService.tmp('T0100', null, {delta: vm.baseWeek}, true).then(function (treeNodes) {
+            return vmh.blocking(vmh.shareService.tmp('T0100', null, {delta: vm.baseWeek}, true).then(function (treeNodes) {
                 vm.xAxisData = treeNodes;
                 vm.cols = {};
                 for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
                     var colId = vm.xAxisData[j]._id;
                     vm.cols[colId] = false;//selectedCol control variable
                 }
-                console.log('loadWeek');
                 queryNursingPlan();
-            });
+            }));
         }
         
         function queryNursingPlan() {
@@ -302,6 +306,90 @@
 
         function saveAsTemplate () {
 
+            var toSaveRows = [];
+            for(var i=0, ylen = vm.yAxisData.length;i< ylen;i++) {
+                var rowId = vm.yAxisData[i]._id;
+                for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
+                    var colId = vm.xAxisData[j]._id;
+                    if(!vm.aggrData[rowId][colId]){
+                        vmh.alertWarning(vm.moduleTranslatePath('MSG-SAVE-AS-TEMPLATE-DATA-INVALID'), true);
+                        return;
+                    } else {
+                        toSaveRows.push({ x_axis: moment(vm.xAxisData[j].value).day(), y_axis: rowId, aggr_value: vm.aggrData[rowId][colId] });
+                    }
+                }
+            }
+            
+            ngDialog.open({
+                template: 'nursing-plan-save-as-template.html',
+                controller: 'NursingPlanSaveAsTemplateController',
+                className: 'ngdialog-theme-default ngdialog-nursing-plan-save-as-template',
+                data: {
+                    vmh: vmh,
+                    moduleTranslatePathRoot: vm.moduleTranslatePath(),
+                    tenantId: vm.tenantId,
+                    nursingPlanTemplates: vm.selectBinding.nursingPlanTemplates,
+                    toSaveRows: toSaveRows
+                }
+            }).closePromise.then(function (ret) {
+                if(ret.value!='$document' && ret.value!='$closeButton' && ret.value!='$escape' ) {
+                    fetchNursingPlanTemplates();
+                }
+            });
+        }
+    }
+
+    NursingPlanSaveAsTemplateController.$inject = ['$scope', 'ngDialog'];
+
+    function NursingPlanSaveAsTemplateController($scope, ngDialog) {
+
+        var vm = $scope.vm = {};
+        var vmh = $scope.ngDialogData.vmh;
+
+        $scope.utils = vmh.utils.v;
+
+        init();
+
+        function init() {
+            vm.moduleTranslatePathRoot = $scope.ngDialogData.moduleTranslatePathRoot;
+            vm.moduleTranslatePath = function(key) {
+                return vm.moduleTranslatePathRoot + '.' + key;
+            };
+            vm.tenantId = $scope.ngDialogData.tenantId;
+            vm.fetchNursingPlanTemplatesPromise = vmh.promiseWrapper($scope.ngDialogData.nursingPlanTemplates);
+            vm.toSaveRows = $scope.ngDialogData.toSaveRows;
+
+            vm.selectNuringPlanTemplateToSave = selectNuringPlanTemplateToSave;
+            vm.cancel = cancel;
+            vm.doSubmit = doSubmit;
+        }
+
+        function selectNuringPlanTemplateToSave(selectedNode) {
+            console.log(selectedNode);
+            vmh.timeout(function(){
+                vm.nursingPlanTemplateName = selectedNode.name;
+            }, 25);
+        }
+
+        function cancel(){
+            $scope.closeThisDialog('$closeButton');
+        }
+
+        function doSubmit() {
+            if ($scope.theForm.$valid) {
+                var promise = ngDialog.openConfirm({
+                    template: 'customConfirmDialog.html',
+                    className: 'ngdialog-theme-default',
+                    controller: ['$scope', function ($scopeConfirm) {
+                        $scopeConfirm.message = vm.moduleTranslatePath('CONFIRM-MESSAGE-SAVE-AS-TEMPLATE')
+                    }]
+                }).then(function () {
+                    vmh.psnService.nursingPlanSaveAsTemplateWeekly(vm.tenantId, vm.nursingPlanTemplateName, vm.toSaveRows).then(function () {
+                        $scope.closeThisDialog();
+                        vmh.alertSuccess();
+                    });
+                });
+            }
         }
     }
 })();

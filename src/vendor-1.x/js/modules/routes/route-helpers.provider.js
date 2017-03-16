@@ -178,6 +178,14 @@
                     });
                 }
 
+                function blocking(promise) {
+                    var self = this;
+                    self.blocker.start();
+                    $q.when(promise.$promise || promise).finally(function(){
+                        self.blocker.stop();
+                    });
+                }
+
                 function fetch(promise) {
                     return (promise || {}).$promise || promise;
                 }
@@ -229,6 +237,7 @@
                     blocker: blockUI.instances.get('module-block'),
                     promiseWrapper: promiseWrapper,
                     exec: exec,
+                    blocking: blocking,
                     fetch: fetch,
                     parallel: parallel,
                     shareService: shareNode,

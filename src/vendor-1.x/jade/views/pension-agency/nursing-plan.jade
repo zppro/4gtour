@@ -49,32 +49,15 @@
                     td.text-center(colspan="{{vm.xAxisData.length + 1}}") {{ 'grid.NO-RESULTS' | translate}}
 
 script(type="text/ng-template", id="nursing-plan-save-as-template.html")
-    form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.saveAsTemplate()")
+    form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
         .ngdialog-message
-            h3.mt0 {{ vm.title | translate}}
+            h3.mt0 {{ vm.moduleTranslatePath('DIALOG-SAVE-AS-TEMPLATE-TITLE') | translate}}
         .ngdialog-input
-            fieldset: .form-group
-                .col-md-4
-                    .panel-heading.bg-primary {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-ADVANCE_PAYMENT_AMOUNT') | translate}}
-                        span.pull-right.text-white.text-sm.text-italic {{'label.TOTAL1'|translate}}：{{vm.advancePayment|currency}}
-                    table.grid.table.table-bordered.table-white(ng-init="vm.advancePayment=0")
-                        tbody
-                            tr(ng-repeat="row in vm.advancePaymentItems" ng-click="vm.grid.selectRow($event,row)",ng-init="vm.advancePayment=vm.advancePayment+row.amount")
-                                td.text-left.text-sm(width="160") {{::row.digest}}
-                                td.text-right.text-primary.text-italic(width="80") {{::row.amount|currency}}
-                .col-md-4
-                    .panel-heading.bg-danger {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-RECORDED_CHARGE_TOTAL') | translate}}
-                        span.pull-right.text-white.text-sm.text-italic {{'label.TOTAL1'|translate}}：{{vm.recorded_charge_total|currency}}
-                    table.grid.table.table-bordered.table-white(ng-init="vm.recorded_charge_total=0")
-                        tbody
-                            tr(ng-repeat="row in vm.chargeItemsRecorded" ng-click="vm.grid.selectRow($event,row)",ng-init="vm.recorded_charge_total=vm.recorded_charge_total+row.amount")
-                                td.text-left.text-sm(width="160") {{::row.digest}}
-                                td.text-right.text-italic(width="80",ng-class='{"text-danger":row.amount>=0,"text-primary":row.amount<0}') {{::row.amount|currency}}
-                .col-md-4
-                    .panel-heading.bg-danger {{ vm.viewTranslatePath('TAB3-LABEL-SETTLEMENT_INFO-UNRECORDED_CHARGE_TOTAL') | translate}}
-                        span.pull-right.text-white.text-sm.text-italic {{'label.TOTAL1'|translate}}：{{vm.unrecorded_charge_total|currency}}
-                    table.grid.table.table-bordered.table-white(ng-init="vm.unrecorded_charge_total=0")
-                        tbody
-                            tr(ng-repeat="row in vm.chargeItemsUnRecorded" ng-click="vm.grid.selectRow($event,row)",ng-init="vm.unrecorded_charge_total=vm.unrecorded_charge_total+row.amount")
-                                td.text-left.text-sm(width="160") {{::row.digest}}
-                                td.text-right.text-italic(width="80",ng-class='{"text-danger":row.amount>=0,"text-primary":row.amount<0}') {{::row.amount|currency}}
+            .col-md-12.cover-nursing-plan-template-c
+                .tree.tree-dropdown(name='nursingPlanTemplateSelected',s-tree, s-tree-data="vm.fetchNursingPlanTemplatesPromise",s-tree-height="400", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{layout:'dropdown',selectNodeFormat:'object'}",ng-model="vm.saveToSelected", on-select="vm.selectNuringPlanTemplateToSave(selectedNode)")
+                .cover-nursing-plan-template-tree
+                    input.form-control(type='text', name='name',ng-model='vm.nursingPlanTemplateName',placeholder='{{vm.moduleTranslatePath("TAB1-PLACEHOLDER-SAVE-TO-TEMPLATE_NAME")|translate}}')
+        .ngdialog-buttons
+            .col-md-12.text-right
+                button.btn.btn-warning(type='button',ng-click="vm.cancel()") {{ "button.CANCEL" | translate}}
+                button.btn.btn-success(type='submit') {{ "button.CONFIRM" | translate}}
