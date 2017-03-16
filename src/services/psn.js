@@ -4008,6 +4008,62 @@ module.exports = {
                         yield next;
                     };
                 }
+            },
+            {
+                method: 'nursingPlanSaveAsTemplateWeekly',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingPlanSaveAsTemplateWeekly",
+                handler: function (app, options) {
+                    return function * (next) {
+                        var steps;
+                        var tenant;
+                        try {
+                            //this.request.body
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+                            var nursingPlanTemplateName = this.request.body.nursingPlanTemplateName; 
+                            var toSaveRows = this.request.body.toSaveRows;
+                            app._.each(toSaveRows, (o) => {
+                                o.tenantId = tenantId
+                            });
+
+                            var nursingPlanTemplate = yield app.modelFactory().model_one(app.models['psn_nursingPlanTemplate'], {
+                                where: {
+                                    status: 1,
+                                    name: nursingPlanTemplateName,
+                                    type: DIC.D3010.WEEKLY,
+                                    tenantId: tenantId
+                                }
+                            });
+
+                            console.log('前置检查完成');
+                            if (nursingPlanTemplate) {
+                                nursingPlanTemplate.content = toSaveRows;
+                                yield nursingPlanTemplate.save();
+                            } else {
+                                yield app.modelFactory().model_create(app.models['psn_nursingPlanTemplate'],{
+                                    name: nursingPlanTemplateName,
+                                    type: DIC.D3010.WEEKLY,
+                                    content: toSaveRows,
+                                    tenantId: tenantId
+                                });
+                            }
+
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
             }
             /**********************其他*****************************/
             

@@ -34,6 +34,7 @@
             vm.saveSelected = saveSelected;
             vm.removeSelected = removeSelected;
             vm.importTemplate = importTemplate;
+            vm.saveAsTemplate = saveAsTemplate;
             vm.tab1 = {cid: 'contentTab1'};
 
             vmh.shareService.tmp('T3001/psn-nursingPlanTemplate', 'name', {tenantId: vm.tenantId, status: 1, stop_flag: false}).then(function (treeNodes) {
@@ -297,6 +298,10 @@
                     loadWeek();
                 });
             });
+        }
+
+        function saveAsTemplate () {
+
         }
     }
 })();
