@@ -19,6 +19,13 @@ module.exports = function(ctx,name) {
             status: {type: Number, min: 0, max: 1, default: 1},
             name: {type: String, required: true, maxlength: 30},
             tenantId: {type: mongoose.Schema.Types.ObjectId,required: true,ref:'pub_tenant'}
+        }, {
+            toObject: {
+                virtuals: true
+            }
+            , toJSON: {
+                virtuals: true
+            }
         });
 
         districtSchema.pre('update', function (next) {

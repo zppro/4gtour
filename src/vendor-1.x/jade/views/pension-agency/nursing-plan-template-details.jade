@@ -24,17 +24,49 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         .col-md-8
                             .form-readable(ng-if="vm.model.stop_flag") {{vm.model.stop_result_name}}
                     fieldset: .form-group
+                        <!--纵轴数据-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-YAXIS') | translate}}:
+                        .col-md-10
+                            .tree.tree-dropdown(name='yAxisData',s-tree, s-tree-disabled="vm.gridEditing",s-tree-data="vm.yAxisDataPromise",s-tree-height="400", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',layout:'dropdown',selectNodeFormat:'object'}",ng-model="vm.yAxisData",required='')
+                    fieldset: .form-group
                         <!--模版内容-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-CONTENT') | translate}}:
                         .col-md-10
                             .panel.panel-default.panel-grid
-                                table.grid.table.table-bordered.table-hover.table-striped
+                                table.grid.table.table-bordered.table-striped
                                     thead
                                         tr
-                                            th.text-center(ng-repeat="column in vm.xAxisData",width="100") {{column.label}}
+                                            th.text-center(ng-click="vm.selectGrid()" width="100") {{ vm.viewTranslatePath('TAB1-LABEL-YAXIS_LABEL') | translate}}
+                                            th.text-center(title="{{vm.viewTranslatePath('TAB1-TITLE-COL')|translate}}",ng-repeat="column in vm.xAxisData",width="100",ng-click="vm.selectGridCol(column._id)") {{::column.name}}
                                     tbody
                                         tr(ng-repeat="row in vm.yAxisData")
-                                            td.text-center(ng-repeat="col in vm.xAxisData",width="100") {{vm.aggrData[row][col]}}
+                                            td.text-center(title="{{vm.viewTranslatePath('TAB1-TITLE-ROW')|translate}}",ng-click="vm.selectGridRow(row._id)")
+                                                | {{::row.name}}
+                                            td.text-center(ng-repeat="col in vm.xAxisData",width="100", ng-class='{"grid-cell-selected": vm.cells[row._id][col._id] }',ng-click="vm.selectGridCell(row._id,col._id)" )
+                                                span {{(vm.aggrData[row._id][col._id] || {}).name }}
+                                        tr(ng-if="vm.yAxisData.length==0")
+                                            td.text-center(colspan="{{vm.xAxisData.length + 1}}") {{ 'grid.NO-RESULTS' | translate}}
+                                .panel-footer
+                                    .row
+                                        .col-md-2.text-left
+                                            .btn-toolbar
+                                                .btn-group(ng-show="!vm.gridEditing")
+                                                    a.btn.btn-primary.btn-sm(ng-click="vm.enterGridEditMode()") {{vm.viewTranslatePath('TAB1-LABEL-ENTER_EDIT_MODE')|translate}}
+                                                .btn-group(ng-show="vm.gridEditing")
+                                                    a.btn.btn-danger.btn-sm(ng-click="vm.exitGridEditMode()") {{vm.viewTranslatePath('TAB1-LABEL-CANCEL_EDIT_MODE')|translate}}
+                                        .col-md-7
+                                        .col-md-3(ng-show="vm.gridEditing")
+                                            .btn-toolbar.pull-right
+                                                .btn-group
+                                                    ui-select(name="nursingWorkers",theme='bootstrap', ng-Model="vm.selectedNursingWorker" ,ng-style='{width: "120px"}')
+                                                        ui-select-match(placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-PICK_NURSING_WORKER")|translate}}') {{$select.selected.name}}
+                                                        ui-select-choices(repeat='nursingWorker in vm.selectBinding.nursingWorkers | filter: {name: $select.search}')
+                                                            div(ng-bind-html='nursingWorker.name | highlight: $select.search')
+                                                .btn-group
+                                                    a.btn.btn-primary.btn-sm(ng-click="vm.applyToSelected()") {{'button.APPLY'|translate}}
+                    //fieldset: .form-group
+                    //    {{vm.yAxisData}}
+
     .text-right.mt-lg
         button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
         button.btn.btn-success(type="submit") {{'button.SAVE'|translate}}

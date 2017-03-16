@@ -1,6 +1,6 @@
 /**
- * district Created by zppro on 17-3-6.
- * Target:养老机构 模版
+ * district Created by zppro on 17-3-14.
+ * Target:养老机构 模版计划
  */
 
 (function() {
@@ -8,101 +8,101 @@
     
     angular
         .module('subsystem.pension-agency')
-        .controller('NursingPlanTemplateGridController', NursingPlanTemplateGridController)
-        .controller('NursingPlanTemplateDetailsController', NursingPlanTemplateDetailsController)
+        .controller('NursingPlanController', NursingPlanController)
     ;
 
+    NursingPlanController.$inject = ['$scope', 'ngDialog', 'vmh', 'instanceVM'];
 
-    NursingPlanTemplateGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
-
-    function NursingPlanTemplateGridController($scope, ngDialog, vmh, vm) {
-
-        $scope.vm = vm;
-        $scope.utils = vmh.utils.g;
-
-        init();
-
-        function init() {
-            vm.init({removeDialog: ngDialog});
-            vm.query();
-        }
-    }
-
-    NursingPlanTemplateDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
-
-    function NursingPlanTemplateDetailsController($scope, ngDialog, vmh, vm) {
+    function NursingPlanController($scope, ngDialog, vmh, vm) {
 
         var vm = $scope.vm = vm;
         $scope.utils = vmh.utils.v;
 
-
         init();
 
         function init() {
 
             vm.init({removeDialog: ngDialog});
-
-
-            vm.doSubmit = doSubmit;
-            vm.enterGridEditMode = enterGridEditMode;
-            vm.exitGridEditMode = exitGridEditMode;
+ 
+            vm.preWeek = preWeek;
+            vm.nextWeek = nextWeek;
+            vm.onRoomChange = onRoomChange;
             vm.selectGrid = selectGrid;
             vm.selectGridCol = selectGridCol;
             vm.selectGridRow = selectGridRow;
             vm.selectGridCell = selectGridCell;
-            vm.applyToSelected = applyToSelected;
+            vm.saveSelected = saveSelected;
+            vm.removeSelected = removeSelected;
             vm.tab1 = {cid: 'contentTab1'};
 
+            vmh.shareService.tmp('T3001/psn-nursingPlanTemplate', 'name', {tenantId: vm.tenantId, status: 1, stop_flag: false}).then(function (treeNodes) {
+                vm.selectBinding.nursingPlanTemplates = treeNodes;
+            });
             vmh.shareService.tmp('T3001/psn-nursingWorker', 'name', {tenantId: vm.tenantId, status: 1, stop_flag: false}).then(function (treeNodes) {
                 vm.selectBinding.nursingWorkers = treeNodes;
             });
 
-
-            vm.yAxisDataPromise = vmh.shareService.tmp('T3009', null, {tenantId:vm.tenantId}).then(function(nodes){
-                console.log(nodes);
+            vm.baseWeek = 0;
+            var p1 = loadWeek();
+            var p2 = vm.yAxisDataPromise = vmh.shareService.tmp('T3009', null, {tenantId:vm.tenantId}).then(function(nodes){
+                console.log('yAxisDataPromise');
                 return nodes;
             });
-            vm.load().then(function(){
-                vm.raw$stop_flag = !!vm.model.stop_flag;
-                //构造类型表格
-                var x_axis = vm.model.type == 'A0001' ? 'weekAxis' :'monthAxis';
-                vmh.clientData.getJson(x_axis).then(function (data) {
-                    vm.xAxisData = data;
-                    vm.cols = {};
-                    for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
-                        var colId = vm.xAxisData[j]._id;
-                        vm.cols[colId] = false;//selectedCol control variable
-                    }
-                });
-
-                if (vm.model.content) {
-                    parseTemplateContent();
-                }
-            });
-
-        }
-
-        function parseTemplateContent() {
-            console.log('parse content');
-            var nursingWorkers = vm.selectBinding.nursingWorkers
-            var yAxisData = [];
-            vm.aggrData = {};
-            for(var i=0,len=vm.model.content.length;i<len;i++) {
-                var aggrPoint = vm.model.content[i];
-                var aggrY = vm.aggrData[aggrPoint.y_axis];
-                if (!aggrY){
-                    aggrY = vm.aggrData[aggrPoint.y_axis] = {};
-
-                    yAxisData.push({_id: aggrPoint.y_axis});
-                }
-                var nursingWorkerObject = _.find(nursingWorkers, function(o){
-                    return o._id == aggrPoint.aggr_value
-                })
-                aggrY[aggrPoint.x_axis] = nursingWorkerObject;
-            }
-            vm.yAxisData = yAxisData;
         }
         
+        function preWeek() {
+            loadWeek(-1);
+        }
+        function nextWeek() {
+            loadWeek(1);
+        }
+        function loadWeek(delta) {
+            vm.baseWeek += delta || 0;
+            console.log(vm.baseWeek);
+            return vmh.shareService.tmp('T0100', null, {delta: vm.baseWeek}, true).then(function (treeNodes) {
+                vm.xAxisData = treeNodes;
+                vm.cols = {};
+                for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
+                    var colId = vm.xAxisData[j]._id;
+                    vm.cols[colId] = false;//selectedCol control variable
+                }
+                console.log('loadWeek');
+                queryNursingPlan();
+            });
+        }
+        
+        function queryNursingPlan() {
+            var start = vm.xAxisData[0].value;
+            var end = vm.xAxisData[vm.xAxisData.length-1].value;
+            var p3 = vmh.psnService.nursingPlanWeekly(vm.tenantId, start, end).then(parseNursingPlan);
+        }
+
+        function parseNursingPlan(nursingPlan) {
+            console.log('parse nursingPlanItems');
+            var nursingPlanItems = nursingPlan.items;
+            vm.yAxisData = nursingPlan.yAxisData;
+            var nursingWorkers = vm.selectBinding.nursingWorkers;
+            vm.aggrData = {};
+            for(var i=0,len=nursingPlanItems.length;i<len;i++) {
+                var nursingPlanItem = nursingPlanItems[i];
+                var nursingWorkerObject = _.find(nursingWorkers, function(o){
+                    return o._id == nursingPlanItem.aggr_value
+                });
+                if (nursingWorkerObject) {
+                    if (!vm.aggrData[nursingPlanItem.y_axis]) {
+                        vm.aggrData[nursingPlanItem.y_axis] = {};
+                    }
+                    vm.aggrData[nursingPlanItem.y_axis][nursingPlanItem.x_axis_value] = nursingWorkerObject;
+                }
+            }
+        }
+        
+        function onRoomChange () {
+            console.log('onRoomChange');
+            exitGridEditMode();
+            enterGridEditMode()
+        }
+
         function enterGridEditMode () {
             vm.gridEditing = true;
             if (!vm.aggrData) {
@@ -143,12 +143,12 @@
         function _unSelectAll () {
             for(var i=0, ylen = vm.yAxisData.length;i< ylen;i++) {
                 var rowId = vm.yAxisData[i]._id;
-                if (vm.cells[rowId]) {
+                if (vm.cells && vm.cells[rowId]) {
                     vm.cells[rowId]['row-selected'] = false;
-                    for (var j = 0, xlen = vm.xAxisData.length; j < xlen; j++) {
+                    for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
                         var colId = vm.xAxisData[j]._id;
-                        vm.cells[rowId][colId] = false;
-                        if (vm.cols[colId]) {
+                        vm.cells[rowId][colId] = false
+                        if (vm.cols[colId]){
                             vm.cols[colId] = false;
                         }
                     }
@@ -209,67 +209,66 @@
         }
 
         function selectGridCell (rowId, colId) {
+            console.log(vm.gridEditing)
             if(!vm.gridEditing) return;
+
             vm.cells[rowId][colId] = !vm.cells[rowId][colId];
             vm.cells[rowId]['row-selected'] = _checkWholeRowIsSelected(rowId);
             vm.cols[colId] = _checkWholeColIsSelected(colId);
         }
 
-        function applyToSelected () {
+        function saveSelected () {
             if (!vm.selectedNursingWorker) {
                 vmh.alertWarning(vm.viewTranslatePath('MSG-NO-PICK-NURSING'), true);
                 return;
             }
+            var toSaveRows = [];
             for(var i=0, ylen = vm.yAxisData.length;i< ylen;i++) {
                 var rowId = vm.yAxisData[i]._id;
                 for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
                     var colId = vm.xAxisData[j]._id;
+                    var date = vm.xAxisData[j].value;
                     if (vm.cells[rowId][colId]) {
                         console.log(vm.selectedNursingWorker);
                         vm.aggrData[rowId][colId] = vm.selectedNursingWorker;
                         vm.cells[rowId][colId] = false;
                         vm.cells[rowId]['row-selected'] = _checkWholeRowIsSelected(rowId);
                         vm.cols[colId] = _checkWholeColIsSelected(colId);
+                        toSaveRows.push({ x_axis: date, y_axis: rowId, aggr_value: vm.selectedNursingWorker.id });
                     }
                 }
             }
-
-        }
-
-        function doSubmit() {
-            if ($scope.theForm.$valid) {
-
-                vm.model.content = [];
-                for(var i=0, ylen = vm.yAxisData.length;i< ylen;i++) {
-                    var rowId = vm.yAxisData[i]._id;
-                    for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
-                        var colId = vm.xAxisData[j]._id;
-                        if (!vm.aggrData[rowId] || !vm.aggrData[rowId][colId]) {
-                            vmh.alertWarning(vm.viewTranslatePath('MSG-NO-NURSING-WORKER-FOR-ROOM'), true);
-                            return;
-                        }
-                        vm.model.content.push({x_axis: colId, y_axis: rowId, aggr_value: vm.aggrData[rowId][colId]});
-                    }
-                }
-
-                var p;
-                if(vm.raw$stop_flag === false && vm.model.stop_flag === true) {
-                    p = vmh.fetch(vmh.psnService.nursingRobotRemoveRoomConfig(vm.tenantId, vm.model.id));
-                } else {
-                    p = vmh.promiseWrapper();
-                }
-                p.then(function(){
-                    vm.save();
+            if(toSaveRows.length > 0) {
+                vmh.psnService.nursingPlanSave(vm.tenantId, toSaveRows).then(function(){
+                    vmh.alertSuccess();
                 });
             }
-            else {
-                if ($scope.utils.vtab(vm.tab1.cid)) {
-                    vm.tab1.active = true;
-                }
-            }
         }
 
+        function removeSelected () {
+            var toRemoveRows = [];
+            for(var i=0, ylen = vm.yAxisData.length;i< ylen;i++) {
+                var rowId = vm.yAxisData[i]._id;
+                for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
+                    var colId = vm.xAxisData[j]._id;
+                    var date = vm.xAxisData[j].value;
+                    if (vm.cells[rowId][colId]) {
+                        vm.cells[rowId][colId] = false;
+                        vm.cells[rowId]['row-selected'] = _checkWholeRowIsSelected(rowId);
+                        vm.cols[colId] = _checkWholeColIsSelected(colId);
 
+                        if (vm.aggrData[rowId][colId]) {
+                            vm.aggrData[rowId][colId] = null;
+                            toRemoveRows.push({ x_axis: date, y_axis: rowId });
+                        }
+                    }
+                }
+            }
+            if(toRemoveRows.length > 0) {
+                vmh.psnService.nursingPlanRemove(vm.tenantId, toRemoveRows).then(function(){
+                    vmh.alertSuccess();
+                });
+            }
+        }
     }
-
 })();

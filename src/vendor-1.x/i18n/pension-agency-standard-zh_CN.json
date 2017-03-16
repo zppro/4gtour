@@ -270,6 +270,20 @@
         "SYNC_FAMILY_MEMBERS_SUCCESS":"同步老人家庭成员数据成功"
       }
     },
+    "nursing-plan": {
+      "TITLE": "养老机构-护理管理-护理计划-编排",
+      "LABEL-YAXIS_LABEL": "房间",
+      "PLACEHOLDER-PICK_NURSING_PLAN_TEMPLATE": "选择一个模版导入..",
+      "PLACEHOLDER-PICK_NURSING_WORKER": "挑选护工..",
+      "TITLE-ROW": "点此选中整行",
+      "TITLE-COL": "点此选中整列",
+      "MSG-NO-PICK-NURSING": "没有挑选护工,无法应用",
+      "MSG-NO-NURSING-WORKER-FOR-ROOM": "部分房间没有设置护工",
+      "BTN-IMPORT-TEMPLATE": "导入模版",
+      "BTN-SAVE-TEMPLATE": "保存为模版",
+      "BTN-PRE-WEEK": "上周",
+      "BTN-NEXT-WEEK": "下周"
+    },
     "nursing-plan-template": {
       "list": {
         "TITLE": "养老机构-护理管理-护理计划模版-列表"
@@ -281,7 +295,16 @@
         "TAB1-PLACEHOLDER-NAME": "1#楼周计划..",
         "TAB1-LABEL-FLAG-COLLECTION": "标志集合",
         "TAB1-LABEL-STOP_FLAG": "停用",
-        "TAB1-LABEL-CONTENT": "模版内容"
+        "TAB1-LABEL-YAXIS": "Y轴数据",
+        "TAB1-LABEL-CONTENT": "模版内容",
+        "TAB1-LABEL-YAXIS_LABEL": "房间",
+        "TAB1-LABEL-ENTER_EDIT_MODE": "进入编辑模式",
+        "TAB1-LABEL-CANCEL_EDIT_MODE": "退出编辑模式",
+        "TAB1-PLACEHOLDER-PICK_NURSING_WORKER": "挑选护工..",
+        "TAB1-TITLE-ROW": "点此选中整行",
+        "TAB1-TITLE-COL": "点此选中整列",
+        "MSG-NO-PICK-NURSING": "没有挑选护工,无法应用",
+        "MSG-NO-NURSING-WORKER-FOR-ROOM": "部分房间没有设置护工"
       }
     },
     "enter-payment":{

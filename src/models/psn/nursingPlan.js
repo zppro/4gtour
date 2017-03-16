@@ -32,6 +32,9 @@ module.exports = function(ctx,name) {
             }
         });
 
+        nursingPlanSchema.virtual('x_axis_value').get(function () {
+            return ctx.moment(this.x_axis).day();
+        });
 
         nursingPlanSchema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});

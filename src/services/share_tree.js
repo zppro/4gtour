@@ -3,6 +3,8 @@
  * 参考字典D1003-预定义树
  */
 
+var statHelper = require('rfcore').factory('statHelper');
+
 module.exports = {
     init: function (option) {
         var self = this;
@@ -32,6 +34,40 @@ module.exports = {
                         try {
                             var districts = require('../pre-defined/' + this.params.id + '.json');
                             this.body = app.wrapper.res.rows(districts);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'fetch-T0100',//周时间段
+                verb: 'post',
+                url: this.service_url_prefix + "/T0100",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var delta = this.request.body.where.delta || 0;
+                            var f = (this.request.body.select || {}).format || 'MMDD(周E)';
+                            var step = 7; //周段
+
+                            console.log(this.request.body);
+
+                            // var base = app.moment().add(delta*step,'days');
+                            // console.log(base.day());
+                            // var start = base.add(-1 * base.day(), 'days');
+                            // console.log(start.format('E'));
+                            // console.log(start.format('YYYYMMDD'));
+                            var start = app.moment().weekday(delta* step);
+                            var rows = [{_id: start.day(), name: start.format(f), value: start.format('L')}];
+                            for(var i=1,len=step;i<len;i++) {
+                                var d = start.add(1, 'days');
+                                rows.push({_id: d.day(), name: d.format(f).replace(/周7/, '周日'), value: d.format('L')});
+                            }
+                            console.log(rows);
+                            this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -117,7 +153,7 @@ module.exports = {
                                 data.where = {status: 1};
                             if (!data.select)
                                 data.select = '_id name';
-                            this.body = app.wrapper.res.rows(yield app.modelFactory().query(modelOption.model_name, modelOption.model_path, data));
+                            this.body = app.wrapper.res.rows(yield app.modelFactory().model_query(app.models[modelOption.model_name], data));
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -327,6 +363,63 @@ module.exports = {
                             this.body = app.wrapper.res.rows(rows);
 
                         } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'fetch-T3009',
+                verb: 'post',
+                url: this.service_url_prefix + "/T3009", // 区域,楼层,房间树
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+
+                            var data = this.request.body;
+                            var tenantId = data.where.tenantId;
+
+                            var rows = [];
+
+                            var districts = yield app.modelFactory().model_query(app.models['psn_district'], {
+                                where: {
+                                    status: 1,
+                                    tenantId: tenantId
+                                }, select: 'name'
+                            });
+
+                            var rooms = yield app.modelFactory().model_query(app.models['psn_room'], {
+                                where: {
+                                    status: 1,
+                                    tenantId: tenantId
+                                }, select: 'name floor districtId'
+                            });
+
+                            rows = districts.map((o) => {
+                                var districtNode = {_id: o.id, name: o.name};
+                                districtNode.children = app._.uniq(app._.where(rooms, (o1) => {
+                                    return o1.districtId == districtNode._id;
+                                }).map((o2) => {
+                                    return o2.floor;
+                                })).map((o3) => {
+                                    var floorNode = {_id: "floor" +o3 + '#', name: o3  + '层'};
+                                    floorNode.children = app._.filter(rooms, (o4) => {
+                                        return o4.districtId == districtNode._id && o4.floor == o3;
+                                    }).map((o5) => {
+                                        return {_id: o5.id, name:o5.name}
+                                    });
+                                    return floorNode;
+                                });
+                                return districtNode;
+                            })
+
+                            // console.log(rows);
+                            this.body = app.wrapper.res.rows(rows);
+
+                        } catch (e) {
+                            console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
                         }

@@ -79,6 +79,8 @@
                             }
                             console.log('tree load finished');
                             self.treeLoadFinished = true;
+                            $scope.onLoadFinished && $scope.onLoadFinished();
+
                         }
                         else {
                             self.treeLoadFinished = false;
@@ -150,7 +152,7 @@
             templateUrl: function (elem, attrs) {
                 return attrs.sTreeTemplateUrl || 'tree-directive-default-renderer.html'
             },
-            scope: {treeData: '=sTreeData', treeHeight: '=sTreeHeight', ngModel: '=', onSelect: '&', onCheckChange: '&',  isDisabled:'&sTreeNodeIsDisabled', treeNodeFunc: '&sTreeNodeFunc'}
+            scope: {treeData: '=sTreeData', treeHeight: '=sTreeHeight', treeDisabled: '=sTreeDisabled', ngModel: '=', onLoadFinished: '&',  onSelect: '&', onCheckChange: '&',  isDisabled:'&sTreeNodeIsDisabled', treeNodeFunc: '&sTreeNodeFunc'}
         };
         return directive;
 
@@ -185,6 +187,12 @@
                 }
             });
 
+            scope.$watch("treeDisabled",function(newValue,oldValue) {
+                if (newValue != oldValue) {
+                    diabledDropDownTree(!!newValue);
+                }
+            });
+
             var option = scope.$eval(attrs.sTreeOption) || {};
             var height = Number(scope.treeHeight);
             option.height = height;
@@ -202,11 +210,11 @@
                     if (newValue != oldValue && oldValue!=undefined) {
                         if(!angular.isArray(newValue))
                             return;
-
                         scope._tree.checkedNodes = [];
                         var checkedNodeValue;
                         for(var i=0;i<newValue.length;i++) {
                             checkedNodeValue = newValue[i];
+
                             if(angular.isString(checkedNodeValue)){
                                 scope._tree.checkedNodes.push($tree.findNodeById(checkedNodeValue));
                             }
@@ -214,12 +222,15 @@
                                 if (checkedNodeValue.level && checkedNodeValue.index && checkedNodeValue.orderNo) {
                                     scope._tree.checkedNodes.push(newValue[i]);
                                 } else {
-                                    scope._tree.checkedNodes.push($tree.findNodeById(checkedNodeValue[nodeIdKey]));
+                                    var node = $tree.findNodeById(checkedNodeValue[nodeIdKey]);
+                                    if (!checkedNodeValue.name) {
+                                        checkedNodeValue.name = node.name;
+                                    }
+                                    scope._tree.checkedNodes.push(node);
                                 }
                             }
                         }
                         angular.forEach(scope._tree.checkedNodes,function(node){
-
                             $tree._check(node, {currentTarget: true, stopPropagation: angular.noop,source:'directive'});
                             $tree.expand(node.attrs.index);
                         });
@@ -246,7 +257,21 @@
 
             });
 
-
+            function diabledDropDownTree(disabled) {
+                var dropdownInput = element.children('.input-group').children('input');
+                var dropdownButton = element.children('.input-group').find('button');
+                if(scope._tree) {
+                    scope._tree.readonly = disabled    
+                }
+                
+                if (disabled) {
+                    dropdownInput.addClass('tree-input-readable').prop('readonly',true);
+                    dropdownButton.prop('disabled',true);
+                } else {
+                    dropdownInput.removeClass('tree-input-readable').prop('readonly',false);
+                    dropdownButton.prop('disabled',false);
+                }
+            }
 
             function createTree(data){
                 $q.when(data).then(function (treeNodes) {

@@ -62,6 +62,14 @@ var source = {
         watch: paths.src_client + 'i18n/*',
         app: paths.src_client + 'i18n/*'
     },
+    font: {
+        watch: [paths.src_client + 'font/**/*'],
+        app: paths.src_client + 'font/**/*'
+    },
+    css: {
+        watch: [paths.src_client + 'css/**/*.css'],
+        app: paths.src_client + 'css/**/*.css'
+    },
     less: {
         watch: [paths.src_client + 'less/**/*', '!' + paths.src_client + 'less/themes/*'],
         app: paths.src_client + 'less/*.*',
@@ -96,6 +104,7 @@ var source = {
     jade: {
         watch: paths.src_client + 'jade/**/*.jade',
         index: paths.src_client + 'jade/index.jade',
+        index_dev: paths.src_client + 'jade/index-dev.jade',
         pages: [paths.src_client + 'jade/pages/**/*.*'],
         pages_root: paths.src_client + 'jade/pages',
         views: [paths.src_client + 'jade/views/**/*.*'],
@@ -108,6 +117,7 @@ var build = {
     develop: {
         images: paths.pub_client_app_develop + 'img/',
         i18n: paths.pub_client_app_develop + 'i18n/',
+        fonts: paths.pub_client_app_develop + 'fonts/',
         styles: paths.pub_client_app_develop + 'css/',
         scripts: paths.pub_client_app_develop + 'js/',
         lazyModules: {
@@ -123,6 +133,7 @@ var build = {
     production: {
         images: paths.pub_client_app_production + 'img/',
         i18n: paths.pub_client_app_production + 'i18n/',
+        fonts: paths.pub_client_app_production + 'fonts/',
         styles: paths.pub_client_app_production + 'css/',
         scripts: paths.pub_client_app_production + 'js/',
         lazyModules: {
@@ -223,6 +234,31 @@ gulp.task('i18n',[
     'i18n:app'
 ]);
 
+// Styles:less subsystem
+gulp.task('font:app', function() {
+    log('copying thirdparty font file for app..');
+    return gulp.src(source.font.app)
+        .pipe(gulp.dest(isProduction ? build.production.fonts : build.develop.fonts))
+        .pipe($plugins.livereload())
+        ;
+});
+
+gulp.task('font',[
+    'font:app'
+]);
+
+// Styles:less subsystem
+gulp.task('styles:css:app', function() {
+    log('copying thirdparty css lib for app..');
+    return gulp.src(source.css.app)
+        .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.init()))
+        .pipe($plugins.if(isProduction, $plugins.minifyCss()))
+        .pipe($plugins.if(isProduction && useSourceMaps, $plugins.sourcemaps.write('.')))
+        .pipe(gulp.dest(isProduction ? build.production.styles : build.develop.styles))
+        .pipe($plugins.livereload())
+        ;
+});
+
 // Styles:less app
 gulp.task('styles:less:app',function() {
     log('Building less app..');
@@ -284,7 +320,10 @@ gulp.task('styles:less:subsystem', function() {
         ;
 });
 
+
+
 gulp.task('styles',[
+    'styles:css:app',
     'styles:less:app',
     'styles:less:app-rtl',
     'styles:less:themes',
@@ -404,7 +443,7 @@ gulp.task('lazy-modules',[
 // JADE
 gulp.task('jade:index',function() {
     log('Building jade index..');
-    return gulp.src(source.jade.index)
+    return gulp.src(isProduction ? source.jade.index : source.jade.index_dev)
         .pipe($plugins.jade({pretty: true}))
         .on('error', handleError)
         .pipe(gulp.dest(isProduction ? build.production.jade.index : build.develop.jade.index))
@@ -454,7 +493,9 @@ gulp.task('watch', function() {
     gulp.watch(serverdata.watch,['server']);
     gulp.watch(source.images.watch, ['images']);
     gulp.watch(source.i18n.watch, ['i18n']);
+    gulp.watch(source.font.watch, ['font']);
     gulp.watch(source.jade.watch, ['jade']);
+    gulp.watch(source.css.watch, ['styles:css:app']);
     gulp.watch(source.less.watch, ['styles:less:app', 'styles:less:app-rtl','styles:less:subsystem']);
     gulp.watch(source.scripts.watch, ['scripts:app']);
     gulp.watch(source.lazyModules.watch, ['lazy-modules:scripts']);
@@ -506,6 +547,7 @@ gulp.task('production', gulpsync.sync([
     'server',
     'images',
     'i18n',
+    'font',
     'styles',
     'scripts',
     'lazy-modules',
@@ -526,6 +568,7 @@ gulp.task('develop', gulpsync.sync([
     'server',
     'images',
     'i18n',
+    'font',
     'styles',
     'scripts',
     'lazy-modules',
