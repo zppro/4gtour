@@ -44,3 +44,7 @@ pub-client-production
 
 #config
 *-config.json
+
+#sublime代码跟踪
+.tags
+.tags_sorted_by_file
