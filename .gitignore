@@ -48,3 +48,6 @@ pub-client-production
 #sublime代码跟踪
 .tags
 .tags_sorted_by_file
+
+#执行启动hcl
+dev-app-h.sh
