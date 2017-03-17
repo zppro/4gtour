@@ -292,31 +292,8 @@
       "TAB1-LABEL-SAVE-TO-TEMPLATE_NAME": "新模版名称",
       "TAB1-PLACEHOLDER-SAVE-TO-TEMPLATE_NAME": "选择一个模版或者输入一个新模版名称"
     },
-    "nursing-plan-template": {
-      "list": {
-        "TITLE": "养老机构-护理管理-护理计划模版-列表"
-      },
-      "details": {
-        "TITLE": "养老机构-护理管理-护理计划模版-详情",
-        "TAB1": "基本信息",
-        "TAB1-LABEL-NAME": "模版名称",
-        "TAB1-PLACEHOLDER-NAME": "1#楼周计划..",
-        "TAB1-LABEL-FLAG-COLLECTION": "标志集合",
-        "TAB1-LABEL-STOP_FLAG": "停用",
-        "TAB1-LABEL-YAXIS": "Y轴数据",
-        "TAB1-LABEL-CONTENT": "模版内容",
-        "TAB1-LABEL-YAXIS_LABEL": "房间",
-        "TAB1-LABEL-ENTER_EDIT_MODE": "进入编辑模式",
-        "TAB1-LABEL-CANCEL_EDIT_MODE": "退出编辑模式",
-        "TAB1-PLACEHOLDER-PICK_NURSING_WORKER": "挑选护工..",
-        "TAB1-TITLE-ROW": "点此选中整行",
-        "TAB1-TITLE-COL": "点此选中整列",
-        "MSG-NO-PICK-NURSING": "没有挑选护工,无法应用",
-        "MSG-NO-NURSING-WORKER-FOR-ROOM": "部分房间没有设置护工"
-      }
-    },
     "nursing-schedule": {
-      "TITLE": "养老机构-护理管理-护理计划-编排",
+      "TITLE": "养老机构-护理管理-护理排班-编排",
       "DIALOG-SAVE-AS-TEMPLATE-TITLE": "保存为护理计划模版",
       "LABEL-YAXIS_LABEL": "房间",
       "PLACEHOLDER-PICK_NURSING_SCHEDULE_TEMPLATE": "选择一个模版导入..",
@@ -328,7 +305,7 @@
       "MSG-NO-PICK-NURSING_SCHEDULE_TEMPLATE": "没有选择模版,无法导入",
       "MSG-NO-PICK-NURSING": "没有挑选护工,无法应用",
       "MSG-NO-NURSING-WORKER-FOR-ROOM": "部分房间没有设置护工",
-      "MSG-SAVE-AS-TEMPLATE-DATA-INVALID": "有房间没有排计划,无法存为模版",
+      "MSG-SAVE-AS-TEMPLATE-DATA-INVALID": "有房间没有指定护工,无法存为模版",
       "BTN-IMPORT-TEMPLATE": "导入模版",
       "BTN-SAVE-TEMPLATE": "保存为模版",
       "BTN-PRE-WEEK": "上周",
@@ -339,13 +316,13 @@
     },
     "nursing-schedule-template": {
       "list": {
-        "TITLE": "养老机构-护理管理-护理计划模版-列表"
+        "TITLE": "养老机构-护理管理-护理排班模版-列表"
       },
       "details": {
-        "TITLE": "养老机构-护理管理-护理计划模版-详情",
+        "TITLE": "养老机构-护理管理-护理排班模版-详情",
         "TAB1": "基本信息",
         "TAB1-LABEL-NAME": "模版名称",
-        "TAB1-PLACEHOLDER-NAME": "1#楼周计划..",
+        "TAB1-PLACEHOLDER-NAME": "1#楼周排班..",
         "TAB1-LABEL-FLAG-COLLECTION": "标志集合",
         "TAB1-LABEL-STOP_FLAG": "停用",
         "TAB1-LABEL-YAXIS": "Y轴数据",

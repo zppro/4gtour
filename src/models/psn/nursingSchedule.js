@@ -19,8 +19,8 @@ module.exports = function(ctx,name) {
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
-            x_axis: {type: Date, required: true},
-            y_axis: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'psn_room'},
+            x_axis: {type: Date, required: true}, //时间轴
+            y_axis: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'psn_room'}, //房间轴
             aggr_value: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'psn_nursingWorker'},
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {

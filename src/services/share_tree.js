@@ -394,7 +394,7 @@ module.exports = {
                                 where: {
                                     status: 1,
                                     tenantId: tenantId
-                                }, select: 'name floor districtId'
+                                }, select: 'name floor capacity districtId'
                             });
 
                             rows = districts.map((o) => {
@@ -408,14 +408,15 @@ module.exports = {
                                     floorNode.children = app._.filter(rooms, (o4) => {
                                         return o4.districtId == districtNode._id && o4.floor == o3;
                                     }).map((o5) => {
-                                        return {_id: o5.id, name:o5.name}
+                                        return {_id: o5.id, name: o5.name, capacity: o5.capacity}
                                     });
+                                    console.log(floorNode);
                                     return floorNode;
                                 });
                                 return districtNode;
-                            })
+                            });
 
-                            // console.log(rows);
+                            console.dir(rows);
                             this.body = app.wrapper.res.rows(rows);
 
                         } catch (e) {
