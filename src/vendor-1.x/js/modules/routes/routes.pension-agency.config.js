@@ -545,9 +545,34 @@
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'nursing-plan.js')
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-plan-template', {
-                url: '/nursing-plan-template',
-                title: '护理计划模版',
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-schedule', {
+                url: '/nursing-schedule',
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-schedule.html'),
+                        controller: 'NursingScheduleController',
+                        resolve: {
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-schedule',{
+                                modelName: 'psn-nursingSchedule',
+                                searchForm: {"status": 1},
+                                switches: {leftTree: true}
+                            })
+                        }
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'NURSING-SCHEDULE'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'nursing-schedule.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-schedule-template', {
+                url: '/nursing-schedule-template',
+                title: '护理排班模版',
                 abstract: true,
                 views: {
                     "module-header": {
@@ -559,18 +584,18 @@
                     }
                 },
                 data:{
-                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'NURSING-PLAN-TEMPLATE'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'NURSING-SCHEDULE-TEMPLATE'//业务系统使用
                 }
-                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'nursing-plan-template.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'nursing-schedule-template.js')
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-plan-template.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-schedule-template.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-plan-template-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-schedule-template-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'NursingPlanTemplateGridController',
+                controller: 'NursingScheduleTemplateGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-plan-template.list', {
-                        modelName: 'psn-nursingPlanTemplate',
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-schedule-template.list', {
+                        modelName: 'psn-nursingScheduleTemplate',
                         searchForm: {"status": 1},
                         serverPaging: true,
                         columns: [
@@ -611,14 +636,14 @@
                     })
                 }
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-plan-template.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-schedule-template.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-plan-template-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-schedule-template-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'NursingPlanTemplateDetailsController',
+                controller: 'NursingScheduleTemplateDetailsController',
                 resolve: {
-                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-plan-template.details', {
-                        modelName: 'psn-nursingPlanTemplate',
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-schedule-template.details', {
+                        modelName: 'psn-nursingScheduleTemplate',
                         model:{ type: 'A0001' }
                         , blockUI: true
                     })

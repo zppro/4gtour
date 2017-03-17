@@ -50,9 +50,14 @@
         "sref": "app.pension-agency.nursing-plan"
       },
       {
-        "_id": "menu.pension-agency.NURSING-PLAN-TEMPLATE",
-        "name": "护理计划模版",
-        "sref": "app.pension-agency.nursing-plan-template.list"
+        "_id": "menu.pension-agency.NURSING-SCHEDULE",
+        "name": "护理排班",
+        "sref": "app.pension-agency.nursing-schedule"
+      },
+      {
+        "_id": "menu.pension-agency.NURSING-SCHEDULE-TEMPLATE",
+        "name": "护理排班模版",
+        "sref": "app.pension-agency.nursing-schedule-template.list"
       }
     ]
   },

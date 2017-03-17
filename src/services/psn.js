@@ -3771,14 +3771,13 @@ module.exports = {
                     };
                 }
             },
-            /**********************护理计划*****************************/
+            /**********************护理排班*****************************/
             {
-                method: 'nursingPlanWeekly',
+                method: 'nursingScheduleWeekly',
                 verb: 'post',
-                url: this.service_url_prefix + "/nursingPlanWeekly", //按周查找护理计划
+                url: this.service_url_prefix + "/nursingScheduleWeekly", //按周查找护理排班
                 handler: function (app, options) {
                     return function * (next) {
-                        var steps;
                         var tenant;
                         try {
                             //this.request.body
@@ -3799,7 +3798,7 @@ module.exports = {
 
                             console.log('前置检查完成');
 
-                            var rows = yield app.modelFactory().model_query(app.models['psn_nursingPlan'],{
+                            var rows = yield app.modelFactory().model_query(app.models['psn_nursingSchedule'],{
                                 select: 'x_axis y_axis aggr_value',
                                 where:{
                                     tenantId: tenantId,
@@ -3829,12 +3828,11 @@ module.exports = {
                 }
             },
             {
-                method: 'nursingPlanSave',
+                method: 'nursingScheduleSave',
                 verb: 'post',
-                url: this.service_url_prefix + "/nursingPlanSave",
+                url: this.service_url_prefix + "/nursingScheduleSave",
                 handler: function (app, options) {
                     return function * (next) {
-                        var steps;
                         var tenant;
                         try {
                             //this.request.body
@@ -3874,7 +3872,7 @@ module.exports = {
 
                             console.log('前置检查完成');
 
-                            var ret = yield app.modelFactory().model_bulkInsert(app.models['psn_nursingPlan'],{
+                            var ret = yield app.modelFactory().model_bulkInsert(app.models['psn_nursingSchedule'],{
                                 rows: toSaveRows,
                                 removeWhere: removeWhere
                             });
@@ -3890,12 +3888,11 @@ module.exports = {
                 }
             },
             {
-                method: 'nursingPlanRemove',
+                method: 'nursingScheduleRemove',
                 verb: 'post',
-                url: this.service_url_prefix + "/nursingPlanRemove",
+                url: this.service_url_prefix + "/nursingScheduleRemove",
                 handler: function (app, options) {
                     return function * (next) {
-                        var steps;
                         var tenant;
                         try {
                             //this.request.body
@@ -3908,7 +3905,7 @@ module.exports = {
                             }
 
                             var toRemoveRows = this.request.body.toRemoveRows;
-                             
+
 
                             console.log('toRemoveRows:');
                             console.log(toRemoveRows);
@@ -3927,10 +3924,10 @@ module.exports = {
                                 y_axis: {$in: yAxisRange},
                                 $or: xAxisRange
                             };
-                           
+
                             console.log('前置检查完成');
-                            
-                            var ret = yield app.modelFactory().model_remove(app.models['psn_nursingPlan'], removeWhere);
+
+                            var ret = yield app.modelFactory().model_remove(app.models['psn_nursingSchedule'], removeWhere);
                             this.body = app.wrapper.res.default();
                         }
                         catch (e) {
@@ -3943,18 +3940,17 @@ module.exports = {
                 }
             },
             {
-                method: 'nursingPlanTemplateImport',
+                method: 'nursingScheduleTemplateImport',
                 verb: 'post',
-                url: this.service_url_prefix + "/nursingPlanTemplateImport",
+                url: this.service_url_prefix + "/nursingScheduleTemplateImport",
                 handler: function (app, options) {
                     return function * (next) {
-                        var steps;
-                        var nursingPlanTemplate;
+                        var nursingScheduleTemplate;
                         try {
                             //this.request.body
-                            var nursingPlanTemplateId = this.request.body.nursingPlanTemplateId;
-                            nursingPlanTemplate = yield app.modelFactory().model_read(app.models['psn_nursingPlanTemplate'], nursingPlanTemplateId);
-                            if(!nursingPlanTemplate || nursingPlanTemplate.status == 0){
+                            var nursingScheduleTemplateId = this.request.body.nursingScheduleTemplateId;
+                            nursingScheduleTemplate = yield app.modelFactory().model_read(app.models['psn_nursingScheduleTemplate'], nursingScheduleTemplateId);
+                            if(!nursingScheduleTemplate || nursingScheduleTemplate.status == 0){
                                 this.body = app.wrapper.res.error({message: '无法找到护理模版!'});
                                 yield next;
                                 return;
@@ -3975,26 +3971,26 @@ module.exports = {
                                 return {'x_axis': {'$gte': xAxisDate, '$lt': xAxisValue.add(1, 'days').toDate()}}
                             });
 
-                            var templateItems = nursingPlanTemplate.content;
+                            var templateItems = nursingScheduleTemplate.content;
                             var yAxisRange = app._.uniq(app._.map(templateItems, (o) => {
                                 return o.y_axis;
                             }));
 
                             var removeWhere = {
-                                tenantId: nursingPlanTemplate.tenantId,
+                                tenantId: nursingScheduleTemplate.tenantId,
                                 y_axis: {$in: yAxisRange},
                                 $or: xAxisRange
                             };
 
                             var toSaveRows = app._.map(templateItems, (o) => {
                                 var x_axis = xAxisDayDateMap[o.x_axis];
-                                return {x_axis: x_axis, y_axis: o.y_axis, aggr_value: o.aggr_value, tenantId: nursingPlanTemplate.tenantId};
+                                return {x_axis: x_axis, y_axis: o.y_axis, aggr_value: o.aggr_value, tenantId: nursingScheduleTemplate.tenantId};
                             });
 
 
                             console.log('前置检查完成');
 
-                            var ret = yield app.modelFactory().model_bulkInsert(app.models['psn_nursingPlan'],{
+                            var ret = yield app.modelFactory().model_bulkInsert(app.models['psn_nursingSchedule'],{
                                 rows: toSaveRows,
                                 removeWhere: removeWhere
                             });
@@ -4010,12 +4006,11 @@ module.exports = {
                 }
             },
             {
-                method: 'nursingPlanSaveAsTemplateWeekly',
+                method: 'nursingScheduleSaveAsTemplateWeekly',
                 verb: 'post',
-                url: this.service_url_prefix + "/nursingPlanSaveAsTemplateWeekly",
+                url: this.service_url_prefix + "/nursingScheduleSaveAsTemplateWeekly",
                 handler: function (app, options) {
                     return function * (next) {
-                        var steps;
                         var tenant;
                         try {
                             //this.request.body
@@ -4026,33 +4021,34 @@ module.exports = {
                                 yield next;
                                 return;
                             }
-                            var nursingPlanTemplateName = this.request.body.nursingPlanTemplateName; 
+
+                            var nursingScheduleTemplateName = this.request.body.nursingScheduleTemplateName;
                             var toSaveRows = this.request.body.toSaveRows;
                             app._.each(toSaveRows, (o) => {
                                 o.tenantId = tenantId
                             });
 
-                            var nursingPlanTemplate = yield app.modelFactory().model_one(app.models['psn_nursingPlanTemplate'], {
+                            var nursingScheduleTemplate = yield app.modelFactory().model_one(app.models['psn_nursingScheduleTemplate'], {
                                 where: {
                                     status: 1,
-                                    name: nursingPlanTemplateName,
+                                    name: nursingScheduleTemplateName,
                                     type: DIC.D3010.WEEKLY,
                                     tenantId: tenantId
                                 }
                             });
 
                             console.log('前置检查完成');
-                            var isCreate = !nursingPlanTemplate;
+                            var isCreate = !nursingScheduleTemplate;
                             if (isCreate) {
-                                yield app.modelFactory().model_create(app.models['psn_nursingPlanTemplate'],{
-                                    name: nursingPlanTemplateName,
+                                yield app.modelFactory().model_create(app.models['psn_nursingScheduleTemplate'],{
+                                    name: nursingScheduleTemplateName,
                                     type: DIC.D3010.WEEKLY,
                                     content: toSaveRows,
                                     tenantId: tenantId
                                 });
                             } else {
-                                nursingPlanTemplate.content = toSaveRows;
-                                yield nursingPlanTemplate.save();
+                                nursingScheduleTemplate.content = toSaveRows;
+                                yield nursingScheduleTemplate.save();
                             }
 
                             this.body = app.wrapper.res.ret(isCreate);
@@ -4065,7 +4061,8 @@ module.exports = {
                         yield next;
                     };
                 }
-            }
+            },
+            /**********************护理计划*****************************/
             /**********************其他*****************************/
             
         ];

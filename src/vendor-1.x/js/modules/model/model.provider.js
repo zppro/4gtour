@@ -473,11 +473,11 @@
                     checkCanChangeBookingOrUnbookingRedToElderlyRecharge: checkCanChangeBookingOrUnbookingRedToElderlyRecharge,
                     disableRedAndUnbookingToElderlyRecharge: disableRedAndUnbookingToElderlyRecharge,
                     changeRedBookingAmountToElderlyRecharge: changeRedBookingAmountToElderlyRecharge,
-                    nursingPlanWeekly: nursingPlanWeekly,
-                    nursingPlanSave: nursingPlanSave,
-                    nursingPlanRemove: nursingPlanRemove,
-                    nursingPlanTemplateImport: nursingPlanTemplateImport,
-                    nursingPlanSaveAsTemplateWeekly: nursingPlanSaveAsTemplateWeekly
+                    nursingScheduleWeekly: nursingScheduleWeekly,
+                    nursingScheduleSave: nursingScheduleSave,
+                    nursingScheduleRemove: nursingScheduleRemove,
+                    nursingScheduleTemplateImport: nursingScheduleTemplateImport,
+                    nursingScheduleSaveAsTemplateWeekly: nursingScheduleSaveAsTemplateWeekly
                 };
 
                 function roomStatusInfo(tenantId) {
@@ -641,8 +641,8 @@
                     return $http.post(baseUrl + 'changeRedBookingAmountToElderlyRecharge/' + redId, data);
                 }
 
-                function nursingPlanWeekly(tenantId, start, end) {
-                    return $http.post(baseUrl + 'nursingPlanWeekly', {
+                function nursingScheduleWeekly(tenantId, start, end) {
+                    return $http.post(baseUrl + 'nursingScheduleWeekly', {
                         tenantId: tenantId,
                         x_axis_range_points: {
                             start: start,
@@ -650,21 +650,21 @@
                         }
                     });
                 }
-                
-                function nursingPlanSave(tenantId, toSaveRows) {
-                    return $http.post(baseUrl + 'nursingPlanSave', {tenantId: tenantId, toSaveRows: toSaveRows});
-                }
-                
-                function nursingPlanRemove(tenantId, toRemoveRows) {
-                    return $http.post(baseUrl + 'nursingPlanRemove', {tenantId: tenantId, toRemoveRows: toRemoveRows});
+
+                function nursingScheduleSave(tenantId, toSaveRows) {
+                    return $http.post(baseUrl + 'nursingScheduleSave', {tenantId: tenantId, toSaveRows: toSaveRows});
                 }
 
-                function nursingPlanTemplateImport(nursingPlanTemplateId, toImportXAxisRange) {
-                    return $http.post(baseUrl + 'nursingPlanTemplateImport', {nursingPlanTemplateId: nursingPlanTemplateId, toImportXAxisRange: toImportXAxisRange});
+                function nursingScheduleRemove(tenantId, toRemoveRows) {
+                    return $http.post(baseUrl + 'nursingScheduleRemove', {tenantId: tenantId, toRemoveRows: toRemoveRows});
                 }
 
-                function nursingPlanSaveAsTemplateWeekly (tenantId, nursingPlanTemplateName, toSaveRows) {
-                    return $http.post(baseUrl + 'nursingPlanSaveAsTemplateWeekly', {tenantId: tenantId, nursingPlanTemplateName: nursingPlanTemplateName, toSaveRows: toSaveRows});
+                function nursingScheduleTemplateImport(nursingScheduleTemplateId, toImportXAxisRange) {
+                    return $http.post(baseUrl + 'nursingScheduleTemplateImport', {nursingScheduleTemplateId: nursingScheduleTemplateId, toImportXAxisRange: toImportXAxisRange});
+                }
+
+                function nursingScheduleSaveAsTemplateWeekly (tenantId, nursingScheduleTemplateName, toSaveRows) {
+                    return $http.post(baseUrl + 'nursingScheduleSaveAsTemplateWeekly', {tenantId: tenantId, nursingScheduleTemplateName: nursingScheduleTemplateName, toSaveRows: toSaveRows});
                 }
             }]
         };

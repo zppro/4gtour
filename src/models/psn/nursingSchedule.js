@@ -1,6 +1,6 @@
 /**
- * Created by zppro on 17-3-9.
- * 养老机构 护理计划
+ * Created by zppro on 17-3-17.
+ * 养老机构 护理排班
  */
 var mongoose = require('mongoose');
 
@@ -15,7 +15,7 @@ module.exports = function(ctx,name) {
     else {
         module.isloaded = true;
 
-        var nursingPlanSchema = new mongoose.Schema({
+        var nursingScheduleSchema = new mongoose.Schema({
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
@@ -32,15 +32,15 @@ module.exports = function(ctx,name) {
             }
         });
 
-        nursingPlanSchema.virtual('x_axis_value').get(function () {
+        nursingScheduleSchema.virtual('x_axis_value').get(function () {
             return ctx.moment(this.x_axis).day();
         });
 
-        nursingPlanSchema.pre('update', function (next) {
+        nursingScheduleSchema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();
         });
 
-        return mongoose.model(name, nursingPlanSchema, name);
+        return mongoose.model(name, nursingScheduleSchema, name);
     }
 }

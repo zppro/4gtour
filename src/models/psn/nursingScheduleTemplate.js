@@ -1,6 +1,6 @@
 /**
- * Created by zppro on 17-3-9.
- * 养老机构 护理计划模版
+ * Created by zppro on 17-3-17.
+ * 养老机构 护理排班模版
  */
 var mongoose = require('mongoose');
 var D3010 = require('../../pre-defined/dictionary.json')['D3010'];
@@ -17,7 +17,7 @@ module.exports = function(ctx,name) {
     else {
         module.isloaded = true;
 
-        var nursingPlanTemplateSchema = new mongoose.Schema({
+        var nursingScheduleTemplateSchema = new mongoose.Schema({
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
@@ -40,25 +40,25 @@ module.exports = function(ctx,name) {
             }
         });
 
-        nursingPlanTemplateSchema.virtual('type_name').get(function () {
+        nursingScheduleTemplateSchema.virtual('type_name').get(function () {
             if (this.type) {
                 return D3010[this.type].name;
             }
             return '';
         });
 
-        nursingPlanTemplateSchema.virtual('stop_result_name').get(function () {
+        nursingScheduleTemplateSchema.virtual('stop_result_name').get(function () {
             if (this.stop_result) {
                 return D3011[this.stop_result].name;
             }
             return '';
-        }); 
+        });
 
-        nursingPlanTemplateSchema.pre('update', function (next) {
+        nursingScheduleTemplateSchema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();
         });
 
-        return mongoose.model(name, nursingPlanTemplateSchema, name);
+        return mongoose.model(name, nursingScheduleTemplateSchema, name);
     }
 }
