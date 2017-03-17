@@ -4,6 +4,7 @@
 var co = require('co');
 var rp = require('request-promise-native');
 var xml2js = require('xml2js');
+var qinkeshi = "http://www.qinkeshi.com:8080"
 module.exports={
     init: function (ctx) {
         console.log('init sleep... ');
@@ -31,7 +32,7 @@ module.exports={
                     try {
                          var ret = yield rp({
                              method: 'POST',
-                             url: 'http://www.qinkeshi.com:8080/ECSServer/userws/userRegister.json',
+                             url: qinkeshi+'/ECSServer/userws/userRegister.json',
                              form: sendData
         			//  type:'application/x-www-form-urlencoded'
                          });
@@ -56,7 +57,7 @@ module.exports={
 		    try {
 		         var ret = yield rp({
 		             method: 'GET',
-		             url: 'http://www.qinkeshi.com:8080/ECSServer/userws/isRegistered.json?userName='+userName,
+		             url: qinkeshi+'/ECSServer/userws/isRegistered.json?userName='+userName,
 				json:true
 		         });
 	    
@@ -80,7 +81,7 @@ module.exports={
                 try {
                     console.log(uniqueId);
                     var ret = yield rp({
-                        url: 'http://www.qinkeshi.com:8080/ECSServer/userws/getToken.json?uniqueId='+uniqueId,
+                        url: qinkeshi+'/ECSServer/userws/getToken.json?uniqueId='+uniqueId,
                         json: true
                     });
 
@@ -102,7 +103,7 @@ module.exports={
                     try {
                          var ret = yield rp({
                              method: 'POST',
-                             url: 'http://www.qinkeshi.com:8080/ECSServer/userws/userAuthenticate.json',
+                             url: qinkeshi  +'/ECSServer/userws/userAuthenticate.json',
                              form: sendData
                          });
             
@@ -126,7 +127,7 @@ module.exports={
 		    try {
 		         var ret = yield rp({
 		             method: 'POST',
-		             url: 'http://www.qinkeshi.com:8080/ECSServer/userws/userLogOut.json',
+		             url: qinkeshi+'/ECSServer/userws/userLogOut.json',
 		             form: sendData
 		         });
 	    
@@ -150,7 +151,7 @@ module.exports={
 				    try {
 					 var ret = yield rp({
 					     method: 'POST',
-					     url: 'http://www.qinkeshi.com:8080/ECSServer/userws/updateUserPassword.json',
+					     url: qinkeshi+'/ECSServer/userws/updateUserPassword.json',
 					     form: sendData
 					 });
 			    
@@ -174,7 +175,7 @@ module.exports={
 				    try {
 					 var ret = yield rp({
 					     method: 'POST',
-					     url: 'http://www.qinkeshi.com:8080/ECSServer/userws/getUserDetail.json',
+					     url: qinkeshi+'/ECSServer/userws/getUserDetail.json',
 					     form: sendData
 					 });
 			    
@@ -198,7 +199,7 @@ module.exports={
 				    try {
 					 var ret = yield rp({
 					     method: 'POST',
-					     url: 'http://www.qinkeshi.com:8080/ECSServer/userws/updateUserDetail.json',
+					     url: qinkeshi+'/ECSServer/userws/updateUserDetail.json',
 					     form: sendData
 					 });
 			    
@@ -222,7 +223,7 @@ module.exports={
 				    try {
 					 var ret = yield rp({
 					     method: 'POST',
-					     url: 'http://www.qinkeshi.com:8080/ECSServer/userws/sessionIsExpired.json',
+					     url: qinkeshi+'/ECSServer/userws/sessionIsExpired.json',
 					     form: sendData
 					 });
 			    
@@ -246,7 +247,7 @@ module.exports={
 				    try {
 					 var ret = yield rp({
 					     method: 'POST',
-					     url: 'http://www.qinkeshi.com:8080/ECSServer/userws/submitFeedback.json',
+					     url: qinkeshi+'/ECSServer/userws/submitFeedback.json',
 					     form: sendData
 					 });
 			    
@@ -270,7 +271,7 @@ module.exports={
 				    try {
 					 var ret = yield rp({
 					     method: 'POST',
-					     url: 'http://www.qinkeshi.com:8080/ECSServer/userws/getConcernPerson.json',
+					     url: qinkeshi+'/ECSServer/userws/getConcernPerson.json',
 					     form: sendData
 					 });
 			    
@@ -294,7 +295,7 @@ module.exports={
                             try {
                              var ret = yield rp({
                                  method: 'POST',
-                                 url: 'http://www.qinkeshi:8080/ECSServer/cpws/updateConcernPerson.json',
+                                 url: qinkeshi+'/ECSServer/cpws/updateConcernPerson.json',
                                  form: sendData
                              });
                         
@@ -308,18 +309,17 @@ module.exports={
                         
                          }).catch(self.ctx.coOnError);
                         
-          },,
+          },
            /**
             *获取关心的人绑定的设备信息
             */
-                getCpAttachedDev:function(sendData){
+                getCpAttachedDev:function(sessionId,cpId){
                          var self = this;
                          return co(function*(){
                             try {
                              var ret = yield rp({
-                                 method: 'POST',
-                                 url: 'http://www.qinkeshi:8080/ECSServer/cpws/getCpAttachedDev.json',
-                                 form: sendData
+                                 method: 'GET',
+                                 url: qinkeshi+'/ECSServer/cpws/getCpAttachedDev.json?sessionId='+sessionId+'&cpId='+cpId,
                              });
                         
                             console.log(ret);
@@ -332,7 +332,7 @@ module.exports={
                         
                          }).catch(self.ctx.coOnError);
                         
-          }
+          },
 
           /**
             *修改关系的人字段信息
@@ -343,7 +343,7 @@ module.exports={
                             try {
                              var ret = yield rp({
                                  method: 'POST',
-                                 url: 'http://www.qinkeshi:8080/ECSServer/cpws/updateConcernPersonParam.json',
+                                 url: qinkeshi+'/ECSServer/cpws/updateConcernPersonParam.json',
                                  form: sendData
                              });
                         
@@ -367,8 +367,9 @@ module.exports={
                             try {
                              var ret = yield rp({
                                  method: 'POST',
-                                 url: 'http://www.qinkeshi:8080/ECSServer/cpws/updateDeviceAttachState',
-                                 form: sendData
+                                 url: qinkeshi+'/ECSServer/devicews/updateDeviceAttachState',
+                                 form: sendData,
+                                json:true
                              });
                         
                             console.log(ret);
@@ -391,7 +392,7 @@ module.exports={
                             try {
                              var ret = yield rp({
                                  method: 'POST',
-                                 url: 'http://www.qinkeshi:8080/ECSServer/cpws/updateDevice',
+                                 url: qinkeshi+'/ECSServer/devicews/updateDevice',
                                  form: sendData
                              });
                         
@@ -415,7 +416,7 @@ module.exports={
                             try {
                              var ret = yield rp({
                                  method: 'POST',
-                                 url: 'http://www.qinkeshi:8080/ECSServer/cpws/getManufactDev',
+                                 url: qinkeshi+'/ECSServer/devicews/getManufactDev',
                                  form: sendData
                              });
                         
@@ -439,7 +440,7 @@ module.exports={
                             try {
                              var ret = yield rp({
                                  method: 'POST',
-                                 url: 'http://www.qinkeshi:8080/ECSServer/cpws/getDevListByType',
+                                 url: qinkeshi+'/ECSServer/devicews/getDevListByType',
                                  form: sendData
                              });
                         
@@ -463,7 +464,7 @@ module.exports={
                             try {
                              var ret = yield rp({
                                  method: 'POST',
-                                 url: 'http://www.qinkeshi:8080/ECSServer/cpws/getAllDevInfoList',
+                                 url:qinkeshi+'/ECSServer/devicews/getAllDevInfoList',
                                  form: sendData
                              });
                         
@@ -487,7 +488,7 @@ module.exports={
                             try {
                              var ret = yield rp({
                                  method: 'POST',
-                                 url: 'http://www.qinkeshi:8080/ECSServer/cpws/getUserCpDevList.json',
+                                 url: qinkeshi+'/ECSServer/userws/getUserCpDevList.json',
                                  form: sendData
                              });
                         
@@ -511,7 +512,7 @@ module.exports={
                             try {
                              var ret = yield rp({
                                  method: 'POST',
-                                 url: 'http://www.qinkeshi:8080/ECSServer/cpws/getDevAlarmSetting',
+                                 url: qinkeshi+'/ECSServer/devicews/getDevAlarmSetting',
                                  form: sendData
                              });
                         
@@ -535,7 +536,7 @@ module.exports={
                             try {
                              var ret = yield rp({
                                  method: 'POST',
-                                 url: 'http://www.qinkeshi:8080/ECSServer/cpws/updateDevAlarmSetting',
+                                 url: qinkeshi+'/ECSServer/devicews/updateDevAlarmSetting',
                                  form: sendData
                              });
                         
