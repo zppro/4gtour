@@ -4063,6 +4063,98 @@ module.exports = {
                 }
             },
             /**********************护理计划*****************************/
+            {
+                method: 'nursingPlansByRoom',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingPlansByRoom", //按房间查找入住老人的护理计划
+                handler: function (app, options) {
+                    return function * (next) {
+                        var tenant, elderly, nursingPlan;
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            var elderlySelectArray = this.request.body.elderlySelectArray;
+                            if(elderlySelectArray.indexOf('room_value') == -1) {
+                                elderlySelectArray.push('room_value');
+                            }
+                            var nursingPlanSelectArray = this.request.body.nursingPlanSelectArray;
+
+                            var rooms = yield app.modelFactory().model_query(app.models['psn_room'],{
+                                select: 'name capacity',
+                                where: {
+                                    status: 1,
+                                    tenantId: tenantId
+                                }
+                            });
+
+
+
+                            var elderlys = yield app.modelFactory().model_query(app.models['psn_elderly'],{
+                                select: elderlySelectArray.join(' '),
+                                where: {
+                                    status: 1,
+                                    live_in_flag: true,
+                                    tenantId: tenantId
+                                }
+                            });
+
+                            var nursingPlans = yield app.modelFactory().model_query(app.models['psn_nursingPlan'],{
+                                select: nursingPlanSelectArray.join(' '),
+                                where: {
+                                    status: 1,
+                                    tenantId: tenantId
+                                }
+                            });
+                            console.log(nursingPlans);
+
+                            var nursingPlansByRoom = {};
+                            app._.each(rooms, function (o) {
+                                for (var i = 1, len = o.capacity; i <= len; i++) {
+                                    elderly = app._.find(elderlys, (o2) => {
+                                            return o2.room_value.roomId.toString() == o._id.toString() && o2.room_value.bed_no == i;
+                                        }) || {};
+
+                                    if (elderly) {
+                                        console.log(o.name + '$' +i, elderly);
+                                        nursingPlan = app._.find(nursingPlans, (o3) => {
+                                                return o3.elderlyId.toString() == elderly._id.toString();
+                                            }) || {};
+                                    }
+
+                                    if (nursingPlan) {
+                                        console.log('nursingPlan:', nursingPlan);
+                                    }
+
+                                    nursingPlansByRoom[o._id + '$' + i] = {
+                                        roomId: o._id,
+                                        room_name: o.name,
+                                        bed_no: i,
+                                        elderly: elderly,
+                                        nursing_plan: nursingPlan
+                                    };
+                                }
+                            });
+
+                            console.log(nursingPlansByRoom);
+
+
+                            this.body = app.wrapper.res.ret(nursingPlansByRoom);
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
             /**********************其他*****************************/
             
         ];

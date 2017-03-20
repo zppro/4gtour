@@ -42,9 +42,12 @@
         }
 
 
-        function fetchNursingPlan(roomIds) {
-            console.log('parse nursingPlanItems');
-
+        function fetchNursingPlan() {
+            console.log('parse nursingPlanItems:');
+            vmh.psnService.nursingPlansByRoom(vm.tenantId, ['name', 'sex', 'nursing_assessment_level'], ['assessment_level_current', 'service_items', 'remark']).then(function(data){
+                vm.aggrData = data;
+                console.log(vm.aggrData);
+            });
         }
         
         function onRoomChange () {
@@ -52,7 +55,7 @@
             var yAxisDataFlatten = [];
             _.each(vm.yAxisData, function (o) {
                 for (var i = 1, len = o.capacity; i <= len; i++) {
-                    yAxisDataFlatten.push(_.extend({trackedKey: o._id + '-' + i, bed_no: i}, o));
+                    yAxisDataFlatten.push(_.extend({trackedKey: o._id + '$' + i, bed_no: i}, o));
                 }
             });
             vm.yAxisDataFlatten = yAxisDataFlatten;
