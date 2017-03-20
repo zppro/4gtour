@@ -26,18 +26,35 @@ module.exports={
             /**
                 *注册
                 */
-             regist:function(sendData){
+             regist:function(session,userInfo){
                  var self = this;
                  return co(function*(){
                     try {
-                         var ret = yield rp({
-                             method: 'POST',
-                             url: qinkeshi+'/ECSServer/userws/userRegister.json',
-                             form: sendData
-        			//  type:'application/x-www-form-urlencoded'
-                         });
-            
-                        console.log(ret);
+                           console.log("sessionid:");console.log(session.openid);
+                           console.log("userInfo:");console.log(userInfo);
+                           var member =yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], { where: {
+                               open_id: session.openid,
+                               status:1
+                            }});
+                           if(member){
+                                return member;
+                           }
+                            console.log("no regist"); 
+                            member  = yield self.ctx.modelFactory().model_create(self.ctx.models['het_member'], {
+                                    open_id:session.openid,
+                                    name:userInfo.nickName,
+                                    passhash: self.ctx.crypto.createHash('md5').update('123456').digest('hex'),
+                                    head_portrait:userInfo.avatarUrl
+                            });
+                              var ret = yield rp({
+                                 method: 'POST',
+                                 url: qinkeshi+'/ECSServer/userws/userRegister.json',
+                                 form: sendData
+                         });         
+
+                         member.sync_flag_hzfanweng = true;
+                         yield member.save(); 
+                       
                          return self.ctx.wrapper.res.default();
                     }
                      catch (e) {
