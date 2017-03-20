@@ -65,6 +65,7 @@
                 //A0001->A0003 入院状态从[登记入院信息]到[提交财务审核]
                 var data = {current_register_step: 'A0003'};
                 var promise = vmh.fetch(vm.modelService.update(row._id, data)).then(function () {
+                    row.current_register_step = data.current_register_step;
                     row.current_register_step_name =  (_.find(vm.enterSteps, function(o) { return data.current_register_step === o.value; }) || {}).name;
                 });
 

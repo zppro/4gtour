@@ -3770,7 +3770,299 @@ module.exports = {
                         yield next;
                     };
                 }
-            }
+            },
+            /**********************护理排班*****************************/
+            {
+                method: 'nursingScheduleWeekly',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingScheduleWeekly", //按周查找护理排班
+                handler: function (app, options) {
+                    return function * (next) {
+                        var tenant;
+                        try {
+                            //this.request.body
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            var xAxisRangePoints = this.request.body.x_axis_range_points;
+                            xAxisValueStart = app.moment(xAxisRangePoints.start);
+                            xAxisValueEnd = app.moment(xAxisRangePoints.end);
+
+                            console.log('xAxisRangePoints:');
+                            console.log(xAxisRangePoints);
+
+                            console.log('前置检查完成');
+
+                            var rows = yield app.modelFactory().model_query(app.models['psn_nursingSchedule'],{
+                                select: 'x_axis y_axis aggr_value',
+                                where:{
+                                    tenantId: tenantId,
+                                    x_axis: {'$gte': xAxisValueStart.toDate(), '$lt': xAxisValueEnd.add(1, 'days').toDate()}
+                                }
+                            });
+
+                            var yAxisData = app._.map(app._.uniq(app._.map(rows,(o) => {
+                                return o.y_axis.toString();
+                            })), (o) => {
+                                return {_id: o};
+                            });
+                            // console.log(yAxisData);
+                            // console.log(rows);
+                            this.body = app.wrapper.res.ret({
+                                yAxisData: yAxisData,
+                                items: rows
+                            });
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'nursingScheduleSave',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingScheduleSave",
+                handler: function (app, options) {
+                    return function * (next) {
+                        var tenant;
+                        try {
+                            //this.request.body
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            var toSaveRows = this.request.body.toSaveRows;
+                            app._.each(toSaveRows, (o) => {
+                                o.tenantId = tenantId
+                            });
+
+                            // 查找x_axis range & y_axis_range
+                            var xAxisValue;
+                            var xAxisRange = app._.uniq(app._.map(toSaveRows, (o) => {
+                                xAxisValue = app.moment(o.x_axis);
+                                return {'x_axis': {'$gte': xAxisValue.toDate(), '$lt': xAxisValue.add(1, 'days').toDate()}}
+                            }));
+                            var yAxisRange = app._.uniq(app._.map(toSaveRows, (o) => {
+                                return o.y_axis;
+                            }));
+
+                            var removeWhere = {
+                                tenantId: tenantId,
+                                y_axis: {$in: yAxisRange},
+                                $or: xAxisRange
+                            };
+
+                            console.log('xAxisRange:');
+                            console.log(xAxisRange);
+                            console.log('yAxisRange:');
+                            console.log(yAxisRange);
+
+                            console.log('前置检查完成');
+
+                            var ret = yield app.modelFactory().model_bulkInsert(app.models['psn_nursingSchedule'],{
+                                rows: toSaveRows,
+                                removeWhere: removeWhere
+                            });
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'nursingScheduleRemove',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingScheduleRemove",
+                handler: function (app, options) {
+                    return function * (next) {
+                        var tenant;
+                        try {
+                            //this.request.body
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            var toRemoveRows = this.request.body.toRemoveRows;
+
+
+                            console.log('toRemoveRows:');
+                            console.log(toRemoveRows);
+
+                            var xAxisValue;
+                            var xAxisRange = app._.uniq(app._.map(toRemoveRows, (o) => {
+                                xAxisValue = app.moment(o.x_axis);
+                                return {'x_axis': {'$gte': xAxisValue.toDate(), '$lt': xAxisValue.add(1, 'days').toDate()}}
+                            }));
+                            var yAxisRange = app._.uniq(app._.map(toRemoveRows, (o) => {
+                                return o.y_axis;
+                            }));
+
+                            var removeWhere = {
+                                tenantId: tenantId,
+                                y_axis: {$in: yAxisRange},
+                                $or: xAxisRange
+                            };
+
+                            console.log('前置检查完成');
+
+                            var ret = yield app.modelFactory().model_remove(app.models['psn_nursingSchedule'], removeWhere);
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'nursingScheduleTemplateImport',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingScheduleTemplateImport",
+                handler: function (app, options) {
+                    return function * (next) {
+                        var nursingScheduleTemplate;
+                        try {
+                            //this.request.body
+                            var nursingScheduleTemplateId = this.request.body.nursingScheduleTemplateId;
+                            nursingScheduleTemplate = yield app.modelFactory().model_read(app.models['psn_nursingScheduleTemplate'], nursingScheduleTemplateId);
+                            if(!nursingScheduleTemplate || nursingScheduleTemplate.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到护理模版!'});
+                                yield next;
+                                return;
+                            }
+
+                            var toImportXAxisRange = this.request.body.toImportXAxisRange;
+
+
+                            console.log('toImportXAxisRange:');
+                            console.log(toImportXAxisRange);
+
+                            var xAxisValue, xAxisDate;
+                            var xAxisDayDateMap = {};
+                            var xAxisRange = app._.map(toImportXAxisRange, (o) => {
+                                xAxisValue = app.moment(o);
+                                xAxisDate = xAxisValue.toDate();
+                                xAxisDayDateMap[xAxisValue.day()] = xAxisDate;
+                                return {'x_axis': {'$gte': xAxisDate, '$lt': xAxisValue.add(1, 'days').toDate()}}
+                            });
+
+                            var templateItems = nursingScheduleTemplate.content;
+                            var yAxisRange = app._.uniq(app._.map(templateItems, (o) => {
+                                return o.y_axis;
+                            }));
+
+                            var removeWhere = {
+                                tenantId: nursingScheduleTemplate.tenantId,
+                                y_axis: {$in: yAxisRange},
+                                $or: xAxisRange
+                            };
+
+                            var toSaveRows = app._.map(templateItems, (o) => {
+                                var x_axis = xAxisDayDateMap[o.x_axis];
+                                return {x_axis: x_axis, y_axis: o.y_axis, aggr_value: o.aggr_value, tenantId: nursingScheduleTemplate.tenantId};
+                            });
+
+
+                            console.log('前置检查完成');
+
+                            var ret = yield app.modelFactory().model_bulkInsert(app.models['psn_nursingSchedule'],{
+                                rows: toSaveRows,
+                                removeWhere: removeWhere
+                            });
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'nursingScheduleSaveAsTemplateWeekly',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingScheduleSaveAsTemplateWeekly",
+                handler: function (app, options) {
+                    return function * (next) {
+                        var tenant;
+                        try {
+                            //this.request.body
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            var nursingScheduleTemplateName = this.request.body.nursingScheduleTemplateName;
+                            var toSaveRows = this.request.body.toSaveRows;
+                            app._.each(toSaveRows, (o) => {
+                                o.tenantId = tenantId
+                            });
+
+                            var nursingScheduleTemplate = yield app.modelFactory().model_one(app.models['psn_nursingScheduleTemplate'], {
+                                where: {
+                                    status: 1,
+                                    name: nursingScheduleTemplateName,
+                                    type: DIC.D3010.WEEKLY,
+                                    tenantId: tenantId
+                                }
+                            });
+
+                            console.log('前置检查完成');
+                            var isCreate = !nursingScheduleTemplate;
+                            if (isCreate) {
+                                yield app.modelFactory().model_create(app.models['psn_nursingScheduleTemplate'],{
+                                    name: nursingScheduleTemplateName,
+                                    type: DIC.D3010.WEEKLY,
+                                    content: toSaveRows,
+                                    tenantId: tenantId
+                                });
+                            } else {
+                                nursingScheduleTemplate.content = toSaveRows;
+                                yield nursingScheduleTemplate.save();
+                            }
+
+                            this.body = app.wrapper.res.ret(isCreate);
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            /**********************护理计划*****************************/
             /**********************其他*****************************/
             
         ];

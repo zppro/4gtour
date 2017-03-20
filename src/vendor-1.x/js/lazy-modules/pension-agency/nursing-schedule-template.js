@@ -1,6 +1,6 @@
 /**
- * district Created by zppro on 17-3-6.
- * Target:养老机构 模版
+ * district Created by zppro on 17-3-17.
+ * Target:养老机构 排班模版
  */
 
 (function() {
@@ -8,14 +8,14 @@
     
     angular
         .module('subsystem.pension-agency')
-        .controller('NursingPlanTemplateGridController', NursingPlanTemplateGridController)
-        .controller('NursingPlanTemplateDetailsController', NursingPlanTemplateDetailsController)
+        .controller('NursingScheduleTemplateGridController', NursingScheduleTemplateGridController)
+        .controller('NursingScheduleTemplateDetailsController', NursingScheduleTemplateDetailsController)
     ;
 
 
-    NursingPlanTemplateGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
+    NursingScheduleTemplateGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
 
-    function NursingPlanTemplateGridController($scope, ngDialog, vmh, vm) {
+    function NursingScheduleTemplateGridController($scope, ngDialog, vmh, vm) {
 
         $scope.vm = vm;
         $scope.utils = vmh.utils.g;
@@ -28,9 +28,9 @@
         }
     }
 
-    NursingPlanTemplateDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
+    NursingScheduleTemplateDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
 
-    function NursingPlanTemplateDetailsController($scope, ngDialog, vmh, vm) {
+    function NursingScheduleTemplateDetailsController($scope, ngDialog, vmh, vm) {
 
         var vm = $scope.vm = vm;
         $scope.utils = vmh.utils.v;
@@ -70,7 +70,7 @@
                     vm.xAxisData = data;
                     vm.cols = {};
                     for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
-                        var colId = vm.xAxisData[j].value;
+                        var colId = vm.xAxisData[j]._id;
                         vm.cols[colId] = false;//selectedCol control variable
                     }
                 });
@@ -122,7 +122,7 @@
                     rowCellsObject = vm.cells[rowId] = {'row-selected': false};
                 }
                 for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
-                    var colId = vm.xAxisData[j].value;
+                    var colId = vm.xAxisData[j]._id;
                     var aggrValue = rowDataObject[colId];
                     if(aggrValue === undefined) {
                         rowDataObject[colId] = "";
@@ -143,9 +143,15 @@
         function _unSelectAll () {
             for(var i=0, ylen = vm.yAxisData.length;i< ylen;i++) {
                 var rowId = vm.yAxisData[i]._id;
-                for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
-                    var colId = vm.xAxisData[j].value;
-                    vm.cells[rowId][colId] = false;
+                if (vm.cells[rowId]) {
+                    vm.cells[rowId]['row-selected'] = false;
+                    for (var j = 0, xlen = vm.xAxisData.length; j < xlen; j++) {
+                        var colId = vm.xAxisData[j]._id;
+                        vm.cells[rowId][colId] = false;
+                        if (vm.cols[colId]) {
+                            vm.cols[colId] = false;
+                        }
+                    }
                 }
             }
         }
@@ -153,7 +159,7 @@
         function _checkWholeRowIsSelected (rowId) {
             var wholeRowSelected = true;
             for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
-                var colId2 = vm.xAxisData[j].value;
+                var colId2 = vm.xAxisData[j]._id;
                 wholeRowSelected = wholeRowSelected  && vm.cells[rowId][colId2];
                 if (!wholeRowSelected){
                     break;
@@ -196,7 +202,7 @@
             if(!vm.gridEditing) return;
             var newRowSelected = vm.cells[rowId]['row-selected'] = !vm.cells[rowId]['row-selected'];
             for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
-                var colId = vm.xAxisData[j].value;
+                var colId = vm.xAxisData[j]._id;
                 vm.cells[rowId][colId] = newRowSelected;
                 vm.cols[colId] = _checkWholeColIsSelected(colId);
             }
@@ -217,7 +223,7 @@
             for(var i=0, ylen = vm.yAxisData.length;i< ylen;i++) {
                 var rowId = vm.yAxisData[i]._id;
                 for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
-                    var colId = vm.xAxisData[j].value;
+                    var colId = vm.xAxisData[j]._id;
                     if (vm.cells[rowId][colId]) {
                         console.log(vm.selectedNursingWorker);
                         vm.aggrData[rowId][colId] = vm.selectedNursingWorker;
@@ -237,7 +243,7 @@
                 for(var i=0, ylen = vm.yAxisData.length;i< ylen;i++) {
                     var rowId = vm.yAxisData[i]._id;
                     for (var j=0, xlen = vm.xAxisData.length;j<xlen;j++) {
-                        var colId = vm.xAxisData[j].value;
+                        var colId = vm.xAxisData[j]._id;
                         if (!vm.aggrData[rowId] || !vm.aggrData[rowId][colId]) {
                             vmh.alertWarning(vm.viewTranslatePath('MSG-NO-NURSING-WORKER-FOR-ROOM'), true);
                             return;

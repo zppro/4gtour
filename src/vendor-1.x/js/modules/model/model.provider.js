@@ -473,6 +473,11 @@
                     checkCanChangeBookingOrUnbookingRedToElderlyRecharge: checkCanChangeBookingOrUnbookingRedToElderlyRecharge,
                     disableRedAndUnbookingToElderlyRecharge: disableRedAndUnbookingToElderlyRecharge,
                     changeRedBookingAmountToElderlyRecharge: changeRedBookingAmountToElderlyRecharge,
+                    nursingScheduleWeekly: nursingScheduleWeekly,
+                    nursingScheduleSave: nursingScheduleSave,
+                    nursingScheduleRemove: nursingScheduleRemove,
+                    nursingScheduleTemplateImport: nursingScheduleTemplateImport,
+                    nursingScheduleSaveAsTemplateWeekly: nursingScheduleSaveAsTemplateWeekly
                 };
 
                 function roomStatusInfo(tenantId) {
@@ -636,6 +641,31 @@
                     return $http.post(baseUrl + 'changeRedBookingAmountToElderlyRecharge/' + redId, data);
                 }
 
+                function nursingScheduleWeekly(tenantId, start, end) {
+                    return $http.post(baseUrl + 'nursingScheduleWeekly', {
+                        tenantId: tenantId,
+                        x_axis_range_points: {
+                            start: start,
+                            end: end
+                        }
+                    });
+                }
+
+                function nursingScheduleSave(tenantId, toSaveRows) {
+                    return $http.post(baseUrl + 'nursingScheduleSave', {tenantId: tenantId, toSaveRows: toSaveRows});
+                }
+
+                function nursingScheduleRemove(tenantId, toRemoveRows) {
+                    return $http.post(baseUrl + 'nursingScheduleRemove', {tenantId: tenantId, toRemoveRows: toRemoveRows});
+                }
+
+                function nursingScheduleTemplateImport(nursingScheduleTemplateId, toImportXAxisRange) {
+                    return $http.post(baseUrl + 'nursingScheduleTemplateImport', {nursingScheduleTemplateId: nursingScheduleTemplateId, toImportXAxisRange: toImportXAxisRange});
+                }
+
+                function nursingScheduleSaveAsTemplateWeekly (tenantId, nursingScheduleTemplateName, toSaveRows) {
+                    return $http.post(baseUrl + 'nursingScheduleSaveAsTemplateWeekly', {tenantId: tenantId, nursingScheduleTemplateName: nursingScheduleTemplateName, toSaveRows: toSaveRows});
+                }
             }]
         };
 

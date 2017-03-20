@@ -45,6 +45,7 @@
                 //A0003->A0005 订单状态从[提交财务审核]到[财务确认收款]
                 var data = {current_register_step: 'A0005'};
                 var promise = vmh.fetch(vm.modelService.update(row._id, data)).then(function () {
+                    row.current_register_step = data.current_register_step;
                     row.current_register_step_name =  (_.find(vm.enterSteps, function(o) { return data.current_register_step === o.value; }) || {}).name;
                 });
 

@@ -37,13 +37,13 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                                     thead
                                         tr
                                             th.text-center(ng-click="vm.selectGrid()" width="100") {{ vm.viewTranslatePath('TAB1-LABEL-YAXIS_LABEL') | translate}}
-                                            th.text-center(title="{{vm.viewTranslatePath('TAB1-TITLE-COL')|translate}}",ng-repeat="column in vm.xAxisData",width="100",ng-click="vm.selectGridCol(column.value)") {{::column.label}}
+                                            th.text-center(title="{{vm.viewTranslatePath('TAB1-TITLE-COL')|translate}}",ng-repeat="column in vm.xAxisData",width="100",ng-click="vm.selectGridCol(column._id)") {{::column.name}}
                                     tbody
                                         tr(ng-repeat="row in vm.yAxisData")
                                             td.text-center(title="{{vm.viewTranslatePath('TAB1-TITLE-ROW')|translate}}",ng-click="vm.selectGridRow(row._id)")
                                                 | {{::row.name}}
-                                            td.text-center(ng-repeat="col in vm.xAxisData",width="100", ng-class='{"grid-cell-selected": vm.cells[row._id][col.value] }',ng-click="vm.selectGridCell(row._id,col.value)" )
-                                                span {{(vm.aggrData[row._id][col.value] || {}).name }}
+                                            td.text-center(ng-repeat="col in vm.xAxisData",width="100", ng-class='{"grid-cell-selected": vm.cells[row._id][col._id] }',ng-click="vm.selectGridCell(row._id,col._id)" )
+                                                span {{(vm.aggrData[row._id][col._id] || {}).name }}
                                         tr(ng-if="vm.yAxisData.length==0")
                                             td.text-center(colspan="{{vm.xAxisData.length + 1}}") {{ 'grid.NO-RESULTS' | translate}}
                                 .panel-footer
@@ -55,13 +55,15 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                                                 .btn-group(ng-show="vm.gridEditing")
                                                     a.btn.btn-danger.btn-sm(ng-click="vm.exitGridEditMode()") {{vm.viewTranslatePath('TAB1-LABEL-CANCEL_EDIT_MODE')|translate}}
                                         .col-md-7
-                                        .col-md-2.text-right(ng-show="vm.gridEditing")
-                                            ui-select(name="nursingWorkers",theme='bootstrap', ng-Model="vm.selectedNursingWorker")
-                                                ui-select-match(placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-PICK_NURSING_WORKER")|translate}}') {{$select.selected.name}}
-                                                ui-select-choices(repeat='nursingWorker as nursingWorker in vm.selectBinding.nursingWorkers | filter: {name: $select.search}')
-                                                    div(ng-bind-html='nursingWorker.name | highlight: $select.search')
-                                        .col-md-1.text-left(ng-show="vm.gridEditing")
-                                            a.btn.btn-primary.btn-sm(ng-click="vm.applyToSelected()") 应用
+                                        .col-md-3(ng-show="vm.gridEditing")
+                                            .btn-toolbar.pull-right
+                                                .btn-group
+                                                    ui-select(name="nursingWorkers",theme='bootstrap', ng-Model="vm.selectedNursingWorker" ,ng-style='{width: "120px"}')
+                                                        ui-select-match(placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-PICK_NURSING_WORKER")|translate}}') {{$select.selected.name}}
+                                                        ui-select-choices(repeat='nursingWorker in vm.selectBinding.nursingWorkers | filter: {name: $select.search}')
+                                                            div(ng-bind-html='nursingWorker.name | highlight: $select.search')
+                                                .btn-group
+                                                    a.btn.btn-primary.btn-sm(ng-click="vm.applyToSelected()") {{'button.APPLY'|translate}}
                     //fieldset: .form-group
                     //    {{vm.yAxisData}}
 

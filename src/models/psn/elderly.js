@@ -96,7 +96,7 @@ module.exports = function(ctx,name) {
                 new_period_price: {type: Number},
                 new_period: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D1015"])}
             }],//2种情况：1对于吃、住、护理类别，必须old_item和new_item都有数据，表明无论如何会选择类别中的一项收费；2、对于其他和自定义项目可以old_item为空也可以new_item为空分别表示新增收费和删除收费
-            py: {type: String},
+            py: {type: String}, //拼音码
             tenantId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'pub_tenant'}
         }, {
             toObject: {

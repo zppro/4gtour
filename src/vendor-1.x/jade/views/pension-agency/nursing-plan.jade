@@ -1,0 +1,32 @@
+.col-xs-2(ng-if="vm.switches.leftTree")
+    .tree.tree-basic(name='yAxisData',s-tree, s-tree-data="vm.yAxisDataPromise",s-tree-height="vm.size.h-15", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',selectNodeFormat:'object'}",ng-model="vm.yAxisData",required='', on-check-change="vm.onRoomChange()")
+.text-left(ng-class='{"col-xs-10":vm.switches.leftTree,"col-xs-12":!vm.switches.leftTree}')
+    .row
+        .col-md-5
+        .col-md-7
+    .row-split
+    .panel.panel-default.panel-grid
+        table.grid.table.table-bordered.table-nursing-plan
+            thead
+                tr
+                    th.text-center(ng-repeat="col in vm.xAxisData",width="{{col.source == 'room' ? '50' :'200'}}") {{::col.name}}
+            tbody
+                tr(ng-repeat="row in vm.yAxisDataFlatten track by row.trackedKey")
+                    td.text-center(ng-repeat="col in vm.xAxisData",width="100")
+                        span {{ col.source == 'room' ?  row[col._id] : (vm.aggrData[row._id][col._id] || {}).name }}
+                tr(ng-if="vm.yAxisDataFlatten.length==0")
+                    td.text-center(colspan="{{vm.xAxisData.length + 1}}") {{ 'grid.NO-RESULTS' | translate}}
+
+script(type="text/ng-template", id="nursing-plan-save-as-template.html")
+    form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+        .ngdialog-message
+            h3.mt0 {{ vm.moduleTranslatePath('DIALOG-SAVE-AS-TEMPLATE-TITLE') | translate}}
+        .ngdialog-input
+            .col-md-12.cover-nursing-plan-template-c
+                .tree.tree-dropdown(name='nursingPlanTemplateSelected',s-tree, s-tree-data="vm.fetchNursingPlanTemplatesPromise",s-tree-height="400", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{layout:'dropdown',selectNodeFormat:'object'}",ng-model="vm.saveToSelected", on-select="vm.selectNuringPlanTemplateToSave(selectedNode)")
+                .cover-nursing-plan-template-tree
+                    input.form-control(type='text', name='name',ng-model='vm.nursingPlanTemplateName',placeholder='{{vm.moduleTranslatePath("TAB1-PLACEHOLDER-SAVE-TO-TEMPLATE_NAME")|translate}}')
+        .ngdialog-buttons
+            .col-md-12.text-right
+                button.btn.btn-warning(type='button',ng-click="vm.cancel()") {{ "button.CANCEL" | translate}}
+                button.btn.btn-success(type='submit') {{ "button.CONFIRM" | translate}}

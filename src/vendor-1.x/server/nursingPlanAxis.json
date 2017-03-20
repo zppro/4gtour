@@ -1,0 +1,28 @@
+[
+  {
+    "_id": "name",
+    "name": "房间",
+    "source": "room"
+  },
+  {
+    "_id": "bed_no",
+    "name": "床位",
+    "source": "room"
+  },
+  {
+    "_id": "elderlyId",
+    "name": "老人"
+  },
+  {
+    "_id": "assessment_level_current",
+    "name": "评估等级"
+  },
+  {
+    "_id": "service_items",
+    "name": "服务项目"
+  },
+  {
+    "_id": "remark",
+    "name": "备注"
+  }
+]
