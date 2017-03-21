@@ -1,6 +1,6 @@
 [
   {
-    "_id": "name",
+    "_id": "room_name",
     "name": "房间",
     "source": "room"
   },
@@ -10,19 +10,24 @@
     "source": "room"
   },
   {
-    "_id": "elderlyId",
-    "name": "老人"
+    "_id": "name",
+    "name": "老人",
+    "source": "elderly",
+    "field": "name"
   },
   {
-    "_id": "assessment_level_current",
-    "name": "评估等级"
+    "_id": "assessment_level_current_name",
+    "name": "评估等级",
+    "source": "elderly"
   },
   {
     "_id": "service_items",
-    "name": "服务项目"
+    "name": "服务项目",
+    "source": "nursing_plan"
   },
   {
     "_id": "remark",
-    "name": "备注"
+    "name": "备注",
+    "source": "nursing_plan"
   }
 ]

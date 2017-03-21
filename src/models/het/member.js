@@ -19,10 +19,9 @@ module.exports = function(ctx,name) {
             status: {type: Number, min: 0, max: 1, default: 1},
             open_id: {type: String},//针对微信
             union_id: {type: String},//针对微信
-            code: {type: String, required: true}, // 对外部的member_id
             name: {type: String, required: true}, // 对外部的member_name
             passhash: {type: String, required: true}, //密码hash
-            sync_flag_hzfanweng: {type: Boolean, default: false},
+            sync_flag_hzfanweng: {type: Boolean, default: false},//is success
             head_portrait:  {type: String} // 对外部的  member_head_portrait
         });
 

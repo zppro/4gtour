@@ -13,7 +13,7 @@
             tbody
                 tr(ng-repeat="row in vm.yAxisDataFlatten track by row.trackedKey")
                     td.text-center(ng-repeat="col in vm.xAxisData",width="100")
-                        span {{ col.source == 'room' ?  row[col._id] : (vm.aggrData[row._id][col._id] || {}).name }}
+                        span {{ col.source == 'room' ?  vm.aggrData[row.trackedKey][col._id] : vm.aggrData[row.trackedKey][col.source][col._id] }}
                 tr(ng-if="vm.yAxisDataFlatten.length==0")
                     td.text-center(colspan="{{vm.xAxisData.length + 1}}") {{ 'grid.NO-RESULTS' | translate}}
 
