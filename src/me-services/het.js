@@ -10,9 +10,7 @@ module.exports = {
         this.service_url_prefix = '/me-services/' + this.module_name.split('_').join('/');
         this.log_name = 'svc_' + this.filename;
         option = option || {};
-
         this.logger = require('log4js').getLogger(this.log_name);
-
         if (!this.logger) {
             console.error('logger not loaded in ' + this.file);
         }
@@ -28,8 +26,16 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            console.log(this.request.body);
-                            this.body = yield app.nursing_bed_monitor_provider.regist(this.request.body.session,this.request.body.userInfo);
+                            var member = yield app.nursing_bed_monitor_provider.regist(this.request.body.session,this.request.body.userInfo);
+                            console.log("regist reback");
+                            if(member){
+                                    console.log("getToken");
+                                    var token = yield app.nursing_bed_monitor_provider.getToken(member.open_id);
+                                    var ret= yield app.nursing_bed_monitor_provider.userAuthenticate(member,token);
+                                    var session_id = yield app.nursing_bed_monitor_provider.getSession(member.open_id)
+                                    console.log(session_id);
+                                    this.body = app.wrapper.res.default();
+                            }
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -38,41 +44,7 @@ module.exports = {
                     };
                 }
             },
-        {
-                   method:'sleepUser$isRegist' ,
-                    verb:'get',
-                    url:this.service_url_prefix+"/sleepUser$isRegist/:userName",
-                    handler:function (app,options) {
-                        return function *(next) {
-                            try {
-
-                                this.body = yield app.nursing_bed_monitor_provider.isRegist(this.params.userName);
-                            } catch (e) {
-                                self.logger.error(e.message);
-                                this.body = app.wrapper.res.error(e);
-                            }
-                            yield next;
-                        };
-                    }
-               },
-               {
-                   method:'sleepUser$getToken' ,
-                    verb:'get',
-                    url:this.service_url_prefix+"/sleepUser$getToken/:uniqueId",
-                    handler:function (app,options) {
-                        return function *(next) {
-                            try {
-
-                                this.body = yield app.nursing_bed_monitor_provider.getToken(this.params.uniqueId);
-                            } catch (e) {
-                                self.logger.error(e.message);
-                                this.body = app.wrapper.res.error(e);
-                            }
-                            yield next;
-                        };
-                    }
-                },
-         {
+             {
                 method: 'sleepUser$userAuthenticate',
                 verb: 'post',
                 url: this.service_url_prefix + "/sleepUser$userAuthenticate",
