@@ -462,6 +462,7 @@
                     changeElderlyRoomBed: changeElderlyRoomBed,
                     changeElderlyChargeItem: changeElderlyChargeItem,
                     changeElderlyChargeItemForOtherAndCustomized: changeElderlyChargeItemForOtherAndCustomized,
+                    changeElderlyNursingLevel: changeElderlyNursingLevel,
                     receptionVisiterSyncElderlyFamilyMembers: receptionVisiterSyncElderlyFamilyMembers,
                     leaveAccompanierSyncElderlyFamilyMembers: leaveAccompanierSyncElderlyFamilyMembers,
                     checkCanChangeBookingOrUnbookingRecharge: checkCanChangeBookingOrUnbookingRecharge,
@@ -478,7 +479,8 @@
                     nursingScheduleRemove: nursingScheduleRemove,
                     nursingScheduleTemplateImport: nursingScheduleTemplateImport,
                     nursingScheduleSaveAsTemplateWeekly: nursingScheduleSaveAsTemplateWeekly,
-                    nursingPlansByRoom: nursingPlansByRoom
+                    nursingPlansByRoom: nursingPlansByRoom,
+                    nursingPlanSave: nursingPlanSave
                 };
 
                 function roomStatusInfo(tenantId) {
@@ -596,6 +598,9 @@
                     });
                 }
 
+                function changeElderlyNursingLevel(tenantId, elderlyId, nursing_level, operated_by, operated_by_name) {
+                    return $http.post(baseUrl + 'changeElderlyNursingLevel', {tenantId: tenantId, elderlyId: elderlyId, nursing_level: nursing_level, operated_by: operated_by, operated_by_name: operated_by_name});
+                }
 
                 function receptionVisiterSyncElderlyFamilyMembers(receptionId) {
                     return $http.post(baseUrl + 'receptionVisiterSyncElderlyFamilyMembers/' + receptionId);
@@ -670,6 +675,10 @@
 
                 function nursingPlansByRoom (tenantId, elderlySelectArray, nursingPlanSelectArray) {
                     return $http.post(baseUrl + 'nursingPlansByRoom', {tenantId: tenantId, elderlySelectArray: elderlySelectArray, nursingPlanSelectArray: nursingPlanSelectArray});
+                }
+
+                function nursingPlanSave(tenantId, elderlyId, nursing_item_check_info) {
+                    return $http.post(baseUrl + 'nursingPlanSave', {tenantId: tenantId, elderlyId: elderlyId, nursing_item_check_info: nursing_item_check_info});
                 }
             }]
         };

@@ -3,6 +3,7 @@
  * 养老机构接口
  */
 var DIC = require('../pre-defined/dictionary-constants.json');
+var D3006 = require('../pre-defined/dictionary.json')['D3006'];
 
 module.exports = {
     init: function (option) {
@@ -817,6 +818,66 @@ module.exports = {
                                     }
                                 }
                             }
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'changeElderlyNursingLevel',
+                verb: 'post',
+                url: this.service_url_prefix + "/changeElderlyNursingLevel", //直接修改老人护理等级
+                handler: function (app, options) {
+                    return function * (next) {
+                        var tenant, elderly, nursingPlan;
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+                            var elderlyId = this.request.body.elderlyId;
+                            elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
+                            if(!elderly || elderly.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到老人!'});
+                                yield next;
+                                return;
+                            }
+                            var nursing_level = this.request.body.nursing_level;
+                            if (nursing_level === elderly.nursing_level) {
+                                this.body = app.wrapper.res.error({message: '护理等级没有变化!'});
+                                yield next;
+                                return;
+                            }
+
+                            var operated_by = this.request.body.operated_by;
+                            var operated_by_name = this.request.body.operated_by_name;
+
+                            var nursing_level_old = elderly.nursing_level || 'null';
+
+                            elderly.nursing_level = nursing_level;
+                            yield elderly.save();
+
+                            yield app.modelFactory().model_create(app.models['psn_elderlySpecificSpotChangeLog'],{
+                                operated_by: operated_by,
+                                operated_by_name: operated_by_name,
+                                elderlyId: elderlyId,
+                                elderly_name: elderly.name,
+                                col_name: 'nursing_level',
+                                col_val_old: nursing_level_old,
+                                col_val_new: nursing_level,
+                                fromMethod: 'changeElderlyNursingLevel',
+                                tenantId: elderly.tenantId
+                            });
+
+                            this.body = app.wrapper.res.ret({nursing_level: nursing_level,nursing_level_name: D3006[nursing_level].name});
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
                         }
                         yield next;
                     };
@@ -4093,8 +4154,6 @@ module.exports = {
                                 }
                             });
 
-
-
                             var elderlys = yield app.modelFactory().model_query(app.models['psn_elderly'],{
                                 select: elderlySelectArray.join(' '),
                                 where: {
@@ -4104,6 +4163,7 @@ module.exports = {
                                 }
                             });
 
+
                             var nursingPlans = yield app.modelFactory().model_query(app.models['psn_nursingPlan'],{
                                 select: nursingPlanSelectArray.join(' '),
                                 where: {
@@ -4111,20 +4171,18 @@ module.exports = {
                                     tenantId: tenantId
                                 }
                             });
-                            console.log(nursingPlans);
 
                             var nursingPlansByRoom = {};
                             app._.each(rooms, function (o) {
                                 for (var i = 1, len = o.capacity; i <= len; i++) {
                                     elderly = app._.find(elderlys, (o2) => {
-                                            return o2.room_value.roomId.toString() == o._id.toString() && o2.room_value.bed_no == i;
-                                        }) || {};
+                                        return o2.room_value.roomId.toString() == o._id.toString() && o2.room_value.bed_no == i;
+                                    });
 
                                     if (elderly) {
-                                        console.log(o.name + '$' +i, elderly);
                                         nursingPlan = app._.find(nursingPlans, (o3) => {
-                                                return o3.elderlyId.toString() == elderly._id.toString();
-                                            }) || {};
+                                            return o3.elderlyId.toString() == elderly._id.toString();
+                                        });
                                     }
 
                                     if (nursingPlan) {
@@ -4135,14 +4193,11 @@ module.exports = {
                                         roomId: o._id,
                                         room_name: o.name,
                                         bed_no: i,
-                                        elderly: elderly,
-                                        nursing_plan: nursingPlan
+                                        elderly: elderly || {},
+                                        nursing_plan: nursingPlan || {}
                                     };
                                 }
                             });
-
-                            console.log(nursingPlansByRoom);
-
 
                             this.body = app.wrapper.res.ret(nursingPlansByRoom);
                         }
@@ -4155,6 +4210,85 @@ module.exports = {
                     };
                 }
             },
+            {
+                method: 'nursingPlanSave',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingPlanSave", //为老人保存一条护理项目
+                handler: function (app, options) {
+                    return function * (next) {
+                        var tenant, elderly, nursingPlan;
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            var elderlyId = this.request.body.elderlyId;
+                            elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
+                            if(!elderly || elderly.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到老人!'});
+                                yield next;
+                                return;
+                            }
+
+                            var nursingItemCheckInfo = this.request.body.nursing_item_check_info;
+                            var toProcessNursingItemId = nursingItemCheckInfo.id;
+                            var isRemoved = !nursingItemCheckInfo.checked;
+
+
+                            var elderlyNursingPlan = yield app.modelFactory().model_one(app.models['psn_nursingPlan'],{
+                                select: 'service_items',
+                                where: {
+                                    status: 1,
+                                    elderlyId: elderlyId,
+                                    tenantId: tenantId
+                                }
+                            });
+
+                            if (!elderlyNursingPlan) {
+                                if (!isRemoved) {
+                                    yield app.modelFactory().model_create(app.models['psn_nursingPlan'],{
+                                        elderlyId: elderlyId,
+                                        elderly_name: elderly.name,
+                                        service_items: [toProcessNursingItemId],
+                                        tenantId: elderly.tenantId
+                                    });
+                                }
+                            } else {
+                                var serviceItems = elderlyNursingPlan.service_items;
+                                var index = app._.findIndex(serviceItems, (o) => {
+                                    return o == toProcessNursingItemId;
+                                });
+                                if (!isRemoved) {
+                                    // 加入
+                                    if (index == -1) {
+                                        serviceItems.push(toProcessNursingItemId);
+                                    }
+                                } else {
+                                    if (index != -1) {
+                                        serviceItems.splice(index, 1);
+                                    }
+                                }
+
+                                elderlyNursingPlan.service_items = serviceItems;
+
+                                yield elderlyNursingPlan.save();
+                            }
+
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            }
             /**********************其他*****************************/
             
         ];

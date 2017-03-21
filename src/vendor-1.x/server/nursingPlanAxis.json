@@ -7,17 +7,17 @@
   {
     "_id": "bed_no",
     "name": "床位",
-    "width": "30"
+    "width": "40"
   },
   {
     "_id": "name",
     "name": "老人",
-    "width": "30"
+    "width": "50"
   },
   {
-    "_id": "assessment_level_current_name",
+    "_id": "nursing_level_name",
     "name": "护理等级",
-    "width": "80"
+    "width": "120"
   },
   {
     "_id": "service_items",

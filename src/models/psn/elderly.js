@@ -66,7 +66,7 @@ module.exports = function(ctx,name) {
             exit_on: {type: Date},//出院时间
             remark: {type: String,maxLength:400},//如果为空则正式入院后从入院单中复制过来
             general_ledger:{type: Number, default: 0.00},//一般在通过流水月结转
-            nursing_assessment_level: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3006"])},
+            nursing_level: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3006"])},
             nursing_assessment_data: {
                 disease_evaluation_level: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3007"])},
                 adl_level: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3008"])}
@@ -107,9 +107,9 @@ module.exports = function(ctx,name) {
             }
         });
 
-        elderlySchema.virtual('nursing_assessment_level_name').get(function () {
-            if (this.nursing_assessment_level) {
-                return D3006[this.nursing_assessment_level].name;
+        elderlySchema.virtual('nursing_level_name').get(function () {
+            if (this.nursing_level) {
+                return D3006[this.nursing_level].name;
             }
             return '';
         });
