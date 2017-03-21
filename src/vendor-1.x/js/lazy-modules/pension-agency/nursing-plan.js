@@ -27,8 +27,11 @@
             vm.onRoomChange = onRoomChange;
             vm.setElderlyNursingLevel = setElderlyNursingLevel;
             vm.doChangeElderlyNursingLevel = doChangeElderlyNursingLevel;
-            vm.cancelEditing = cancelEditing;
+            vm.cancelElderlyEditing = cancelElderlyEditing;
             vm.serviceItemChecked = serviceItemChecked;
+            vm.setNursingPlanRemark = setNursingPlanRemark;
+            vm.saveNursingPlanRemark = saveNursingPlanRemark;
+            vm.cancelNursingPlanRemark = cancelNursingPlanRemark;
 
             vm.tab1 = {cid: 'contentTab1'};
             vm.$editings = {};
@@ -69,11 +72,8 @@
             console.log('parse nursingPlanItems:');
             vmh.psnService.nursingPlansByRoom(vm.tenantId, ['name', 'sex', 'nursing_level'], ['elderlyId', 'service_items', 'remark']).then(function(data){
                 vm.aggrData = data;
-                _.each(vm.aggrData, function(o) {
-
-                });
-
                 for(var trackedKey in vm.aggrData) {
+                    vm.$editings[trackedKey] = {};
                     var key = vm.aggrData[trackedKey]['elderly']['nursing_level'];
                     if (key) {
                         if (!vm.service_items[key]) {
@@ -107,7 +107,7 @@
         }
 
         function setElderlyNursingLevel (trackedKey) {
-            vm.$editings[trackedKey] = true;
+            vm.$editings[trackedKey]['elderly'] = true;
         }
 
         function doChangeElderlyNursingLevel (trackedKey, nursing_level) {
@@ -115,12 +115,12 @@
             vmh.psnService.changeElderlyNursingLevel(vm.tenantId, elderlyId, nursing_level, vm.operated_by, vm.operated_by_name).then(function(data){
                 vm.aggrData[trackedKey]['elderly'].nursing_level = data.nursing_level;
                 vm.aggrData[trackedKey]['elderly'].nursing_level_name = data.nursing_level_name;
-                vm.$editings[trackedKey] = false;
+                vm.$editings[trackedKey]['elderly'] = false;
             });
         }
 
-        function cancelEditing (trackedKey) {
-            vm.$editings[trackedKey] = false;
+        function cancelElderlyEditing (trackedKey) {
+            vm.$editings[trackedKey]['elderly'] = false;
         }
 
         function serviceItemChecked (trackedKey, nursingItemId) {
@@ -128,6 +128,19 @@
             var nursing_item_check_info = { id: nursingItemId, checked: vm.service_items[vm.aggrData[trackedKey]['elderly']['nursing_level']][nursingItemId]};
             // console.log('serviceItemChecked:',nursingItemId, nursing_item_check_info);
             vmh.psnService.nursingPlanSave(vm.tenantId, elderlyId, nursing_item_check_info);
+        }
+
+        function setNursingPlanRemark (trackedKey) {
+            vm.$editings[trackedKey]['remark'] = true;
+        }
+
+        function saveNursingPlanRemark (trackedKey, remark) {
+            console.log('saveNursingPlanRemark=>', trackedKey, remark);
+
+        }
+
+        function cancelNursingPlanRemark (trackedKey) {
+            vm.$editings[trackedKey]['remark'] = false;
         }
     }
 })();

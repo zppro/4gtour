@@ -272,7 +272,8 @@
     },
     "nursing-plan": {
       "TITLE": "养老机构-护理管理-护理计划-编排",
-      "BTN-SET-NURSING-LEVEL": "设置护理等级"
+      "BTN-SET-NURSING-LEVEL": "设置护理等级",
+      "BTN-SET-NURSING-PLAN-REMARK": "填写备注"
     },
     "nursing-schedule": {
       "TITLE": "养老机构-护理管理-护理排班-编排",

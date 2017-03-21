@@ -18,13 +18,13 @@
                         td.text-center
                             div(ng-if="vm.aggrData[row.trackedKey]['elderly']['id']")
                                 span(ng-if="vm.aggrData[row.trackedKey]['elderly']['nursing_level_name']") {{vm.aggrData[row.trackedKey]['elderly']['nursing_level_name']}}
-                                a.btn.btn-warning.btn-sm(ng-if="!vm.$editings[row.trackedKey] && !vm.aggrData[row.trackedKey]['elderly']['nursing_level_name']" ng-click="vm.setElderlyNursingLevel(row.trackedKey)") {{ vm.moduleTranslatePath('BTN-SET-NURSING-LEVEL') | translate}}
-                                .btn-group(ng-if="vm.$editings[row.trackedKey] && !vm.aggrData[row.trackedKey]['elderly']['nursing_level_name']")
+                                a.btn.btn-warning.btn-sm(ng-if="!vm.$editings[row.trackedKey]['elderly'] && !vm.aggrData[row.trackedKey]['elderly']['nursing_level_name']" ng-click="vm.setElderlyNursingLevel(row.trackedKey)") {{ vm.moduleTranslatePath('BTN-SET-NURSING-LEVEL') | translate}}
+                                .btn-group(ng-if="vm.$editings[row.trackedKey]['elderly'] && !vm.aggrData[row.trackedKey]['elderly']['nursing_level_name']")
                                     .btn.btn-primary.btn-xs(ng-repeat='nursingLevel in vm.selectBinding.nursingLevels',ng-model="vm.editing$NursingLevel",btn-radio="nursingLevel.value") {{nursingLevel.name.substr(0,1)}}
-                                .btn-group(ng-if="vm.$editings[row.trackedKey] && !vm.aggrData[row.trackedKey]['elderly']['nursing_level_name']")
+                                .btn-group(ng-if="vm.$editings[row.trackedKey]['elderly'] && !vm.aggrData[row.trackedKey]['elderly']['nursing_level_name']")
                                     a.btn.btn-warning.btn-xs(title="{{'button.SAVE'|translate}}",ng-click="vm.doChangeElderlyNursingLevel(row.trackedKey, vm.editing$NursingLevel)")
                                         i.glyphicon.glyphicon-ok-sign
-                                    a.btn.btn-primary.btn-xs(title="{{'button.CANCEL'|translate}}",ng-click="vm.cancelEditing(row.trackedKey)")
+                                    a.btn.btn-primary.btn-xs(title="{{'button.CANCEL'|translate}}",ng-click="vm.cancelElderlyEditing(row.trackedKey)")
                                         i.glyphicon.glyphicon-remove-sign
                         td
                             .btn-group.nursing-item-group(ng-if="vm.aggrData[row.trackedKey]['elderly']['id'] && vm.aggrData[row.trackedKey]['elderly']['nursing_level']", ng-repeat="nursingItem in vm.nursingItemMap[vm.aggrData[row.trackedKey]['elderly']['nursing_level']]")
@@ -33,8 +33,16 @@
                                         input(id="{{vm.aggrData[row.trackedKey]['elderly']['nursing_level'] + '$' +nursingItem.value}}",type='checkbox',ng-model="vm.service_items[vm.aggrData[row.trackedKey]['elderly']['nursing_level']][nursingItem.value]" ng-change="vm.serviceItemChecked(row.trackedKey, nursingItem.value)")
                                         span.fa.fa-check
                                 label(for="{{vm.aggrData[row.trackedKey]['elderly']['nursing_level'] + '$' +nursingItem.value}}") {{ nursingItem.name }}
-                        td
-                            span(ng-if="vm.aggrData[row.trackedKey]['elderly']['id']") {{vm.aggrData[row.trackedKey]['nursing_plan']['remark']}}
+                        td.text-center
+                            div(ng-if="vm.aggrData[row.trackedKey]['elderly']['id']")
+                                span(ng-if="vm.aggrData[row.trackedKey]['nursing_plan']['remark']") {{vm.aggrData[row.trackedKey]['nursing_plan']['remark']}}
+                                a.btn.btn-primary.btn-sm(ng-if="!vm.$editings[row.trackedKey]['remark'] && !vm.aggrData[row.trackedKey]['nursing_plan']['remark']" ng-click="vm.setNursingPlanRemark(row.trackedKey)") {{ vm.moduleTranslatePath('BTN-SET-NURSING-PLAN-REMARK') | translate}}
+                                input.form-control(type="text",ng-if="vm.$editings[row.trackedKey]['remark']",ng-model='vm.editing$NursingPlanRemark')
+                                .btn-group(ng-if="vm.$editings[row.trackedKey]['remark']")
+                                    a.btn.btn-primary.btn-xs(title="{{'button.SAVE'|translate}}",ng-click="vm.saveNursingPlanRemark(row.trackedKey, vm.editing$NursingPlanRemark)")
+                                        i.glyphicon.glyphicon-ok-sign
+                                    a.btn.btn-primary.btn-xs(title="{{'button.CANCEL'|translate}}",ng-click="vm.cancelNursingPlanRemark(row.trackedKey)")
+                                        i.glyphicon.glyphicon-remove-sign
                     tr(ng-if="vm.yAxisDataFlatten.length==0")
                         td.text-center(colspan="{{vm.xAxisData.length + 1}}") {{ 'grid.NO-RESULTS' | translate}}
         .panel-footer
