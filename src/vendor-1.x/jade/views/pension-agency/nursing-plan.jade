@@ -5,18 +5,24 @@
         .col-md-5
         .col-md-7
     .row-split
-    .panel.panel-default.panel-grid
-        table.grid.table.table-bordered.table-nursing-plan
-            thead
-                tr
-                    th.text-center(ng-repeat="col in vm.xAxisData",width="{{col.source == 'room' ? '50' :'200'}}") {{::col.name}}
-            tbody
-                tr(ng-repeat="row in vm.yAxisDataFlatten track by row.trackedKey")
-                    td.text-center(ng-repeat="col in vm.xAxisData",width="100")
-                        span {{ col.source == 'room' ?  vm.aggrData[row.trackedKey][col._id] : vm.aggrData[row.trackedKey][col.source][col._id] }}
-                tr(ng-if="vm.yAxisDataFlatten.length==0")
-                    td.text-center(colspan="{{vm.xAxisData.length + 1}}") {{ 'grid.NO-RESULTS' | translate}}
-
+        .panel.panel-default.panel-grid
+            table.grid.table.table-bordered.table-nursing-plan
+                thead
+                    tr
+                        th.text-center(ng-repeat="col in vm.xAxisData",width="{{col.width}}") {{::col.name}}
+                tbody
+                    tr(ng-repeat="row in vm.yAxisDataFlatten track by row.trackedKey")
+                        td.text-center {{vm.aggrData[row.trackedKey]['room_name']}}
+                        td.text-center {{vm.aggrData[row.trackedKey]['bed_no']}}
+                        td.text-center {{vm.aggrData[row.trackedKey]['elderly']['name']}}
+                        td.text-center
+                            a.btn.btn-warning.btn-sm(ng-if="!vm.aggrData[row.trackedKey]['elderly']['assessment_level_current_name']" ng-click="vm.importTemplate()") 输入评估结果
+                            span(ng-if="vm.aggrData[row.trackedKey]['elderly']['assessment_level_current_name']") {{vm.aggrData[row.trackedKey]['elderly']['assessment_level_current_name']}}
+                        td {{vm.aggrData[row.trackedKey]['nursing_plan']['service_items']}}
+                        td {{vm.aggrData[row.trackedKey]['nursing_plan']['remark']}}
+                    tr(ng-if="vm.yAxisDataFlatten.length==0")
+                        td.text-center(colspan="{{vm.xAxisData.length + 1}}") {{ 'grid.NO-RESULTS' | translate}}
+        .panel-footer
 script(type="text/ng-template", id="nursing-plan-save-as-template.html")
     form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
         .ngdialog-message

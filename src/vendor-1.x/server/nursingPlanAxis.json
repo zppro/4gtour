@@ -2,32 +2,31 @@
   {
     "_id": "room_name",
     "name": "房间",
-    "source": "room"
+    "width": "50"
   },
   {
     "_id": "bed_no",
     "name": "床位",
-    "source": "room"
+    "width": "30"
   },
   {
     "_id": "name",
     "name": "老人",
-    "source": "elderly",
-    "field": "name"
+    "width": "30"
   },
   {
     "_id": "assessment_level_current_name",
-    "name": "评估等级",
-    "source": "elderly"
+    "name": "护理等级",
+    "width": "80"
   },
   {
     "_id": "service_items",
     "name": "服务项目",
-    "source": "nursing_plan"
+    "width": "300"
   },
   {
     "_id": "remark",
     "name": "备注",
-    "source": "nursing_plan"
+    "width": "100"
   }
 ]
