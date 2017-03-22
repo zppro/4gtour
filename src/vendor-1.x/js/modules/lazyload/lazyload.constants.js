@@ -44,6 +44,7 @@
                 {name:'subsystem.shared.wxa-config.js',files:['app/js/lazy-modules/shared/wxa-config.js']},
                 {name:'subsystem.shared.charge-standard.js',files:['app/js/lazy-modules/shared/charge-standard.js']},
                 {name:'subsystem.shared.charge-item-customized.js',files:['app/js/lazy-modules/shared/charge-item-customized.js']},
+                {name:'subsystem.shared.robot.js',files:['app/js/lazy-modules/shared/robot.js']},
                 {name:'subsystem.shared.bed-monitor.js',files:['app/js/lazy-modules/shared/bed-monitor.js']},
                 {name:'subsystem.merchant-webstore.dashboard.js',files:['app/js/lazy-modules/merchant-webstore/dashboard.js']},
                 {name:'subsystem.merchant-webstore.spu.js',files:['app/js/lazy-modules/merchant-webstore/spu.js']},
@@ -66,8 +67,6 @@
                 {name:'subsystem.pension-agency.exit-settlement.js',files:['app/js/lazy-modules/pension-agency/exit-settlement.js']},
                 {name:'subsystem.pension-agency.exit-item-return.js',files:['app/js/lazy-modules/pension-agency/exit-item-return.js']},
                 {name:'subsystem.pension-agency.nursing-worker.js',files:['app/js/lazy-modules/pension-agency/nursing-worker.js']},
-                {name:'subsystem.pension-agency.nursing-robot.js',files:['app/js/lazy-modules/pension-agency/nursing-robot.js']},
-                
                 {name:'subsystem.pension-agency.room.js',files:['app/js/lazy-modules/pension-agency/room.js']},
                 {name:'subsystem.pension-agency.district.js',files:['app/js/lazy-modules/pension-agency/district.js']},
                 {name:'subsystem.health-center.dashboard.js',files:['app/js/lazy-modules/health-center/dashboard.js']},

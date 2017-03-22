@@ -16,7 +16,7 @@ module.exports = function(ctx,name) {
     else {
         module.isloaded = true;
 
-        var nursingRobotSchema = new mongoose.Schema({
+        var robotSchema = new mongoose.Schema({
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
@@ -35,18 +35,18 @@ module.exports = function(ctx,name) {
             }
         });
 
-        nursingRobotSchema.virtual('robot_status_name').get(function () {
+        robotSchema.virtual('robot_status_name').get(function () {
             if (this.robot_status) {
                 return D3009[this.robot_status].name;
             }
             return '';
         });
 
-        nursingRobotSchema.pre('update', function (next) {
+        robotSchema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();
         });
 
-        return mongoose.model(name, nursingRobotSchema, name);
+        return mongoose.model(name, robotSchema, name);
     }
 }

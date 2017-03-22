@@ -443,7 +443,7 @@
                 return {
                     roomStatusInfo: roomStatusInfo,
                     updateRoomStatusInfo: updateRoomStatusInfo,
-                    nursingRobotRemoveRoomConfig: nursingRobotRemoveRoomConfig,
+                    robotRemoveRoomConfig: robotRemoveRoomConfig,
                     bedMonitorRemoveRoomConfig: bedMonitorRemoveRoomConfig,
                     submitApplicationToExit: submitApplicationToExit,
                     submitToAuditItemReturn: submitToAuditItemReturn,
@@ -496,8 +496,8 @@
                     });
                 }
 
-                function nursingRobotRemoveRoomConfig(tenantId, robotId) {
-                    return $http.post(baseUrl + 'nursingRobotRemoveRoomConfig', {
+                function robotRemoveRoomConfig(tenantId, robotId) {
+                    return $http.post(baseUrl + 'robotRemoveRoomConfig', {
                         tenantId: tenantId,
                         robotId: robotId
                     });

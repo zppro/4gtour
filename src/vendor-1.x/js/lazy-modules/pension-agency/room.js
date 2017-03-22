@@ -352,29 +352,40 @@
             vm.onBedMonitorCheckChange = onBedMonitorCheckChange;
             vm.tab1 = {cid: 'contentTab1'};
 
-            vm.treeDataPromiseOfNursingRobots = vmh.shareService.tmp('T3005', 'name', {tenantId:vm.tenantId, roomId: vm.getParam('_id')}, true).then(function(nodes){
+            vm.treeDataPromiseOfRobots = vmh.shareService.tmp('T3005', 'name', {tenantId:vm.tenantId, roomId: vm.getParam('_id')}, true).then(function(nodes){
                 return nodes;
             });
 
             vm.treeDataPromiseOfBedMonitors = vmh.shareService.tmp('T3007', 'code name', {tenantId:vm.tenantId, roomId: vm.getParam('_id')}, true).then(function(nodes){
+                console.log(nodes);
                 return nodes;
             });
 
-            vm.load();
-
-
-
+            vm.load().then(function(){
+                var bedMonitors = vm.model.bedMonitors;
+                var bedNos = {}, bedMonitor;
+                for(var i=0,len=bedMonitors.length;i<len;i++) {
+                    bedMonitor = bedMonitors[i];
+                    bedNos[bedMonitor._id] = bedMonitor.bed_no;
+                }
+                vm.bedNos = bedNos;
+                console.log(345);
+            });
         }
 
         function onBedMonitorCheckChange(checkedNodes) {
 
-            var bedMonitors = vm.model.bedMonitors;
+            var bedMonitors = vm.model.bedMonitors, bedMonitorId;
             for(var i=0,len=checkedNodes.length;i<len;i++) {
                 var index = _.findIndex(bedMonitors, function (bedMonitor) {
                     return bedMonitor.bedMonitorId == checkedNodes[i].bedMonitorId;
                 });
                 if (index != -1) {
+                    bedMonitorId = checkedNodes[i]._id;
                     bedMonitors[index].name = checkedNodes[i].name;
+                    if (vm.bedNos[bedMonitorId]){
+                        bedMonitors[index].bed_no =  vm.bedNos[bedMonitorId];
+                    }
                 }
             }
 

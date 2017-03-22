@@ -165,9 +165,9 @@
         "sref": "app.pension-agency.nursing-worker.list"
       },
       {
-        "_id": "menu.pension-agency.NURSING-ROBOT",
+        "_id": "menu.pension-agency.ROBOT",
         "name": "机器人",
-        "sref": "app.pension-agency.nursing-robot.list"
+        "sref": "app.pension-agency.robot.list"
       },
       {
         "_id": "menu.pension-agency.BED-MONITOR",

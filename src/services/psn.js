@@ -2373,13 +2373,13 @@ module.exports = {
             },
             /**********************房间配置相关*****************************/
             {
-                method: 'nursingRobotRemoveRoomConfig',
+                method: 'robotRemoveRoomConfig',
                 verb: 'post',
-                url: this.service_url_prefix + "/nursingRobotRemoveRoomConfig",
+                url: this.service_url_prefix + "/robotRemoveRoomConfig",
                 handler: function (app, options) {
                     return function * (next) {
                         var steps;
-                        var tenant,robot,rooms,room,nursing_robots;
+                        var tenant,robot,rooms,room,robots;
                         try {
                             //this.request.body
                             var tenantId = this.request.body.tenantId;
@@ -2392,7 +2392,7 @@ module.exports = {
                                 return;
                             }
 
-                            robot =  yield app.modelFactory().model_read(app.models['psn_nursingRobot'], robotId);
+                            robot =  yield app.modelFactory().model_read(app.models['pub_robot'], robotId);
                             if(!robot || robot.status == 0 ){
                                 this.body = app.wrapper.res.error({message: '无法找到机器人!'});
                                 yield next;
@@ -2401,7 +2401,7 @@ module.exports = {
 
                             rooms = yield app.modelFactory().model_query(app.models['psn_room'], {
                                 where:{
-                                    nursing_robots: {$elemMatch:{$eq: robotId}},
+                                    robots: {$elemMatch:{$eq: robotId}},
                                     tenantId: tenantId
                                 }
                             });
@@ -2416,17 +2416,17 @@ module.exports = {
 
                             for (var i=0, len=rooms.length;i<len;i++) {
                                 room = rooms[i];
-                                nursing_robots = room.toObject().nursing_robots;
-                                var inIndex = nursing_robots.findIndex((o) => {
+                                robots = room.toObject().robots;
+                                var inIndex = robots.findIndex((o) => {
                                     return o == robotId
                                 });
 
                                 if(inIndex != -1) {
-                                    nursing_robots.splice(inIndex, 1);
+                                    robots.splice(inIndex, 1);
                                 }
                                 console.log(inIndex)
-                                room.nursing_robots =  nursing_robots;
-                                console.log(room.nursing_robots)
+                                room.robots =  robots;
+                                console.log(room.robots)
                                 yield room.save();
                             }
 

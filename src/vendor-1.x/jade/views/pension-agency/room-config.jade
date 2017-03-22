@@ -15,9 +15,9 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         .col-md-4
                             .form-readable {{vm.model.capacity}}
                     fieldset: .form-group
-                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NURSING_ROBOT') | translate}}:
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ROBOT') | translate}}:
                         .col-md-4
-                            .tree.tree-basic(s-tree,s-tree-data="vm.treeDataPromiseOfNursingRobots",s-tree-height="300", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check'}",ng-model="vm.model.nursing_robots")
+                            .tree.tree-basic(s-tree,s-tree-data="vm.treeDataPromiseOfRobots",s-tree-height="300", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check'}",ng-model="vm.model.robots")
                     fieldset: .form-group
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-BED_MONITOR') | translate}}:
                         .col-md-4

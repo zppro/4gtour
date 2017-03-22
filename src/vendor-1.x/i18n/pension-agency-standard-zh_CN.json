@@ -402,7 +402,7 @@
         "TAB1-PLACEHOLDER-PHONE": "137XXXX0258.."
       }
     },
-    "nursing-robot": {
+    "robot": {
       "list": {
         "TITLE": "养老机构-基础设置-机器人-列表"
       },
@@ -477,7 +477,7 @@
         "TITLE": "养老机构-基础设置-房间-配置",
         "TAB1": "配置信息",
         "TAB1-LABEL-NAME": "房间名称",
-        "TAB1-LABEL-NURSING_ROBOT": "机器人",
+        "TAB1-LABEL-ROBOT": "机器人",
         "TAB1-LABEL-BED_MONITOR": "睡眠带",
         "TAB1-LABEL-BED_MONITOR_TO_BED_NO": "睡眠带绑定床位",
         "TAB1-LABEL-CAPACITY": "床位数量",

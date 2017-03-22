@@ -1240,8 +1240,8 @@
                     //, deps: helper.resolveFor2('ui.select')
                 }
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-robot', {
-                url: '/nursing-robot',
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'robot', {
+                url: '/robot',
                 title: '机器人管理',
                 abstract: true,
                 views: {
@@ -1254,18 +1254,18 @@
                     }
                 },
                 data:{
-                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'NURSING-ROBOT'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'ROBOT'//业务系统使用
                 }
-                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'nursing-robot.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'robot.js')
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-robot.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'robot.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-robot-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'robot-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'NursingRobotGridController',
+                controller: 'RobotGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-robot.list', {
-                        modelName: 'psn-nursingRobot',
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'robot.list', {
+                        modelName: 'pub-robot',
                         searchForm: {"status": 1},
                         serverPaging: true,
                         columns: [
@@ -1313,14 +1313,14 @@
                     })
                 }
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-robot.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'robot.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-robot-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'robot-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'NursingRobotDetailsController',
+                controller: 'RobotDetailsController',
                 resolve: {
-                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-robot.details', {
-                        modelName: 'psn-nursingRobot',
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'robot.details', {
+                        modelName: 'pub-robot',
                         model:{ robot_status: 'A0003' }
                         , blockUI: true
                     })
@@ -1439,7 +1439,7 @@
                             "roomConfig": MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'room.config'
                         },
                         serverPaging: true,
-                        // populates: [{path:'nursing_workers', select:'-_id name'}, {path:'nursing_robots', select:'-_id name'}],
+                        // populates: [{path:'nursing_workers', select:'-_id name'}, {path:'robots', select:'-_id name'}],
                         columns: [
                             {
                                 label: '片区',
@@ -1478,10 +1478,10 @@
                             },
                             {
                                 label: '机器人',
-                                name: 'nursing_robots',
+                                name: 'robots',
                                 type: 'string',
                                 width: 120,
-                                formatter: {type:'populate' ,options: {path:'nursing_robots', select:'-_id name'}}
+                                formatter: {type:'populate' ,options: {path:'robots', select:'-_id name'}}
                             },
                             {
                                 label: '睡眠带',

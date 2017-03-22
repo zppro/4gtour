@@ -1,21 +1,21 @@
 /**
  * district Created by zppro on 17-3-6.
- * Target:养老机构 机器人
+ * Target:机器人
  */
 
 (function() {
     'use strict';
     
     angular
-        .module('subsystem.pension-agency')
-        .controller('NursingRobotGridController', NursingRobotGridController)
-        .controller('NursingRobotDetailsController', NursingRobotDetailsController)
+        .module('subsystem.shared')
+        .controller('RobotGridController', RobotGridController)
+        .controller('RobotDetailsController', RobotDetailsController)
     ;
 
 
-    NursingRobotGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
+    RobotGridController.$inject = ['$scope', 'ngDialog', 'vmh', 'entryVM'];
 
-    function NursingRobotGridController($scope, ngDialog, vmh, vm) {
+    function RobotGridController($scope, ngDialog, vmh, vm) {
 
         $scope.vm = vm;
         $scope.utils = vmh.utils.g;
@@ -28,9 +28,9 @@
         }
     }
 
-    NursingRobotDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
+    RobotDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
 
-    function NursingRobotDetailsController($scope, ngDialog, vmh, vm) {
+    function RobotDetailsController($scope, ngDialog, vmh, vm) {
 
         var vm = $scope.vm = vm;
         $scope.utils = vmh.utils.v;
@@ -58,7 +58,7 @@
             if ($scope.theForm.$valid) {
                 var p;
                 if(vm.raw$stop_flag === false && vm.model.stop_flag === true) {
-                    p = vmh.fetch(vmh.psnService.nursingRobotRemoveRoomConfig(vm.tenantId, vm.model.id));
+                    p = vmh.fetch(vmh.psnService.robotRemoveRoomConfig(vm.tenantId, vm.model.id));
                 } else {
                     p = vmh.promiseWrapper();
                 }

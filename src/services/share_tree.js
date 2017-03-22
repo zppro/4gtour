@@ -269,34 +269,34 @@ module.exports = {
                                 where: {
                                     status: 1,
                                     tenantId: tenantId
-                                }, select: 'name nursing_robots'
+                                }, select: 'name robots'
                             });
                             rooms = app._.reject(rooms, function(o){return o.id == roomId;})
-                            var assignedNursingRobots = [];
-                            var dicNursingRobotToRoom = {};
+                            var assignedRobots = [];
+                            var dicRobotToRoom = {};
                             app._.each(rooms, function(o){
-                                app._.each(o.nursing_robots,function (o2) {
-                                    var nursingRobotId = o2.toString();
-                                    assignedNursingRobots.push(nursingRobotId);
-                                    dicNursingRobotToRoom[nursingRobotId] = o.name;
+                                app._.each(o.robots,function (o2) {
+                                    var robotId = o2.toString();
+                                    assignedRobots.push(robotId);
+                                    dicRobotToRoom[robotId] = o.name;
                                 });
                             });
 
-                            var nursingRobots = yield app.modelFactory().model_query(app.models['psn_nursingRobot'], {
+                            var robots = yield app.modelFactory().model_query(app.models['pub_robot'], {
                                 where: {
                                     status: 1,
                                     stop_flag: false
                                 }, select: data.select || 'name'
                             });
 
-                            var rows = app._.map(nursingRobots, function(o){
-                                var nursingRobot = o.toObject();
+                            var rows = app._.map(robots, function(o){
+                                var robot = o.toObject();
 
-                                nursingRobot.disableCheck = app._.contains(assignedNursingRobots, nursingRobot.id);
-                                if (nursingRobot.disableCheck ) {
-                                    nursingRobot.name += ' (正服务于' + dicNursingRobotToRoom[nursingRobot.id] + ')';
+                                robot.disableCheck = app._.contains(assignedRobots, robot.id);
+                                if (robot.disableCheck ) {
+                                    robot.name += ' (正服务于' + dicRobotToRoom[robot.id] + ')';
                                 }
-                                return nursingRobot;
+                                return robot;
                             });
                             // console.log(rows);
                             this.body = app.wrapper.res.rows(rows);

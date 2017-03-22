@@ -34,7 +34,7 @@
                         td {{::row.floor}}F
                         td.text-right {{::row.capacity}}
                         td {{::row.stop_flag|boolFilter}}
-                        td.text-left {{::row.nursing_robots | populateFilter}}
+                        td.text-left {{::row.robots | populateFilter}}
                         td.text-left {{::row.bedMonitors | populateFilter:'bedMonitorId.name'}}
                         td
                             .btn-group
