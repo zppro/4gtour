@@ -325,20 +325,20 @@ module.exports = {
                                 where: {
                                     status: 1,
                                     tenantId: tenantId
-                                }, select: 'name nursing_bedMonitors'
+                                }, select: 'name bedMonitors'
                             });
                             rooms = app._.reject(rooms, function(o){return o.id == roomId;})
-                            var assignedNursingBedMonitors = [];
-                            var dicNursingBedMonitorToRoom = {};
+                            var assignedBedMonitors = [];
+                            var dicBedMonitorToRoom = {};
                             app._.each(rooms, function(o){
-                                app._.each(o.nursing_bedMonitors,function (o2) {
-                                    var nursingBedMonitorId = o2.nursingBedMonitorId.toString();
-                                    assignedNursingBedMonitors.push(nursingBedMonitorId);
-                                    dicNursingBedMonitorToRoom[nursingBedMonitorId] = o.name + '-' + o2.bed_no +'#床';
+                                app._.each(o.bedMonitors,function (o2) {
+                                    var bedMonitorId = o2.bedMonitorId.toString();
+                                    assignedBedMonitors.push(bedMonitorId);
+                                    dicBedMonitorToRoom[bedMonitorId] = o.name + '-' + o2.bed_no +'#床';
                                 });
                             });
 
-                            var nursingBedMonitors = yield app.modelFactory().model_query(app.models['psn_nursingBedMonitor'], {
+                            var bedMonitors = yield app.modelFactory().model_query(app.models['pub_bedMonitor'], {
                                 where: {
                                     status: 1,
                                     stop_flag: false
@@ -346,18 +346,18 @@ module.exports = {
                                 select: data.select || 'name'
                             });
 
-                            var rows = app._.map(nursingBedMonitors, function(o){
-                                var nursingBedMonitor = o.toObject();
-                                nursingBedMonitor.disableCheck = app._.contains(assignedNursingBedMonitors, nursingBedMonitor.id);
+                            var rows = app._.map(bedMonitors, function(o){
+                                var bedMonitor = o.toObject();
+                                bedMonitor.disableCheck = app._.contains(assignedBedMonitors, bedMonitor.id);
 
-                                if (nursingBedMonitor.disableCheck ) {
-                                    nursingBedMonitor.name = nursingBedMonitor.name + ' (正服务于' + dicNursingBedMonitorToRoom[nursingBedMonitor.id] + ')';
+                                if (bedMonitor.disableCheck ) {
+                                    bedMonitor.name = bedMonitor.name + ' (正服务于' + dicBedMonitorToRoom[bedMonitor.id] + ')';
                                 } else {
-                                    nursingBedMonitor.name = nursingBedMonitor.code + ' [' + nursingBedMonitor.name + ']'
+                                    bedMonitor.name = bedMonitor.code + ' [' + bedMonitor.name + ']'
                                 }
-                                nursingBedMonitor.nursingBedMonitorId = nursingBedMonitor.id;
+                                bedMonitor.bedMonitorId = bedMonitor.id;
 
-                                return nursingBedMonitor;
+                                return bedMonitor;
                             });
                             // console.log(rows);
                             this.body = app.wrapper.res.rows(rows);

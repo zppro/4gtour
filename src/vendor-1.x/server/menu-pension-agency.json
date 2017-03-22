@@ -170,9 +170,9 @@
         "sref": "app.pension-agency.nursing-robot.list"
       },
       {
-        "_id": "menu.pension-agency.NURSING-BED-MONITOR",
+        "_id": "menu.pension-agency.BED-MONITOR",
         "name": "睡眠带",
-        "sref": "app.pension-agency.nursing-bed-monitor.list"
+        "sref": "app.pension-agency.bed-monitor.list"
       },
       {
         "_id": "menu.pension-agency.ROOM",

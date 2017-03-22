@@ -1,5 +1,5 @@
 /**
- * Created by zppro on 16-11-29.
+ * Created by zppro on 17-11-29.
  *  会员实体
  */
 var mongoose = require('mongoose');
@@ -22,9 +22,10 @@ module.exports = function(ctx,name) {
             name: {type: String, required: true}, // 对外部的member_name
             passhash: {type: String, required: true}, //密码hash       
             head_portrait:  {type: String}, // 对外部的  member_head_portrait
+            bindingBedMonitors:[{type: mongoose.Schema.Types.ObjectId, ref: 'pub_bedMonitor'}],
             sync_flag_hzfanweng: {type: Boolean, default: false},//is success
-            session_id_hzfanweng:{type:String}
-
+            session_id_hzfanweng:{type:String},
+            tenantId: {type: mongoose.Schema.Types.ObjectId}
         });
 
         memberSchema.pre('update', function (next) {

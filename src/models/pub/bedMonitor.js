@@ -16,7 +16,7 @@ module.exports = function(ctx,name) {
     else {
         module.isloaded = true;
 
-        var nursingBedMonitorSchema = new mongoose.Schema({
+        var bedMonitorSchema = new mongoose.Schema({
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
@@ -34,18 +34,18 @@ module.exports = function(ctx,name) {
             }
         });
 
-        nursingBedMonitorSchema.virtual('device_status_name').get(function () {
+        bedMonitorSchema.virtual('device_status_name').get(function () {
             if (this.device_status) {
                 return D3009[this.device_status].name;
             }
             return '';
         });
 
-        nursingBedMonitorSchema.pre('update', function (next) {
+        bedMonitorSchema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();
         });
 
-        return mongoose.model(name, nursingBedMonitorSchema, name);
+        return mongoose.model(name, bedMonitorSchema, name);
     }
 }

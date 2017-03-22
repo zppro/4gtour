@@ -1327,8 +1327,8 @@
                     //, deps: helper.resolveFor2('ui.select')
                 }
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-bed-monitor', {
-                url: '/nursing-bed-monitor',
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'bed-monitor', {
+                url: '/bed-monitor',
                 title: '睡眠带管理',
                 abstract: true,
                 views: {
@@ -1341,18 +1341,18 @@
                     }
                 },
                 data:{
-                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'NURSING-BED-MONITOR'//业务系统使用
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'BED-MONITOR'//业务系统使用
                 }
-                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'nursing-bed-monitor.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'bed-monitor.js')
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-bed-monitor.list', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'bed-monitor.list', {
                 url: '/list/:action',
-                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-bed-monitor-list.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'bed-monitor-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'NursingBedMonitorGridController',
+                controller: 'BedMonitorGridController',
                 resolve: {
-                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-bed-monitor.list', {
-                        modelName: 'psn-nursingBedMonitor',
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'bed-monitor.list', {
+                        modelName: 'pub-bedMonitor',
                         searchForm: {"status": 1},
                         serverPaging: true,
                         columns: [
@@ -1393,14 +1393,14 @@
                     })
                 }
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-bed-monitor.details', {
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'bed-monitor.details', {
                 url: '/details/:action/:_id',
-                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-bed-monitor-details.html'),
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'bed-monitor-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'NursingBedMonitorDetailsController',
+                controller: 'BedMonitorDetailsController',
                 resolve: {
-                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-bed-monitor.details', {
-                        modelName: 'psn-nursingBedMonitor',
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'bed-monitor.details', {
+                        modelName: 'pub-bedMonitor',
                         model:{ device_status: 'A0003' }
                         , blockUI: true
                     })
@@ -1485,10 +1485,10 @@
                             },
                             {
                                 label: '睡眠带',
-                                name: 'nursing_bedMonitors',
+                                name: 'bedMonitors',
                                 type: 'string',
                                 width: 120,
-                                formatter: {type:'populate' ,options: {path:'nursing_bedMonitors.nursingBedMonitorId', select:'-_id name'}}
+                                formatter: {type:'populate' ,options: {path:'bedMonitors.bedMonitorId', select:'-_id name'}}
                             },
                             {
                                 label: '',

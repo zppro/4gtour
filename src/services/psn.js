@@ -2442,13 +2442,13 @@ module.exports = {
                 }
             },
             {
-                method: 'nursingBedMonitorRemoveRoomConfig',
+                method: 'bedMonitorRemoveRoomConfig',
                 verb: 'post',
-                url: this.service_url_prefix + "/nursingBedMonitorRemoveRoomConfig",
+                url: this.service_url_prefix + "/bedMonitorRemoveRoomConfig",
                 handler: function (app, options) {
                     return function * (next) {
                         var steps;
-                        var tenant,bedMonitor,rooms,room,nursing_bedMonitors;
+                        var tenant,bedMonitor,rooms,room,bedMonitors;
                         try {
                             //this.request.body
                             var tenantId = this.request.body.tenantId;
@@ -2461,7 +2461,7 @@ module.exports = {
                                 return;
                             }
 
-                            bedMonitor =  yield app.modelFactory().model_read(app.models['psn_nursingBedMonitor'], bedMonitorId);
+                            bedMonitor =  yield app.modelFactory().model_read(app.models['pub_bedMonitor'], bedMonitorId);
                             if(!bedMonitor || bedMonitor.status == 0 ){
                                 this.body = app.wrapper.res.error({message: '无法找到睡眠带!'});
                                 yield next;
@@ -2470,7 +2470,7 @@ module.exports = {
 
                             rooms = yield app.modelFactory().model_query(app.models['psn_room'], {
                                 where:{
-                                    "nursing_bedMonitors.nursingBedMonitorId": bedMonitorId, // nursing_bedMonitors: {$elemMatch:{nursingBedMonitorId: bedMonitorId}},
+                                    "bedMonitors.bedMonitorId": bedMonitorId, // bedMonitors: {$elemMatch:{bedMonitorId: bedMonitorId}},
                                     tenantId: tenantId
                                 }
                             });
@@ -2486,15 +2486,15 @@ module.exports = {
                             console.log('前置检查完成');
                             for (var i=0, len=rooms.length;i<len;i++) {
                                 room = rooms[i];
-                                nursing_bedMonitors = room.toObject().nursing_bedMonitors;
-                                var inIndex = nursing_bedMonitors.findIndex((o) => {
-                                    return o.nursingBedMonitorId == bedMonitorId
+                                bedMonitors = room.toObject().bedMonitors;
+                                var inIndex = bedMonitors.findIndex((o) => {
+                                    return o.bedMonitorId == bedMonitorId
                                 });
 
                                 if(inIndex != -1) {
-                                    nursing_bedMonitors.splice(inIndex, 1);
+                                    bedMonitors.splice(inIndex, 1);
                                 }
-                                room.nursing_bedMonitors =  nursing_bedMonitors;
+                                room.bedMonitors =  bedMonitors;
                                 yield room.save();
                             }
 

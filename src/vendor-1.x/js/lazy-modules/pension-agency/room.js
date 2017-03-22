@@ -349,14 +349,14 @@
 
             vm.init({removeDialog: ngDialog});
             vm.doSubmit = doSubmit;
-            vm.onNursingBedMonitorCheckChange = onNursingBedMonitorCheckChange;
+            vm.onBedMonitorCheckChange = onBedMonitorCheckChange;
             vm.tab1 = {cid: 'contentTab1'};
 
             vm.treeDataPromiseOfNursingRobots = vmh.shareService.tmp('T3005', 'name', {tenantId:vm.tenantId, roomId: vm.getParam('_id')}, true).then(function(nodes){
                 return nodes;
             });
 
-            vm.treeDataPromiseOfNursingBedMonitors = vmh.shareService.tmp('T3007', 'code name', {tenantId:vm.tenantId, roomId: vm.getParam('_id')}, true).then(function(nodes){
+            vm.treeDataPromiseOfBedMonitors = vmh.shareService.tmp('T3007', 'code name', {tenantId:vm.tenantId, roomId: vm.getParam('_id')}, true).then(function(nodes){
                 return nodes;
             });
 
@@ -366,19 +366,19 @@
 
         }
 
-        function onNursingBedMonitorCheckChange(checkedNodes) {
+        function onBedMonitorCheckChange(checkedNodes) {
 
-            var nursing_bedMonitors = vm.model.nursing_bedMonitors;
+            var bedMonitors = vm.model.bedMonitors;
             for(var i=0,len=checkedNodes.length;i<len;i++) {
-                var index = _.findIndex(nursing_bedMonitors, function (bedMonitor) {
-                    return bedMonitor.nursingBedMonitorId == checkedNodes[i].nursingBedMonitorId;
+                var index = _.findIndex(bedMonitors, function (bedMonitor) {
+                    return bedMonitor.bedMonitorId == checkedNodes[i].bedMonitorId;
                 });
                 if (index != -1) {
-                    nursing_bedMonitors[index].name = checkedNodes[i].name;
+                    bedMonitors[index].name = checkedNodes[i].name;
                 }
             }
 
-            console.log(vm.model.nursing_bedMonitors);
+            console.log(vm.model.bedMonitors);
         }
 
         function doSubmit() {
@@ -394,14 +394,10 @@
             //}
 
             if ($scope.theForm.$valid) {
-                if (vm.model.nursing_bedMonitors.length > vm.model.capacity) {
+                if (vm.model.bedMonitors.length > vm.model.capacity) {
                     vmh.alertWarning(vm.viewTranslatePath('MSG-OVER-CAPACITY'), true);
                     return;
                 }
-                // var nursing_bedMonitors = vm.model.nursing_bedMonitors;
-                // vm.model.nursing_bedMonitors = nursing_bedMonitors.map(function(o){
-                //    return {nursingBedMonitorId: o.id,bed_no: o.bed_no};
-                // });
                 vm.save();
             }
             else {

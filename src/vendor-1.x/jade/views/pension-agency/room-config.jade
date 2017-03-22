@@ -19,13 +19,13 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         .col-md-4
                             .tree.tree-basic(s-tree,s-tree-data="vm.treeDataPromiseOfNursingRobots",s-tree-height="300", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check'}",ng-model="vm.model.nursing_robots")
                     fieldset: .form-group
-                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NURSING_BED_MONITOR') | translate}}:
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-BED_MONITOR') | translate}}:
                         .col-md-4
-                            .tree.tree-basic(s-tree,s-tree-data="vm.treeDataPromiseOfNursingBedMonitors",s-tree-height="300", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check', selectNodeFormat:'object', nodeIdKey: 'nursingBedMonitorId'}",ng-model="vm.model.nursing_bedMonitors", on-check-change="vm.onNursingBedMonitorCheckChange(checkedNodes)")
+                            .tree.tree-basic(s-tree,s-tree-data="vm.treeDataPromiseOfBedMonitors",s-tree-height="300", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check', selectNodeFormat:'object', nodeIdKey: 'bedMonitorId'}",ng-model="vm.model.bedMonitors", on-check-change="vm.onBedMonitorCheckChange(checkedNodes)")
                         .col-md-6
                             .panel.panel-default.panel-grid
                                 .panel-heading-normal
-                                    a {{ vm.viewTranslatePath('TAB1-LABEL-NURSING_BED_MONITOR_TO_BED_NO') | translate}}
+                                    a {{ vm.viewTranslatePath('TAB1-LABEL-BED_MONITOR_TO_BED_NO') | translate}}
                                 table.grid.table.table-bordered.table-hover.table-striped
                                     thead
                                         tr
@@ -34,7 +34,7 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                                             th.text-center(width="50")
                                                 | 床位
                                     tbody
-                                        tr(ng-repeat="bedMonitor in vm.model.nursing_bedMonitors"  )
+                                        tr(ng-repeat="bedMonitor in vm.model.bedMonitors"  )
                                             td.text-left
                                                 span {{bedMonitor.name}}
                                             td.text-center

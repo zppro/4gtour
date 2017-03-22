@@ -419,7 +419,7 @@
         "TAB1-LABEL-ROBOT_STATUS": "机器人状态"
       }
     },
-    "nursing-bed-monitor": {
+    "bed-monitor": {
       "list": {
         "TITLE": "养老机构-基础设置-睡眠带-列表"
       },
@@ -478,8 +478,8 @@
         "TAB1": "配置信息",
         "TAB1-LABEL-NAME": "房间名称",
         "TAB1-LABEL-NURSING_ROBOT": "机器人",
-        "TAB1-LABEL-NURSING_BED_MONITOR": "睡眠带",
-        "TAB1-LABEL-NURSING_BED_MONITOR_TO_BED_NO": "睡眠带绑定床位",
+        "TAB1-LABEL-BED_MONITOR": "睡眠带",
+        "TAB1-LABEL-BED_MONITOR_TO_BED_NO": "睡眠带绑定床位",
         "TAB1-LABEL-CAPACITY": "床位数量",
         "MSG-OVER-CAPACITY": "睡眠带数量不能超过床位数量"
       }
