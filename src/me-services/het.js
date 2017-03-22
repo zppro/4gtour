@@ -30,9 +30,9 @@
                         console.log("regist reback");
                         if(member){
                             console.log("getToken");
-                            var token = yield app.nursing_bed_monitor_provider.getToken(member.open_id);
-                            var ret= yield app.nursing_bed_monitor_provider.userAuthenticate(member,token);
-                            var session_id = yield app.nursing_bed_monitor_provider.getSession(member.open_id)
+                            var token = yield app.bed_monitor_provider.getToken(member.open_id);
+                            var ret= yield app.bed_monitor_provider.userAuthenticate(member,token);
+                            var session_id = yield app.bed_monitor_provider.getSession(member.open_id)
                             console.log(session_id);
                             this.body = app.wrapper.res.default();
                         }
@@ -53,7 +53,7 @@
                  try {
                   console.log("body:");
                   console.log(this.request.body);
-                  this.body = yield app.bed_monitor_provider.addDevice(this.request.body);
+                  this.body = yield app.bed_monitor_provider.addDevice(this.request.body.deviceInfo,this.request.body.session);
               } catch (e) {
                 self.logger.error(e.message);
                 this.body = app.wrapper.res.error(e);
@@ -61,7 +61,25 @@
             yield next;
         };
     }
-}
+},
+                               {
+                                    method: 'sleepDevicews$updateDevice',
+                                    verb: 'post',
+                                    url: this.service_url_prefix + "/sleepDevicews$updateDevice",
+                                    handler: function (app, options) {
+                                        return function *(next) {
+                                                     try {
+                                                  console.log("body:");
+                                                   console.log(typeof(this.request.body.device));
+                                                                    this.body = yield app.bed_monitor_provider.updateDevice(this.request.body);
+                                                         } catch (e) {
+                                                    self.logger.error(e.message);
+                                                    this.body = app.wrapper.res.error(e);
+                                                        }
+                                                yield next;
+                                        };
+                                    }
+                             }
 ];
 return this;
 }
