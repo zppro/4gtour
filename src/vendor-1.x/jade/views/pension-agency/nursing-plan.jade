@@ -30,7 +30,7 @@
                             .btn-group.nursing-item-group(ng-if="vm.aggrData[row.trackedKey]['elderly']['id'] && vm.aggrData[row.trackedKey]['elderly']['nursing_level']", ng-repeat="nursingItem in vm.nursingItemMap[vm.aggrData[row.trackedKey]['elderly']['nursing_level']]")
                                 .checkbox.c-checkbox
                                     label
-                                        input(id="{{vm.aggrData[row.trackedKey]['elderly']['nursing_level'] + '$' +nursingItem.value}}",type='checkbox',ng-model="vm.service_items[vm.aggrData[row.trackedKey]['elderly']['nursing_level']][nursingItem.value]" ng-change="vm.serviceItemChecked(row.trackedKey, nursingItem.value)")
+                                        input(id="{{vm.aggrData[row.trackedKey]['elderly']['nursing_level'] + '$' +nursingItem.value}}",type='checkbox',ng-model="vm.nursing_items[vm.aggrData[row.trackedKey]['elderly']['nursing_level']][nursingItem.value]" ng-change="vm.serviceItemChecked(row.trackedKey, nursingItem.value)")
                                         span.fa.fa-check
                                 label(for="{{vm.aggrData[row.trackedKey]['elderly']['nursing_level'] + '$' +nursingItem.value}}") {{ nursingItem.name }}
                         td.text-center

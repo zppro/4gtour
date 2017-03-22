@@ -63,28 +63,28 @@
                 return nodes;
             });
 
-            vm.service_items = {};
+            vm.nursing_items = {};
             fetchNursingPlan();
         }
 
 
         function fetchNursingPlan() {
             console.log('parse nursingPlanItems:');
-            vmh.psnService.nursingPlansByRoom(vm.tenantId, ['name', 'sex', 'nursing_level'], ['elderlyId', 'service_items', 'remark']).then(function(data){
+            vmh.psnService.nursingPlansByRoom(vm.tenantId, ['name', 'sex', 'nursing_level'], ['elderlyId', 'nursing_items', 'remark']).then(function(data){
                 vm.aggrData = data;
                 for(var trackedKey in vm.aggrData) {
                     vm.$editings[trackedKey] = {};
                     var key = vm.aggrData[trackedKey]['elderly']['nursing_level'];
                     if (key) {
-                        if (!vm.service_items[key]) {
-                            vm.service_items[key] = {};
+                        if (!vm.nursing_items[key]) {
+                            vm.nursing_items[key] = {};
                         }
                         var nursingPlan = vm.aggrData[trackedKey]['nursing_plan'];
                         if (vm.aggrData[trackedKey]['nursing_plan']) {
-                            var service_items = vm.aggrData[trackedKey]['nursing_plan']['service_items'];
-                            if (service_items) {
-                                for (var i = 0, len = service_items.length; i < len; i++) {
-                                    vm.service_items[key][service_items[i]] = true;
+                            var nursing_items = vm.aggrData[trackedKey]['nursing_plan']['nursing_items'];
+                            if (nursing_items) {
+                                for (var i = 0, len = nursing_items.length; i < len; i++) {
+                                    vm.nursing_items[key][nursing_items[i]] = true;
                                 }
                             }
                         }
@@ -125,9 +125,9 @@
 
         function serviceItemChecked (trackedKey, nursingItemId) {
             var elderlyId = vm.aggrData[trackedKey]['elderly'].id;
-            var nursing_item_check_info = { id: nursingItemId, checked: vm.service_items[vm.aggrData[trackedKey]['elderly']['nursing_level']][nursingItemId]};
+            var nursing_item_check_info = { id: nursingItemId, checked: vm.nursing_items[vm.aggrData[trackedKey]['elderly']['nursing_level']][nursingItemId]};
             // console.log('serviceItemChecked:',nursingItemId, nursing_item_check_info);
-            vmh.psnService.nursingPlanSave(vm.tenantId, elderlyId, nursing_item_check_info);
+            vmh.psnService.nursingPlanSaveNursingItem(vm.tenantId, elderlyId, nursing_item_check_info);
         }
 
         function setNursingPlanRemark (trackedKey) {
@@ -135,8 +135,11 @@
         }
 
         function saveNursingPlanRemark (trackedKey, remark) {
-            console.log('saveNursingPlanRemark=>', trackedKey, remark);
-
+            var elderlyId = vm.aggrData[trackedKey]['elderly'].id;
+            vmh.psnService.nursingPlanSaveRemark(vm.tenantId, elderlyId, remark).then(function(data){
+                vm.aggrData[trackedKey]['nursing_plan']['remark'] = remark;
+                vm.$editings[trackedKey]['remark'] = false;
+            });;
         }
 
         function cancelNursingPlanRemark (trackedKey) {

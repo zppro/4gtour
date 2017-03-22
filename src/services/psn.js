@@ -4211,9 +4211,9 @@ module.exports = {
                 }
             },
             {
-                method: 'nursingPlanSave',
+                method: 'nursingPlanSaveNursingItem',
                 verb: 'post',
-                url: this.service_url_prefix + "/nursingPlanSave", //为老人保存一条护理项目
+                url: this.service_url_prefix + "/nursingPlanSaveNursingItem", //为老人保存一条护理项目
                 handler: function (app, options) {
                     return function * (next) {
                         var tenant, elderly, nursingPlan;
@@ -4240,7 +4240,7 @@ module.exports = {
 
 
                             var elderlyNursingPlan = yield app.modelFactory().model_one(app.models['psn_nursingPlan'],{
-                                select: 'service_items',
+                                select: 'nursing_items',
                                 where: {
                                     status: 1,
                                     elderlyId: elderlyId,
@@ -4253,27 +4253,86 @@ module.exports = {
                                     yield app.modelFactory().model_create(app.models['psn_nursingPlan'],{
                                         elderlyId: elderlyId,
                                         elderly_name: elderly.name,
-                                        service_items: [toProcessNursingItemId],
+                                        nursing_items: [toProcessNursingItemId],
                                         tenantId: elderly.tenantId
                                     });
                                 }
                             } else {
-                                var serviceItems = elderlyNursingPlan.service_items;
-                                var index = app._.findIndex(serviceItems, (o) => {
+                                var nursingItems = elderlyNursingPlan.nursing_items;
+                                var index = app._.findIndex(nursingItems, (o) => {
                                     return o == toProcessNursingItemId;
                                 });
                                 if (!isRemoved) {
                                     // 加入
                                     if (index == -1) {
-                                        serviceItems.push(toProcessNursingItemId);
+                                        nursingItems.push(toProcessNursingItemId);
                                     }
                                 } else {
                                     if (index != -1) {
-                                        serviceItems.splice(index, 1);
+                                        nursingItems.splice(index, 1);
                                     }
                                 }
 
-                                elderlyNursingPlan.service_items = serviceItems;
+                                elderlyNursingPlan.nursing_items = nursingItems;
+
+                                yield elderlyNursingPlan.save();
+                            }
+
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'nursingPlanSaveRemark',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingPlanSaveRemark", //为老人保存一条护理项目
+                handler: function (app, options) {
+                    return function * (next) {
+                        var tenant, elderly, nursingPlan;
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            var elderlyId = this.request.body.elderlyId;
+                            elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
+                            if(!elderly || elderly.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到老人!'});
+                                yield next;
+                                return;
+                            }
+
+                            var remark = this.request.body.remark;  
+                            var elderlyNursingPlan = yield app.modelFactory().model_one(app.models['psn_nursingPlan'],{
+                                select: 'remark',
+                                where: {
+                                    status: 1,
+                                    elderlyId: elderlyId,
+                                    tenantId: tenantId
+                                }
+                            });
+
+                            if (!elderlyNursingPlan) {
+                                yield app.modelFactory().model_create(app.models['psn_nursingPlan'],{
+                                    elderlyId: elderlyId,
+                                    elderly_name: elderly.name,
+                                    remark: remark,
+                                    tenantId: elderly.tenantId
+                                });
+                            } else {
+                                 
+                                elderlyNursingPlan.remark = remark;
 
                                 yield elderlyNursingPlan.save();
                             }

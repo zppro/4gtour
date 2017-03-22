@@ -21,7 +21,7 @@ module.exports = function(ctx,name) {
             status: {type: Number, min: 0, max: 1, default: 1},
             elderlyId: {type: mongoose.Schema.Types.ObjectId, ref: 'psn_elderly'},
             elderly_name: {type: String},
-            service_items: [{type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3012"])}],
+            nursing_items: [{type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3012"])}],
             remark: {type: String,maxLength:200},
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {
