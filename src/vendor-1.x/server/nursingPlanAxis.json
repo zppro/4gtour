@@ -20,8 +20,8 @@
     "width": "120"
   },
   {
-    "_id": "nursing_items",
-    "name": "服务项目",
+    "_id": "nursing_catalogs",
+    "name": "护理类目",
     "width": "300"
   },
   {

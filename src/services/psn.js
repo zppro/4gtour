@@ -4211,9 +4211,9 @@ module.exports = {
                 }
             },
             {
-                method: 'nursingPlanSaveNursingItem',
+                method: 'nursingPlanSaveNursingCatalog',
                 verb: 'post',
-                url: this.service_url_prefix + "/nursingPlanSaveNursingItem", //为老人保存一条护理项目
+                url: this.service_url_prefix + "/nursingPlanSaveNursingCatalog", //为老人保存一条护理类目
                 handler: function (app, options) {
                     return function * (next) {
                         var tenant, elderly, nursingPlan;
@@ -4234,13 +4234,13 @@ module.exports = {
                                 return;
                             }
 
-                            var nursingItemCheckInfo = this.request.body.nursing_item_check_info;
-                            var toProcessNursingItemId = nursingItemCheckInfo.id;
-                            var isRemoved = !nursingItemCheckInfo.checked;
+                            var nursingCatalogCheckInfo = this.request.body.nursing_catalog_check_info;
+                            var toProcessNursingCatalogId = nursingCatalogCheckInfo.id;
+                            var isRemoved = !nursingCatalogCheckInfo.checked;
 
 
                             var elderlyNursingPlan = yield app.modelFactory().model_one(app.models['psn_nursingPlan'],{
-                                select: 'nursing_items',
+                                select: 'nursing_catalogs',
                                 where: {
                                     status: 1,
                                     elderlyId: elderlyId,
@@ -4253,27 +4253,27 @@ module.exports = {
                                     yield app.modelFactory().model_create(app.models['psn_nursingPlan'],{
                                         elderlyId: elderlyId,
                                         elderly_name: elderly.name,
-                                        nursing_items: [toProcessNursingItemId],
+                                        nursing_catalogs: [toProcessNursingCatalogId],
                                         tenantId: elderly.tenantId
                                     });
                                 }
                             } else {
-                                var nursingItems = elderlyNursingPlan.nursing_items;
-                                var index = app._.findIndex(nursingItems, (o) => {
-                                    return o == toProcessNursingItemId;
+                                var nursingCatalogs = elderlyNursingPlan.nursing_catalogs;
+                                var index = app._.findIndex(nursingCatalogs, (o) => {
+                                    return o == toProcessNursingCatalogId;
                                 });
                                 if (!isRemoved) {
                                     // 加入
                                     if (index == -1) {
-                                        nursingItems.push(toProcessNursingItemId);
+                                        nursingCatalogs.push(toProcessNursingCatalogId);
                                     }
                                 } else {
                                     if (index != -1) {
-                                        nursingItems.splice(index, 1);
+                                        nursingCatalogs.splice(index, 1);
                                     }
                                 }
 
-                                elderlyNursingPlan.nursing_items = nursingItems;
+                                elderlyNursingPlan.nursing_catalogs = nursingCatalogs;
 
                                 yield elderlyNursingPlan.save();
                             }
