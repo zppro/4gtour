@@ -20,9 +20,11 @@ module.exports = function(ctx,name) {
             open_id: {type: String},//针对微信
             union_id: {type: String},//针对微信
             name: {type: String, required: true}, // 对外部的member_name
-            passhash: {type: String, required: true}, //密码hash
+            passhash: {type: String, required: true}, //密码hash       
+            head_portrait:  {type: String}, // 对外部的  member_head_portrait
             sync_flag_hzfanweng: {type: Boolean, default: false},//is success
-            head_portrait:  {type: String} // 对外部的  member_head_portrait
+            session_id_hzfanweng:{type:String}
+
         });
 
         memberSchema.pre('update', function (next) {
