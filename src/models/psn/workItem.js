@@ -4,6 +4,8 @@
  */
 var mongoose = require('mongoose');
 var D3012 = require('../../pre-defined/dictionary.json')['D3012'];
+var D0103 = require('../../pre-defined/dictionary.json')['D0103'];
+var D0104 = require('../../pre-defined/dictionary.json')['D0104'];
 
 module.isloaded = false;
 
@@ -23,8 +25,14 @@ module.exports = function(ctx,name) {
             nursing_catalog: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3012"])},
             name: {type: String, required: true, maxlength: 100},
             description: {type: String,maxLength:200},
-            needConfirm: {type: Boolean, default: false}, // 需要护工确认
-            repeatType: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3012"])},
+            repeat_type: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D0103"])},
+            repeat_values: [{type: Number, min: 0, max: 365, default: 0}],
+            repeat_start: {type: String, minlength: 1, maxlength: 5, default: '*'},
+            duration: {type: Number, default: 0}, // 完成时长 单为分
+            confirm_flag: {type: Boolean, default: false}, // 需要护工确认标识
+            remind_flag: {type: Boolean, default: false}, // 需要提醒标识
+            remind_type: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D0104"])},
+            remind_times: {type: Number}, // 提醒次数
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {
             toObject: {
@@ -38,6 +46,20 @@ module.exports = function(ctx,name) {
         workItemSchema.virtual('nursing_catalog_name').get(function () {
             if (this.nursing_catalog) {
                 return D3012[this.nursing_catalog].name;
+            }
+            return '';
+        });
+
+        workItemSchema.virtual('repeat_type_name').get(function () {
+            if (this.repeat_type) {
+                return D0103[this.repeat_type].name;
+            }
+            return '';
+        });
+
+        workItemSchema.virtual('remind_type_name').get(function () {
+            if (this.remind_type) {
+                return D0104[this.remind_type].name;
             }
             return '';
         });
