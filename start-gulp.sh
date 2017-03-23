@@ -1,5 +1,5 @@
 #!/bin/sh
-cd ~/github/4gtour/
+cd /桌面/git-repository/4gtour-repository/4gtour/
 
 if [ $1 == "vendor-1.x" ]
     then
