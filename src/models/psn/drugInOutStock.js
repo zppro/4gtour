@@ -20,9 +20,9 @@ module.exports = function(ctx,name) {
             elderId:{type: mongoose.Schema.Types.ObjectId,required: true,ref:'psn_elderly'},//关联老人
             drugId:{type: mongoose.Schema.Types.ObjectId,required: true,ref:'psn_drug'},//关联药品
             in_out_no:{type: String},//出入库单号
-            type:{type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3006"])},//出入库类别
+            type:{type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3014"])},//出入库类别
             in_out_quantity:{type:Number},//出入库数量
-            unit:{type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3006"])},//包装单位
+            unit:{type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3013"])},//包装单位
             tenantId: {type: mongoose.Schema.Types.ObjectId,required: true,ref:'pub_tenant'}//关联机构
         }, {
             toObject: {
