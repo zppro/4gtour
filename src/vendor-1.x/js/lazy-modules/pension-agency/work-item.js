@@ -72,11 +72,10 @@
             ]).then(function (results) {
                 vm.selectBinding.nursingCatalogs = results[0];
                 vm.selectBinding.repeatTypes = results[1];
-                vm.selectBinding.remindTypes = results[2];
+                vm.selectBinding.remindModes = results[2];
             });
 
             vm.load();
-
         }
 
         function doSubmit() {

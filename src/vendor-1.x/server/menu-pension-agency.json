@@ -218,6 +218,11 @@
         "sref": "app.pension-agency.district.list"
       },
       {
+        "_id": "menu.pension-agency.NURSING-LEVEL",
+        "name": "护理等级",
+        "sref": "app.pension-agency.nursing-level.list"
+      },
+      {
         "_id": "menu.pension-agency.CHARGE-STANDARD",
         "name": "收费标准",
         "sref": "app.pension-agency.charge-standard"
