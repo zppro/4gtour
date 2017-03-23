@@ -1,7 +1,7 @@
 /**
  * Created by hcl on 17-3-14.
  */
-module.exports = {
+ module.exports = {
     init: function (option) {
         var self = this;
         this.file = __filename;
@@ -19,237 +19,49 @@ module.exports = {
         }
 
         this.actions=[
-            {
-                method: 'sleepUser$regist',
-                verb: 'post',
-                url: this.service_url_prefix + "/sleepUser$regist",
-                handler: function (app, options) {
-                    return function *(next) {
-                        try {
-                            var member = yield app.nursing_bed_monitor_provider.regist(this.request.body.session,this.request.body.userInfo);
-                            console.log("regist reback");
-                            if(member){
-                                    console.log("getToken");
-                                    var token = yield app.nursing_bed_monitor_provider.getToken(member.open_id);
-                                    var ret= yield app.nursing_bed_monitor_provider.userAuthenticate(member,token);
-                                    var session_id = yield app.nursing_bed_monitor_provider.getSession(member.open_id)
-                                    console.log(session_id);
-                                    this.body = app.wrapper.res.default();
-                            }
-                        } catch (e) {
-                            self.logger.error(e.message);
-                            this.body = app.wrapper.res.error(e);
-                        }
-                        yield next;
-                    };
-                }
-            },
-             {
-                method: 'sleepUser$userAuthenticate',
-                verb: 'post',
-                url: this.service_url_prefix + "/sleepUser$userAuthenticate",
-                handler: function (app, options) {
-                    return function *(next) {
-                        try {
-                            this.body = yield app.nursing_bed_monitor_provider.userAuthenticate(this.request.body);
-                        } catch (e) {
-                            self.logger.error(e.message);
-                            this.body = app.wrapper.res.error(e);
-                        }
-                        yield next;
-                    };
-                 }
-               },
-               {
-                        method: 'sleepUser$userLogOut',
-                        verb: 'post',
-                        url: this.service_url_prefix + "/sleepUser$userLogOut",
-                        handler: function (app, options) {
-                            return function *(next) {
-                                try {
-                                    this.body = yield app.nursing_bed_monitor_provider.userLogOut(this.request.body);
-                                } catch (e) {
-                                    self.logger.error(e.message);
-                                    this.body = app.wrapper.res.error(e);
-                                }
-                                yield next;
-                            };
-                         }
-               },
-    {
-               method: 'sleepUser$updateUserPassword',
-               verb: 'post',
-               url: this.service_url_prefix + "/sleepUser$updateUserPassword",
-               handler: function (app, options) {
+        {
+            method: 'sleepUser$regist',//regist useing
+            verb: 'post',
+            url: this.service_url_prefix + "/sleepUser$regist",
+            handler: function (app, options) {
                 return function *(next) {
                     try {
-                            this.body = yield app.nursing_bed_monitor_provider.userLogOut(this.request.body);
-                     } catch (e) {
-                            self.logger.error(e.message);
-                            this.body = app.wrapper.res.error(e);
-                     }
-                        yield next;
-                    };
-             }
-     },
-    {
-        method: 'sleepUser$getUserDetail',
-        verb: 'post',
-        url: this.service_url_prefix + "/sleepUser$getUserDetail",
-        handler: function (app, options) {
-            return function *(next) {
-                          try {
-                            this.body = yield app.nursing_bed_monitor_provider.getUserDetail(this.request.body);
-                 } catch (e) {
-                            self.logger.error(e.message);
-                            this.body = app.wrapper.res.error(e);
-                 }
-                        yield next;
-            };
-        }
-    },
-        {
-            method: 'sleepUser$updateUserDetail',
-            verb: 'post',
-            url: this.service_url_prefix + "/sleepUser$updateUserDetail",
-            handler: function (app, options) {
-                return function *(next) {
-                        try {
-                            this.body = yield app.nursing_bed_monitor_provider.updateUserDetail(this.request.body);
-                        } catch (e) {
-                            self.logger.error(e.message);
-                            this.body = app.wrapper.res.error(e);
+                        var member = yield app.bed_monitor_provider.regist(this.request.body.session,this.request.body.userInfo);
+                        console.log("regist reback");
+                        if(member){
+                            console.log("getToken");
+                            var token = yield app.bed_monitor_provider.getToken(member.open_id);
+                            var ret= yield app.bed_monitor_provider.userAuthenticate(member,token);
+                            var session_id = yield app.bed_monitor_provider.getSession(member.open_id)
+                            console.log(session_id);
+                            this.body = app.wrapper.res.default();
                         }
-                        yield next;
-                 };
-            }
-         },
-        {
-            method: 'sleepUser$sessionIsExpired',
-            verb: 'post',
-            url: this.service_url_prefix + "/sleepUser$sessionIsExpired",
-            handler: function (app, options) {
-                         return function *(next) {
-                        try {
-                           console.log("body:");
-                           console.log(this.request.body);
-                            this.body = yield app.nursing_bed_monitor_provider.sessionIsExpired(this.request.body);
-                        } catch (e) {
-                            self.logger.error(e.message);
-                            this.body = app.wrapper.res.error(e);
-                        }
-                        yield next;
-                    };
-                 }
-         },
-        {
-            method: 'sleepUser$submitFeedback',
-            verb: 'post',
-            url: this.service_url_prefix + "/sleepUser$submitFeedback",
-            handler: function (app, options) {
-                return function *(next) {
-                             try {
-                          console.log("body:");
-                           console.log(this.request.body);
-                                            this.body = yield app.nursing_bed_monitor_provider.submitFeedback(this.request.body);
-                                 } catch (e) {
-                            self.logger.error(e.message);
-                            this.body = app.wrapper.res.error(e);
-                                }
-                        yield next;
+                    } catch (e) {
+                        self.logger.error(e.message);
+                        this.body = app.wrapper.res.error(e);
+                    }
+                    yield next;
                 };
             }
-         },
-                            {
-                                method: 'sleepConcernPerson$getConcernPerson',
-                                verb: 'post',
-                                url: this.service_url_prefix + "/sleepConcernPerson$getConcernPerson",
-                                handler: function (app, options) {
-                                    return function *(next) {
-                                                 try {
-                                              console.log("body:");
-                                               console.log(this.request.body);
-                                                                this.body = yield app.nursing_bed_monitor_provider.getConcernPerson(this.request.body);
-                                                     } catch (e) {
-                                                self.logger.error(e.message);
-                                                this.body = app.wrapper.res.error(e);
-                                                    }
-                                            yield next;
-                                    };
-                                }
-                             },
-                               {
-                                method: 'sleepConcernPerson$updateConcernPerson',
-                                verb: 'post',
-                                url: this.service_url_prefix + "/sleepConcernPerson$updateConcernPerson",
-                                handler: function (app, options) {
-                                    return function *(next) {
-                                                 try {
-                                              console.log("body:");
-                                               console.log(this.request.body);
-                                                                this.body = yield app.nursing_bed_monitor_provider.updateConcernPerson(this.request.body);
-                                                     } catch (e) {
-                                                self.logger.error(e.message);
-                                                this.body = app.wrapper.res.error(e);
-                                                    }
-                                            yield next;
-                                    };
-                                }
-                             },
-                               {
-                                method: 'sleepConcernPerson$getCpAttachedDev',
-                                verb: 'post',
-                                url: this.service_url_prefix + "/sleepConcernPerson$getCpAttachedDev",
-                                handler: function (app, options) {
-                                    return function *(next) {
-                                                 try {
-                                              console.log("body:");
-                                               console.log(this.request.body);
-                                                                this.body = yield app.nursing_bed_monitor_provider.getCpAttachedDev(this.request.body.sessionId,this.request.body.cpId);
-                                                     } catch (e) {
-                                                self.logger.error(e.message);
-                                                this.body = app.wrapper.res.error(e);
-                                                    }
-                                            yield next;
-                                    };
-                                }
-                             },
-                               {
-                                        method: 'sleepConcernPerson$updateConcernPersonParam',
-                                        verb: 'post',
-                                        url: this.service_url_prefix + "/sleepConcernPerson$updateConcernPersonParam",
-                                        handler: function (app, options) {
-                                            return function *(next) {
-                                                         try {
-                                                      console.log("body:");
-                                                       console.log(this.request.body);
-                                                                        this.body = yield app.nursing_bed_monitor_provider.updateConcernPersonParam(this.request.body);
-                                                             } catch (e) {
-                                                        self.logger.error(e.message);
-                                                        this.body = app.wrapper.res.error(e);
-                                                            }
-                                                    yield next;
-                                            };
-                                        }
-                             },
-                               {
-                                        method: 'sleepDevicews$updateDeviceAttachState',
-                                        verb: 'post',
-                                        url: this.service_url_prefix + "/sleepDevicews$updateDeviceAttachState",
-                                        handler: function (app, options) {
-                                            return function *(next) {
-                                                         try {
-                                                      console.log("body:");
-                                                       console.log(this.request.body);
-                                                                        this.body = yield app.nursing_bed_monitor_provider.updateDeviceAttachState(this.request.body);
-                                                             } catch (e) {
-                                                        self.logger.error(e.message);
-                                                        this.body = app.wrapper.res.error(e);
-                                                            }
-                                                    yield next;
-                                            };
-                                        }
-                             },
+        },
+        {
+            method: 'sleepDevicews$addDevice',
+            verb: 'post',
+            url: this.service_url_prefix + "/sleepDevicews$addDevice",
+            handler: function (app, options) {
+                return function *(next) {
+                 try {
+                  console.log("body:");
+                  console.log(this.request.body);
+                  this.body = yield app.bed_monitor_provider.addDevice(this.request.body.deviceInfo,this.request.body.session);
+              } catch (e) {
+                self.logger.error(e.message);
+                this.body = app.wrapper.res.error(e);
+            }
+            yield next;
+        };
+    }
+},
                                {
                                     method: 'sleepDevicews$updateDevice',
                                     verb: 'post',
@@ -258,8 +70,8 @@ module.exports = {
                                         return function *(next) {
                                                      try {
                                                   console.log("body:");
-                                                   console.log(this.request.body);
-                                                                    this.body = yield app.nursing_bed_monitor_provider.updateDevice(this.request.body);
+                                                   console.log(typeof(this.request.body.device));
+                                                                    this.body = yield app.bed_monitor_provider.updateDevice(this.request.body);
                                                          } catch (e) {
                                                     self.logger.error(e.message);
                                                     this.body = app.wrapper.res.error(e);
@@ -267,116 +79,8 @@ module.exports = {
                                                 yield next;
                                         };
                                     }
-                             },
-                               {
-                                method: 'sleepDevicews$getManufactDev',
-                                verb: 'post',
-                                url: this.service_url_prefix + "/sleepDevicews$getManufactDev",
-                                handler: function (app, options) {
-                                    return function *(next) {
-                                                 try {
-                                              console.log("body:");
-                                               console.log(this.request.body);
-                                                                this.body = yield app.nursing_bed_monitor_provider.getManufactDev(this.request.body);
-                                                     } catch (e) {
-                                                self.logger.error(e.message);
-                                                this.body = app.wrapper.res.error(e);
-                                                    }
-                                            yield next;
-                                    };
-                                }
-                             },
-                               {
-                                method: 'sleepDevicews$getDevListByType',
-                                verb: 'post',
-                                url: this.service_url_prefix + "/sleepDevicews$getDevListByType",
-                                handler: function (app, options) {
-                                    return function *(next) {
-                                                 try {
-                                              console.log("body:");
-                                               console.log(this.request.body);
-                                                                this.body = yield app.nursing_bed_monitor_provider.getDevListByType(this.request.body);
-                                                     } catch (e) {
-                                                self.logger.error(e.message);
-                                                this.body = app.wrapper.res.error(e);
-                                                    }
-                                            yield next;
-                                    };
-                                }
-                             },
-                               {
-                                method: 'sleepDevicews$getAllDevInfoList',
-                                verb: 'post',
-                                url: this.service_url_prefix + "/sleepDevicews$getAllDevInfoList",
-                                handler: function (app, options) {
-                                    return function *(next) {
-                                                 try {
-                                              console.log("body:");
-                                               console.log(this.request.body);
-                                                                this.body = yield app.nursing_bed_monitor_provider.getAllDevInfoList(this.request.body);
-                                                     } catch (e) {
-                                                self.logger.error(e.message);
-                                                this.body = app.wrapper.res.error(e);
-                                                    }
-                                            yield next;
-                                    };
-                                }
-                             },
-                               {
-                                method: 'sleepDevicews$getUserCpDevList',
-                                verb: 'post',
-                                url: this.service_url_prefix + "/sleepDevicews$getUserCpDevList",
-                                handler: function (app, options) {
-                                    return function *(next) {
-                                                 try {
-                                              console.log("body:");
-                                               console.log(this.request.body);
-                                                                this.body = yield app.nursing_bed_monitor_provider.getUserCpDevList(this.request.body);
-                                                     } catch (e) {
-                                                self.logger.error(e.message);
-                                                this.body = app.wrapper.res.error(e);
-                                                    }
-                                            yield next;
-                                    };
-                                }
-                             },
-                               {
-                                method: 'sleepDevicews$getDevAlarmSetting',
-                                verb: 'post',
-                                url: this.service_url_prefix + "/sleepDevicews$getDevAlarmSetting",
-                                handler: function (app, options) {
-                                    return function *(next) {
-                                                 try {
-                                              console.log("body:");
-                                               console.log(this.request.body);
-                                                                this.body = yield app.nursing_bed_monitor_provider.getDevAlarmSetting(this.request.body);
-                                                     } catch (e) {
-                                                self.logger.error(e.message);
-                                                this.body = app.wrapper.res.error(e);
-                                                    }
-                                            yield next;
-                                    };
-                                }
-                             },
-                               {
-                                method: 'sleepDevicews$updateDevAlarmSetting',
-                                verb: 'post',
-                                url: this.service_url_prefix + "/sleepDevicews$updateDevAlarmSetting",
-                                handler: function (app, options) {
-                                    return function *(next) {
-                                                 try {
-                                              console.log("body:");
-                                               console.log(this.request.body);
-                                                                this.body = yield app.nursing_bed_monitor_provider.updateDevAlarmSetting(this.request.body);
-                                                     } catch (e) {
-                                                self.logger.error(e.message);
-                                                this.body = app.wrapper.res.error(e);
-                                                    }
-                                            yield next;
-                                    };
-                                }
                              }
-            ];
-        return this;
-    }
+];
+return this;
+}
 }.init();

@@ -2373,13 +2373,13 @@ module.exports = {
             },
             /**********************房间配置相关*****************************/
             {
-                method: 'nursingRobotRemoveRoomConfig',
+                method: 'robotRemoveRoomConfig',
                 verb: 'post',
-                url: this.service_url_prefix + "/nursingRobotRemoveRoomConfig",
+                url: this.service_url_prefix + "/robotRemoveRoomConfig",
                 handler: function (app, options) {
                     return function * (next) {
                         var steps;
-                        var tenant,robot,rooms,room,nursing_robots;
+                        var tenant,robot,rooms,room,robots;
                         try {
                             //this.request.body
                             var tenantId = this.request.body.tenantId;
@@ -2392,7 +2392,7 @@ module.exports = {
                                 return;
                             }
 
-                            robot =  yield app.modelFactory().model_read(app.models['psn_nursingRobot'], robotId);
+                            robot =  yield app.modelFactory().model_read(app.models['pub_robot'], robotId);
                             if(!robot || robot.status == 0 ){
                                 this.body = app.wrapper.res.error({message: '无法找到机器人!'});
                                 yield next;
@@ -2401,7 +2401,7 @@ module.exports = {
 
                             rooms = yield app.modelFactory().model_query(app.models['psn_room'], {
                                 where:{
-                                    nursing_robots: {$elemMatch:{$eq: robotId}},
+                                    robots: {$elemMatch:{$eq: robotId}},
                                     tenantId: tenantId
                                 }
                             });
@@ -2416,17 +2416,17 @@ module.exports = {
 
                             for (var i=0, len=rooms.length;i<len;i++) {
                                 room = rooms[i];
-                                nursing_robots = room.toObject().nursing_robots;
-                                var inIndex = nursing_robots.findIndex((o) => {
+                                robots = room.toObject().robots;
+                                var inIndex = robots.findIndex((o) => {
                                     return o == robotId
                                 });
 
                                 if(inIndex != -1) {
-                                    nursing_robots.splice(inIndex, 1);
+                                    robots.splice(inIndex, 1);
                                 }
                                 console.log(inIndex)
-                                room.nursing_robots =  nursing_robots;
-                                console.log(room.nursing_robots)
+                                room.robots =  robots;
+                                console.log(room.robots)
                                 yield room.save();
                             }
 
@@ -2442,13 +2442,13 @@ module.exports = {
                 }
             },
             {
-                method: 'nursingBedMonitorRemoveRoomConfig',
+                method: 'bedMonitorRemoveRoomConfig',
                 verb: 'post',
-                url: this.service_url_prefix + "/nursingBedMonitorRemoveRoomConfig",
+                url: this.service_url_prefix + "/bedMonitorRemoveRoomConfig",
                 handler: function (app, options) {
                     return function * (next) {
                         var steps;
-                        var tenant,bedMonitor,rooms,room,nursing_bedMonitors;
+                        var tenant,bedMonitor,rooms,room,bedMonitors;
                         try {
                             //this.request.body
                             var tenantId = this.request.body.tenantId;
@@ -2461,7 +2461,7 @@ module.exports = {
                                 return;
                             }
 
-                            bedMonitor =  yield app.modelFactory().model_read(app.models['psn_nursingBedMonitor'], bedMonitorId);
+                            bedMonitor =  yield app.modelFactory().model_read(app.models['pub_bedMonitor'], bedMonitorId);
                             if(!bedMonitor || bedMonitor.status == 0 ){
                                 this.body = app.wrapper.res.error({message: '无法找到睡眠带!'});
                                 yield next;
@@ -2470,7 +2470,7 @@ module.exports = {
 
                             rooms = yield app.modelFactory().model_query(app.models['psn_room'], {
                                 where:{
-                                    "nursing_bedMonitors.nursingBedMonitorId": bedMonitorId, // nursing_bedMonitors: {$elemMatch:{nursingBedMonitorId: bedMonitorId}},
+                                    "bedMonitors.bedMonitorId": bedMonitorId, // bedMonitors: {$elemMatch:{bedMonitorId: bedMonitorId}},
                                     tenantId: tenantId
                                 }
                             });
@@ -2486,15 +2486,15 @@ module.exports = {
                             console.log('前置检查完成');
                             for (var i=0, len=rooms.length;i<len;i++) {
                                 room = rooms[i];
-                                nursing_bedMonitors = room.toObject().nursing_bedMonitors;
-                                var inIndex = nursing_bedMonitors.findIndex((o) => {
-                                    return o.nursingBedMonitorId == bedMonitorId
+                                bedMonitors = room.toObject().bedMonitors;
+                                var inIndex = bedMonitors.findIndex((o) => {
+                                    return o.bedMonitorId == bedMonitorId
                                 });
 
                                 if(inIndex != -1) {
-                                    nursing_bedMonitors.splice(inIndex, 1);
+                                    bedMonitors.splice(inIndex, 1);
                                 }
-                                room.nursing_bedMonitors =  nursing_bedMonitors;
+                                room.bedMonitors =  bedMonitors;
                                 yield room.save();
                             }
 
@@ -4211,9 +4211,9 @@ module.exports = {
                 }
             },
             {
-                method: 'nursingPlanSave',
+                method: 'nursingPlanSaveNursingCatalog',
                 verb: 'post',
-                url: this.service_url_prefix + "/nursingPlanSave", //为老人保存一条护理项目
+                url: this.service_url_prefix + "/nursingPlanSaveNursingCatalog", //为老人保存一条护理类目
                 handler: function (app, options) {
                     return function * (next) {
                         var tenant, elderly, nursingPlan;
@@ -4234,13 +4234,13 @@ module.exports = {
                                 return;
                             }
 
-                            var nursingItemCheckInfo = this.request.body.nursing_item_check_info;
-                            var toProcessNursingItemId = nursingItemCheckInfo.id;
-                            var isRemoved = !nursingItemCheckInfo.checked;
+                            var nursingCatalogCheckInfo = this.request.body.nursing_catalog_check_info;
+                            var toProcessNursingCatalogId = nursingCatalogCheckInfo.id;
+                            var isRemoved = !nursingCatalogCheckInfo.checked;
 
 
                             var elderlyNursingPlan = yield app.modelFactory().model_one(app.models['psn_nursingPlan'],{
-                                select: 'service_items',
+                                select: 'nursing_catalogs',
                                 where: {
                                     status: 1,
                                     elderlyId: elderlyId,
@@ -4253,27 +4253,86 @@ module.exports = {
                                     yield app.modelFactory().model_create(app.models['psn_nursingPlan'],{
                                         elderlyId: elderlyId,
                                         elderly_name: elderly.name,
-                                        service_items: [toProcessNursingItemId],
+                                        nursing_catalogs: [toProcessNursingCatalogId],
                                         tenantId: elderly.tenantId
                                     });
                                 }
                             } else {
-                                var serviceItems = elderlyNursingPlan.service_items;
-                                var index = app._.findIndex(serviceItems, (o) => {
-                                    return o == toProcessNursingItemId;
+                                var nursingCatalogs = elderlyNursingPlan.nursing_catalogs;
+                                var index = app._.findIndex(nursingCatalogs, (o) => {
+                                    return o == toProcessNursingCatalogId;
                                 });
                                 if (!isRemoved) {
                                     // 加入
                                     if (index == -1) {
-                                        serviceItems.push(toProcessNursingItemId);
+                                        nursingCatalogs.push(toProcessNursingCatalogId);
                                     }
                                 } else {
                                     if (index != -1) {
-                                        serviceItems.splice(index, 1);
+                                        nursingCatalogs.splice(index, 1);
                                     }
                                 }
 
-                                elderlyNursingPlan.service_items = serviceItems;
+                                elderlyNursingPlan.nursing_catalogs = nursingCatalogs;
+
+                                yield elderlyNursingPlan.save();
+                            }
+
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'nursingPlanSaveRemark',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingPlanSaveRemark", //为老人保存一条护理项目
+                handler: function (app, options) {
+                    return function * (next) {
+                        var tenant, elderly, nursingPlan;
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            var elderlyId = this.request.body.elderlyId;
+                            elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
+                            if(!elderly || elderly.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到老人!'});
+                                yield next;
+                                return;
+                            }
+
+                            var remark = this.request.body.remark;  
+                            var elderlyNursingPlan = yield app.modelFactory().model_one(app.models['psn_nursingPlan'],{
+                                select: 'remark',
+                                where: {
+                                    status: 1,
+                                    elderlyId: elderlyId,
+                                    tenantId: tenantId
+                                }
+                            });
+
+                            if (!elderlyNursingPlan) {
+                                yield app.modelFactory().model_create(app.models['psn_nursingPlan'],{
+                                    elderlyId: elderlyId,
+                                    elderly_name: elderly.name,
+                                    remark: remark,
+                                    tenantId: elderly.tenantId
+                                });
+                            } else {
+                                 
+                                elderlyNursingPlan.remark = remark;
 
                                 yield elderlyNursingPlan.save();
                             }

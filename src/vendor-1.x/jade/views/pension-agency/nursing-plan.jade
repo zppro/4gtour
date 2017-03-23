@@ -27,12 +27,12 @@
                                     a.btn.btn-primary.btn-xs(title="{{'button.CANCEL'|translate}}",ng-click="vm.cancelElderlyEditing(row.trackedKey)")
                                         i.glyphicon.glyphicon-remove-sign
                         td
-                            .btn-group.nursing-item-group(ng-if="vm.aggrData[row.trackedKey]['elderly']['id'] && vm.aggrData[row.trackedKey]['elderly']['nursing_level']", ng-repeat="nursingItem in vm.nursingItemMap[vm.aggrData[row.trackedKey]['elderly']['nursing_level']]")
+                            .btn-group.nursing-catalog(ng-if="vm.aggrData[row.trackedKey]['elderly']['id'] && vm.aggrData[row.trackedKey]['elderly']['nursing_level']", ng-repeat="nursingCatalog in vm.nursingCatalogMap[vm.aggrData[row.trackedKey]['elderly']['nursing_level']]")
                                 .checkbox.c-checkbox
                                     label
-                                        input(id="{{vm.aggrData[row.trackedKey]['elderly']['nursing_level'] + '$' +nursingItem.value}}",type='checkbox',ng-model="vm.service_items[vm.aggrData[row.trackedKey]['elderly']['nursing_level']][nursingItem.value]" ng-change="vm.serviceItemChecked(row.trackedKey, nursingItem.value)")
+                                        input(id="{{vm.aggrData[row.trackedKey]['elderly']['nursing_level'] + '$' +nursingCatalog.value}}",type='checkbox',ng-model="vm.nursing_catalogs[vm.aggrData[row.trackedKey]['elderly']['nursing_level']][nursingCatalog.value]" ng-change="vm.nursingCatalogChecked(row.trackedKey, nursingCatalog.value)")
                                         span.fa.fa-check
-                                label(for="{{vm.aggrData[row.trackedKey]['elderly']['nursing_level'] + '$' +nursingItem.value}}") {{ nursingItem.name }}
+                                label(for="{{vm.aggrData[row.trackedKey]['elderly']['nursing_level'] + '$' +nursingCatalog.value}}") {{ nursingCatalog.name }}
                         td.text-center
                             div(ng-if="vm.aggrData[row.trackedKey]['elderly']['id']")
                                 span(ng-if="vm.aggrData[row.trackedKey]['nursing_plan']['remark']") {{vm.aggrData[row.trackedKey]['nursing_plan']['remark']}}

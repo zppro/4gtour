@@ -443,8 +443,8 @@
                 return {
                     roomStatusInfo: roomStatusInfo,
                     updateRoomStatusInfo: updateRoomStatusInfo,
-                    nursingRobotRemoveRoomConfig: nursingRobotRemoveRoomConfig,
-                    nursingBedMonitorRemoveRoomConfig: nursingBedMonitorRemoveRoomConfig,
+                    robotRemoveRoomConfig: robotRemoveRoomConfig,
+                    bedMonitorRemoveRoomConfig: bedMonitorRemoveRoomConfig,
                     submitApplicationToExit: submitApplicationToExit,
                     submitToAuditItemReturn: submitToAuditItemReturn,
                     submitToAuditSettlement: submitToAuditSettlement,
@@ -480,7 +480,8 @@
                     nursingScheduleTemplateImport: nursingScheduleTemplateImport,
                     nursingScheduleSaveAsTemplateWeekly: nursingScheduleSaveAsTemplateWeekly,
                     nursingPlansByRoom: nursingPlansByRoom,
-                    nursingPlanSave: nursingPlanSave
+                    nursingPlanSaveNursingCatalog: nursingPlanSaveNursingCatalog,
+                    nursingPlanSaveRemark: nursingPlanSaveRemark
                 };
 
                 function roomStatusInfo(tenantId) {
@@ -496,15 +497,15 @@
                     });
                 }
 
-                function nursingRobotRemoveRoomConfig(tenantId, robotId) {
-                    return $http.post(baseUrl + 'nursingRobotRemoveRoomConfig', {
+                function robotRemoveRoomConfig(tenantId, robotId) {
+                    return $http.post(baseUrl + 'robotRemoveRoomConfig', {
                         tenantId: tenantId,
                         robotId: robotId
                     });
                 }
 
-                function nursingBedMonitorRemoveRoomConfig(tenantId, bedMonitorId) {
-                    return $http.post(baseUrl + 'nursingBedMonitorRemoveRoomConfig', {
+                function bedMonitorRemoveRoomConfig(tenantId, bedMonitorId) {
+                    return $http.post(baseUrl + 'bedMonitorRemoveRoomConfig', {
                         tenantId: tenantId,
                         bedMonitorId: bedMonitorId
                     });
@@ -677,8 +678,12 @@
                     return $http.post(baseUrl + 'nursingPlansByRoom', {tenantId: tenantId, elderlySelectArray: elderlySelectArray, nursingPlanSelectArray: nursingPlanSelectArray});
                 }
 
-                function nursingPlanSave(tenantId, elderlyId, nursing_item_check_info) {
-                    return $http.post(baseUrl + 'nursingPlanSave', {tenantId: tenantId, elderlyId: elderlyId, nursing_item_check_info: nursing_item_check_info});
+                function nursingPlanSaveNursingCatalog(tenantId, elderlyId, nursing_catalog_check_info) {
+                    return $http.post(baseUrl + 'nursingPlanSaveNursingCatalog', {tenantId: tenantId, elderlyId: elderlyId, nursing_catalog_check_info: nursing_catalog_check_info});
+                }
+
+                function nursingPlanSaveRemark(tenantId, elderlyId, remark) {
+                    return $http.post(baseUrl + 'nursingPlanSaveRemark', {tenantId: tenantId, elderlyId: elderlyId, remark: remark});
                 }
             }]
         };

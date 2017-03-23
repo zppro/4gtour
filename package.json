@@ -1,11 +1,12 @@
 {
   "name": "4gtour",
-  "version": "0.7.6",
+  "version": "0.7.8",
   "description": "",
   "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "./start-app.sh",
+    "start-dev": "./dev-app.sh",
     "build": "./start-gulp.sh vendor-1.x",
     "dev": "./start-gulp.sh vendor-1.x dev"
   },
