@@ -12,7 +12,6 @@ module.exports = function(ctx,name) {
     }
     else {
         module.isloaded = true;
-
         var drugDirectorySchema = new mongoose.Schema({
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},

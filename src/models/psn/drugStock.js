@@ -12,12 +12,11 @@ module.exports = function(ctx,name) {
     }
     else {
         module.isloaded = true;
-
         var drugStockSchema = new mongoose.Schema({
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
-            elderId:{type: mongoose.Schema.Types.ObjectId,required: true,ref:'psn_elderly'},//关联老人
+            elderlyId:{type: mongoose.Schema.Types.ObjectId,required: true,ref:'psn_elderly'},//关联老人
             drugId:{type: mongoose.Schema.Types.ObjectId,required: true,ref:'psn_drug'},//关联药品
             current_quantity:{type:Number},//当前数量
             unit:{type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3013"])},//包装单位

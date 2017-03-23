@@ -12,12 +12,11 @@ module.exports = function(ctx,name) {
     }
     else {
         module.isloaded = true;
-
-        var drugDirectorySchema = new mongoose.Schema({
+        var drugInOutStockSchema = new mongoose.Schema({
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
-            elderId:{type: mongoose.Schema.Types.ObjectId,required: true,ref:'psn_elderly'},//关联老人
+            elderlyId:{type: mongoose.Schema.Types.ObjectId,required: true,ref:'psn_elderly'},//关联老人
             drugId:{type: mongoose.Schema.Types.ObjectId,required: true,ref:'psn_drug'},//关联药品
             in_out_no:{type: String},//出入库单号
             type:{type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3014"])},//出入库类别
@@ -33,11 +32,11 @@ module.exports = function(ctx,name) {
             }
         });
 
-        drugDirectorySchema.pre('update', function (next) {
+        drugInOutStockSchema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});
             next();
         });
 
-        return mongoose.model(name, drugDirectorySchema, name);
+        return mongoose.model(name, drugInOutStockSchema, name);
     }
 }

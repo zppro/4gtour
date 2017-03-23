@@ -5,7 +5,8 @@
  var rp = require('request-promise-native');
  var xml2js = require('xml2js');
  var externalSystemConfig = require('../pre-defined/external-system-config.json');
- var qinkeshi = externalSystemConfig.bed_monitor_provider.api_url;
+//  var qinkeshi = externalSystemConfig.bed_monitor_provider.api_url;
+var qinkeshi;
  module.exports={
     init: function (ctx) {
         console.log('init sleep... ');
