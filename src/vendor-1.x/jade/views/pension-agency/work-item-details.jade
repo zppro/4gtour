@@ -7,7 +7,8 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                     span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
                         i.glyphicon.glyphicon-minus-sign
                 div#contentTab1
-                    fieldset(ng-if="vm.selectBinding.districts"): .form-group
+                    fieldset: .form-group
+                        <!--护理类目-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NURSING_CATALOG') | translate}}:
                         .col-md-10
                             ui-select(name="districtId",ng-model='vm.model.districtId', theme='bootstrap',required='')
@@ -16,23 +17,23 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                                     div(ng-bind-html='nursingCatalog.name | highlight: $select.search')
                             span.text-danger(ng-show="utils.vinput(this.theForm,'districtId','required')") {{ "validator.REQUIRED" | translate}}
                     fieldset: .form-group
+                        <!--项目名称-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NAME') | translate}}:
                         .col-md-10
                             input.form-control(readonly,type='text', name='name',ng-model='vm.model.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-NAME")|translate}}' ,required='')
                             span.text-danger(ng-show="utils.vinput(this.theForm,'name','required')") {{ "validator.REQUIRED" | translate}}
                     fieldset: .form-group
-                        <!--描述-->
-                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-description') | translate}}:
+                        <!--工作描述-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-DESCRIPTION') | translate}}:
                         .col-md-10
                             textarea.form-control(name='description',ng-model='vm.model.description',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-DESCRIPTION")|translate}}',maxlength="200")
                     fieldset: .form-group
-                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-FLOOR') | translate}}:
+                        <!--工作描述-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-REPEAT_TYPE') | translate}}:
                         .col-md-10
                             .btn-group
-                                label.btn.btn-primary(ng-disabled="!vm.model.districtId||vm.diableFloor(floor)",ng-repeat='floor in vm.selectBinding.floors',ng-class="{active: floor == vm.model.floor}")
-                                    input(ng-disabled="!vm.model.districtId||vm.diableFloor(floor)",type='radio',class="hidden",name="floor" ng-model="vm.model.floor" ng-value="floor",ng-change='vm.genRoomName()',required='')
-                                    |{{floor}}F
-                            span.text-danger(ng-show="utils.vinput(this.theForm,'floor','required')") {{ "validator.REQUIRED" | translate}}
+                                .btn.btn-primary(name='repeat_type',ng-repeat='repeatType in vm.selectBinding.repeatTypes',ng-model='vm.model.repeat_type',btn-radio="repeatType.value",required='') {{repeatType.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'repeat_type','required')") {{ "validator.REQUIRED" | translate}}
                     fieldset: .form-group
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NUMBER-IN-FLOOR') | translate}}:
                         .col-md-10

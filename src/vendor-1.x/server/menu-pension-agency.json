@@ -108,7 +108,7 @@
       {
         "_id": "menu.pension-agency.DRUG-DIRECTORY",
         "name": "药品目录",
-        "sref": "app.pension-agency.drug-storage.list"
+        "sref": "app.pension-agency.drug-directory.list"
       },
       {
         "_id": "menu.pension-agency.DRUG-STOCK",
@@ -117,12 +117,12 @@
       },
       {
         "_id": "menu.pension-agency.DRUG-IN-STOCK",
-        "name": "出库管理",
+        "name": "入库管理",
         "sref": "app.pension-agency.drug-in-stock.list"
       },
       {
         "_id": "menu.pension-agency.DRUG-OUT-STOCK",
-        "name": "入库管理",
+        "name": "出库管理",
         "sref": "app.pension-agency.drug-out-stock.list"
       }
     ]
