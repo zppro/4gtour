@@ -1259,7 +1259,7 @@
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'work-item.js')
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'work-item.list', {
-                url: '/list/:action',
+                url: '/list/:action/:nursingLevelId',
                 templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'work-item-list.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'WorkItemGridController',
@@ -1270,24 +1270,24 @@
                         serverPaging: true,
                         columns: [
                             {
-                                label: '护理类目',
-                                name: 'nursing_catalog_name',
+                                label: '护理等级',
+                                name: 'nursing_level_name',
                                 type: 'string',
                                 width: 80,
-                                sortable: true
+                                formatter: {type:'populate' ,options: {path:'nursingLevelId', select:'-_id name'}}
                             },
                             {
                                 label: '项目名称',
                                 name: 'name',
                                 type: 'string',
-                                width: 80,
+                                width: 100,
                                 sortable: true
                             },
                             {
                                 label: '重复',
                                 name: 'repeat',
                                 type: 'string',
-                                width: 120,
+                                width: 100,
                                 sortable: true
                             },
                             {
@@ -1327,12 +1327,14 @@
                                 sortable: false,
                                 width: 60
                             }
-                        ]
+                        ],
+                        switches: {leftTree: true},
+                        toDetails: ['nursingLevelId']
                     })
                 }
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'work-item.details', {
-                url: '/details/:action/:_id',
+                url: '/details/:action/:_id/:nursingLevelId',
                 templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'work-item-details.html'),
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 controller: 'WorkItemDetailsController',
@@ -1342,7 +1344,8 @@
                         model: {
                             duration: 30
                         }
-                        , blockUI: true
+                        , blockUI: true,
+                        toList: ['nursingLevelId']
                     })
                 }
             })

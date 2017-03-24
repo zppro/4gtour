@@ -191,6 +191,7 @@
             populateFilter: populateFilter,
             boolFilter: boolFilter,
             diFilter: diFilter,
+            repeatInfoCombo: repeatInfoCombo,
             orFilter: orFilter
         };
 
@@ -314,8 +315,15 @@
             }
         }
 
-
-
+        function repeatInfoCombo(repeatValues, repeat_start) {
+            if (_.isArray(repeatValues) && repeatValues.length > 0) {
+                return _.map(repeatValues, function (r) {
+                    return r + repeat_start;
+                }).join('\r\n');
+            } else {
+                return repeat_start;
+            }
+        } 
 
         /**
          * AngularJS default filter with the following expression:

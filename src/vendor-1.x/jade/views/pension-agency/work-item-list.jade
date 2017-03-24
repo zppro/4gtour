@@ -29,14 +29,14 @@
                                 label
                                     input(type='checkbox' data="trBubble" ng-model="row.checked" )
                                     span.fa.fa-check(data="trBubble")
-                        td {{::row.nursing_catalog_name}}
+                        td {{::row.nursingLevelId.name}}
                         td {{::row.name}}
-                        td {{::row.repeat_type_name + row.repeat_values.join() + row.repeat_start}}
-                        td {{::row.duration + row.duration ? '分':''}}
+                        td {{::row.repeat_type_name }}{{row.repeat_values | repeatInfoCombo: row.repeat_start}}
+                        td {{::row.duration}}
                         td {{::row.confirm_flag|boolFilter}}
                         td {{::row.remind_flag|boolFilter}}
                         td {{::row.remind_mode_name}}
-                        td {{::row.remind_times + row.remind_times ? '次':''}}
+                        td {{::row.remind_times}}
                         td.text-left
                             .btn-group
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")

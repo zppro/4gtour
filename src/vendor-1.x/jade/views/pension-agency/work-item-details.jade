@@ -9,13 +9,13 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                 div#contentTab1
                     fieldset: .form-group
                         <!--护理类目-->
-                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NURSING_CATALOG') | translate}}:
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NURSING_LEVEL') | translate}}:
                         .col-md-10
-                            ui-select(name="nursing_catalog",ng-model='vm.model.nursing_catalog', theme='bootstrap',required='')
-                                ui-select-match(placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-NURSING_CATALOG")|translate}}') {{$select.selected.name}}
-                                ui-select-choices(repeat='nursingCatalog.value as nursingCatalog in vm.selectBinding.nursingCatalogs | filter: {name: $select.search}')
-                                    div(ng-bind-html='nursingCatalog.name | highlight: $select.search')
-                            span.text-danger(ng-show="utils.vinput(this.theForm,'nursing_catalog','required')") {{ "validator.REQUIRED" | translate}}
+                            ui-select(name="nursingLevelId",ng-model='vm.model.nursingLevelId', theme='bootstrap',required='')
+                                ui-select-match(placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-NURSING_LEVEL")|translate}}') {{$select.selected.name}}
+                                ui-select-choices(repeat='nursingLevel.id as nursingLevel in vm.selectBinding.nursingLevels | filter: {name: $select.search}')
+                                    div(ng-bind-html='nursingLevel.name | highlight: $select.search')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'nursingLevelId','required')") {{ "validator.REQUIRED" | translate}}
                     fieldset: .form-group
                         <!--项目名称-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NAME') | translate}}:
@@ -26,7 +26,7 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         <!--工作描述-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-DESCRIPTION') | translate}}:
                         .col-md-10
-                            textarea.form-control(name='description',ng-model='vm.model.description',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-DESCRIPTION")|translate}}',maxlength="200")
+                            textarea.form-control(name='description',ng-model='vm.model.description',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-DESCRIPTION")|translate}}',maxlength="400")
                     fieldset: .form-group
                         <!--时长(分)-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-DURATION') | translate}}:
@@ -67,6 +67,12 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                                     input#remindFlag(type='checkbox',ng-model='vm.model.remind_flag')
                                     span.fa.fa-check
                             label(for="remindFlag") {{ vm.viewTranslatePath('TAB1-LABEL-REMIND_FLAG') | translate}}
+                        .col-md-2
+                            .checkbox.c-checkbox
+                                label
+                                    input#feeFlag(type='checkbox',ng-model='vm.model.fee_flag')
+                                    span.fa.fa-check
+                            label(for="feeFlag") {{ vm.viewTranslatePath('TAB1-LABEL-FEE_FLAG') | translate}}
                     fieldset(ng-if="vm.model.remind_flag"): .form-group
                         <!--提醒方式-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-REMIND_MODE') | translate}}:
@@ -75,13 +81,21 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                                 .btn.btn-primary(name='remind_mode',ng-repeat='remindMode in vm.selectBinding.remindModes',ng-model='vm.model.remind_mode',btn-radio="remindMode.value",required='') {{remindMode.name}}
                             span.text-danger(ng-show="utils.vinput(this.theForm,'remind_mode','required')") {{ "validator.REQUIRED" | translate}}
                     fieldset(ng-if="vm.model.remind_flag"): .form-group
-                        <!--时长(分)-->
+                        <!--提醒次数-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-REMIND_TIMES') | translate}}:
                         .col-md-10
                             input.form-control(type='number',name='remind_times' ,ng-model='vm.model.remind_times',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-REMIND_TIMES")|translate}}', required='' ui-validate="'$value>=1'" )
                             span.text-danger(ng-show="utils.vinput(this.theForm,'remind_times','required')") {{ "validator.REQUIRED" | translate}}
                             span.text-danger(ng-show="utils.vinput(this.theForm,'remind_times','number')") {{ "validator.NUMBER" | translate}}
                             span.text-danger(ng-show="utils.vinput(this.theForm,'remind_times','validator')") {{ "validator.MIN" | translate:{min:1} }}
+                    fieldset(ng-if="vm.model.fee_flag"): .form-group
+                        <!--费用(￥)-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-FEE') | translate}}:
+                        .col-md-10
+                            input.form-control(type='number',name='fee' ,ng-model='vm.model.fee',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-FEE")|translate}}', required='' ui-validate="'$value>=1'" )
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'fee','required')") {{ "validator.REQUIRED" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'fee','number')") {{ "validator.NUMBER" | translate}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'fee','validator')") {{ "validator.MIN" | translate:{min:1} }}
 
     .text-right.mt-lg
         button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}

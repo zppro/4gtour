@@ -409,8 +409,8 @@
       "details": {
         "TITLE": "养老机构-基础设置-工作项目-详情",
         "TAB1": "基本信息",
-        "TAB1-LABEL-NURSING_CATALOG":"护理类目",
-        "TAB1-PLACEHOLDER-NURSING_CATALOG":"请选择一个护理类目..",
+        "TAB1-LABEL-NURSING_LEVEL":"护理等级",
+        "TAB1-PLACEHOLDER-NURSING_LEVEL":"请选择一个护理等级..",
         "TAB1-LABEL-NAME": "项目名称",
         "TAB1-PLACEHOLDER-NAME": "喂早餐..",
         "TAB1-LABEL-DESCRIPTION": "工作描述",
@@ -427,6 +427,9 @@
         "TAB1-LABEL-REMIND_FLAG": "提醒",
         "TAB1-LABEL-REMIND_MODE": "提醒方式",
         "TAB1-LABEL-REMIND_TIMES": "提醒次数",
+        "TAB1-LABEL-FEE_FLAG": "收费",
+        "TAB1-LABEL-FEE": "费用(￥)",
+        "TAB1-PLACEHOLDER-FEE": "100..",
         "TAB1-PLACEHOLDER-REMIND_TIMES": "3.."
       }
     },

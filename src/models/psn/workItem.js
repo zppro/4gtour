@@ -25,7 +25,7 @@ module.exports = function(ctx,name) {
             nursingLevelId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'psn_nursingLevel'},
             customize_flag: {type: Boolean, default: false}, // 自定义标识,一旦确定无法修改
             name: {type: String, required: true, maxlength: 100},
-            description: {type: String,maxLength:200},
+            description: {type: String,maxLength:400},
             duration: {type: Number, default: 0}, // 完成时长 单为分
             repeat_type: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D0103"])},
             repeat_values: [{type: Number, min: 0, max: 365, default: 0}],

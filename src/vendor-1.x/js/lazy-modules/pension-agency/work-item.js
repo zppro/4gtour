@@ -26,19 +26,17 @@
             vm.init({removeDialog: ngDialog});
 
             if (vm.switches.leftTree) {
-                vmh.shareService.d('D3012').then(function (rows) {
-                    var treeNodes = _.map(rows,function(row){
-                        return {_id:row.value,name:row.name};
-                    });
+                vmh.shareService.tmp('T3001/psn-nursingLevel', 'name', vm.treeFilterObject).then(function (rows) {
+                    var treeNodes = _.map(rows,function(row){return row});
                     treeNodes.unshift({_id: '', name:'全部'});
                     vm.trees = [new vmh.treeFactory.sTree('tree1', treeNodes, {mode: 'grid'})];
-                    vm.trees[0].selectedNode = vm.trees[0].findNodeById($scope.$stateParams.nursingCatalog);
+                    vm.trees[0].selectedNode = vm.trees[0].findNodeById($scope.$stateParams.nursingLevelId);
                 });
 
                 $scope.$on('tree:node:select', function ($event, node) {
                     var selectNodeId = node._id;
-                    if ($scope.$stateParams.nursingCatalog != selectNodeId) {
-                        $scope.$state.go(vm.viewRoute(), {nursingCatalog: selectNodeId});
+                    if ($scope.$stateParams.nursingLevelId != selectNodeId) {
+                        $scope.$state.go(vm.viewRoute(), {nursingLevelId: selectNodeId});
                     }
                 });
             }
@@ -66,19 +64,28 @@
             vm.tab1 = {cid: 'contentTab1'};
 
             vmh.parallel([
-                vmh.shareService.d('D3012'),
+                vmh.shareService.tmp('T3001/psn-nursingLevel', 'name', vm.treeFilterObject),
                 vmh.shareService.d('D0103'),
                 vmh.shareService.d('D0104')
             ]).then(function (results) {
-                vm.selectBinding.nursingCatalogs = results[0];
+                vm.selectBinding.nursingLevels = _.map(results[0],function(row){return {id: row._id, name: row.name }});
                 vm.selectBinding.repeatTypes = results[1];
                 vm.selectBinding.remindModes = results[2];
             });
 
-            vm.load();
+            vm.load().then(function(){
+                if(vm.model.repeat_values && vm.model.repeat_values.length > 0){
+                    vm.repeat_values = vm.model.repeat_values.join();
+                }
+            });
         }
 
         function doSubmit() {
+            var repeat_values = vm.repeat_values;
+            if (repeat_values) {
+                var arr = repeat_values.split(',');
+                vm.model.repeat_values = repeat_values.split(',');
+            }
             if ($scope.theForm.$valid) {
 
                 vm.save();

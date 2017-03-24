@@ -18,6 +18,7 @@
         .filter('populateFilter',populateFilter)
         .filter('boolFilter',boolFilter)
         .filter('diFilter',diFilter)
+        .filter('repeatInfoCombo',repeatInfoCombo)
         .filter('orFilter',orFilter)
     ;
 
@@ -76,6 +77,10 @@
 
     function diFilter(GridUtils){
         return GridUtils.diFilter;
+    }
+
+    function repeatInfoCombo(GridUtils){
+        return GridUtils.repeatInfoCombo;
     }
 
     function orFilter(GridUtils) {
