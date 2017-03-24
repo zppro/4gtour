@@ -27,17 +27,29 @@
         function link(scope, element, attrs) {
 
             var data = scope.sDropdownData;
-
             if (!data) {
                 return;
             }
             var option = scope.$eval(attrs.sDropdownOption) || {};
             var selectItemFormat = option.selectItemFormat || 'value';
-            var valueKey = option.valueKey || 'value';
-            var textKey = option.textKey || 'name';
+            var valueKey = scope.valueKey = option.valueKey || 'value';
+            var textKey =  scope.textKey = option.textKey || 'name';
+
+            scope.$watch("sDropdownData",function(newValue,oldValue) {
+                if (newValue != oldValue) {
+                    $timeout(function () {
+                        $q.when(newValue).then(function (items) {
+                            scope.items = items;
+                            setShowText();
+                        });
+                        console.log('dropdown recreate end')
+                    }, 0);
+                }
+            });
 
             // Bring in changes from outside:
             scope.$watch('model', function(newValue,oldValue) {
+                // console.log('model newValue:',newValue ,' oldValue:', oldValue);
                 if (newValue != oldValue) {
                     scope.$eval(attrs.ngModel + ' = model');
                     setShowText();
@@ -67,9 +79,10 @@
             };
             $q.when(data).then(function (items) {
                 scope.items = items;
-
                 setShowText();
             });
+
+
 
             function setShowText() {
                 scope.showText = scope.emptyPlaceholder || '请选择';

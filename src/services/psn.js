@@ -3,7 +3,6 @@
  * 养老机构接口
  */
 var DIC = require('../pre-defined/dictionary-constants.json');
-var D3006 = require('../pre-defined/dictionary.json')['D3006'];
 
 module.exports = {
     init: function (option) {
@@ -826,10 +825,10 @@ module.exports = {
             {
                 method: 'changeElderlyNursingLevel',
                 verb: 'post',
-                url: this.service_url_prefix + "/changeElderlyNursingLevel", //直接修改老人护理等级
+                url: this.service_url_prefix + "/changeElderlyNursingLevel", //直接修改老人护理级别
                 handler: function (app, options) {
                     return function * (next) {
-                        var tenant, elderly, nursingPlan;
+                        var tenant, elderly, nursingLevel, nursingPlan;
                         try {
                             var tenantId = this.request.body.tenantId;
                             tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
@@ -845,9 +844,17 @@ module.exports = {
                                 yield next;
                                 return;
                             }
-                            var nursing_level = this.request.body.nursing_level;
-                            if (nursing_level === elderly.nursing_level) {
-                                this.body = app.wrapper.res.error({message: '护理等级没有变化!'});
+                            var nursingLevelId = this.request.body.nursingLevelId;
+                            nursingLevel = yield app.modelFactory().model_read(app.models['psn_nursingLevel'], nursingLevelId);
+                            if(!nursingLevel || nursingLevel.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到护理级别!'});
+                                yield next;
+                                return;
+                            }
+
+                            console.log('nursingLevelId:', nursingLevelId);
+                            if (nursingLevelId === (elderly.nursingLevelId || '').toString()) {
+                                this.body = app.wrapper.res.error({message: '护理级别没有变化!'});
                                 yield next;
                                 return;
                             }
@@ -855,9 +862,9 @@ module.exports = {
                             var operated_by = this.request.body.operated_by;
                             var operated_by_name = this.request.body.operated_by_name;
 
-                            var nursing_level_old = elderly.nursing_level || 'null';
+                            var oldNursingLevelId = elderly.nursingLevelId || 'null';
 
-                            elderly.nursing_level = nursing_level;
+                            elderly.nursingLevelId = nursingLevelId;
                             yield elderly.save();
 
                             yield app.modelFactory().model_create(app.models['psn_elderlySpecificSpotChangeLog'],{
@@ -865,14 +872,26 @@ module.exports = {
                                 operated_by_name: operated_by_name,
                                 elderlyId: elderlyId,
                                 elderly_name: elderly.name,
-                                col_name: 'nursing_level',
-                                col_val_old: nursing_level_old,
-                                col_val_new: nursing_level,
+                                col_name: 'nursingLevelId',
+                                col_val_old: oldNursingLevelId,
+                                col_val_new: nursingLevelId,
                                 fromMethod: 'changeElderlyNursingLevel',
                                 tenantId: elderly.tenantId
                             });
 
-                            this.body = app.wrapper.res.ret({nursing_level: nursing_level,nursing_level_name: D3006[nursing_level].name});
+                            // 如果更换护理等级,将清空对应的所有工作项目
+                            var elderlyNursingPlan = yield app.modelFactory().model_one(app.models['psn_nursingPlan'],{
+                                select: 'work_items',
+                                where: {
+                                    status: 1,
+                                    elderlyId: elderlyId,
+                                    tenantId: tenantId
+                                }
+                            });
+                            elderlyNursingPlan.work_items = [];
+                            yield elderlyNursingPlan.save();
+
+                            this.body = app.wrapper.res.ret({nursingLevelId: nursingLevelId,nursingLevelName: nursingLevel.name});
                         }
                         catch (e) {
                             console.log(e);
@@ -4211,12 +4230,12 @@ module.exports = {
                 }
             },
             {
-                method: 'nursingPlanSaveNursingCatalog',
+                method: 'nursingPlanSaveWorkItem',
                 verb: 'post',
-                url: this.service_url_prefix + "/nursingPlanSaveNursingCatalog", //为老人保存一条护理类目
+                url: this.service_url_prefix + "/nursingPlanSaveWorkItem", //为老人保存一条护理类目
                 handler: function (app, options) {
                     return function * (next) {
-                        var tenant, elderly, nursingPlan;
+                        var tenant, elderly, workItem, nursingPlan;
                         try {
                             var tenantId = this.request.body.tenantId;
                             tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
@@ -4234,13 +4253,23 @@ module.exports = {
                                 return;
                             }
 
-                            var nursingCatalogCheckInfo = this.request.body.nursing_catalog_check_info;
-                            var toProcessNursingCatalogId = nursingCatalogCheckInfo.id;
-                            var isRemoved = !nursingCatalogCheckInfo.checked;
+                            var workItemCheckInfo = this.request.body.work_item_check_info;
+                            var toProcessWorkItemId = workItemCheckInfo.id;
+                            workItem = yield app.modelFactory().model_read(app.models['psn_workItem'], toProcessWorkItemId);
+                            if(!workItem || workItem.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到工作项目!'});
+                                yield next;
+                                return;
+                            }
+
+                            var toProcessWorkItem = workItem.toObject();
+                            toProcessWorkItem.workItemId = toProcessWorkItemId;
+
+                            var isRemoved = !workItemCheckInfo.checked;
 
 
                             var elderlyNursingPlan = yield app.modelFactory().model_one(app.models['psn_nursingPlan'],{
-                                select: 'nursing_catalogs',
+                                select: 'work_items',
                                 where: {
                                     status: 1,
                                     elderlyId: elderlyId,
@@ -4248,32 +4277,35 @@ module.exports = {
                                 }
                             });
 
+
+
                             if (!elderlyNursingPlan) {
                                 if (!isRemoved) {
+
                                     yield app.modelFactory().model_create(app.models['psn_nursingPlan'],{
                                         elderlyId: elderlyId,
                                         elderly_name: elderly.name,
-                                        nursing_catalogs: [toProcessNursingCatalogId],
+                                        work_items: [toProcessWorkItem],
                                         tenantId: elderly.tenantId
                                     });
                                 }
                             } else {
-                                var nursingCatalogs = elderlyNursingPlan.nursing_catalogs;
-                                var index = app._.findIndex(nursingCatalogs, (o) => {
-                                    return o == toProcessNursingCatalogId;
+                                var workItems = elderlyNursingPlan.work_items;
+                                var index = app._.findIndex(workItems, (o) => {
+                                    return o.workItemId.toString() == toProcessWorkItemId;
                                 });
                                 if (!isRemoved) {
                                     // 加入
                                     if (index == -1) {
-                                        nursingCatalogs.push(toProcessNursingCatalogId);
+                                        workItems.push(toProcessWorkItem);
                                     }
                                 } else {
                                     if (index != -1) {
-                                        nursingCatalogs.splice(index, 1);
+                                        workItems.splice(index, 1);
                                     }
                                 }
 
-                                elderlyNursingPlan.nursing_catalogs = nursingCatalogs;
+                                elderlyNursingPlan.work_items = workItems;
 
                                 yield elderlyNursingPlan.save();
                             }

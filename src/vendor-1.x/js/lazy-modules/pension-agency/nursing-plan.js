@@ -25,10 +25,11 @@
             vm.init({removeDialog: ngDialog});
  
             vm.onRoomChange = onRoomChange;
-            vm.setElderlyNursingLevel = setElderlyNursingLevel;
-            vm.doChangeElderlyNursingLevel = doChangeElderlyNursingLevel;
+            vm.addElderlyNursingLevel = addElderlyNursingLevel;
+            vm.editElderlyNursingLevel = editElderlyNursingLevel;
+            vm.saveElderlyNursingLevel = saveElderlyNursingLevel;
             vm.cancelElderlyEditing = cancelElderlyEditing;
-            vm.nursingCatalogChecked = nursingCatalogChecked;
+            vm.workItemChecked = workItemChecked;
             vm.setNursingPlanRemark = setNursingPlanRemark;
             vm.saveNursingPlanRemark = saveNursingPlanRemark;
             vm.cancelNursingPlanRemark = cancelNursingPlanRemark;
@@ -39,22 +40,28 @@
 
             vmh.parallel([
                 vmh.clientData.getJson('nursingPlanAxis'),
-                vmh.shareService.d('D3006'),
-                vmh.shareService.d('D3012')
+                vmh.shareService.tmp('T3001/psn-nursingLevel', 'name short_name', null),
+                vmh.shareService.tmp('T3001/psn-workItem', 'name nursingLevelId', null),
             ]).then(function (results) {
                 vm.xAxisData = results[0];
-                vm.selectBinding.nursingLevels = results[1];
-                var nursingCatalogs = results[2];
-                var nursingCatalogMap = {};
+
+                vm.selectBinding.nursingLevels = _.map(results[1],function(row){return {id: row._id, name: row.name, short_name: row.short_name }});
+                var nursingLevelMap = {};
+                _.reduce(vm.selectBinding.nursingLevels, function (o, nursingLevel) {
+                    o[nursingLevel.id] = nursingLevel.short_name;
+                    return o;
+                }, nursingLevelMap);
+                vm.nursingLevelMap = nursingLevelMap;
+
+                var workItems = _.map(results[2],function(row){return {id: row._id, name: row.name, nursingLevelId: row.nursingLevelId}});
+                var workItemMap = {};
                 for(var i=0,len = vm.selectBinding.nursingLevels.length;i< len;i++) {
-                    var nursingLevel = vm.selectBinding.nursingLevels[i].value;
-                    var nursingLevelCatalogPrefix = nursingLevel.substr(0, 2);
-                    nursingCatalogMap[nursingLevel] = _.filter(nursingCatalogs, function (o) {
-                       return o.value.substr(0, 2) ===  nursingLevelCatalogPrefix;
+                    var nursingLevelId = vm.selectBinding.nursingLevels[i].id;
+                    workItemMap[nursingLevelId] = _.filter(workItems, function (o) {
+                       return o.nursingLevelId ===  nursingLevelId;
                     });
                 }
-                vm.nursingCatalogMap = nursingCatalogMap;
-                console.log(nursingCatalogMap);
+                vm.workItemMap = workItemMap;
             });
 
             vm.yAxisDataPromise = vmh.shareService.tmp('T3009', null, {tenantId:vm.tenantId}).then(function(nodes){
@@ -63,33 +70,35 @@
                 return nodes;
             });
 
-            vm.nursing_catalogs = {};
+            vm.editing$NursingLevel = {};
+            vm.work_items = {};
             fetchNursingPlan();
         }
 
 
         function fetchNursingPlan() {
             console.log('parse nursingPlanCatalogs:');
-            vmh.psnService.nursingPlansByRoom(vm.tenantId, ['name', 'sex', 'nursing_level'], ['elderlyId', 'nursing_catalogs', 'remark']).then(function(data){
+            vmh.psnService.nursingPlansByRoom(vm.tenantId, ['name', 'sex', 'nursingLevelId'], ['elderlyId', 'work_items', 'remark']).then(function(data){
                 vm.aggrData = data;
                 for(var trackedKey in vm.aggrData) {
                     vm.$editings[trackedKey] = {};
-                    var key = vm.aggrData[trackedKey]['elderly']['nursing_level'];
+                    var key = vm.aggrData[trackedKey]['elderly']['nursingLevelId'];
                     if (key) {
-                        if (!vm.nursing_catalogs[key]) {
-                            vm.nursing_catalogs[key] = {};
+                        if (!vm.work_items[key]) {
+                            vm.work_items[key] = {};
                         }
                         var nursingPlan = vm.aggrData[trackedKey]['nursing_plan'];
                         if (vm.aggrData[trackedKey]['nursing_plan']) {
-                            var nursing_catalogs = vm.aggrData[trackedKey]['nursing_plan']['nursing_catalogs'];
-                            if (nursing_catalogs) {
-                                for (var i = 0, len = nursing_catalogs.length; i < len; i++) {
-                                    vm.nursing_catalogs[key][nursing_catalogs[i]] = true;
+                            var work_items = vm.aggrData[trackedKey]['nursing_plan']['work_items'];
+                            if (work_items) {
+                                for (var i = 0, len = work_items.length; i < len; i++) {
+                                    vm.work_items[key][work_items[i].workItemId] = true;
                                 }
                             }
                         }
                     }
                 }
+                console.log('vm.work_items', vm.work_items);
             });
         }
         
@@ -106,15 +115,19 @@
             vm.yAxisDataFlatten = yAxisDataFlatten;
         }
 
-        function setElderlyNursingLevel (trackedKey) {
+        function addElderlyNursingLevel (trackedKey) {
             vm.$editings[trackedKey]['elderly'] = true;
         }
 
-        function doChangeElderlyNursingLevel (trackedKey, nursing_level) {
+        function editElderlyNursingLevel (trackedKey, nursingLevelId) {
+            vm.editing$NursingLevel[vm.aggrData[trackedKey]['elderly']['id']] = vm.aggrData[trackedKey]['elderly']['nursingLevelId'];
+            vm.$editings[trackedKey]['elderly'] = true;
+        }
+
+        function saveElderlyNursingLevel (trackedKey, nursingLevelId) {
             var elderlyId = vm.aggrData[trackedKey]['elderly'].id;
-            vmh.psnService.changeElderlyNursingLevel(vm.tenantId, elderlyId, nursing_level, vm.operated_by, vm.operated_by_name).then(function(data){
-                vm.aggrData[trackedKey]['elderly'].nursing_level = data.nursing_level;
-                vm.aggrData[trackedKey]['elderly'].nursing_level_name = data.nursing_level_name;
+            vmh.psnService.changeElderlyNursingLevel(vm.tenantId, elderlyId, nursingLevelId, vm.operated_by, vm.operated_by_name).then(function(data){
+                vm.aggrData[trackedKey]['elderly'].nursingLevelId = data.nursingLevelId;
                 vm.$editings[trackedKey]['elderly'] = false;
             });
         }
@@ -123,10 +136,10 @@
             vm.$editings[trackedKey]['elderly'] = false;
         }
 
-        function nursingCatalogChecked (trackedKey, nursingCatalogId) {
+        function workItemChecked (trackedKey, workItemId) {
             var elderlyId = vm.aggrData[trackedKey]['elderly'].id;
-            var nursing_catalog_check_info = { id: nursingCatalogId, checked: vm.nursing_catalogs[vm.aggrData[trackedKey]['elderly']['nursing_level']][nursingCatalogId]};
-            vmh.psnService.nursingPlanSaveNursingCatalog(vm.tenantId, elderlyId, nursing_catalog_check_info);
+            var work_item_check_info = { id: workItemId, checked: vm.work_items[vm.aggrData[trackedKey]['elderly']['nursingLevelId']][workItemId]};
+            vmh.psnService.nursingPlanSaveWorkItem(vm.tenantId, elderlyId, work_item_check_info);
         }
 
         function setNursingPlanRemark (trackedKey) {

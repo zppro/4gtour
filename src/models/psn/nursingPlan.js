@@ -27,7 +27,7 @@ module.exports = function(ctx,name) {
                 check_in_time: {type: Date, default: Date.now},
                 nursing_catalog: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3012"])},
                 name: {type: String, required: true, maxlength: 100},
-                description: {type: String,maxLength:200},
+                description: {type: String,maxLength:400},
                 repeat_type: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D0103"])},
                 repeat_values: [{type: Number, min: 0, max: 365, default: 0}],
                 repeat_start: {type: String, minlength: 1, maxlength: 5, default: '*'},

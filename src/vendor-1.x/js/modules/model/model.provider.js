@@ -480,7 +480,7 @@
                     nursingScheduleTemplateImport: nursingScheduleTemplateImport,
                     nursingScheduleSaveAsTemplateWeekly: nursingScheduleSaveAsTemplateWeekly,
                     nursingPlansByRoom: nursingPlansByRoom,
-                    nursingPlanSaveNursingCatalog: nursingPlanSaveNursingCatalog,
+                    nursingPlanSaveWorkItem: nursingPlanSaveWorkItem,
                     nursingPlanSaveRemark: nursingPlanSaveRemark
                 };
 
@@ -599,8 +599,8 @@
                     });
                 }
 
-                function changeElderlyNursingLevel(tenantId, elderlyId, nursing_level, operated_by, operated_by_name) {
-                    return $http.post(baseUrl + 'changeElderlyNursingLevel', {tenantId: tenantId, elderlyId: elderlyId, nursing_level: nursing_level, operated_by: operated_by, operated_by_name: operated_by_name});
+                function changeElderlyNursingLevel(tenantId, elderlyId, nursingLevelId, operated_by, operated_by_name) {
+                    return $http.post(baseUrl + 'changeElderlyNursingLevel', {tenantId: tenantId, elderlyId: elderlyId, nursingLevelId: nursingLevelId, operated_by: operated_by, operated_by_name: operated_by_name});
                 }
 
                 function receptionVisiterSyncElderlyFamilyMembers(receptionId) {
@@ -678,8 +678,8 @@
                     return $http.post(baseUrl + 'nursingPlansByRoom', {tenantId: tenantId, elderlySelectArray: elderlySelectArray, nursingPlanSelectArray: nursingPlanSelectArray});
                 }
 
-                function nursingPlanSaveNursingCatalog(tenantId, elderlyId, nursing_catalog_check_info) {
-                    return $http.post(baseUrl + 'nursingPlanSaveNursingCatalog', {tenantId: tenantId, elderlyId: elderlyId, nursing_catalog_check_info: nursing_catalog_check_info});
+                function nursingPlanSaveWorkItem(tenantId, elderlyId, work_item_check_info) {
+                    return $http.post(baseUrl + 'nursingPlanSaveWorkItem', {tenantId: tenantId, elderlyId: elderlyId, work_item_check_info: work_item_check_info});
                 }
 
                 function nursingPlanSaveRemark(tenantId, elderlyId, remark) {
