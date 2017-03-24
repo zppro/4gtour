@@ -100,6 +100,34 @@
     ]
   },
   {
+    "_id": "menu.pension-agency.DRUG",
+    "name": "药品管理",
+    "sref": "#",
+    "icon": "icon-folder",
+    "children": [
+      {
+        "_id": "menu.pension-agency.DRUG-DIRECTORY",
+        "name": "药品目录",
+        "sref": "app.pension-agency.drug-directory.list"
+      },
+      {
+        "_id": "menu.pension-agency.DRUG-STOCK",
+        "name": "库存管理",
+        "sref": "app.pension-agency.drug-stock.list"
+      },
+      {
+        "_id": "menu.pension-agency.DRUG-IN-STOCK",
+        "name": "入库管理",
+        "sref": "app.pension-agency.drug-in-stock.list"
+      },
+      {
+        "_id": "menu.pension-agency.DRUG-OUT-STOCK",
+        "name": "出库管理",
+        "sref": "app.pension-agency.drug-out-stock.list"
+      }
+    ]
+  },
+  {
     "_id": "menu.pension-agency.MATERIAL",
     "name": "物资管理",
     "sref": "#",
@@ -113,37 +141,37 @@
       {
         "_id": "menu.pension-agency.EX-WAREHOUSE-MANAGE",
         "name": "出库管理",
-        "sref": "app.pension-agency.material-ex-warehouse-manage.list"
+        "sref": "app.pension-agency.ex-warehouse-manage.list"
       },
       {
         "_id": "menu.pension-agency.IM-WAREHOUSE-MANAGE",
         "name": "入库管理",
-        "sref": "app.pension-agency.material-im-warehouse-manage.list"
+        "sref": "app.pension-agency.im-warehouse-manage.list"
       },
       {
         "_id": "menu.pension-agency.INVENTORY-MANAGE",
         "name": "库存管理",
-        "sref": "app.pension-agency.material-inventory-manage.list"
+        "sref": "app.pension-agency.inventory-manage.list"
       },
       {
         "_id": "menu.pension-agency.INVENTORY-ACCOUNT",
         "name": "库存清单",
-        "sref": "app.pension-agency.material-inventory-account.list"
+        "sref": "app.pension-agency.inventory-account.list"
       },
       {
         "_id": "menu.pension-agency.DONATION-MANAGE",
         "name": "捐赠管理",
-        "sref": "app.pension-agency.material-donation-manage.list"
+        "sref": "app.pension-agency.donation-manage.list"
       },
       {
         "_id": "menu.pension-agency.FIX-ASSERTS-MANAGE",
         "name": "固定资产管理",
-        "sref": "app.pension-agency.material-fix-asserts-manage.list"
+        "sref": "app.pension-agency.fix-asserts-manage.list"
       },
       {
         "_id": "menu.pension-agency.ITEM-CATALOG-MANAGE",
         "name": "物资品类管理",
-        "sref": "app.pension-agency.material-item-catalog-manage.list"
+        "sref": "app.pension-agency.item-catalog-manage.list"
       }
     ]
   },
@@ -165,6 +193,11 @@
         "sref": "app.pension-agency.nursing-worker.list"
       },
       {
+        "_id": "menu.pension-agency.WORK-ITEM",
+        "name": "工作项目",
+        "sref": "app.pension-agency.work-item.list"
+      },
+      {
         "_id": "menu.pension-agency.ROBOT",
         "name": "机器人",
         "sref": "app.pension-agency.robot.list"
@@ -183,6 +216,11 @@
         "_id": "menu.pension-agency.DISTRICT",
         "name": "片区",
         "sref": "app.pension-agency.district.list"
+      },
+      {
+        "_id": "menu.pension-agency.NURSING-LEVEL",
+        "name": "护理等级",
+        "sref": "app.pension-agency.nursing-level.list"
       },
       {
         "_id": "menu.pension-agency.CHARGE-STANDARD",

@@ -1240,6 +1240,112 @@
                     //, deps: helper.resolveFor2('ui.select')
                 }
             })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'work-item', {
+                url: '/work-item',
+                title: '工作项目',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'WORK-ITEM'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'work-item.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'work-item.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'work-item-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'WorkItemGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'work-item.list', {
+                        modelName: 'psn-workItem',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '护理类目',
+                                name: 'nursing_catalog_name',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '项目名称',
+                                name: 'name',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '重复',
+                                name: 'repeat',
+                                type: 'string',
+                                width: 120,
+                                sortable: true
+                            },
+                            {
+                                label: '时长(分)',
+                                name: 'duration',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '护工确认',
+                                name: 'confirm_flag',
+                                type: 'bool',
+                                width: 80
+                            },
+                            {
+                                label: '提醒',
+                                name: 'remind_flag',
+                                type: 'bool',
+                                width: 80
+                            },
+                            {
+                                label: '提醒方式',
+                                name: 'remind_mode',
+                                type: 'bool',
+                                width: 80
+                            },
+                            {
+                                label: '提醒次数',
+                                name: 'remind_times',
+                                type: 'number',
+                                width: 80
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 60
+                            }
+                        ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'work-item.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'work-item-details.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'WorkItemDetailsController',
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'work-item.details', {
+                        modelName: 'psn-workItem',
+                        model: {
+                            duration: 30
+                        }
+                        , blockUI: true
+                    })
+                }
+            })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'robot', {
                 url: '/robot',
                 title: '机器人管理',
@@ -1621,6 +1727,84 @@
                         , blockUI: true
                     })
                     //, deps: helper.resolveFor2('ui.select')
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-level', {
+                url: '/nursing-level',
+                title: '护理级别',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'NURSING-LEVEL'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'nursing-level.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-level.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-level-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'NursingLevelGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-level.list', {
+                        modelName: 'psn-nursingLevel',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '评估等级',
+                                name: 'nursing_assessment_grade_name',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '全称',
+                                name: 'name',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '简称',
+                                name: 'name',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '停用',
+                                name: 'stop_flag',
+                                type: 'bool',
+                                width: 80
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 60
+                            }
+                        ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-level.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'nursing-level-details.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'NursingLevelDetailsController',
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'nursing-level.details', {
+                        modelName: 'psn-nursingLevel'
+                        , blockUI: true
+                    })
                 }
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'charge-standard', {

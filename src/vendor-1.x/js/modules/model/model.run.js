@@ -32,7 +32,9 @@
         modelNode.factory('psn-nursingScheduleTemplate');
         modelNode.factory('psn-recharge');
         modelNode.factory('psn-nursingWorker');
+        modelNode.factory('psn-workItem');
         modelNode.factory('psn-district');
+        modelNode.factory('psn-nursingLevel');
         modelNode.factory('psn-room');
         modelNode.factory('psn-roomOccupancyChangeHistory');
 

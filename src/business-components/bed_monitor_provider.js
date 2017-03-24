@@ -5,8 +5,8 @@
  var rp = require('request-promise-native');
  var xml2js = require('xml2js');
  var externalSystemConfig = require('../pre-defined/external-system-config.json');
-  var dictionary = require('../pre-defined/dictionary.json');
-  var DIC = require('../pre-defined/dictionary-constants.json');
+ var dictionary = require('../pre-defined/dictionary.json');
+ var DIC = require('../pre-defined/dictionary-constants.json');
 
  module.exports={
     init: function (ctx) {
