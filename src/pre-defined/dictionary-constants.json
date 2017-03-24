@@ -3,6 +3,10 @@
     "MOBILE": "A0001",
     "PC": "A0003"
   },
+  "D1006":{
+    "MALE" : "M",
+    "FEMALE":"F"
+  },
   "D0102": {
     "FourSeasonTour": "A0001"
   },

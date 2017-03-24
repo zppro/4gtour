@@ -18,6 +18,7 @@ module.exports = function(ctx,name) {
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
             name: {type: String, required: true},//关心人的名称
+            birthYear:{type:String},//关心人的age
             sex: {type: String, required: true, minlength: 1, maxlength: 1, enum: ctx._.rest(ctx.dictionary.keys["D1006"])},
             care_by: {type: mongoose.Schema.Types.ObjectId, ref: 'het_member'},
             bedMonitorId: {type: mongoose.Schema.Types.ObjectId, ref: 'pub_bedMonitor'}, //绑定关心人的设备

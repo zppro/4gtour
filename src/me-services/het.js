@@ -26,7 +26,7 @@
             handler: function (app, options) {
                 return function *(next) {
                     try {
-                        var member = yield app.bed_monitor_provider.regist(this.request.body.session,this.request.body.userInfo);
+                        var member = yield app.bed_monitor_provider.regist(this.request.body.session,this.request.body.userInfo,this.request.body.tenantId);
                         console.log("regist reback");
                         if(member){
                             console.log("getToken");
@@ -53,7 +53,11 @@
                  try {
                   console.log("body:");
                   console.log(this.request.body);
-                  this.body = yield app.bed_monitor_provider.addDevice(this.request.body.deviceInfo,this.request.body.session);
+                 var ret = yield app.bed_monitor_provider.addDevice(this.request.body.deviceInfo,this.request.body.session,this.request.body.tenantId);
+                   console.log("add device back");
+                // console(ret);
+                 console.log("-------------------------");
+                    this.body = app.wrapper.res.ret(ret);
               } catch (e) {
                 self.logger.error(e.message);
                 this.body = app.wrapper.res.error(e);
@@ -70,8 +74,10 @@
                                         return function *(next) {
                                                      try {
                                                   console.log("body:");
-                                                   console.log(typeof(this.request.body.device));
-                                                                    this.body = yield app.bed_monitor_provider.updateDevice(this.request.body);
+                                                  console.log(this.request.body.setUserConcernPersonJson)
+                                                   console.log(typeof(this.request.body.setUserConcernPersonJson));
+                                                     //this.body = yield app.bed_monitor_provider.updateDevice(this.request.body);
+                                                     this.body = "ok";
                                                          } catch (e) {
                                                     self.logger.error(e.message);
                                                     this.body = app.wrapper.res.error(e);
