@@ -35,6 +35,7 @@
                             var session_id = yield app.bed_monitor_provider.getSession(member.open_id)
                             console.log(session_id);
                             this.body = app.wrapper.res.default();
+
                         }
                     } catch (e) {
                         self.logger.error(e.message);
@@ -53,12 +54,12 @@
                  try {
                   console.log("body:");
                   console.log(this.request.body);
-                 var ret = yield app.bed_monitor_provider.addDevice(this.request.body.deviceInfo,this.request.body.session,this.request.body.tenantId);
-                   console.log("add device back");
+                  var ret = yield app.bed_monitor_provider.addDevice(this.request.body.deviceInfo,this.request.body.session,this.request.body.tenantId);
+                  console.log("add device back");
                 // console(ret);
-                 console.log("-------------------------");
-                    this.body = app.wrapper.res.ret(ret);
-              } catch (e) {
+                console.log("-------------------------");
+                this.body = app.wrapper.res.ret(ret);
+            } catch (e) {
                 self.logger.error(e.message);
                 this.body = app.wrapper.res.error(e);
             }
@@ -66,27 +67,46 @@
         };
     }
 },
-                               {
-                                    method: 'sleepDevicews$updateDevice',
-                                    verb: 'post',
-                                    url: this.service_url_prefix + "/sleepDevicews$updateDevice",
-                                    handler: function (app, options) {
-                                        return function *(next) {
-                                                     try {
-                                                  console.log("body:");
-                                                  console.log(this.request.body.setUserConcernPersonJson)
-                                                   console.log(typeof(this.request.body.setUserConcernPersonJson));
+{
+    method: 'sleepDevicews$updateDevice',
+    verb: 'post',
+    url: this.service_url_prefix + "/sleepDevicews$updateDevice",
+    handler: function (app, options) {
+        return function *(next) {
+         try {
+          console.log("body:");
+          console.log(this.request.body.setUserConcernPersonJson)
+          console.log(typeof(this.request.body.setUserConcernPersonJson));
                                                      //this.body = yield app.bed_monitor_provider.updateDevice(this.request.body);
                                                      this.body = "ok";
-                                                         } catch (e) {
+                                                 } catch (e) {
                                                     self.logger.error(e.message);
                                                     this.body = app.wrapper.res.error(e);
-                                                        }
+                                                }
                                                 yield next;
-                                        };
-                                    }
-                             }
-];
-return this;
-}
-}.init();
+                                            };
+                                        }
+                                    },
+                                    {
+                                        method: 'sleepDevicews$test',
+                                        verb: 'post',
+                                        url: this.service_url_prefix + "/sleepDevicews$test",
+                                        handler: function (app, options) {
+                                            return function *(next) {
+                                             try {
+                                              console.log("body:");
+                                              console.log(this.request.body)
+                                              this.body = yield app.bed_monitor_provider.updateConcernPerson(this.request.body);
+                                              this.body = "ok";
+                                          } catch (e) {
+                                            self.logger.error(e.message);
+                                            this.body = app.wrapper.res.error(e);
+                                        }
+                                        yield next;
+                                    };
+                                }
+                            }
+                            ];
+                            return this;
+                        }
+                    }.init();
