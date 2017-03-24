@@ -22,17 +22,20 @@ module.exports = function(ctx,name) {
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
-            nursing_catalog: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3012"])},
+            nursingLevelId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'psn_nursingLevel'},
+            customize_flag: {type: Boolean, default: false}, // 自定义标识,一旦确定无法修改
             name: {type: String, required: true, maxlength: 100},
             description: {type: String,maxLength:200},
             duration: {type: Number, default: 0}, // 完成时长 单为分
-            confirm_flag: {type: Boolean, default: false}, // 需要护工确认标识
             repeat_type: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D0103"])},
             repeat_values: [{type: Number, min: 0, max: 365, default: 0}],
             repeat_start: {type: String, minlength: 1, maxlength: 5, default: '*'},
+            confirm_flag: {type: Boolean, default: false}, // 需要护工确认标识
             remind_flag: {type: Boolean, default: false}, // 需要提醒标识
-            remind_type: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D0104"])},
+            remind_mode: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D0104"])},
             remind_times: {type: Number}, // 提醒次数
+            fee_flag: {type: Boolean, default: false}, // 是否需要收费
+            fee: {type: Number}, // 费用
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {
             toObject: {
@@ -57,9 +60,9 @@ module.exports = function(ctx,name) {
             return '';
         });
 
-        workItemSchema.virtual('remind_type_name').get(function () {
-            if (this.remind_type) {
-                return D0104[this.remind_type].name;
+        workItemSchema.virtual('remind_mode_name').get(function () {
+            if (this.remind_mode) {
+                return D0104[this.remind_mode].name;
             }
             return '';
         });
