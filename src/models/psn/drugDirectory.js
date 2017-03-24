@@ -16,7 +16,7 @@ module.exports = function(ctx,name) {
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
-            drug_no:{type: String，required: true},// 药品编码
+            drug_no:{type: String, required: true},// 药品编码
             full_name:{type: String},
             short_name:{type: String},
             alias:{type: String},
