@@ -24,7 +24,6 @@ module.exports = function(ctx,name) {
             work_items:[{
                 workItemId: {type: mongoose.Schema.Types.ObjectId, ref: 'psn_workItem'},
                 check_in_time: {type: Date, default: Date.now},
-                nursing_catalog: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3012"])},
                 name: {type: String, required: true, maxlength: 100},
                 description: {type: String,maxLength:400},
                 repeat_type: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D0103"])},

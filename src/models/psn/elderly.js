@@ -72,20 +72,7 @@ module.exports = function(ctx,name) {
                 adl_level: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3008"])}
             },
             nursingLevelId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'psn_nursingLevel'},
-            nursing_content:[{
-                check_in_time: {type: Date, default: Date.now},
-                gen_batch_no: {type: String, required: true, minlength: 10, maxlength: 10},
-                workItemId: {type: mongoose.Schema.Types.ObjectId, ref: 'psn_workItem'},
-                name: {type: String, required: true, maxlength: 100},
-                description: {type: String,maxLength:400},
-                remark: {type: String,maxLength:200},
-                duration: {type: Number, default: 0}, // 完成时长 单为分
-                assigned_worker: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'psn_nursingWorker'}, // 分配的护工
-                exec_time:{type: Date, required: true},
-                confirmed_on: {type: Boolean, default: false}, // 护工已确认标识
-                confirmed_worker: {type: mongoose.Schema.Types.ObjectId, ref: 'psn_nursingWorker'}, // 护工
-                remind_on:[{type: Date, required: true}] //提醒时间
-            }],
+            nursing_content:[{type: mongoose.Schema.Types.ObjectId, required: true, ref: 'psn_nursingRecord'}],
             subsidiary_ledger:{
                 self:{type: Number, default: 0.00},//自费账户
                 gov_subsidy:{type: Number, default: 0.00} //政府补助

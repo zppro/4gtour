@@ -13,6 +13,12 @@
   "D3010": {
     "WEEKLY": "A0001"
   },
+  "D0103": {
+    "AS_NEEDED": "A0001",
+    "TIME_IN_DAY": "A0003",
+    "DAY_IN_WEEK": "A0005",
+    "DATE_IN_MONTH": "A0007"
+  },
   "TRV00": {
     "FEELING": "A0001",
     "ROUTE": "A0003"

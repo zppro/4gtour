@@ -8,6 +8,7 @@
     "ENTER_TO_TENANT": "psn_enter$tenant",
     "RECEPTION_TO_TENANT": "psn_reception$tenant",
     "LEAVE_TO_TENANT": "psn_leave$tenant",
+    "CODE_OF_NURSING_RECORD": "psn_nursingRecord$code",
     "BOOKING_TO_TENANT": "booking$tenant",
     "SCENICSPOT": "scenerySpot$code"
   },

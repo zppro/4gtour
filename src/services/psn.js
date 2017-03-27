@@ -4379,6 +4379,250 @@ module.exports = {
                         yield next;
                     };
                 }
+            },
+            /**********************护理计划执行(护理记录)*****************************/
+            {
+                method: 'nursingRecordGenerate',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingRecordGenerate", //按照护理计划一轮护理记录
+                handler: function (app, options) {
+                    return function * (next) {
+                        var tenant, elderly, elderlyRoomValue, roomId, nursingPlanItems, nursingPlanItem, workItems, workItem,
+                            nursingRecord, now, gen_batch_no, nursingWorkerScheduleItem, exec_date, exec_date_string, exec_time_string, remind_on;
+                        var elderlyMapRoom = {},  nursingRecordsToSave = [], nursingRecordToSave,work_item_repeat_values, allElderly, nursingRecordExist, 
+                            remind_max, remind_step, remind_start, exec_start, exec_end;
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            var elderlyId = this.request.body.elderlyId;
+                            if (elderlyId) {
+                                // 为单个老人
+                                elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
+                                if (!elderly || elderly.status == 0) {
+                                    this.body = app.wrapper.res.error({message: '无法找到老人!'});
+                                    yield next;
+                                    return;
+                                }
+
+                                if (!elderly.live_in_flag) {
+                                    this.body = app.wrapper.res.error({message: '老人已出院或离世!'});
+                                    yield next;
+                                    return;
+                                }
+
+                                nursingPlanItems = yield app.modelFactory().model_query(app.models['psn_nursingPlan'], {
+                                    select: 'work_items',
+                                    where: {
+                                        status: 1,
+                                        elderlyId: elderlyId,
+                                        tenantId: tenantId
+                                    }
+                                });
+
+                                // 查询房间号
+                                elderlyMapRoom[elderlyId] =  elderly.room_value;
+
+                            } else {
+                                allElderly =  yield app.modelFactory().model_query(app.models['psn_nursingPlan'], {
+                                    select: 'room_value',
+                                    where: {
+                                        status: 1,
+                                        live_in_flag: true,
+                                        tenantId: tenantId
+                                    }
+                                });
+                                
+                                app._.each(allElderly, (o) => {
+                                    elderlyMapRoom[o._id.toString()] = o.room_value;
+                                });
+
+                                // 为所有老人
+                                nursingPlanItems = yield app.modelFactory().model_query(app.models['psn_nursingPlan'], {
+                                    select: 'work_items',
+                                    where: {
+                                        status: 1,
+                                        tenantId: tenantId
+                                    }
+                                });
+                            }
+
+                            if (nursingPlanItems.length) {
+                                now = app.moment();
+                                gen_batch_no = yield app.sequenceFactory.getSequenceVal(ctx.modelVariables.SEQUENCE_DEFS.CODE_OF_NURSING_RECORD);
+                                elderlyRoomValue = elderlyMapRoom[nursingPlanItem.elderlyId.toString()];
+                                nursingRecord = {
+                                    elderlyId: nursingPlanItem.elderlyId,
+                                    elderly_name: nursingPlanItem.elderlyId,
+                                    roomId: elderlyRoomValue.roomId,
+                                    bed_no: elderlyRoomValue.bed_no,
+                                    gen_batch_no: gen_batch_no,
+                                    tenantId: tenantId
+                                }
+                                for (var i = 0, len = nursingPlanItems.length; i < len; i++) {
+                                    nursingPlanItem = nursingPlanItems[i];
+                                    workItems = nursingPlanItem.work_items;
+                                    for (var j = 0, len2 = workItems.length; j < len2; j++) {
+                                        workItem = workItems[j];
+                                        remind_max = workItem.remind_times || 1;
+                                        remind_step = workItem.duration / remind_max;
+
+                                        nursingRecordExist = yield app.modelFactory().model_query(app.models['psn_nursingRecord'], {
+                                            select: 'work_items',
+                                            where: {
+                                                status: 1,
+                                                tenantId: tenantId
+                                            }
+                                        });
+
+                                        nursingRecord.workItemId = workItem._id
+                                        nursingRecord.name = workItem.name;
+                                        nursingRecord.description = workItem.description;
+                                        nursingRecord.remark = workItem.remark;
+                                        nursingRecord.duration = workItem.duration;
+                                        nursingRecord.remind_on = [];
+
+
+                                        if (workItem.repeat_type == DIC.D0103.AS_NEEDED) {
+                                            //按需工作不需要提醒
+                                            nursingRecord.exec_date_string = now.format('YYYY-MM-DD');
+                                            nursingRecord.assigned_worker = null; // 待补
+                                            nursingRecordsToSave.push(nursingRecord)
+                                        } else if (workItem.repeat_type == DIC.D0103.TIME_IN_DAY) {
+                                            nursingRecord.exec_date_string = now.format('YYYY-MM-DD');
+                                            if (workItem.repeat_values.length > 0) {
+                                                // 每天某几个时刻执行,考虑到时间间隔比较近,因此将当天的全部生成
+                                                app._.each(workItem.repeat_values.split(','), (o)=> {
+                                                    if (app.moment(nursingRecord.exec_date_string + ' ' + o + workItem.repeat_start).isAfter(now)) {
+                                                        // 当天没有过期的时刻
+                                                        nursingRecord.exec_time_string = o + workItem.repeat_start;
+                                                        if (workItem.remind_flag) {
+                                                            remind_start = app.moment(nursingRecord.exec_date_string + ' ' + nursingRecord.exec_time_string);
+                                                            for (var remind_count = 0; remind_count < remind_max; remind_count++) {
+                                                                nursingRecord.remind_on.push(remind_start.add(remind_step * remind_count, 'minutes'));
+                                                            }
+                                                        }
+                                                        nursingRecordsToSave.push(app._.extend({}, nursingRecord));
+                                                    }
+                                                });
+                                            } else {
+                                                // 每天某个时刻执行
+                                                if (app.moment(nursingRecord.exec_date_string + ' ' + workItem.repeat_start).isBefore(now)) {
+                                                    // 当天已经过期,生成明天
+                                                    nursingRecord.exec_date_string = now.add(1, 'days').format('YYYY-MM-DD');
+                                                }
+                                                nursingRecord.exec_time_string = workItem.repeat_start;
+                                                if (workItem.remind_flag) {
+                                                    remind_start = app.moment(nursingRecord.exec_date_string + ' ' + nursingRecord.exec_time_string);
+                                                    for (var remind_count = 0; remind_count < remind_max; remind_count++) {
+                                                        nursingRecord.remind_on.push(remind_start.add(remind_step * remind_count, 'minutes'));
+                                                    }
+                                                }
+                                                nursingRecordsToSave.push(nursingRecord);
+                                            }
+                                        } else if (workItem.repeat_type == DIC.D0103.DAY_IN_WEEK) {
+                                            if (workItem.repeat_values) {
+                                                work_item_repeat_values = workItem.repeat_values.split(',');
+                                                for (var weekDay = now.day(),weekMax = weekDay+8; weekDay< weekMax; weekDay++) {
+                                                    if (app._.find(work_item_repeat_values, (o) => {
+                                                            return weekDay % 7 === o % 7;
+                                                        })) {
+                                                        // day 相等以后,判断是否时是生成当天,如果是则比较时刻,时刻过期的话需要生成下一个执行点
+                                                        exec_date = now.day(weekDay);
+                                                        if (app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start).isAfter(now)) {
+                                                            nursingRecord.exec_date_string = exec_date.format('YYYY-MM-DD');
+                                                            nursingRecord.exec_time_string = workItem.repeat_start;
+                                                            if (workItem.remind_flag) {
+                                                                remind_start = app.moment(nursingRecord.exec_date_string + ' ' + nursingRecord.exec_time_string);
+                                                                for (var remind_count = 0; remind_count < remind_max; remind_count++) {
+                                                                    nursingRecord.remind_on.push(remind_start.add(remind_step * remind_count, 'minutes'));
+                                                                }
+                                                            }
+                                                            nursingRecordsToSave.push(app._.extend({}, nursingRecord));
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        } else if (workItem.repeat_type == DIC.D0103.DATE_IN_MONTH) {
+                                            if (workItem.repeat_values) {
+                                                work_item_repeat_values = workItem.repeat_values.split(',');
+                                                for (var i = 0; i< 32;i++) {
+                                                    if (app._.find(work_item_repeat_values, (o) => {
+                                                            return now.add(i, 'days').date() === o;
+                                                        })) {
+                                                        // date 相等以后,判断是否时是生成当天,如果是则比较时刻,时刻过期的话需要生成下一个执行点
+                                                        exec_date = now.add(i, 'days');
+                                                        if (app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start).isAfter(now)) {
+                                                            nursingRecord.exec_date_string = exec_date.format('YYYY-MM-DD');
+                                                            nursingRecord.exec_time_string = workItem.repeat_start;
+                                                            if (workItem.remind_flag) {
+                                                                remind_start = app.moment(nursingRecord.exec_date_string + ' ' + nursingRecord.exec_time_string);
+                                                                for (var remind_count = 0; remind_count < remind_max; remind_count++) {
+                                                                    nursingRecord.remind_on.push(remind_start.add(remind_step * remind_count, 'minutes'));
+                                                                }
+                                                            }
+                                                            nursingRecordsToSave.push(app._.extend({}, nursingRecord));
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                console.log(nursingRecordsToSave);
+                                // 计算本轮 
+                                for (var i=0,len = nursingRecordsToSave.length;i<len;i++) {
+                                    nursingRecordToSave = nursingRecordsToSave[i];
+                                    // todo:判断是否已经存在,如果存在则删除
+
+                                    nursingWorkerScheduleItem = yield app.modelFactory().model_remove(app.models['psn_nursingSchedule'], {
+                                        status: 1,
+                                        elderlyId: nursingRecordToSave.elderlyId,
+                                        y_axis: elderlyRoomValue.roomId,
+                                        tenantId: tenantId
+                                    });
+                                    
+
+                                    // 查找老人对应的护工 (老人->房间+日期->排班->护工)
+                                    exec_start = app.moment(nursingRecordToSave.exec_date_string);
+                                    exec_end = exec_start.add(1, 'days');
+                                    nursingWorkerScheduleItem = yield app.modelFactory().model_one(app.models['psn_nursingSchedule'], {
+                                        select: 'aggr_value',
+                                        where: {
+                                            status: 1,
+                                            x_axis: {'$gte': exec_start, '$lt': exec_end},
+                                            y_axis: elderlyRoomValue.roomId,
+                                            tenantId: tenantId
+                                        }
+                                    });
+
+                                    if (nursingWorkerScheduleItem) {
+                                        nursingRecordToSave.assigned_worker = nursingWorkerScheduleItem.aggr_value;
+                                    }
+                                }
+
+
+                            }
+
+
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
             }
             /**********************其他*****************************/
             

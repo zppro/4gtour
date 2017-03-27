@@ -7,6 +7,7 @@
 var _ = require('underscore');
 var moment = require("moment");
 moment.locale('zh-cn');
+
 var log4js = require('log4js');
 var koa = require('koa');
 var Router = require('koa-router');
@@ -444,8 +445,7 @@ co(function*() {
     app.group_service.joinMonitoring();
 
     console.log('listening...');
-
-
+    
     // console.log('test app.spu_service');
     // var member1 = yield app.modelFactory().model_query(app.models['het_member']);
     // var member2 = yield app.modelFactory().model_query(app.models['trv_member']);

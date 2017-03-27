@@ -3,7 +3,6 @@
  * 养老机构 工作项目
  */
 var mongoose = require('mongoose');
-var D3012 = require('../../pre-defined/dictionary.json')['D3012'];
 var D0103 = require('../../pre-defined/dictionary.json')['D0103'];
 var D0104 = require('../../pre-defined/dictionary.json')['D0104'];
 
@@ -45,14 +44,7 @@ module.exports = function(ctx,name) {
                 virtuals: true
             }
         });
-
-        workItemSchema.virtual('nursing_catalog_name').get(function () {
-            if (this.nursing_catalog) {
-                return D3012[this.nursing_catalog].name;
-            }
-            return '';
-        });
-
+ 
         workItemSchema.virtual('repeat_type_name').get(function () {
             if (this.repeat_type) {
                 return D0103[this.repeat_type].name;
