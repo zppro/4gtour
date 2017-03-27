@@ -32,14 +32,11 @@
                                             i.glyphicon.glyphicon-ok-sign
                                         a.btn.btn-primary.btn-sm(title="{{'button.CANCEL'|translate}}",ng-click="vm.cancelElderlyEditing(row.trackedKey)")
                                             i.glyphicon.glyphicon-remove-sign
-                                //.btn-group(ng-if="vm.$editings[row.trackedKey]['nursingLevelId'] && !vm.aggrData[row.trackedKey]['elderly']['nursing_level_name']")
-                                //    .btn.btn-primary.btn-xs(ng-repeat='nursingLevel in vm.selectBinding.nursingLevels',ng-model="vm.editing$NursingLevel",btn-radio="nursingLevel.id") {{nursingLevel.short_name}}
-                                //.btn-group(ng-if="vm.$editings[row.trackedKey]['nursingLevelId'] && !vm.aggrData[row.trackedKey]['elderly']['nursing_level_name']")
-
                         td
-                            .btn-group
-                                a.btn.btn-primary.btn-sm(ng-if="vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']" ng-click="vm.switchReadonlyWorkItems(row.trackedKey)" ng-class="{'btn-primary': !vm.$editings[row.trackedKey]['workItems'], 'btn-warning': vm.$editings[row.trackedKey]['workItems']}") {{ vm.$editings[row.trackedKey]['workItems'] ? vm.moduleTranslatePath('BTN-DO-READONLY-WORK-ITEMS') : vm.moduleTranslatePath('BTN-CANCEL-READONLY-WORK-ITEMS') | translate}}
-                                a.btn.btn-primary.btn-sm(ng-if="vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']" ng-click="vm.addCustomizedWorkItems(row.trackedKey)") {{ vm.moduleTranslatePath('BTN-ADD-CUSTOMIZED-WORK-ITEMS') | translate}}
+                            .btn-group(ng-if="vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']")
+                                a.btn.btn-primary.btn-sm(ng-click="vm.switchReadonlyWorkItems(row.trackedKey)" ng-class="{'btn-primary': !vm.$editings[row.trackedKey]['workItems'], 'btn-warning': vm.$editings[row.trackedKey]['workItems']}") {{ vm.$editings[row.trackedKey]['workItems'] ? vm.moduleTranslatePath('BTN-DO-READONLY-WORK-ITEMS') : vm.moduleTranslatePath('BTN-CANCEL-READONLY-WORK-ITEMS') | translate}}
+                                a.btn.btn-primary.btn-sm(ng-click="vm.addCustomizedWorkItems(row.trackedKey)") {{ vm.moduleTranslatePath('BTN-ADD-CUSTOMIZED-WORK-ITEMS') | translate}}
+                                a.btn.btn-primary.btn-sm(ng-click="vm.genNursingContent(row.trackedKey)") {{ vm.moduleTranslatePath('BTN-GEN-NURSING-CONTENT') | translate}}
                             .split
                             .btn-group.work-item(ng-if="vm.aggrData[row.trackedKey]['elderly']['id'] && vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']", ng-repeat="workItem in vm.workItemMap[vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']]")
                                 .checkbox.c-checkbox

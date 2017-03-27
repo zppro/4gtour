@@ -21,7 +21,6 @@ module.exports = function(ctx,name) {
             status: {type: Number, min: 0, max: 1, default: 1},
             elderlyId: {type: mongoose.Schema.Types.ObjectId, ref: 'psn_elderly'},
             elderly_name: {type: String},
-            nursing_catalogs: [{type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3012"])}],
             work_items:[{
                 workItemId: {type: mongoose.Schema.Types.ObjectId, ref: 'psn_workItem'},
                 check_in_time: {type: Date, default: Date.now},
@@ -35,7 +34,8 @@ module.exports = function(ctx,name) {
                 confirm_flag: {type: Boolean, default: false}, // 需要护工确认标识
                 remind_flag: {type: Boolean, default: false}, // 需要提醒标识
                 remind_type: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D0104"])},
-                remind_times: {type: Number} // 提醒次数
+                remind_times: {type: Number}, // 提醒次数
+                remark: {type: String,maxLength:200} //可以对某一个项目进行备注
             }],
             remark: {type: String,maxLength:200},
             tenantId: {type: mongoose.Schema.Types.ObjectId}
