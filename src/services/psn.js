@@ -859,10 +859,10 @@ module.exports = {
                                 return;
                             }
 
+                            var oldNursingLevelId = elderly.nursingLevelId;
+
                             var operated_by = this.request.body.operated_by;
                             var operated_by_name = this.request.body.operated_by_name;
-
-                            var oldNursingLevelId = elderly.nursingLevelId || 'null';
 
                             elderly.nursingLevelId = nursingLevelId;
                             yield elderly.save();
@@ -873,7 +873,7 @@ module.exports = {
                                 elderlyId: elderlyId,
                                 elderly_name: elderly.name,
                                 col_name: 'nursingLevelId',
-                                col_val_old: oldNursingLevelId,
+                                col_val_old: oldNursingLevelId || 'null',
                                 col_val_new: nursingLevelId,
                                 fromMethod: 'changeElderlyNursingLevel',
                                 tenantId: elderly.tenantId
@@ -891,7 +891,7 @@ module.exports = {
                             elderlyNursingPlan.work_items = [];
                             yield elderlyNursingPlan.save();
 
-                            this.body = app.wrapper.res.ret({nursingLevelId: nursingLevelId,nursingLevelName: nursingLevel.name});
+                            this.body = app.wrapper.res.ret({oldNursingLevelId: oldNursingLevelId, nursingLevelId: nursingLevelId,nursingLevelName: nursingLevel.name});
                         }
                         catch (e) {
                             console.log(e);

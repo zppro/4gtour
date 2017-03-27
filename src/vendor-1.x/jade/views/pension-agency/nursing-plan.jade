@@ -40,16 +40,19 @@
                             .btn-group.work-item(ng-if="vm.aggrData[row.trackedKey]['elderly']['id'] && vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']", ng-repeat="workItem in vm.workItemMap[vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']]")
                                 .checkbox.c-checkbox
                                     label
-                                        input(id="{{vm.aggrData[row.trackedKey]['elderly']['nursingLevelId'] + '$' +workItem.id}}",type='checkbox',ng-model="vm.work_items[vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']][workItem.id]" ng-change="vm.workItemChecked(row.trackedKey, workItem.id)")
+                                        input(id="{{row.trackedKey + '$' +workItem.id}}",type='checkbox',ng-model="vm.work_items[row.trackedKey + '$' + vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']][workItem.id]" ng-change="vm.workItemChecked(row.trackedKey, workItem.id)")
                                         span.fa.fa-check
-                                label(for="{{vm.aggrData[row.trackedKey]['elderly']['nursingLevelId'] + '$' +workItem.id}}") {{ workItem.name }}
+                                label(for="{{row.trackedKey + '$' +workItem.id}}") {{ workItem.name }}
                         td.text-center
                             div(ng-if="vm.aggrData[row.trackedKey]['elderly']['id']")
-                                span(ng-if="vm.aggrData[row.trackedKey]['nursing_plan']['remark']") {{vm.aggrData[row.trackedKey]['nursing_plan']['remark']}}
-                                a.btn.btn-primary.btn-sm(ng-if="!vm.$editings[row.trackedKey]['remark'] && !vm.aggrData[row.trackedKey]['nursing_plan']['remark']" ng-click="vm.setNursingPlanRemark(row.trackedKey)") {{ vm.moduleTranslatePath('BTN-SET-NURSING-PLAN-REMARK') | translate}}
-                                input.form-control(type="text",ng-if="vm.$editings[row.trackedKey]['remark']",ng-model='vm.editing$NursingPlanRemark')
+                                span(ng-if="!vm.$editings[row.trackedKey]['remark'] && vm.aggrData[row.trackedKey]['nursing_plan']['remark']") {{vm.aggrData[row.trackedKey]['nursing_plan']['remark']}}
+                                a.btn.btn-primary.btn-sm(ng-if="!vm.$editings[row.trackedKey]['remark'] && !vm.aggrData[row.trackedKey]['nursing_plan']['remark']" ng-click="vm.addNursingPlanRemark(row.trackedKey)") {{ vm.moduleTranslatePath('BTN-SET-NURSING-PLAN-REMARK') | translate}}
+                                .btn-group(ng-if="!vm.$editings[row.trackedKey]['remark'] && vm.aggrData[row.trackedKey]['nursing_plan']['remark']")
+                                    a.btn.btn-primary.btn-xs(ng-click="vm.editNursingPlanRemark(row.trackedKey)")
+                                        i.glyphicon.glyphicon-pencil
+                                input.form-control(type="text",ng-if="vm.$editings[row.trackedKey]['remark']",ng-model="vm.editing$NursingPlanRemark[vm.aggrData[row.trackedKey]['elderly']['id']]")
                                 .btn-group(ng-if="vm.$editings[row.trackedKey]['remark']")
-                                    a.btn.btn-primary.btn-xs(title="{{'button.SAVE'|translate}}",ng-click="vm.saveNursingPlanRemark(row.trackedKey, vm.editing$NursingPlanRemark)")
+                                    a.btn.btn-primary.btn-xs(title="{{'button.SAVE'|translate}}",ng-click="vm.saveNursingPlanRemark(row.trackedKey, vm.editing$NursingPlanRemark[vm.aggrData[row.trackedKey]['elderly']['id']])")
                                         i.glyphicon.glyphicon-ok-sign
                                     a.btn.btn-primary.btn-xs(title="{{'button.CANCEL'|translate}}",ng-click="vm.cancelNursingPlanRemark(row.trackedKey)")
                                         i.glyphicon.glyphicon-remove-sign

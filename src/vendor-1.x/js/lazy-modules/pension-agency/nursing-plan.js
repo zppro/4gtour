@@ -30,7 +30,8 @@
             vm.saveElderlyNursingLevel = saveElderlyNursingLevel;
             vm.cancelElderlyEditing = cancelElderlyEditing;
             vm.workItemChecked = workItemChecked;
-            vm.setNursingPlanRemark = setNursingPlanRemark;
+            vm.addNursingPlanRemark = addNursingPlanRemark;
+            vm.editNursingPlanRemark = editNursingPlanRemark;
             vm.saveNursingPlanRemark = saveNursingPlanRemark;
             vm.cancelNursingPlanRemark = cancelNursingPlanRemark;
 
@@ -71,6 +72,7 @@
             });
 
             vm.editing$NursingLevel = {};
+            vm.editing$NursingPlanRemark = {};
             vm.work_items = {};
             fetchNursingPlan();
         }
@@ -82,7 +84,7 @@
                 vm.aggrData = data;
                 for(var trackedKey in vm.aggrData) {
                     vm.$editings[trackedKey] = {};
-                    var key = vm.aggrData[trackedKey]['elderly']['nursingLevelId'];
+                    var key = trackedKey + '$' + vm.aggrData[trackedKey]['elderly']['nursingLevelId'];
                     if (key) {
                         if (!vm.work_items[key]) {
                             vm.work_items[key] = {};
@@ -109,17 +111,17 @@
                 for (var i = 1, len = o.capacity; i <= len; i++) {
                     var trackedKey =  o._id + '$' + i;
                     yAxisDataFlatten.push(_.extend({trackedKey: trackedKey, bed_no: i}, o));
-
                 }
             });
             vm.yAxisDataFlatten = yAxisDataFlatten;
+            // console.log('yAxisDataFlatten:',vm.yAxisDataFlatten);
         }
 
         function addElderlyNursingLevel (trackedKey) {
             vm.$editings[trackedKey]['elderly'] = true;
         }
 
-        function editElderlyNursingLevel (trackedKey, nursingLevelId) {
+        function editElderlyNursingLevel (trackedKey) {
             vm.editing$NursingLevel[vm.aggrData[trackedKey]['elderly']['id']] = vm.aggrData[trackedKey]['elderly']['nursingLevelId'];
             vm.$editings[trackedKey]['elderly'] = true;
         }
@@ -127,7 +129,23 @@
         function saveElderlyNursingLevel (trackedKey, nursingLevelId) {
             var elderlyId = vm.aggrData[trackedKey]['elderly'].id;
             vmh.psnService.changeElderlyNursingLevel(vm.tenantId, elderlyId, nursingLevelId, vm.operated_by, vm.operated_by_name).then(function(data){
-                vm.aggrData[trackedKey]['elderly'].nursingLevelId = data.nursingLevelId;
+
+                // 更改老人护理等级意味着需要原等级下的所有工作项目
+                if (data.oldNursingLevelId && data.nursingLevelId != data.oldNursingLevelId) {
+                    console.log('更改前:', vm.work_items)
+                    var key = trackedKey + '$' + data.oldNursingLevelId;
+                    var workItemsOfNursingLevel = vm.workItemMap[data.oldNursingLevelId];
+                    if (workItemsOfNursingLevel) {
+                        console.log('workItemsOfNursingLevel:',workItemsOfNursingLevel);
+                        for (var i = 0, len = workItemsOfNursingLevel.length; i < len; i++) {
+                            console.log('workItemsOfNursingLevel[i]:', workItemsOfNursingLevel[i]);
+                            vm.work_items[key][workItemsOfNursingLevel[i].id] = false;
+                        }
+                    }
+                    console.log('更改后:', vm.work_items)
+                }
+
+                vm.aggrData[trackedKey]['elderly']['nursingLevelId'] = data.nursingLevelId;
                 vm.$editings[trackedKey]['elderly'] = false;
             });
         }
@@ -138,11 +156,17 @@
 
         function workItemChecked (trackedKey, workItemId) {
             var elderlyId = vm.aggrData[trackedKey]['elderly'].id;
-            var work_item_check_info = { id: workItemId, checked: vm.work_items[vm.aggrData[trackedKey]['elderly']['nursingLevelId']][workItemId]};
+            var key = trackedKey + '$' + vm.aggrData[trackedKey]['elderly']['nursingLevelId'];
+            var work_item_check_info = { id: workItemId, checked: vm.work_items[key][workItemId]};
             vmh.psnService.nursingPlanSaveWorkItem(vm.tenantId, elderlyId, work_item_check_info);
         }
 
-        function setNursingPlanRemark (trackedKey) {
+        function addNursingPlanRemark (trackedKey) {
+            vm.$editings[trackedKey]['remark'] = true;
+        }
+
+        function editNursingPlanRemark (trackedKey) {
+            vm.editing$NursingPlanRemark[vm.aggrData[trackedKey]['elderly']['id']] = vm.aggrData[trackedKey]['nursing_plan']['remark'];
             vm.$editings[trackedKey]['remark'] = true;
         }
 
