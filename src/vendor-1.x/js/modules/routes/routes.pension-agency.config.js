@@ -1081,7 +1081,7 @@
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-directory', {
                 url: '/drug-directory',
-                title: '出院管理',
+                title: '药品管理',
                 abstract: true,
                 views: {
                     "module-header": {
@@ -1105,7 +1105,7 @@
                 resolve: {
                     entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'drug-directory.list', {
                         modelName: 'psn-drugDirectory',
-                        searchForm: {"status": 1},
+                        searchForm: {},
                         serverPaging: true,
                         columns: [
                             {
