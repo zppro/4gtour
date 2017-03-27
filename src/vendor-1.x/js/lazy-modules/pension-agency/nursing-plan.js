@@ -29,6 +29,7 @@
             vm.editElderlyNursingLevel = editElderlyNursingLevel;
             vm.saveElderlyNursingLevel = saveElderlyNursingLevel;
             vm.cancelElderlyEditing = cancelElderlyEditing;
+            vm.switchReadonlyWorkItems = switchReadonlyWorkItems;
             vm.workItemChecked = workItemChecked;
             vm.addNursingPlanRemark = addNursingPlanRemark;
             vm.editNursingPlanRemark = editNursingPlanRemark;
@@ -100,7 +101,6 @@
                         }
                     }
                 }
-                console.log('vm.work_items', vm.work_items);
             });
         }
         
@@ -118,12 +118,12 @@
         }
 
         function addElderlyNursingLevel (trackedKey) {
-            vm.$editings[trackedKey]['elderly'] = true;
+            vm.$editings[trackedKey]['nursingLevelId'] = true;
         }
 
         function editElderlyNursingLevel (trackedKey) {
             vm.editing$NursingLevel[vm.aggrData[trackedKey]['elderly']['id']] = vm.aggrData[trackedKey]['elderly']['nursingLevelId'];
-            vm.$editings[trackedKey]['elderly'] = true;
+            vm.$editings[trackedKey]['nursingLevelId'] = true;
         }
 
         function saveElderlyNursingLevel (trackedKey, nursingLevelId) {
@@ -132,26 +132,29 @@
 
                 // 更改老人护理等级意味着需要原等级下的所有工作项目
                 if (data.oldNursingLevelId && data.nursingLevelId != data.oldNursingLevelId) {
-                    console.log('更改前:', vm.work_items)
+                    // console.log('更改前:', vm.work_items)
                     var key = trackedKey + '$' + data.oldNursingLevelId;
                     var workItemsOfNursingLevel = vm.workItemMap[data.oldNursingLevelId];
                     if (workItemsOfNursingLevel) {
-                        console.log('workItemsOfNursingLevel:',workItemsOfNursingLevel);
                         for (var i = 0, len = workItemsOfNursingLevel.length; i < len; i++) {
-                            console.log('workItemsOfNursingLevel[i]:', workItemsOfNursingLevel[i]);
+                            // console.log('workItemsOfNursingLevel[i]:', workItemsOfNursingLevel[i]);
                             vm.work_items[key][workItemsOfNursingLevel[i].id] = false;
                         }
                     }
-                    console.log('更改后:', vm.work_items)
+                    // console.log('更改后:', vm.work_items)
                 }
 
                 vm.aggrData[trackedKey]['elderly']['nursingLevelId'] = data.nursingLevelId;
-                vm.$editings[trackedKey]['elderly'] = false;
+                vm.$editings[trackedKey]['nursingLevelId'] = false;
             });
         }
 
         function cancelElderlyEditing (trackedKey) {
-            vm.$editings[trackedKey]['elderly'] = false;
+            vm.$editings[trackedKey]['nursingLevelId'] = false;
+        }
+
+        function switchReadonlyWorkItems(trackedKey) {
+            vm.$editings[trackedKey]['workItems'] = !vm.$editings[trackedKey]['workItems'];
         }
 
         function workItemChecked (trackedKey, workItemId) {

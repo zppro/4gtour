@@ -273,6 +273,9 @@
     "nursing-plan": {
       "TITLE": "养老机构-护理管理-护理计划-编排",
       "BTN-SET-NURSING-LEVEL": "设置护理等级",
+      "BTN-CANCEL-READONLY-WORK-ITEMS": "进入编辑模式",
+      "BTN-DO-READONLY-WORK-ITEMS": "返回只读模式",
+      "BTN-ADD-CUSTOMIZED-WORK-ITEMS": "添加自定义项目",
       "BTN-SET-NURSING-PLAN-REMARK": "填写备注"
     },
     "nursing-schedule": {
