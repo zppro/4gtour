@@ -4388,9 +4388,9 @@ module.exports = {
                 handler: function (app, options) {
                     return function * (next) {
                         var tenant, elderly, elderlyRoomValue, roomId, nursingPlanItems, nursingPlanItem, workItems, workItem,
-                            nursingRecord, now, gen_batch_no, nursingWorkerScheduleItem, exec_date, exec_date_string, exec_time_string, remind_on;
-                        var elderlyMapRoom = {},  nursingRecordsToSave = [], nursingRecordToSave,work_item_repeat_values, allElderly, nursingRecordExist, 
-                            remind_max, remind_step, remind_start, exec_start, exec_end;
+                            nursingRecord, now, gen_batch_no, nursingWorkerScheduleItem, exec_date, exec_on, exec_date_string, remind_on;
+                        var elderlyMapRoom = {},  nursingRecordsToSave = [], nursingRecordToSave,work_item_repeat_values, allEdlerlyIds, allElderly, nursingRecordExist,
+                            remind_max, remind_step, remind_start, exec_start, exec_end, warningMsg;
                         try {
                             var tenantId = this.request.body.tenantId;
                             tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
@@ -4417,7 +4417,7 @@ module.exports = {
                                 }
 
                                 nursingPlanItems = yield app.modelFactory().model_query(app.models['psn_nursingPlan'], {
-                                    select: 'work_items',
+                                    select: 'elderlyId elderly_name work_items',
                                     where: {
                                         status: 1,
                                         elderlyId: elderlyId,
@@ -4429,7 +4429,7 @@ module.exports = {
                                 elderlyMapRoom[elderlyId] =  elderly.room_value;
 
                             } else {
-                                allElderly =  yield app.modelFactory().model_query(app.models['psn_nursingPlan'], {
+                                allElderly =  yield app.modelFactory().model_query(app.models['psn_elderly'], {
                                     select: 'room_value',
                                     where: {
                                         status: 1,
@@ -4444,7 +4444,7 @@ module.exports = {
 
                                 // 为所有老人
                                 nursingPlanItems = yield app.modelFactory().model_query(app.models['psn_nursingPlan'], {
-                                    select: 'work_items',
+                                    select: 'elderlyId elderly_name work_items',
                                     where: {
                                         status: 1,
                                         tenantId: tenantId
@@ -4454,18 +4454,19 @@ module.exports = {
 
                             if (nursingPlanItems.length) {
                                 now = app.moment();
-                                gen_batch_no = yield app.sequenceFactory.getSequenceVal(ctx.modelVariables.SEQUENCE_DEFS.CODE_OF_NURSING_RECORD);
-                                elderlyRoomValue = elderlyMapRoom[nursingPlanItem.elderlyId.toString()];
-                                nursingRecord = {
-                                    elderlyId: nursingPlanItem.elderlyId,
-                                    elderly_name: nursingPlanItem.elderlyId,
-                                    roomId: elderlyRoomValue.roomId,
-                                    bed_no: elderlyRoomValue.bed_no,
-                                    gen_batch_no: gen_batch_no,
-                                    tenantId: tenantId
-                                }
+                                gen_batch_no = yield app.sequenceFactory.getSequenceVal(app.modelVariables.SEQUENCE_DEFS.CODE_OF_NURSING_RECORD);
                                 for (var i = 0, len = nursingPlanItems.length; i < len; i++) {
                                     nursingPlanItem = nursingPlanItems[i];
+                                    elderlyRoomValue = elderlyMapRoom[nursingPlanItem.elderlyId];
+                                    console.log(nursingPlanItem.elderlyId);
+                                    nursingRecord = {
+                                        elderlyId: nursingPlanItem.elderlyId,
+                                        elderly_name: nursingPlanItem.elderly_name,
+                                        roomId: elderlyRoomValue.roomId,
+                                        bed_no: elderlyRoomValue.bed_no,
+                                        gen_batch_no: gen_batch_no,
+                                        tenantId: tenantId
+                                    }
                                     workItems = nursingPlanItem.work_items;
                                     for (var j = 0, len2 = workItems.length; j < len2; j++) {
                                         workItem = workItems[j];
@@ -4490,19 +4491,20 @@ module.exports = {
 
                                         if (workItem.repeat_type == DIC.D0103.AS_NEEDED) {
                                             //按需工作不需要提醒
-                                            nursingRecord.exec_date_string = now.format('YYYY-MM-DD');
+                                            nursingRecord.exec_on = app.moment(now.format('YYYY-MM-DD'));
                                             nursingRecord.assigned_worker = null; // 待补
                                             nursingRecordsToSave.push(nursingRecord)
                                         } else if (workItem.repeat_type == DIC.D0103.TIME_IN_DAY) {
-                                            nursingRecord.exec_date_string = now.format('YYYY-MM-DD');
+                                            exec_date_string = now.format('YYYY-MM-DD');
                                             if (workItem.repeat_values.length > 0) {
                                                 // 每天某几个时刻执行,考虑到时间间隔比较近,因此将当天的全部生成
                                                 app._.each(workItem.repeat_values.split(','), (o)=> {
-                                                    if (app.moment(nursingRecord.exec_date_string + ' ' + o + workItem.repeat_start).isAfter(now)) {
+                                                    exec_on = app.moment(exec_date_string + ' ' + o + workItem.repeat_start)
+                                                    if (exec_on.isAfter(now)) {
                                                         // 当天没有过期的时刻
-                                                        nursingRecord.exec_time_string = o + workItem.repeat_start;
+                                                        nursingRecord.exec_on = exec_on;
                                                         if (workItem.remind_flag) {
-                                                            remind_start = app.moment(nursingRecord.exec_date_string + ' ' + nursingRecord.exec_time_string);
+                                                            remind_start = exec_on;
                                                             for (var remind_count = 0; remind_count < remind_max; remind_count++) {
                                                                 nursingRecord.remind_on.push(remind_start.add(remind_step * remind_count, 'minutes'));
                                                             }
@@ -4512,13 +4514,14 @@ module.exports = {
                                                 });
                                             } else {
                                                 // 每天某个时刻执行
-                                                if (app.moment(nursingRecord.exec_date_string + ' ' + workItem.repeat_start).isBefore(now)) {
+                                                exec_on = app.moment(exec_date_string + ' ' + workItem.repeat_start)
+                                                if (exec_on.isBefore(now)) {
                                                     // 当天已经过期,生成明天
-                                                    nursingRecord.exec_date_string = now.add(1, 'days').format('YYYY-MM-DD');
+                                                    exec_on = now.add(1, 'days').format('YYYY-MM-DD') + ' ' + workItem.repeat_start;
                                                 }
-                                                nursingRecord.exec_time_string = workItem.repeat_start;
+                                                nursingRecord.exec_on = exec_on;
                                                 if (workItem.remind_flag) {
-                                                    remind_start = app.moment(nursingRecord.exec_date_string + ' ' + nursingRecord.exec_time_string);
+                                                    remind_start = exec_on;
                                                     for (var remind_count = 0; remind_count < remind_max; remind_count++) {
                                                         nursingRecord.remind_on.push(remind_start.add(remind_step * remind_count, 'minutes'));
                                                     }
@@ -4535,10 +4538,9 @@ module.exports = {
                                                         // day 相等以后,判断是否时是生成当天,如果是则比较时刻,时刻过期的话需要生成下一个执行点
                                                         exec_date = now.day(weekDay);
                                                         if (app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start).isAfter(now)) {
-                                                            nursingRecord.exec_date_string = exec_date.format('YYYY-MM-DD');
-                                                            nursingRecord.exec_time_string = workItem.repeat_start;
+                                                            exec_on = app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start)
                                                             if (workItem.remind_flag) {
-                                                                remind_start = app.moment(nursingRecord.exec_date_string + ' ' + nursingRecord.exec_time_string);
+                                                                remind_start = exec_on;
                                                                 for (var remind_count = 0; remind_count < remind_max; remind_count++) {
                                                                     nursingRecord.remind_on.push(remind_start.add(remind_step * remind_count, 'minutes'));
                                                                 }
@@ -4554,15 +4556,14 @@ module.exports = {
                                                 work_item_repeat_values = workItem.repeat_values.split(',');
                                                 for (var i = 0; i< 32;i++) {
                                                     if (app._.find(work_item_repeat_values, (o) => {
-                                                            return now.add(i, 'days').date() === o;
+                                                            return now.add(i, 'danursingRecordToSaveys').date() === o;
                                                         })) {
                                                         // date 相等以后,判断是否时是生成当天,如果是则比较时刻,时刻过期的话需要生成下一个执行点
                                                         exec_date = now.add(i, 'days');
                                                         if (app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start).isAfter(now)) {
-                                                            nursingRecord.exec_date_string = exec_date.format('YYYY-MM-DD');
-                                                            nursingRecord.exec_time_string = workItem.repeat_start;
+                                                            exec_on = app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start)
                                                             if (workItem.remind_flag) {
-                                                                remind_start = app.moment(nursingRecord.exec_date_string + ' ' + nursingRecord.exec_time_string);
+                                                                remind_start = exec_on;
                                                                 for (var remind_count = 0; remind_count < remind_max; remind_count++) {
                                                                     nursingRecord.remind_on.push(remind_start.add(remind_step * remind_count, 'minutes'));
                                                                 }
@@ -4577,23 +4578,16 @@ module.exports = {
                                     }
                                 }
 
-                                console.log(nursingRecordsToSave);
-                                // 计算本轮 
-                                for (var i=0,len = nursingRecordsToSave.length;i<len;i++) {
+                                console.log('nursingRecordsToSave:',nursingRecordsToSave);
+                                for (var i=0, findNuringWorkerCount=0, len = nursingRecordsToSave.length;i<len;i++) {
                                     nursingRecordToSave = nursingRecordsToSave[i];
-                                    // todo:判断是否已经存在,如果存在则删除
-
-                                    nursingWorkerScheduleItem = yield app.modelFactory().model_remove(app.models['psn_nursingSchedule'], {
-                                        status: 1,
-                                        elderlyId: nursingRecordToSave.elderlyId,
-                                        y_axis: elderlyRoomValue.roomId,
-                                        tenantId: tenantId
-                                    });
-                                    
-
+                                    elderlyRoomValue = elderlyMapRoom[nursingRecordToSave.elderlyId];
                                     // 查找老人对应的护工 (老人->房间+日期->排班->护工)
-                                    exec_start = app.moment(nursingRecordToSave.exec_date_string);
+                                    exec_start = app.moment(nursingRecordToSave.exec_on.format('YYYY-MM-DD'));
                                     exec_end = exec_start.add(1, 'days');
+                                    console.log('exec_start:', exec_start);
+                                    console.log('exec_end:', exec_end);
+                                    console.log('elderlyRoomValue:', elderlyRoomValue);
                                     nursingWorkerScheduleItem = yield app.modelFactory().model_one(app.models['psn_nursingSchedule'], {
                                         select: 'aggr_value',
                                         where: {
@@ -4606,14 +4600,32 @@ module.exports = {
 
                                     if (nursingWorkerScheduleItem) {
                                         nursingRecordToSave.assigned_worker = nursingWorkerScheduleItem.aggr_value;
+                                        findNuringWorkerCount++;
                                     }
                                 }
+                                if (findNuringWorkerCount == 0) {
+                                    warningMsg = '无法找到护理记录执行时间对应的护工,可能还没有排班';
+                                } else {
+                                    warningMsg = '部分护理记录无法找到执行时间对应的护工,可能那些时间段还没有排班';
+                                }
+                                // 最终需要先删除当前时间之后的所有记录,并插入重新计算以后的护理记录
 
+                                if (nursingRecordsToSave.length > 0) {
+                                    allEdlerlyIds = app._.allKeys(elderlyMapRoom);
+                                    yield app.modelFactory().model_bulkInsert(app.models['psn_nursingRecord'], {
+                                        removeWhere: {
+                                            status: 1,
+                                            tenantId: tenantId,
+                                            elderlyId: {'$in': allEdlerlyIds},
+                                            exec_on: {'$gt': now},
 
+                                        },
+                                        rows: nursingRecordsToSave
+                                    });
+                                }
                             }
 
-
-                            this.body = app.wrapper.res.default();
+                            this.body = app.wrapper.res.default(warningMsg);
                         }
                         catch (e) {
                             console.log(e);

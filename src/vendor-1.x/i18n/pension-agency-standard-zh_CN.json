@@ -277,7 +277,8 @@
       "BTN-DO-READONLY-WORK-ITEMS": "返回只读模式",
       "BTN-ADD-CUSTOMIZED-WORK-ITEMS": "添加自定义项目",
       "BTN-GEN-NURSING-CONTENT": "生成护理内容",
-      "BTN-SET-NURSING-PLAN-REMARK": "填写备注"
+      "BTN-SET-NURSING-PLAN-REMARK": "填写备注",
+      "DIALOG-GENERATE-NURSING-RECORD": "生成的数据将覆盖之前还未执行的护理内容,您确定要生成吗？"
     },
     "nursing-schedule": {
       "TITLE": "养老机构-护理管理-护理排班-编排",

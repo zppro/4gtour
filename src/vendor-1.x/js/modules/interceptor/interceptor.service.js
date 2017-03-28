@@ -34,6 +34,9 @@
                     if (resp.data.success) {
                         //console.log(resp.data);
                         //console.log(resp.headers());
+                        if (resp.data.msg) {
+                            $rootScope.$broadcast('server:warning', resp.data.msg);
+                        }
 
                         if (resp.config.headers._$resource$_) {
                             //console.log(resp.headers()['page-totals']);

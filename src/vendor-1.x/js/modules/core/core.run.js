@@ -91,6 +91,10 @@
             });
         });
 
+        $rootScope.$on('server:warning',function (event, msg) {
+            Notify.alert('<div class="text-center"><em class="fa fa-warning"></em> ' + msg + '</div>', 'warning');
+        });
+
         // Hook not found
         $rootScope.$on('$stateNotFound',
             function (event, unfoundState/*, fromState, fromParams*/) {

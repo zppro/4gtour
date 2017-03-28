@@ -481,7 +481,8 @@
                     nursingScheduleSaveAsTemplateWeekly: nursingScheduleSaveAsTemplateWeekly,
                     nursingPlansByRoom: nursingPlansByRoom,
                     nursingPlanSaveWorkItem: nursingPlanSaveWorkItem,
-                    nursingPlanSaveRemark: nursingPlanSaveRemark
+                    nursingPlanSaveRemark: nursingPlanSaveRemark,
+                    nursingRecordGenerate: nursingRecordGenerate
                 };
 
                 function roomStatusInfo(tenantId) {
@@ -684,6 +685,10 @@
 
                 function nursingPlanSaveRemark(tenantId, elderlyId, remark) {
                     return $http.post(baseUrl + 'nursingPlanSaveRemark', {tenantId: tenantId, elderlyId: elderlyId, remark: remark});
+                }
+
+                function nursingRecordGenerate(tenantId, elderlyId) {
+                    return $http.post(baseUrl + 'nursingRecordGenerate', {tenantId: tenantId, elderlyId: elderlyId});
                 }
             }]
         };

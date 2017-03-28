@@ -28,9 +28,10 @@ module.exports = function(ctx,name) {
             description: {type: String,maxLength:400},
             remark: {type: String,maxLength:200},
             duration: {type: Number, default: 0}, // 完成时长 单为分
-            exec_date_string:{type: String, minlength: 8, maxlength: 10}, //按需时不需要设置 2017-3-1(8) 2017-03-27(10)
-            exec_time_string:{type: String, minlength: 2, maxlength: 5}, //按需时不需要设置   :3(2) :30(3) 8:45(4) 08:30(5)
-            assigned_worker: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'psn_nursingWorker'}, // 分配的护工
+            exec_on: {type: Date, required: true},
+            // exec_date_string:{type: String, minlength: 8, maxlength: 10}, //按需时不需要设置 2017-3-1(8) 2017-03-27(10)
+            // exec_time_string:{type: String, minlength: 2, maxlength: 5}, //按需时不需要设置   :3(2) :30(3) 8:45(4) 08:30(5)
+            assigned_worker: {type: mongoose.Schema.Types.ObjectId, ref: 'psn_nursingWorker'}, // 分配的护工 可滞后分配
             confirmed_on: {type: Boolean, default: false}, // 护工已确认标识
             remind_on:[{type: Date, required: true}], //提醒时间
             tenantId: {type: mongoose.Schema.Types.ObjectId}
@@ -43,13 +44,13 @@ module.exports = function(ctx,name) {
             }
         });
 
-        nursingRecordSchema.virtual('exec_on').get(function () {
-            if (this.exec_date_string) {
-                var datetimeString = this.exec_date_string + ' ' + (this.exec_time_string || '');
-                return ctx.moment(datetimeString).toDate();
-            }
-            return null;
-        });
+        // nursingRecordSchema.virtual('exec_on').get(function () {
+        //     if (this.exec_date_string) {
+        //         var datetimeString = this.exec_date_string + ' ' + (this.exec_time_string || '');
+        //         return ctx.moment(datetimeString).toDate();
+        //     }
+        //     return null;
+        // });
 
         nursingRecordSchema.pre('update', function (next) {
             this.update({}, {$set: {operated_on: new Date()}});

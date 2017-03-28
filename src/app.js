@@ -102,17 +102,17 @@ _.each(app.conf.dir,function(v){
 app.wrapper = {
     cb: thunkify,
     res: {
-        default: function () {
-            return {success: true, code: 0, msg: null};
+        default: function (msg) {
+            return {success: true, code: 0, msg: msg};
         },
         error: function (err) {
             return {success: false, code: err.code, msg: err.message};
         },
-        ret: function (ret) {
-            return {success: true, code: 0, msg: null, ret: ret};
+        ret: function (ret, msg) {
+            return {success: true, code: 0, msg: msg, ret: ret};
         },
-        rows: function (rows) {
-            return {success: true, code: 0, msg: null, rows: rows};
+        rows: function (rows, msg) {
+            return {success: true, code: 0, msg: msg, rows: rows};
         }
     }
 };
