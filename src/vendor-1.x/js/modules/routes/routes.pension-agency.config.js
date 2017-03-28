@@ -1263,7 +1263,7 @@
                                 sortable:true
                             },
                             {
-                                label: '',
+                                label: '操作',
                                 name: 'actions',
                                 sortable: false,
                                 width: 40
