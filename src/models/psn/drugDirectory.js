@@ -27,6 +27,8 @@ module.exports = function(ctx,name) {
             usage:{type: String},
             price:{type: String},
             specification:{type: String},//药品规格
+            tenantId: {type: mongoose.Schema.Types.ObjectId, required: true,ref:'pub_tenant'}
+
         }, {
             toObject: {
                 virtuals: true

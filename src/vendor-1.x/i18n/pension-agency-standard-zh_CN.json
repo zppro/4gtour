@@ -399,6 +399,21 @@
         "TAB1-SPECIFICATION":"药品规格" 
       }
     },
+    "drug-in-stock": {
+      "list": {
+        "TITLE": "养老机构-药品管理-入库管理-列表"
+      },
+      "details": {
+        "TITLE": "养老机构-药品管理-入库管理-详情",
+        "TAB1":"基本信息",
+        "TAB1-LABEL-ELDERLY-NAME":"老人姓名",
+        "TAB1-PLACEHOLDER-ELDERLY-NAME":"张三",
+        "TAB1-LABEL-DRUG-NAME":"药品编码",
+        "TAB1-LABEL-TYPE":"药品来源",
+        "TAB1-LABEL-QUANTITY":"数量",
+        "TAB1-LABEL-UNIT":"包装", 
+      }
+    },
     "receipts-and-disbursements":{
       "list":{
         "TITLE": "养老机构-财务管理-收支明细-列表"
