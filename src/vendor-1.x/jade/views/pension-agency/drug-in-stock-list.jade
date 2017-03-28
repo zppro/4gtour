@@ -1,4 +1,4 @@
-// create zhangsx on 17-3-22 
+// create zhangsx on 17-3-28 
  
 .col-xs-12.text-center
     .row
@@ -27,18 +27,11 @@
                                 label
                                     input(type='checkbox' data="trBubble" ng-model="row.checked" )
                                     span.fa.fa-check(data="trBubble")
-                        td.text-center {{::row.drug_no}}
-                        //td.text-center {{::row.validate_util|date:'yyyy-MM-dd'}}
-                        td.text-center {{::row.full_name}}
-                        td.text-center {{::row.short_name}}
-                        td.text-center {{::row.alias}}
-                        td.text-center {{::row.english_name}}
-                        td.text-center {{::row.indications_function}}
-                        td {{::row.otc_flag|boolFilter}}
-                        td {{::row.health_care_flag|boolFilter}}
-                        td {{::row.usage}}
-                        td {{::row.price}}
-                        td {{::row.specification}}
+                        td.text-center {{::row.elderlyId}}
+                        td.text-center {{::row.drugId}}
+                        td.text-center {{::row.in_out_no}}
+                        td.text-center {{::row.in_out_quantity}}
+                        td.text-center {{::row.unit}}
                         td
                             .btn-group
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
