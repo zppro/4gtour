@@ -72,7 +72,6 @@ module.exports = function(ctx,name) {
                 adl_level: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3008"])}
             },
             nursingLevelId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'psn_nursingLevel'},
-            nursing_content:[{type: mongoose.Schema.Types.ObjectId, required: true, ref: 'psn_nursingRecord'}],
             subsidiary_ledger:{
                 self:{type: Number, default: 0.00},//自费账户
                 gov_subsidy:{type: Number, default: 0.00} //政府补助

@@ -35,6 +35,7 @@
             vm.editNursingPlanRemark = editNursingPlanRemark;
             vm.saveNursingPlanRemark = saveNursingPlanRemark;
             vm.cancelNursingPlanRemark = cancelNursingPlanRemark;
+            vm.generateNursingRecord = generateNursingRecord;
 
             vm.tab1 = {cid: 'contentTab1'};
             vm.$editings = {};
@@ -178,11 +179,26 @@
             vmh.psnService.nursingPlanSaveRemark(vm.tenantId, elderlyId, remark).then(function(data){
                 vm.aggrData[trackedKey]['nursing_plan']['remark'] = remark;
                 vm.$editings[trackedKey]['remark'] = false;
-            });;
+            });
         }
 
         function cancelNursingPlanRemark (trackedKey) {
             vm.$editings[trackedKey]['remark'] = false;
+        }
+
+        function generateNursingRecord(trackedKey) {
+            ngDialog.openConfirm({
+                template: 'customConfirmDialog.html',
+                className: 'ngdialog-theme-default',
+                controller: ['$scope', function ($scopeConfirm) {
+                    $scopeConfirm.message = vm.moduleTranslatePath('DIALOG-GENERATE-NURSING-RECORD')
+                }]
+            }).then(function () {
+                var elderlyId = vm.aggrData[trackedKey]['elderly'].id;
+                vmh.psnService.nursingRecordGenerate(vm.tenantId, elderlyId).then(function (data) {
+                    vmh.alertSuccess('button.GEN', true);
+                });
+            });
         }
     }
 })();
