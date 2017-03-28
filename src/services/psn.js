@@ -4776,6 +4776,159 @@ module.exports = {
                         yield next;
                     };
                 }
+            },
+            /**********************出入库*****************************/
+            {
+                method: 'inStock',
+                verb: 'post',
+                url: this.service_url_prefix + "/inStock", 
+                handler: function (app, options) {
+                    return function * (next) {
+                        var tenant, elderly, drug;
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            var elderlyId = this.request.body.elderlyId;
+                            elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
+                            if(!elderly || elderly.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到老人!'});
+                                yield next;
+                                return;
+                            }
+
+                            var drugId = this.request.body.drugId;
+                            drug = yield app.modelFactory().model_read(app.models['psn_drugDirectory'],drugId);
+                            if(!drug || drug.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到药品!'});
+                                yield next;
+                                return;
+                            }
+                            var in_out_quantity = this.request.body.in_out_quantity;
+                            var unit = this.request.body.unit;
+                            var type = this.request.body.type;
+                            var drugStock  = yield app.modelFactory().model_one(app.models['psn_drugStock'],{
+                                    where: {
+                                        status: 1,
+                                        elderlyId: elderlyId,
+                                        drugId: drugId,
+                                        tenantId: tenantId
+                                    }
+                                });
+                            yield app.modelFactory().model_create(app.models['psn_drugInOutStock'],{
+                                elderlyId: elderlyId,
+                                tenantId: tenantId,
+                                drugId: drugId,
+                                in_out_quantity: in_out_quantity,
+                                unit: unit,
+                                type: type,
+                                in_out_no: 'in-'+ Date.now.toString()
+                            });
+                            if(!drugStock){
+                                yield app.modelFactory().model_create(app.models['psn_drugStock'],{
+                                    elderlyId: elderlyId,
+                                    tenantId: tenantId,
+                                    drugId: drugId,
+                                    current_quantity: in_out_quantity,
+                                    unit: unit
+                                });
+                            }else{
+                                durgStock.current_quantity += in_out_quantity; 
+                                yield durgStock.save();
+                            }
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'outStock',
+                verb: 'post',
+                url: this.service_url_prefix + "/outStock", 
+                handler: function (app, options) {
+                    return function * (next) {
+                        var tenant, elderly, drug;
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            var elderlyId = this.request.body.elderlyId;
+                            elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
+                            if(!elderly || elderly.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到老人!'});
+                                yield next;
+                                return;
+                            }
+
+                            var drugId = this.request.body.drugId;
+                            drug = yield app.modelFactory().model_read(app.models['psn_drugDirectory'],drugId);
+                            if(!drug || drug.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到药品!'});
+                                yield next;
+                                return;
+                            }
+                            var in_out_quantity = this.request.body.in_out_quantity;
+                            var unit = this.request.body.unit;
+                            var type = this.request.body.type;
+                            yield app.modelFactory().model_create(app.models['psn_drugInOutStock'],{
+                                elderlyId: elderlyId,
+                                tenantId: tenantId,
+                                drugId: drugId,
+                                in_out_quantity: in_out_quantity,
+                                unit: unit,
+                                type: type,
+                                in_out_no: 'out-'+ Date.now.toString()
+                            });
+                            var drugStock  = yield app.modelFactory().model_one(app.models['psn_drugStock'],{
+                                    where: {
+                                        status: 1,
+                                        elderlyId: elderlyId,
+                                        drugId: drugId,
+                                        tenantId: tenantId
+                                    }
+                                });
+                           
+                            if(!drugStock){
+                                this.body = app.wrapper.res.error({message: '当前无库存，无法出库!'});
+                                yield next;
+                                return;
+                            }else{
+                                if(drugStock.current_quantity < in_out_quantity){
+                                    this.body = app.wrapper.res.error({message: '出库数量大于当前库存，无法出库!'});
+                                    yield next;
+                                    return;
+                                }else{
+                                    durgStock.current_quantity -= in_out_quantity; 
+                                    yield durgStock.save();
+                                }
+                                
+                            }
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
             }
             /**********************其他*****************************/
             
