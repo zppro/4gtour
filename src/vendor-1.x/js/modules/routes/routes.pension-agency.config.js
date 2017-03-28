@@ -1079,131 +1079,6 @@
                     })
                 }
             })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-directory', {
-                url: '/drug-directory',
-                title: '药品管理',
-                abstract: true,
-                views: {
-                    "module-header": {
-                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
-                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
-                    },
-                    "module-content": {
-                        template: '<div class="data-ui-view"></div>'
-                    }
-                },
-                data:{
-                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'DRUG-DIRECTORY'//业务系统使用
-                }
-                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'drug-directory.js')
-            })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-directory.list', {
-                url: '/list/:action',
-                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'drug-directory-list.html'),
-                access_level: AUTH_ACCESS_LEVELS.USER,
-                controller: 'DrugDirectoryGridController',
-                resolve: {
-                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'drug-directory.list', {
-                        modelName: 'psn-drugDirectory',
-                        searchForm: {},
-                        serverPaging: true,
-                        columns: [
-                            {
-                                label: '药品编码',
-                                name: 'drug_no',
-                                type: 'string',
-                                width: 80,
-                                sortable: true
-                            },
-                            {
-                                label: '全称',
-                                name: 'full_name',
-                                type: 'string',
-                                width: 100,
-                                sortable: true
-                            },
-                            {
-                                label: '简称',
-                                name: 'short_name',
-                                type: 'string',
-                                width: 60,
-                                sortable: true
-                            },
-                            {
-                                label: '别名',
-                                name: 'alias',
-                                type: 'string',
-                                width: 60,
-                                sortable: true
-                            },
-                            {
-                                label: '英文名',
-                                name: 'english_name',
-                                type: 'string',
-                                width: 80,
-                                sortable: true
-                            },
-                            {
-                                label: '功能主治',
-                                name: 'indications_function',
-                                type: 'string',
-                                width: 60,
-                                sortable: true
-                            },{
-                                label:'处方药',
-                                name:'otc_flag',
-                                type:'bool',
-                                width:60,
-                                sortable:true
-                            },{
-                                label:'医保',
-                                name:'health_care_flag',
-                                type:'bool',
-                                width:60,
-                                sortable:true
-                            },{
-                                label:'使用方法',
-                                name:'usage',
-                                type: 'string',
-                                width:60,
-                                sortable:true
-                            },{
-                                label:'价格',
-                                name:'price',
-                                 type: 'string',
-                                width:60,
-                                sortable:true
-                            },{
-                                label:'规格',
-                                name:'specification',
-                                type: 'string',
-                                width:60,
-                                sortable:true
-                            },
-                            {
-                                label: '',
-                                name: 'actions',
-                                sortable: false,
-                                width: 40
-                            }
-                        ]
-                    })
-                }
-            })
-            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-directory.details', {
-                url: '/details/:action/:_id',
-                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'drug-directory-details.html'),
-                controller: 'DrugDirectoryDetailsController',
-                access_level: AUTH_ACCESS_LEVELS.USER,
-                params:{autoSetTab:null},
-                resolve: {
-                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'drug-directory.details', {
-                        modelName: 'psn-drugDirectory',
-                        model: {},
-                        blockUI: true
-                    })
-                }
-            })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'exit-item-return', {
                 url: '/exit-item-return',
                 title: '出院物品归还',
@@ -1283,6 +1158,131 @@
                                 width: 40
                             }
                         ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-directory', {
+                url: '/drug-directory',
+                title: '药品管理',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'DRUG-DIRECTORY'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'drug-directory.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-directory.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'drug-directory-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'DrugDirectoryGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'drug-directory.list', {
+                        modelName: 'psn-drugDirectory',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '药品编码',
+                                name: 'drug_no',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '全称',
+                                name: 'full_name',
+                                type: 'string',
+                                width: 100,
+                                sortable: true
+                            },
+                            {
+                                label: '简称',
+                                name: 'short_name',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '别名',
+                                name: 'alias',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '英文名',
+                                name: 'english_name',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '功能主治',
+                                name: 'indications_function',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },{
+                                label:'处方药',
+                                name:'otc_flag',
+                                type:'bool',
+                                width:60,
+                                sortable:true
+                            },{
+                                label:'医保',
+                                name:'health_care_flag',
+                                type:'bool',
+                                width:60,
+                                sortable:true
+                            },{
+                                label:'使用方法',
+                                name:'usage',
+                                type: 'string',
+                                width:60,
+                                sortable:true
+                            },{
+                                label:'价格',
+                                name:'price',
+                                type: 'string',
+                                width:60,
+                                sortable:true
+                            },{
+                                label:'规格',
+                                name:'specification',
+                                type: 'string',
+                                width:60,
+                                sortable:true
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 40
+                            }
+                        ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-directory.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'drug-directory-details.html'),
+                controller: 'DrugDirectoryDetailsController',
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                params:{autoSetTab:null},
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'drug-directory.details', {
+                        modelName: 'psn-drugDirectory',
+                        model: {},
+                        blockUI: true
                     })
                 }
             })
