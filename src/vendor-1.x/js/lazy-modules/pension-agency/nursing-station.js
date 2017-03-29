@@ -38,6 +38,10 @@
 
         function onFloorChange () {
             console.log('onFloorChange:',vm.floorData);
+            vm.nursingStationBlocker.start();
+            vmh.timeout(function(){
+                vm.nursingStationBlocker.stop();
+            },5000);
             // var yAxisDataFlatten = [];
             // _.each(vm.yAxisData, function (o) {
             //     for (var i = 1, len = o.capacity; i <= len; i++) {
