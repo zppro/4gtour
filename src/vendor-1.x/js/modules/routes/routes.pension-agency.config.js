@@ -1342,8 +1342,28 @@
                                 type: 'string',
                                 width: 60,
                                 sortable: true
+                            },
+                            {
+                                label: '操作',
+                                name: 'actions',
+                                sortable: false,
+                                width: 40
                             }
                         ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-stock.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'drug-stock-details.html'),
+                controller: 'DrugStockDetailsController',
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                params:{autoSetTab:null},
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'drug-stock.details', {
+                        modelName: 'psn-drugStock',
+                        model: {},
+                        blockUI: true
                     })
                 }
             })
