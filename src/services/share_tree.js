@@ -371,6 +371,57 @@ module.exports = {
                 }
             },
             {
+                method: 'fetch-T3008',
+                verb: 'post',
+                url: this.service_url_prefix + "/T3008", // 区域,楼层
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+
+                            var data = this.request.body;
+                            var tenantId = data.where.tenantId;
+
+                            var rows = [];
+
+                            var districts = yield app.modelFactory().model_query(app.models['psn_district'], {
+                                where: {
+                                    status: 1,
+                                    tenantId: tenantId
+                                }, select: 'name'
+                            });
+
+                            var rooms = yield app.modelFactory().model_query(app.models['psn_room'], {
+                                where: {
+                                    status: 1,
+                                    tenantId: tenantId
+                                }, select: 'name floor capacity districtId'
+                            });
+
+                            rows = districts.map((o) => {
+                                var districtNode = {_id: o.id, name: o.name};
+                                districtNode.children = app._.uniq(app._.where(rooms, (o1) => {
+                                    return o1.districtId == districtNode._id;
+                                }).map((o2) => {
+                                    return o2.floor;
+                                })).map((o3) => {
+                                    return {_id: o.id + '$' + o3, name: o3 + '层'};
+                                });
+                                return districtNode;
+                            });
+
+                            console.dir(rows);
+                            this.body = app.wrapper.res.rows(rows);
+
+                        } catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
                 method: 'fetch-T3009',
                 verb: 'post',
                 url: this.service_url_prefix + "/T3009", // 区域,楼层,房间树

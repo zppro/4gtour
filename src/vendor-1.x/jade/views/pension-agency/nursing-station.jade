@@ -1,3 +1,19 @@
-//
-   Created by zppro on 17-3-29.
 
+form.search-form
+    .row
+        label.search-col.col-md-1.text-right 楼层房间
+        .col-md-2
+            .tree.tree-dropdown(name='floorTree',s-tree, s-tree-data="vm.floorDataPromise",s-tree-height="400", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',layout:'dropdown',selectNodeFormat:'object'}",ng-model="vm.floorData", on-check-change="vm.onFloorChange()")
+.nursing-station
+    .col-md-12(block-ui="nursing-station")
+        .elderly(ng-repeat="elderly in vm.elderlys")
+            .avatar
+                .avatar-block
+                    .user-block-status
+                        img.img-thumbnail.img-circle(ng-src="{{'https://img2.okertrip.com/avatar/oldman-1.jpg'+'?imageView2/1/w/65/h/85'}}", alt="姓名")
+            .room-info.text-center 1102-1
+                span.nursing-level (特七)
+            div(ng-class='{"bg-danger": elderly===15, "bg-success": elderly !== 15}')
+                .name.text-center {{ elderly % 2 === 0 ? '张小' : '张小谷' }}
+                    span.age (65)
+.clearfix

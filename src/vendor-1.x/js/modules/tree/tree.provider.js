@@ -485,7 +485,7 @@
                             return;
                         }
                         //this.mode == 'check' ||
-
+                        var self = this;
                         //console.log(angular.element('#' + id + ' .tree-node-selected').size()); 
                         this.el.find('.tree-node-selected').removeClass('tree-node-selected');
                         this.el.find('.tree-node-cascade-selected').removeClass('tree-node-cascade-selected');
@@ -505,12 +505,15 @@
                             //console.log(angular.element(target).parents().filter('.tree-group').children('.cascade-selectable'));
                             angular.element(target).parents().filter('.tree-group').children('.cascade-selectable').addClass('tree-node-cascade-selected')
                         }
-                        var handlers = this.eventHanders['select'];
-                        if(handlers) {
-                            for (var i=0,len=handlers.length;i<len;i++) {
-                                handlers[i]({selectedNode:this.selectedNode});
+                        $timeout(function () {
+                            var handlers = self.eventHanders['select'];
+                            if(handlers) {
+                                for (var i=0,len=handlers.length;i<len;i++) {
+                                    handlers[i]({selectedNode:self.selectedNode});
+                                }
                             }
-                        }
+                        });
+
                         $rootScope.$broadcast('tree:node:select', this.selectedNode, this);
 
 
@@ -520,8 +523,8 @@
                     }
 
                     this.toggleCheck = function ($index, $event) {
-                        if(this.readonly && !$event.source)
-                            return;
+                        if(this.readonly && !$event.source) return;
+                        var self = this;
                         $index += '';
                         if (angular.isDefined(this._checkedIndexes[$index])) {
                             var toState, inputToCheck;
@@ -539,16 +542,18 @@
 
                             this._UpdateCheckState($index, toState, inputToCheck);
 
-
                             //手工动作重新设置checked节点
                             if ($event && $event.currentTarget) {
                                 this.checkedNodes = this._getCheckedNodes();
-                                var handlers = this.eventHanders['checkChange'];
-                                if(handlers) {
-                                    for (var i=0,len=handlers.length;i<len;i++) {
-                                        handlers[i]({checkedNodes:this.checkedNodes});
+                                $timeout(function () {
+                                    var handlers = self.eventHanders['checkChange'];
+                                    if(handlers) {
+                                        for (var i=0,len=handlers.length;i<len;i++) {
+                                            console.log('toggleCheck...', handlers[i]);
+                                            handlers[i]({checkedNodes:self.checkedNodes});
+                                        }
                                     }
-                                }
+                                })
                                 $rootScope.$broadcast('tree:node:checkChange', this.checkedNodes, this);
                             }
                         }
@@ -560,8 +565,8 @@
                     }
 
                     this.check = function ($index,$event) {
-                        if(this.readonly && !$event.source)
-                            return;
+                        if(this.readonly && !$event.source) return;
+                        var self = this;
                         $index += '';
                         if (angular.isDefined(this._checkedIndexes[$index])) {
 
@@ -570,12 +575,15 @@
                             //手工动作重新设置checked节点
                             if ($event && $event.currentTarget) {
                                 this.checkedNodes = this._getCheckedNodes();
-                                var handlers = this.eventHanders['checkChange'];
-                                if(handlers) {
-                                    for (var i=0,len=handlers.length;i<len;i++) {
-                                        handlers[i]({checkedNodes:this.checkedNodes});
+                                $timeout(function () {
+                                    var handlers = self.eventHanders['check'];
+                                    if(handlers) {
+                                        for (var i=0,len=handlers.length;i<len;i++) {
+                                            console.log('check...', handlers[i]);
+                                            handlers[i]({checkedNodes:self.checkedNodes});
+                                        }
                                     }
-                                }
+                                });
                                 $rootScope.$broadcast('tree:node:checkChange', this.checkedNodes, this);
                             }
                         }
@@ -584,8 +592,8 @@
                     }
 
                     this.unCheck = function ($index,$event) {
-                        if(this.readonly && !$event.source)
-                            return;
+                        if(this.readonly && !$event.source) return;
+                        var self = this;
                         $index += '';
                         if (angular.isDefined(this._checkedIndexes[$index])) {
 
@@ -594,12 +602,15 @@
                             //手工动作重新设置checked节点
                             if ($event && $event.currentTarget) {
                                 this.checkedNodes = this._getCheckedNodes();
-                                var handlers = this.eventHanders['checkChange'];
-                                if(handlers) {
-                                    for (var i=0,len=handlers.length;i<len;i++) {
-                                        handlers[i]({checkedNodes:this.checkedNodes});
+                                $timeout(function () {
+                                    var handlers = this.eventHanders['unCheck'];
+                                    if(handlers) {
+                                        console.log('unCheck...')
+                                        for (var i=0,len=handlers.length;i<len;i++) {
+                                            handlers[i]({checkedNodes:this.checkedNodes});
+                                        }
                                     }
-                                }
+                                });
                                 $rootScope.$broadcast('tree:node:checkChange', this.checkedNodes, this);
                             }
                         }

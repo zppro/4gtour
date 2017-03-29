@@ -11,9 +11,9 @@
         .controller('NursingStationController', NursingStationController)
     ;
 
-    NursingStationController.$inject = ['$scope', 'ngDialog', 'vmh', 'instanceVM'];
+    NursingStationController.$inject = ['$scope', 'ngDialog', 'blockUI', 'vmh', 'instanceVM'];
 
-    function NursingStationController($scope, ngDialog, vmh, vm) {
+    function NursingStationController($scope, ngDialog, blockUI, vmh, vm) {
 
         var vm = $scope.vm = vm;
         $scope.utils = vmh.utils.v;
@@ -23,6 +23,30 @@
         function init() {
 
             vm.init({removeDialog: ngDialog});
+
+            vm.onFloorChange = onFloorChange;
+            
+            vm.nursingStationBlocker = blockUI.instances.get('nursing-station');
+
+            vm.floorDataPromise = vmh.shareService.tmp('T3008', null, {tenantId:vm.tenantId}).then(function(nodes){
+                console.log(nodes);
+                return nodes;
+            });
+
+            vm.elderlys = _.range(80);
+        }
+
+        function onFloorChange () {
+            console.log('onFloorChange:',vm.floorData);
+            // var yAxisDataFlatten = [];
+            // _.each(vm.yAxisData, function (o) {
+            //     for (var i = 1, len = o.capacity; i <= len; i++) {
+            //         var trackedKey =  o._id + '$' + i;
+            //         yAxisDataFlatten.push(_.extend({trackedKey: trackedKey, bed_no: i}, o));
+            //     }
+            // });
+            // vm.yAxisDataFlatten = yAxisDataFlatten;
+            // console.log('yAxisDataFlatten:',vm.yAxisDataFlatten);
         }
 
     }
