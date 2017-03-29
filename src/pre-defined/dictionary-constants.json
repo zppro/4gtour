@@ -13,6 +13,10 @@
   "D3010": {
     "WEEKLY": "A0001"
   },
+  "D3009":{
+    "OnLine":"A0001",
+    "OffLine":"A0003"
+  },
   "D0103": {
     "AS_NEEDED": "A0001",
     "TIME_IN_DAY": "A0003",
