@@ -23,6 +23,7 @@
        else {
            this.logger.info(this.file + " loaded!");
        }
+       this.isExecuting = false;
        console.log(this.filename + ' ready... ');
        return this;
    },
