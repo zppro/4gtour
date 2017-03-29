@@ -400,6 +400,11 @@
         "TAB1-SPECIFICATION":"药品规格" 
       }
     },
+    "drug-stock": {
+      "list": {
+        "TITLE": "养老机构-药品管理-库存-列表"
+      }
+    },
     "drug-in-stock": {
       "list": {
         "TITLE": "养老机构-药品管理如-药品入库-列表"

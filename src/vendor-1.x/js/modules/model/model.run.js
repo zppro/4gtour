@@ -32,7 +32,11 @@
         modelNode.factory('psn-nursingScheduleTemplate');
         modelNode.factory('psn-recharge');
         modelNode.factory('psn-drugDirectory');
+
+        modelNode.factory('psn-drugStock');
+
         modelNode.factory('psn-drugInOutStock');
+
         modelNode.factory('psn-nursingWorker');
         modelNode.factory('psn-workItem');
         modelNode.factory('psn-district');
