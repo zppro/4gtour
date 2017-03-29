@@ -105,8 +105,8 @@
             });
         }
         
-        function onRoomChange () {
-            console.log('onRoomChange');
+        function onRoomChange () { 
+            console.log('onRoomChange: ', vm.yAxisData);
             var yAxisDataFlatten = [];
             _.each(vm.yAxisData, function (o) {
                 for (var i = 1, len = o.capacity; i <= len; i++) {

@@ -60,7 +60,7 @@
                     }
                 },
                 data: {
-                    selectFilterObject: {"type": ['A0001', 'A0002', 'A0003']}
+                    selectFilterObject: {"type": ['A0000', 'A0001', 'A0002', 'A0003']}
                 }
                 ,resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'tenant-account-manage.js')
             })
@@ -72,7 +72,7 @@
                 resolve: {
                     entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.MANAGE_CENTER + 'tenant-account-manage.list', {
                         modelName: 'pub-tenant',
-                        searchForm: {"type": {"$in": ['A0001', 'A0002', 'A0003']}},
+                        searchForm: {"type": {"$in": ['A0000','A0001', 'A0002', 'A0003']}},
                         transTo: {
                             "user": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-user-manage.list',
                             "openFuncs": MODEL_VARIABLES.STATE_PREFIXS.MANAGE_CENTER + 'tenant-open-funcs',
@@ -166,9 +166,9 @@
                 },
                 data: {
 
-                    selectFilterObject: {"tenants": {"type": {"$in": ['A0001', 'A0002', 'A0003']}}},
+                    selectFilterObject: {"tenants": {"type": {"$in": ['A0000','A0001', 'A0002', 'A0003']}}},
                     //treeFilterObject: {"type": ['A0001', 'A0002', 'A0003']}//使用tmg时的过滤 treeFilter[key]==treeNode[key]
-                    treeFilterObject: {"type": {"$in": ['A0001', 'A0002', 'A0003']}} //使用tmp时的过滤
+                    treeFilterObject: {"type": {"$in": ['A0000','A0001', 'A0002', 'A0003']}} //使用tmp时的过滤
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'tenant-user-manage.js')
             })
@@ -271,7 +271,7 @@
                     }
                 },
                 data: {
-                    selectFilterObject: {"tenants": {"type": {"$in": ['A0001', 'A0002', 'A0003']}}}
+                    selectFilterObject: {"tenants": {"type": {"$in": ['A0000','A0001', 'A0002', 'A0003']}}}
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'func.js')
             })
@@ -289,9 +289,9 @@
                 },
                 data: {
 
-                    selectFilterObject: {"tenants": {"type": {"$in": ['A0001', 'A0002', 'A0003']}}},
+                    selectFilterObject: {"tenants": {"type": {"$in": ['A0000', 'A0001', 'A0002', 'A0003']}}},
                     //treeFilterObject: {"type": ['A0001', 'A0002', 'A0003']}//使用tmg时的过滤 treeFilter[key]==treeNode[key]
-                    treeFilterObject: {"type": {"$in": ['A0001', 'A0002', 'A0003']}} //使用tmp时的过滤
+                    treeFilterObject: {"type": {"$in": ['A0000', 'A0001', 'A0002', 'A0003']}} //使用tmp时的过滤
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.MANAGE_CENTER + 'tenant-order-manage.js')
             })
