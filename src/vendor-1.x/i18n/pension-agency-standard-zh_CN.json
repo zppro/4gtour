@@ -405,6 +405,28 @@
         "TITLE": "养老机构-药品管理-库存-列表"
       }
     },
+    "drug-in-stock": {
+      "list": {
+        "TITLE": "养老机构-药品管理如-药品入库-列表"
+      },
+      "details": {
+        "TITLE": "养老机构-药品管理-药品入库-详情",
+        "TAB1":"入库信息",
+        "TAB1-LABEL-ELDERLY-NAME":"被看护人",
+        "TAB1-LABEL-DRUG-NO":"药品编码",
+        "TAB1-LABEL-TYPE":"药品来源",
+        "TAB1-LABEL-QUANTITY":"入库数量",
+        "TAB1-LABEL-UNIT":"包装规格",
+        "TAB1-INDICTIONS-FUNCTION":"功能主治",
+        "TAB1-OTC-FLAG":"处方标记",
+        "TAB1-LABEL-OTC-FLAG":"是否处方药",
+        "TAB1-HEALTH-CARE-FLAG":"医保标记",
+        "TAB1-LABEL-HEALTH-CARE-FLAG":"是否参加医保",
+        "TAB1-USAGE":"使用方法",
+        "TAB1-PRICE":"药品价格",
+        "TAB1-SPECIFICATION":"药品规格" 
+      }
+    },
     "receipts-and-disbursements":{
       "list":{
         "TITLE": "养老机构-财务管理-收支明细-列表"

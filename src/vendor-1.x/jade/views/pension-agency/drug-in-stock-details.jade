@@ -1,0 +1,50 @@
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        <!--看护人姓名-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY-NAME') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            input.form-control(type='text', name='elderly$name',ng-model='vm.elderlyModel.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-ELDERLY-NAME")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$name','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.elderlyModel.name}}
+                    fieldset: .form-group
+                        <!--药品编码-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-DRUG-NO') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            input.form-control(type='text', name='drug$name',ng-model='vm.elderlyModel.name',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-ELDERLY-NAME")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$name','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .form-readable {{vm.elderlyModel.name}}          
+                    fieldset: .form-group
+                        <!--药品来源-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-TYPE') | translate}}:
+                        .col-md-10
+                            .tree.tree-dropdown(name='elderly$hobbies',s-tree,s-tree-data="vm.hobbiesPromise",s-tree-height="200", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',layout:'dropdown',readonly:{{vm.readonly}}}",ng-model="vm.elderlyModel.hobbies",required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$hobbies','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-QUANTITY') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='in_out_quantity',ng-model='vm.model.in_out_quantity',placeholder='{{vm.viewTranslatePath("TAB1-ENGLISH-NAME")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'in_out_quantity','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        <!--包装单位-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UNIT') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            .btn-group
+                                .btn.btn-primary(name='drug$unit',ng-repeat='item in vm.selectBinding.unit',ng-model='vm.elderlyModel.unit',btn-radio="item.value",required='') {{item.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$marriage','required')") {{ "validator.REQUIRED" | translate}}
+                        .col-md-10(ng-if="vm.readonly")
+                            .btn-group
+                                .btn.btn-primary.cursor-not-allowed(name='drug$unit',ng-repeat='item in vm.selectBinding.unit',ng-class="{'active':vm.elderlyModel.unit==item.value}") {{item.name}}
+    .text-right.mt-lg
+        button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(type="submit") {{'button.SAVE'|translate}}
+ 
