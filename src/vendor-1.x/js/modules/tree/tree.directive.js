@@ -37,6 +37,8 @@
                     });
                     $scope.onSelect && $scope._tree._addEventListener('select', $scope.onSelect);
                     $scope.onCheckChange && $scope._tree._addEventListener('checkChange', $scope.onCheckChange);
+                    $scope.onCheck && $scope._tree._addEventListener('check', $scope.onCheck);
+                    $scope.onUnCheck && $scope._tree._addEventListener('unCheck', $scope.onUnCheck);
 
 
                     this.linked = 0;
@@ -152,7 +154,7 @@
             templateUrl: function (elem, attrs) {
                 return attrs.sTreeTemplateUrl || 'tree-directive-default-renderer.html'
             },
-            scope: {treeData: '=sTreeData', treeHeight: '=sTreeHeight', treeDisabled: '=sTreeDisabled', ngModel: '=', onLoadFinished: '&',  onSelect: '&', onCheckChange: '&',  isDisabled:'&sTreeNodeIsDisabled', treeNodeFunc: '&sTreeNodeFunc'}
+            scope: {treeData: '=sTreeData', treeHeight: '=sTreeHeight', treeDisabled: '=sTreeDisabled', ngModel: '=', onLoadFinished: '&',  onSelect: '&', onCheckChange: '&', onCheck: '&', onUnCheck:'&', isDisabled:'&sTreeNodeIsDisabled', treeNodeFunc: '&sTreeNodeFunc'}
         };
         return directive;
 

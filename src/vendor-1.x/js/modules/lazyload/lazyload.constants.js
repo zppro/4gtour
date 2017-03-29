@@ -59,6 +59,7 @@
                 {name:'subsystem.pension-agency.exit.js',files:['app/js/lazy-modules/pension-agency/exit.js']},
                 {name:'subsystem.pension-agency.reception.js',files:['app/js/lazy-modules/pension-agency/reception.js']},
                 {name:'subsystem.pension-agency.leave.js',files:['app/js/lazy-modules/pension-agency/leave.js']},
+                {name:'subsystem.pension-agency.nursing-station.js',files:['app/js/lazy-modules/pension-agency/nursing-station.js']},
                 {name:'subsystem.pension-agency.nursing-plan.js',files:['app/js/lazy-modules/pension-agency/nursing-plan.js']},
                 {name:'subsystem.pension-agency.nursing-schedule.js',files:['app/js/lazy-modules/pension-agency/nursing-schedule.js']},
                 {name:'subsystem.pension-agency.nursing-schedule-template.js',files:['app/js/lazy-modules/pension-agency/nursing-schedule-template.js']},
@@ -66,11 +67,8 @@
                 {name:'subsystem.pension-agency.recharge.js',files:['app/js/lazy-modules/pension-agency/recharge.js']},
                 {name:'subsystem.pension-agency.exit-settlement.js',files:['app/js/lazy-modules/pension-agency/exit-settlement.js']},
                 {name:'subsystem.pension-agency.drug-directory.js',files:['app/js/lazy-modules/pension-agency/drug-directory.js']},
-
                 {name:'subsystem.pension-agency.drug-stock.js',files:['app/js/lazy-modules/pension-agency/drug-stock.js']},
-
                 {name:'subsystem.pension-agency.drug-in-stock.js',files:['app/js/lazy-modules/pension-agency/drug-in-stock.js']},
-
                 {name:'subsystem.pension-agency.exit-item-return.js',files:['app/js/lazy-modules/pension-agency/exit-item-return.js']},
                 {name:'subsystem.pension-agency.nursing-worker.js',files:['app/js/lazy-modules/pension-agency/nursing-worker.js']},
                 {name:'subsystem.pension-agency.work-item.js',files:['app/js/lazy-modules/pension-agency/work-item.js']},

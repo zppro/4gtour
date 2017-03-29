@@ -40,6 +40,11 @@
     "icon": "icon-folder",
     "children": [
       {
+        "_id": "menu.pension-agency.NURSING-STATION",
+        "name": "护士台",
+        "sref": "app.pension-agency.nursing-station"
+      },
+      {
         "_id": "menu.pension-agency.ASSESSMENT-RESULT-IMPORT",
         "name": "评估结果导入",
         "sref": "app.pension-agency.assessment-result-import"

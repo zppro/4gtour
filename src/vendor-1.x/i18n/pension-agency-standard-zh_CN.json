@@ -270,6 +270,9 @@
         "SYNC_FAMILY_MEMBERS_SUCCESS":"同步老人家庭成员数据成功"
       }
     },
+    "nursing-station": {
+      "TITLE": "养老机构-护理管理-护士台"
+    },
     "nursing-plan": {
       "TITLE": "养老机构-护理管理-护理计划-编排",
       "BTN-SET-NURSING-LEVEL": "设置护理等级",
