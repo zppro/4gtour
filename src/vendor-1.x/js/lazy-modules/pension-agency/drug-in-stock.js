@@ -41,12 +41,6 @@
             vm.init({removeDialog: ngDialog});
             vm.doSubmit = doSubmit;
             vm.tab1 = {cid: 'contentTab1'};
-            vmh.parallel([
-                vmh.shareService.d('D3013')
-                ]).then(result){
-                console.log(result[0]); 
-                vm.selectBinding.unit = result[0];
-            }  
             vm.load();
 
         }
