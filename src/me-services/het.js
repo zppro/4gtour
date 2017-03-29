@@ -96,7 +96,26 @@
            try {
               console.log("body:");
               console.log(this.request.body)
-              this.body = yield app.bed_monitor_provider.getLatestSmbPerMinuteRecord(this.request.body);
+              this.body = yield app.bed_monitor_provider.setBedStatus(this.request.body.tenantId,this.request.body.devId,this.request.body.bedStatus);
+              this.body = "ok";
+          } catch (e) {
+            self.logger.error(e.message);
+            this.body = app.wrapper.res.error(e);
+        }
+        yield next;
+    };
+}
+},
+{
+    method: 'sleepDevicews$tests',
+    verb: 'post',
+    url: this.service_url_prefix + "/sleepDevicews$tests",
+    handler: function (app, options) {
+        return function *(next) {
+           try {
+              console.log("body:");
+              console.log(this.request.body)
+              this.body = yield app.bed_monitor_provider.setBedStatuss(this.request.body.tenantId,this.request.body.devId,this.request.body.bedStatus);
               this.body = "ok";
           } catch (e) {
             self.logger.error(e.message);

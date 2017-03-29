@@ -17,6 +17,7 @@
        this.CACHE_MODULE = 'N-BED-M-P-';
        this.CACHE_ITEM_SESSION = 'SESSIONID';
        this.logger = require('log4js').getLogger(this.log_name);
+       this.isExecuting = false;
        if (!this.logger) {
            console.error('logger not loaded in ' + this.file);
        }
@@ -103,6 +104,27 @@
 
 }).catch(self.ctx.coOnError);
 },
+sessionIsExpired: function (sessionId) {
+   var self = this;
+   return co(function*() {
+       try {
+           var ret = yield rp({
+               method: 'POST',
+               url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/userws/sessionIsExpired.json',
+               form: {sessionId:sessionId},
+           });
+           console.log(ret);
+            console.log(typeof(ret));
+           return self.ctx.wrapper.res.default();
+       }
+       catch (e) {
+           console.log(e);
+           self.logger.error(e.message);
+       }
+
+   }).catch(self.ctx.coOnError);
+
+},
 regist: function (session, userInfo, tenantId) {
    var self = this;
    return co(function*() {
@@ -135,7 +157,7 @@ regist: function (session, userInfo, tenantId) {
                    userType: "zjwsy"
                }
               // form: {userName:'testt',encryptedName:'testt',encryptedPwd:psd,userType:"zjwsy"}
-           });
+          });
            ret = JSON.parse(ret);
            if (ret.retCode == 'success') {
                console.log(" sync regist success");
@@ -442,6 +464,70 @@ updateDeviceAttachState: function (sendData) {
 
    }).catch(self.ctx.coOnError);
 
+},
+setBedStatus:function(tenantId,devId,bedStatus){
+ var self = this;
+ return co(function*() {
+   try {
+       var myDate = new Date();
+       {
+         status: 1
+         type: {'$in': ['A0001', 'A0002', 'A0003']},
+         active_flag: true,
+         certificate_flag: true,
+         validate_util:{ "$gte" : self.ctx.moment() }
+     }
+     var key =tenantId+'$'+devId;
+     self.ctx.cache.put(key, bedStatus,60000,function(key,value){
+        console.log(key+"setBedStatus"+value);
+        console.log(myDate.toLocaleString());
+    });          
+ }
+ catch (e) {
+   console.log(e);
+   self.logger.error(e.message);
+}
+}).catch(self.ctx.coOnError);
+},
+isInBed:function(){
+ var self = this;
+ return co(function*() {
+   try {
+     if(self.isExecuting){
+        return;
+    }
+    var tenants= yield self.ctx.modelFactory().model_query(self.ctx.models['pub_tenant'], {
+        select : '_id'
+        where: {
+            status: 1
+            type: {'$in': ['A0001', 'A0002', 'A0003']},
+            active_flag: true,
+            certificate_flag: true,
+            validate_util:{ "$gte" : self.ctx.moment()}
+        }
+    }); 
+    var tenantIds = self.ctx._.map(tenants, (o) => {
+        return o._id;
+    });
+    var devIds = yield self.ctx.modelFactory().model_query(self.ctx.models['pub_tenant'], {
+        select:'name'
+        where: {
+            status: 1
+            tenantId: {
+                '$in' : tenantIds
+            }
+        }
+    }); 
+    for(var i =0;i<=devIds.length;i++){
+        var inbed = yield self.getLatestSmbPerMinuteRecord(); 
+    }
+}
+catch (e) {
+   console.log(e);
+   self.logger.error(e.message);
+   self.isExecuting = false;
+}
+}).catch(self.ctx.coOnError);
 },
 getLatestSmbPerMinuteRecord:function(openId,devId){
   var self = this;
