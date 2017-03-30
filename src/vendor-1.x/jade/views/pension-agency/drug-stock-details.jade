@@ -1,0 +1,34 @@
+//-  Created by yrm on 17-3-29
+form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="vm.doSubmit()")
+    .panel
+        tabset(justified="true")
+            tab(active="vm.tab1.active")
+                tab-heading
+                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
+                        i.glyphicon.glyphicon-minus-sign
+                div#contentTab1
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-DRUGID') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='drugId',ng-model='vm.model.drugId', placeholder='{{ vm.viewTranslatePath("TAB1-LABEL-DRUGID") | translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'drugId','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLYID') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='elderlyId',ng-model='vm.model.elderlyId',placeholder='{{vm.viewTranslatePath("TAB1-LABEL-ELDERLYID")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderlyId','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-CURRENT-QUANTITY') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='current_quantity',ng-model='vm.model.current_quantity',placeholder='{{vm.viewTranslatePath("TAB1-LABEL-CURRENT-QUANTITY")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'current_quantity','required')") {{ "validator.REQUIRED" | translate}}
+                    fieldset: .form-group
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UNIT') | translate}}:
+                        .col-md-10
+                            input.form-control(type='text', name='unit',ng-model='vm.model.unit',placeholder='{{vm.viewTranslatePath("TAB1-LABEL-UNIT")|translate}}' ,required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'unit','required')") {{ "validator.REQUIRED" | translate}}
+
+    .text-right.mt-lg
+        button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
+        button.btn.btn-success(type="submit") {{'button.SAVE'|translate}}

@@ -20,27 +20,31 @@
                             | {{column.label}}
                             i.glyphicon(ng-if="column.name === vm.sort.column && vm.sort.direction",ng-class="vm.sort.direction|orderClass")
                 tbody
-                    tr(ng-init="row.unselectable = row.current_register_step!='A0001' ",ng-repeat="row in vm.rows|filter:vm.filter|orderBy:vm.sort.column:vm.sort.direction===-1|paging:vm" , ng-click="vm.selectRow($event,row)",ng-dblclick="vm.dblclickRow(row.id)")
+                    tr(ng-repeat="row in vm.rows|filter:vm.filter|orderBy:vm.sort.column:vm.sort.direction===-1|paging:vm" , ng-click="vm.selectRow($event,row)",ng-dblclick="vm.dblclickRow(row.id)")
                         td
-                            .checkbox.c-checkbox(ng-if="!row.unselectable")
+                            .checkbox.c-checkbox
                                 label
                                     input(type='checkbox' data="trBubble" ng-model="row.checked" )
                                     span.fa.fa-check(data="trBubble")
-                        td.text-left {{::row.elderlyId}}
-                        td.text-left {{::row.drugId}}
-                        td.text-left {{::row.current_quantity}}
-                        td.text-left {{::row.unit}}
-                        
+                        td.text-center {{::row.elderlyId}}
+                        td.text-center {{::row.drugId}}
+                        td.text-center {{::row.current_quantity}}
+                        td.text-center {{::row.unit}}
+                        td
+                            .btn-group
+                                a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
+                                    i.glyphicon.glyphicon-pencil
+
                     tr(ng-if="vm.paged.length==0")
                         td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}
             .panel-footer
                 .row
                     .col-md-4.text-left
-                        .btn-toolbar
-                            .btn-group
-                                a.btn.btn-primary.btn-sm(title="{{'button.ADD'|translate}}",ng-click="vm.addEx()")
-                                    i.glyphicon.glyphicon-plus
-                                a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.disable(vm.disableEnterRelatedAction)")
-                                    i.glyphicon.glyphicon-minus
+                    //-     .btn-toolbar
+                    //-         .btn-group
+                    //-             a.btn.btn-primary.btn-sm(title="{{'button.ADD'|translate}}",ng-click="vm.addEx()")
+                    //-                 i.glyphicon.glyphicon-plus
+                    //-             a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.disable(vm.disableEnterRelatedAction)")
+                    //-                 i.glyphicon.glyphicon-minus
                     .col-md-8
                         pagination.pagination-sm.pull-right(total-items="vm.page.totals",ng-model="vm.page.no",max-size="5",items-per-page="vm.page.size",boundary-links="true" ,ng-change="vm.paging()")
