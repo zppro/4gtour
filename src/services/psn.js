@@ -4777,6 +4777,40 @@ module.exports = {
                     };
                 }
             },
+
+            /**********************药品相关*****************************/
+            {
+                method: 'queryDrug',
+                verb: 'post',
+                url: this.service_url_prefix + "/q/drug",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            var keyword = this.request.body.keyword;
+                            var data = this.request.body.data;
+
+                            app._.extend(data.where,{
+                                status: 1,
+                                tenantId: tenantId
+                            });
+
+                            if(keyword){
+                                data.where.full_name = new RegExp(keyword);
+                            }
+                            var rows = yield app.modelFactory().model_query(app.models['psn_drug'], data);
+
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                          console.log(e);
+                          self.logger.error(e.message);
+                          this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+
             /**********************护士台*****************************/
             {
                 method: 'elderlysByDistrictFloors',
@@ -4877,7 +4911,7 @@ module.exports = {
                                 yield next;
                                 return;
                             }
-
+                            var elderly_json = elderly.toObject();
                             var drugId = this.request.body.drugId;
                             drug = yield app.modelFactory().model_read(app.models['psn_drugDirectory'],drugId);
                             if(!drug || drug.status == 0){
@@ -4885,6 +4919,7 @@ module.exports = {
                                 yield next;
                                 return;
                             }
+                            var drug_json = drug.toObject();
                             var in_out_quantity = this.request.body.in_out_quantity;
                             var unit = this.request.body.unit;
                             var type = this.request.body.type;
@@ -4898,8 +4933,10 @@ module.exports = {
                                 });
                             yield app.modelFactory().model_create(app.models['psn_drugInOutStock'],{
                                 elderlyId: elderlyId,
+                                elderly_name:elderly_json.name,
                                 tenantId: tenantId,
                                 drugId: drugId,
+                                drug_full_name: drug.json.full_name,
                                 in_out_quantity: in_out_quantity,
                                 unit: unit,
                                 type: type,
@@ -4908,8 +4945,10 @@ module.exports = {
                             if(!drugStock){
                                 yield app.modelFactory().model_create(app.models['psn_drugStock'],{
                                     elderlyId: elderlyId,
+                                    elderly_name:elderly_json.name,
                                     tenantId: tenantId,
                                     drugId: drugId,
+                                    drug_full_name: drug.json.full_name,
                                     current_quantity: in_out_quantity,
                                     unit: unit
                                 });
@@ -4951,7 +4990,7 @@ module.exports = {
                                 yield next;
                                 return;
                             }
-
+                            var elderly_json = elderly.toObject();
                             var drugId = this.request.body.drugId;
                             drug = yield app.modelFactory().model_read(app.models['psn_drugDirectory'],drugId);
                             if(!drug || drug.status == 0){
@@ -4959,13 +4998,16 @@ module.exports = {
                                 yield next;
                                 return;
                             }
+                            var drug_json = drug.toObject();
                             var in_out_quantity = this.request.body.in_out_quantity;
                             var unit = this.request.body.unit;
                             var type = this.request.body.type;
                             yield app.modelFactory().model_create(app.models['psn_drugInOutStock'],{
                                 elderlyId: elderlyId,
+                                elderly_name:elderly_json.name,
                                 tenantId: tenantId,
                                 drugId: drugId,
+                                drug_full_name: drug.json.full_name,
                                 in_out_quantity: in_out_quantity,
                                 unit: unit,
                                 type: type,
