@@ -1482,7 +1482,7 @@
                         modelName: 'psn-drugInOutStock',
                         model: {},
                         blockUI: true
-                    })
+                    }), deps: helper.resolveFor2('angucomplete-alt')
                 }
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-worker', {

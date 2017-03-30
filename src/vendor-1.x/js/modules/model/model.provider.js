@@ -458,6 +458,7 @@
                     disableEnterRelatedAction: disableEnterRelatedAction,
                     checkBeforeAddEnter: checkBeforeAddEnter,
                     queryElderly: queryElderly,
+                    queryDrug:queryDrug,
                     elderlyInfo: elderlyInfo,
                     changeElderlyRoomBed: changeElderlyRoomBed,
                     changeElderlyChargeItem: changeElderlyChargeItem,
@@ -562,6 +563,14 @@
 
                 function queryElderly(tenantId,keyword,where,select,sort) {
                     return $http.post(baseUrl + 'q/elderly', {tenantId: tenantId, keyword: keyword,  data: {
+                        where: where,
+                        select: select,
+                        sort: sort
+                    }});
+                }
+
+                function queryDrug(tenantId,keyword,where,select,sort) {
+                    return $http.post(baseUrl + 'q/drug', {tenantId: tenantId, keyword: keyword,  data: {
                         where: where,
                         select: select,
                         sort: sort

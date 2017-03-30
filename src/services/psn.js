@@ -4777,6 +4777,39 @@ module.exports = {
                     };
                 }
             },
+            /************************药品相关***************************/
+
+            {
+                method: 'queryDrug',
+                verb: 'post',
+                url: this.service_url_prefix + "/q/drug",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            var keyword = this.request.body.keyword;
+                            var data = this.request.body.data;
+
+                            app._.extend(data.where,{
+                                status: 1,
+                                tenantId: tenantId
+                            });
+
+                            if(keyword){
+                                data.where.drug_no = new RegExp(keyword);
+                            }
+                            var rows = yield app.modelFactory().model_query(app.models['psn_drugDirectory'], data);
+                            console.log('drugs:',rows);
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+
             /**********************出入库*****************************/
             {
                 method: 'inStock',
