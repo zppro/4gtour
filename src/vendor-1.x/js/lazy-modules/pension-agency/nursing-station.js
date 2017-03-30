@@ -26,6 +26,7 @@
 
             vm.onFloorChange = onFloorChange;
             
+            vm.defaultElderlyAvatar = 'app/img/user/avatar-in-nursing-station.png';
             vm.nursingStationBlocker = blockUI.instances.get('nursing-station');
 
             vm.floorDataPromise = vmh.shareService.tmp('T3008', null, {tenantId:vm.tenantId}).then(function(nodes){

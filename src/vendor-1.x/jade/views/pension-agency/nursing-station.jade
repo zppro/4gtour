@@ -10,7 +10,7 @@ form.search-form
             .avatar
                 .avatar-block
                     .user-block-status
-                        img.img-thumbnail.img-circle(ng-src="{{'https://img2.okertrip.com/avatar/oldman-1.jpg'+'?imageView2/1/w/62/h/81'}}", alt="姓名")
+                        img.img-thumbnail.img-circle(ng-src="{{ elderly.avatar ? elderly.avatar + '?imageView2/1/w/62/h/81' : vm.defaultElderlyAvatar}}", alt="姓名")
             div.text-center
                 .room-info {{elderly.room_value.roomId.name + '-' + elderly.room_value.bed_no}}
                 span.nursing-level ({{elderly.nursingLevelId.short_name}})
