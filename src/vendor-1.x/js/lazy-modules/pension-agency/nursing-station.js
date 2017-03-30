@@ -11,9 +11,9 @@
         .controller('NursingStationController', NursingStationController)
     ;
 
-    NursingStationController.$inject = ['$scope', 'ngDialog', 'blockUI', 'vmh', 'instanceVM'];
+    NursingStationController.$inject = ['$scope', 'ngDialog', 'blockUI' ,'SOCKET_SERVER_EVENTS', 'vmh', 'instanceVM'];
 
-    function NursingStationController($scope, ngDialog, blockUI, vmh, vm) {
+    function NursingStationController($scope, ngDialog, blockUI, SOCKET_SERVER_EVENTS, vmh, vm) {
 
         var vm = $scope.vm = vm;
         $scope.utils = vmh.utils.v;
@@ -36,6 +36,7 @@
             
             vm.elderlyStatusMonitor = {};
             subscribeBedMonitor();
+            console.log(SOCKET_SERVER_EVENTS);
         }
 
         function subscribeBedMonitor () {
@@ -47,10 +48,11 @@
             }
             socket.on('connect', () => {
                 console.log('group socket connected')
-            })
+            });
             socket.on('disconnect', () => {
                 console.log('group socket disconnected')
-            })
+            });
+            // socket.emit('CG001', rootState.member.self.member_id)
         }
 
         function onFloorChange () {

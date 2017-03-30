@@ -32,9 +32,9 @@ module.exports = {
     mountServer: function (server) {
         this.ioSocket = io.listen(server);
     },
-    registerSocketChannel: function (channelProvider) {
-        var channelName = channelProvider.filename;
-        this.channels[channelName] = channelProvider.createChannel();
+    registerSocketChannel: function (channelName, channelProvider) {
+        console.log('registerSocketChannel:' ,channelName);
+        this.channels[channelName] = channelProvider.init(this.ctx, this.ioSocket);
     },
     getChannel: function (channelName) {
         return this.channels[channelName];
