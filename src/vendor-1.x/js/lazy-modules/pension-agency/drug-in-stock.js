@@ -69,7 +69,7 @@
             console.log('keyword', keyword)
             return vmh.fetch(vmh.psnService.queryElderly(vm.tenantId, keyword, {
                   live_in_flag: true,
-                  begin_exit_flow: {'$in':[false,undefined]}
+                  // sbegin_exit_flow: {'$in':[false,undefined]}
             }, 'name'));
         }
 
@@ -92,14 +92,20 @@
                 vm.model.drug_no = o.originalObject.drug_no;
             }
         }
+ 
 
         function doSubmit() {
 
-            if ($scope.theForm.$valid) {
-                vm.save();
-            }
-            else {
-                if ($scope.utils.vtab(vm.tab1.cid)) {
+            if($scope.theForm.$valid) {
+                vm.save(true).then(function(ret) {
+                    console.log(vm.model);
+                    vmh.psnService.drugInStock(ret.tenantId,ret.elderlyId,ret.drugId,ret.type,ret.unit).then(function(ret) {
+                        vmh.alertSuccess(vm.viewTranslatePath('SYNC_FAMILY_MEMBERS_SUCCESS'), true);
+                        vm.returnBack();
+                    });
+                });
+            } else {
+                if($scope.utils.vtab(vm.tab1.cid)) {
                     vm.tab1.active = true;
                 }
             }

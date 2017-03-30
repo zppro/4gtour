@@ -23,8 +23,8 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         <!--药品来源-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-TYPE') | translate}}:
                         .col-md-10
-                            .tree.tree-dropdown(name='elderly$hobbies',s-tree,s-tree-data="vm.typePromise",s-tree-height="200", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',layout:'dropdown',readonly:{{vm.readonly}}}",ng-model="vm.elderlyModel.hobbies",required='')
-                            span.text-danger(ng-show="utils.vinput(this.theForm,'elderly$hobbies','required')") {{ "validator.REQUIRED" | translate}}
+                            .tree.tree-dropdown(name='type',s-tree,s-tree-data="vm.typePromise",s-tree-height="200", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',layout:'dropdown',readonly:{{vm.readonly}}}",ng-model="vm.elderlyModel.hobbies",required='')
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'type','required')") {{ "validator.REQUIRED" | translate}}
                     fieldset: .form-group
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-QUANTITY') | translate}}:
                         .col-md-10
@@ -35,8 +35,8 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UNIT') | translate}}:
                         .col-md-10
                             .btn-group
-                                .btn.btn-primary(name='drug$unit',ng-repeat='item in vm.selectBinding.unit',ng-model='vm.elderlyModel.unit',btn-radio="item.value",required='') {{item.name}}
-                            span.text-danger(ng-show="utils.vinput(this.theForm,'drug$unit','required')") {{ "validator.REQUIRED" | translate}}
+                                .btn.btn-primary(name='unit',ng-repeat='item in vm.selectBinding.unit',ng-model='vm.elderlyModel.unit',btn-radio="item.value",required='') {{item.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'unit','required')") {{ "validator.REQUIRED" | translate}}
                         
     .text-right.mt-lg
         button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}

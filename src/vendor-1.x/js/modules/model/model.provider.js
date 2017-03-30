@@ -466,6 +466,7 @@
                     changeElderlyNursingLevel: changeElderlyNursingLevel,
                     receptionVisiterSyncElderlyFamilyMembers: receptionVisiterSyncElderlyFamilyMembers,
                     leaveAccompanierSyncElderlyFamilyMembers: leaveAccompanierSyncElderlyFamilyMembers,
+                    drugInStock:drugInStock,
                     checkCanChangeBookingOrUnbookingRecharge: checkCanChangeBookingOrUnbookingRecharge,
                     bookingRecharge: bookingRecharge,
                     disableRechargeAndUnbooking: disableRechargeAndUnbooking,
@@ -621,6 +622,9 @@
                     return $http.post(baseUrl + 'leaveAccompanierSyncElderlyFamilyMembers/' + leaveId);
                 }
 
+                function drugInStock(tenantId,elderlyId,drugId,type,unit){
+                     return $http.post(baseUrl + 'inStock', {tenantId: tenantId, elderlyId: elderlyId, drugId: drugId, type: type, unit: unit});
+                }
 
                 function checkCanChangeBookingOrUnbookingRecharge(rechargeId){
                     return $http.get(baseUrl + 'checkCanChangeBookingOrUnbookingRecharge/' + rechargeId);

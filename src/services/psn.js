@@ -44,8 +44,9 @@ module.exports = {
                             if(keyword){
                                 data.where.name = new RegExp(keyword);
                             }
+                            console.log(data);
                             var rows = yield app.modelFactory().model_query(app.models['psn_elderly'], data);
-
+                            console.log(rows);
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
@@ -4799,7 +4800,6 @@ module.exports = {
                                 data.where.drug_no = new RegExp(keyword);
                             }
                             var rows = yield app.modelFactory().model_query(app.models['psn_drugDirectory'], data);
-                            console.log('drugs:',rows);
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
