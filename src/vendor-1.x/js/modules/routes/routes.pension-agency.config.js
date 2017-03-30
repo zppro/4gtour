@@ -540,7 +540,7 @@
                 data:{
                     func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'NURSING-STATION'//业务系统使用
                 }
-                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'nursing-station.js')
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'nursing-station.js','socket.io-client')
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'nursing-plan', {
                 url: '/nursing-plan',
@@ -1389,7 +1389,6 @@
                     })
                 }
             })
-           
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-in-stock', {
                 url: '/drug-in-stock',
                 title: '药品管理',

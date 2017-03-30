@@ -17,6 +17,7 @@ console.log(mode);
 var target = args.target || 'default';
 
 var paths = {
+    npm_modules: './node_modules/',
     src_client: './src/' + target + '/',
     build:'./build/',
     pub_client_develop: './pub-client-develop/' + target + '/',
@@ -36,6 +37,15 @@ var bower = {
     dest_base_production: paths.pub_client_app_production + 'js/',
     // vendor scripts to make the app work. Usually via lazy loading
     source_app: _.map(require(paths.build + 'gulp-' + target + '-bower-' + mode + '.json'), function (o) {
+        return o.replace(/\{\{(.+?)\}\}/g, target)
+    }),
+    dest_develop: paths.pub_client_develop + 'vendor/',
+    dest_production: paths.pub_client_production + 'vendor/'
+};
+
+
+var npm = {
+    source_app: _.map(require(paths.build + 'gulp-' + target + '-npm-' + mode + '.json'), function (o) {
         return o.replace(/\{\{(.+?)\}\}/g, target)
     }),
     dest_develop: paths.pub_client_develop + 'vendor/',
@@ -195,6 +205,27 @@ gulp.task('bower:app', function() {
 });
 
 gulp.task('bower', gulpsync.sync(['bower:base','bower:app']) );
+
+// NPM
+// copy file from npm folder into the app vendor folder
+gulp.task('npm:app', function() {
+    log('Copying npm app..');
+
+    var jsFilter = $plugins.filter('**/*.js', {restore: true});
+    var cssFilter = $plugins.filter('**/*.css', {restore: true});
+
+    return gulp.src(npm.source_app, {base: paths.npm_modules})
+        .pipe($plugins.expectFile(npm.source_app))
+        .pipe(jsFilter)
+        .pipe($plugins.if(isProduction, $plugins.uglify(vendorUglifyOpts)))
+        .pipe(jsFilter.restore)
+        .pipe(cssFilter)
+        .pipe($plugins.if(isProduction, $plugins.minifyCss()))
+        .pipe(cssFilter.restore)
+        .pipe(gulp.dest(isProduction ? npm.dest_production : npm.dest_develop))
+});
+
+gulp.task('npm', gulpsync.sync(['npm:app']) );
 
 // Build the server data to start the application
 gulp.task('server:data', function() {
@@ -544,6 +575,7 @@ gulp.task('clean', function(done) {
 // build for production (minify)
 gulp.task('production', gulpsync.sync([
     'bower',
+    'npm',
     'server',
     'images',
     'i18n',
@@ -565,6 +597,7 @@ gulp.task('production', gulpsync.sync([
 // build for develop (no minify)
 gulp.task('develop', gulpsync.sync([
     'bower',
+    'npm',
     'server',
     'images',
     'i18n',

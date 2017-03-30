@@ -4778,8 +4778,9 @@ module.exports = {
                     };
                 }
             },
-            /************************药品相关***************************/
+ 
 
+            /**********************药品相关*****************************/
             {
                 method: 'queryDrug',
                 verb: 'post',
@@ -4802,6 +4803,84 @@ module.exports = {
                             var rows = yield app.modelFactory().model_query(app.models['psn_drugDirectory'], data);
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
+                          console.log(e);
+                          self.logger.error(e.message);
+                          this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+
+            /**********************护士台*****************************/
+            {
+                method: 'elderlysByDistrictFloors',
+                verb: 'post',
+                url: this.service_url_prefix + "/elderlysByDistrictFloors", //按片区楼层查找入住老人
+                handler: function (app, options) {
+                    return function * (next) {
+                        var tenant, districtFloors, pairOfDistrictFloor, roomObjects, roomIds, elderlyObjects, elderlyIds;
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            // console.log('districtFloors:', this.request.body.districtFloors);
+                            var districtFloors = app._.map(this.request.body.districtFloors, (o) => {
+                                pairOfDistrictFloor = o.split('$');
+                                return {'$and':[{districtId: pairOfDistrictFloor[0]},{floor: pairOfDistrictFloor[1]}]};
+                            });
+
+                            // console.log('districtFloors:', districtFloors);
+                            roomObjects = yield app.modelFactory().model_query(app.models['psn_room'], {
+                                select: '_id',
+                                where: {
+                                    status: 1,
+                                    '$or': districtFloors,
+                                    tenantId: tenantId
+                                }
+                            });
+
+                            roomIds = app._.map(roomObjects, (o) => {
+                               return o._id;
+                            });
+                            // console.log('roomIds:', roomIds);
+                            elderlyObjects = yield app.modelFactory().model_query(app.models['psn_roomOccupancyChangeHistory'], {
+                                select: 'elderlyId',
+                                where: {
+                                    roomId: {'$in': roomIds},
+                                    in_flag: true,
+                                    check_out_time: {$exists: false},
+                                    tenantId: tenantId
+                                }
+                            });
+                            // console.log('elderlyObjects:', elderlyObjects);
+                            elderlyIds =  app._.map(elderlyObjects, (o) => {
+                                return o.elderlyId;
+                            });
+                            // console.log('elderlyIds:', elderlyIds);
+
+                            var rows = yield app.modelFactory().model_query(app.models['psn_elderly'],{
+                                select: 'name birthday nursingLevelId room_value',
+                                where: {
+                                    status: 1,
+                                    live_in_flag: true,
+                                    _id: {'$in': elderlyIds},
+                                    tenantId: tenantId
+                                }
+                            }).populate('nursingLevelId','short_name nursing_assessment_grade', 'psn_nursingLevel')
+                                .populate('room_value.roomId','name', 'psn_room');
+
+                            // console.log('elderlys:', rows);
+
+                            this.body = app.wrapper.res.rows(rows);
+                        }
+                        catch (e) {
+                            console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
                         }
@@ -4809,7 +4888,6 @@ module.exports = {
                     };
                 }
             },
-
             /**********************出入库*****************************/
             {
                 method: 'inStock',
@@ -4834,7 +4912,7 @@ module.exports = {
                                 yield next;
                                 return;
                             }
-
+                            var elderly_json = elderly.toObject();
                             var drugId = this.request.body.drugId;
                             drug = yield app.modelFactory().model_read(app.models['psn_drugDirectory'],drugId);
                             if(!drug || drug.status == 0){
@@ -4842,6 +4920,7 @@ module.exports = {
                                 yield next;
                                 return;
                             }
+                            var drug_json = drug.toObject();
                             var in_out_quantity = this.request.body.in_out_quantity;
                             var unit = this.request.body.unit;
                             var type = this.request.body.type;
@@ -4853,26 +4932,22 @@ module.exports = {
                                         tenantId: tenantId
                                     }
                                 });
-                            yield app.modelFactory().model_create(app.models['psn_drugInOutStock'],{
-                                elderlyId: elderlyId,
-                                tenantId: tenantId,
-                                drugId: drugId,
-                                in_out_quantity: in_out_quantity,
-                                unit: unit,
-                                type: type,
-                                in_out_no: 'in-'+ Date.now.toString()
-                            });
-                            if(!drugStock){
-                                yield app.modelFactory().model_create(app.models['psn_drugStock'],{
+                             var data ={
+                                    status:1,
                                     elderlyId: elderlyId,
+                                    // elderly_name:elderly_json.name,
                                     tenantId: tenantId,
                                     drugId: drugId,
+                                    // drug_full_name: drug.json.full_name,
                                     current_quantity: in_out_quantity,
                                     unit: unit
-                                });
+                                };
+                                console.log(data);
+                            if(!drugStock){
+                                yield app.modelFactory().model_create(app.models['psn_drugStock'],data);
                             }else{
-                                durgStock.current_quantity += in_out_quantity; 
-                                yield durgStock.save();
+                                drugStock.current_quantity += in_out_quantity; 
+                                yield drugStock.save();
                             }
                             this.body = app.wrapper.res.default();
                         }
@@ -4908,7 +4983,7 @@ module.exports = {
                                 yield next;
                                 return;
                             }
-
+                            var elderly_json = elderly.toObject();
                             var drugId = this.request.body.drugId;
                             drug = yield app.modelFactory().model_read(app.models['psn_drugDirectory'],drugId);
                             if(!drug || drug.status == 0){
@@ -4916,13 +4991,16 @@ module.exports = {
                                 yield next;
                                 return;
                             }
+                            var drug_json = drug.toObject();
                             var in_out_quantity = this.request.body.in_out_quantity;
                             var unit = this.request.body.unit;
                             var type = this.request.body.type;
                             yield app.modelFactory().model_create(app.models['psn_drugInOutStock'],{
                                 elderlyId: elderlyId,
+                                elderly_name:elderly_json.name,
                                 tenantId: tenantId,
                                 drugId: drugId,
+                                drug_full_name: drug.json.full_name,
                                 in_out_quantity: in_out_quantity,
                                 unit: unit,
                                 type: type,
@@ -4947,8 +5025,8 @@ module.exports = {
                                     yield next;
                                     return;
                                 }else{
-                                    durgStock.current_quantity -= in_out_quantity; 
-                                    yield durgStock.save();
+                                    drugStock.current_quantity -= in_out_quantity; 
+                                    yield drugStock.save();
                                 }
                                 
                             }

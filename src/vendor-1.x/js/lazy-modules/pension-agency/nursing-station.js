@@ -26,31 +26,47 @@
 
             vm.onFloorChange = onFloorChange;
             
+            vm.defaultElderlyAvatar = 'app/img/user/avatar-in-nursing-station.png';
             vm.nursingStationBlocker = blockUI.instances.get('nursing-station');
 
             vm.floorDataPromise = vmh.shareService.tmp('T3008', null, {tenantId:vm.tenantId}).then(function(nodes){
                 console.log(nodes);
                 return nodes;
             });
+            
+            vm.elderlyStatusMonitor = {};
+            subscribeBedMonitor();
+        }
 
-            vm.elderlys = _.range(80);
+        function subscribeBedMonitor () {
+            var socketUrl = 'http://localhost:3002/psn$bed_monitor', socket;
+            if (socketUrl.toLowerCase().startsWith('https')) {
+                socket = io(socketUrl, {secure: true})
+            } else {
+                socket = io(socketUrl)
+            }
+            socket.on('connect', () => {
+                console.log('group socket connected')
+            })
+            socket.on('disconnect', () => {
+                console.log('group socket disconnected')
+            })
         }
 
         function onFloorChange () {
             console.log('onFloorChange:',vm.floorData);
-            vm.nursingStationBlocker.start();
-            vmh.timeout(function(){
-                vm.nursingStationBlocker.stop();
-            },5000);
-            // var yAxisDataFlatten = [];
-            // _.each(vm.yAxisData, function (o) {
-            //     for (var i = 1, len = o.capacity; i <= len; i++) {
-            //         var trackedKey =  o._id + '$' + i;
-            //         yAxisDataFlatten.push(_.extend({trackedKey: trackedKey, bed_no: i}, o));
-            //     }
-            // });
-            // vm.yAxisDataFlatten = yAxisDataFlatten;
-            // console.log('yAxisDataFlatten:',vm.yAxisDataFlatten);
+            if (vm.floorData.length > 0) {
+                vm.nursingStationBlocker.start();
+                vmh.psnService.elderlysByDistrictFloors(vm.tenantId, _.map(vm.floorData,function(o){
+                    return o._id;
+                })).then(function(data){
+                    vm.elderlys = data;
+                }).finally(function(){
+                    vm.nursingStationBlocker.stop();
+                });
+            } else {
+                vm.elderlys = [];
+            }
         }
 
     }

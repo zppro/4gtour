@@ -1,4 +1,11 @@
 {
+  "PSN": {
+    "BED_MONITOR": {
+      "LEAVE": "psn$bed_monitor$leave",
+      "LEAVE_TIME": "psn$bed_monitor$leave_time",
+      "COME": "psn$bed_monitor$come"
+    }
+  },
   "MEMBER": {
     "YOUR_FOLLOWING_MEMBER_LOGIN_SUCCESS": "SM001"
   },

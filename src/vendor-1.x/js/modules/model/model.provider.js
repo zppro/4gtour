@@ -484,7 +484,8 @@
                     nursingPlansByRoom: nursingPlansByRoom,
                     nursingPlanSaveWorkItem: nursingPlanSaveWorkItem,
                     nursingPlanSaveRemark: nursingPlanSaveRemark,
-                    nursingRecordGenerate: nursingRecordGenerate
+                    nursingRecordGenerate: nursingRecordGenerate,
+                    elderlysByDistrictFloors: elderlysByDistrictFloors
                 };
 
                 function roomStatusInfo(tenantId) {
@@ -622,8 +623,8 @@
                     return $http.post(baseUrl + 'leaveAccompanierSyncElderlyFamilyMembers/' + leaveId);
                 }
 
-                function drugInStock(tenantId,elderlyId,drugId,type,unit){
-                     return $http.post(baseUrl + 'inStock', {tenantId: tenantId, elderlyId: elderlyId, drugId: drugId, type: type, unit: unit});
+                function drugInStock(tenantId,elderlyId,drugId,in_out_quantity,type,unit){
+                     return $http.post(baseUrl + 'inStock', {tenantId: tenantId, elderlyId: elderlyId, drugId: drugId,in_out_quantity:in_out_quantity,type: type, unit: unit});
                 }
 
                 function checkCanChangeBookingOrUnbookingRecharge(rechargeId){
@@ -702,6 +703,10 @@
 
                 function nursingRecordGenerate(tenantId, elderlyId) {
                     return $http.post(baseUrl + 'nursingRecordGenerate', {tenantId: tenantId, elderlyId: elderlyId});
+                }
+                
+                function elderlysByDistrictFloors(tenantId, districtFloors) {
+                    return $http.post(baseUrl + 'elderlysByDistrictFloors', {tenantId: tenantId, districtFloors: districtFloors});
                 }
             }]
         };

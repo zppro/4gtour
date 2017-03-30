@@ -75,7 +75,7 @@
 
         function selectElerly(o) {
             if(o){
-                vm.model.enter_code = o.originalObject.enter_code;
+                // vm.model.enter_code = o.originalObject.enter_code;
                 vm.model.elderlyId = o.originalObject._id;
                 vm.model.elderly_name = o.title;
             }
@@ -95,17 +95,16 @@
  
 
         function doSubmit() {
-
-            if($scope.theForm.$valid) {
-                vm.save(true).then(function(ret) {
-                    console.log(vm.model);
-                    vmh.psnService.drugInStock(ret.tenantId,ret.elderlyId,ret.drugId,ret.type,ret.unit).then(function(ret) {
-                        vmh.alertSuccess(vm.viewTranslatePath('SYNC_FAMILY_MEMBERS_SUCCESS'), true);
-                        vm.returnBack();
-                    });
-                });
-            } else {
-                if($scope.utils.vtab(vm.tab1.cid)) {
+            if ($scope.theForm.$valid) {
+                vm.save(true).then(function(ret){
+                    vmh.psnService.drugInStock(vm.tenantId,vm.model.elderlyId,vm.model.drugId,vm.model.in_out_quantity,vm.model.type,vm.model.unit).then(function(ret) {
+                            vmh.alertSuccess(vm.viewTranslatePath('SYNC_FAMILY_MEMBERS_SUCCESS'), true);
+                            vm.returnBack();
+                        });
+                })
+            }
+            else {
+                if ($scope.utils.vtab(vm.tab1.cid)) {
                     vm.tab1.active = true;
                 }
             }
