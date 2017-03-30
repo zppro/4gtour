@@ -32,8 +32,7 @@
 
         var vm = $scope.vm = vm;
         $scope.utils = vmh.utils.v;
-
-
+    
         init();
 
         function init() {
@@ -41,6 +40,18 @@
             vm.init({removeDialog: ngDialog});
             vm.doSubmit = doSubmit;
             vm.tab1 = {cid: 'contentTab1'};
+            
+            vmh.parallel([
+                vmh.shareService.d('D3013'),
+            ]).then(function(results){
+                vm.selectBinding.unit = results[0];
+            })   
+
+            vm.hobbiesPromise = vmh.shareService.d('D3014').then(function (hobbies) {
+                vmh.utils.v.changeProperyName(hobbies, [{o: 'value', n: '_id'}]);
+                return hobbies;
+            });
+
             vm.load();
 
         }
