@@ -35,7 +35,22 @@
             });
             
             vm.elderlyStatusMonitor = {};
+            subscribeBedMonitor();
+        }
 
+        function subscribeBedMonitor () {
+            var socketUrl = 'http://localhost:3002/psn$bed_monitor', socket;
+            if (socketUrl.toLowerCase().startsWith('https')) {
+                socket = io(socketUrl, {secure: true})
+            } else {
+                socket = io(socketUrl)
+            }
+            socket.on('connect', () => {
+                console.log('group socket connected')
+            })
+            socket.on('disconnect', () => {
+                console.log('group socket disconnected')
+            })
         }
 
         function onFloorChange () {
