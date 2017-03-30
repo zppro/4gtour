@@ -38,6 +38,7 @@ app.conf = {
         scheduleJobs: path.join(__dirname, 'jobs'),
         sequenceDefs: path.join(__dirname, 'sequences'),
         businessComponents: path.join(__dirname, 'business-components'),
+        socketProviders: path.join(__dirname, 'socket-providers'),
         static_develop: '../pub-client-develop/',
         static_production: '../pub-client-production/'
     },
@@ -213,21 +214,28 @@ co(function*() {
     app.models = ModelFactory.models;
     app.modelFactory = ModelFactory.bind(app);
 
-    console.log('configure business-components...');
-    app.conf.businessComponentNames = _.map((yield app.wrapper.cb(fs.readdir)(app.conf.dir.businessComponents)), function (o) {
-        return o.substr(0, o.indexOf('.'))
-    });
-
-    console.log('configure schedule jobs...');
-    app.conf.scheduleJobNames = _.map((yield app.wrapper.cb(fs.readdir)(app.conf.dir.scheduleJobs)), function (o) {
-        return o.substr(0, o.indexOf('.'))
-    });
 
     console.log('configure schedule sequence defs...');
     app.conf.sequenceDefNames = _.map((yield app.wrapper.cb(fs.readdir)(app.conf.dir.sequenceDefs)), function (o) {
         return o.substr(0, o.indexOf('.'))
     });
 
+    
+    console.log('configure business-components...');
+    app.conf.businessComponentNames = _.map((yield app.wrapper.cb(fs.readdir)(app.conf.dir.businessComponents)), function (o) {
+        return o.substr(0, o.indexOf('.'))
+    });
+
+    console.log('configure socket-providers...');
+    app.conf.socketProviderNames = _.map((yield app.wrapper.cb(fs.readdir)(app.conf.dir.socketProviders)), function (o) {
+        return o.substr(0, o.indexOf('.'))
+    });
+ 
+    console.log('configure schedule jobs...');
+    app.conf.scheduleJobNames = _.map((yield app.wrapper.cb(fs.readdir)(app.conf.dir.scheduleJobs)), function (o) {
+        return o.substr(0, o.indexOf('.'))
+    });
+ 
     console.log('configure services...');
     app.conf.serviceNames = _.map((yield app.wrapper.cb(fs.readdir)(app.conf.dir.service)), function (o) {
         return o.substr(0, o.indexOf('.'))
@@ -268,6 +276,16 @@ co(function*() {
         }),
         _.map(app.conf.businessComponentNames, function (o) {
             var logName = 'bc_' + o + '.js';
+            return {
+                type: 'dateFile',
+                filename: path.join(app.conf.dir.log, logName),
+                pattern: '-yyyy-MM-dd.log',
+                alwaysIncludePattern: true,
+                category: logName
+            };
+        }),
+        _.map(app.conf.socketProviderNames, function (o) {
+            var logName = 'sp_' + o + '.js';
             return {
                 type: 'dateFile',
                 filename: path.join(app.conf.dir.log, logName),
@@ -439,7 +457,10 @@ co(function*() {
 
     var svr = app.listen(app.conf.port);
     app.socket_service.mountServer(svr);
-    app.socket_service.registerSocketChannel()
+    _.each(app.conf.socketProviderNames, function (o) {
+        console.log(o);
+        app.socket_service.registerSocketChannel(o, require('./socket-providers/' + o));
+    });
     // app.socket_service.addMemberNamespace();
     // app.socket_service.addGroupNamespace();
     // //var io = require('socket.io').listen( app.listen(3000) );

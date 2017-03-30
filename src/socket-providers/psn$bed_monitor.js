@@ -4,8 +4,8 @@
 var co = require('co');
 var socketClientEvents = require('../pre-defined/socket-client-events.json');
 module.exports = {
-    createChannel: function (ctx, ioSocket) {
-        console.log('init socket$psn_bed_monitor component... ');
+    init: function (ctx, ioSocket) {
+        console.log('init psn_bed_monitor socketProvider... ');
         var self = this;
         this.file = __filename;
         this.filename = this.file.substr(this.file.lastIndexOf('/') + 1);
@@ -37,10 +37,10 @@ module.exports = {
     },
     onPSN$BedMonitorConnection: function (socket) {
         var self = this;
-        console.log('nsp member connection: ' + socket.id);
+        console.log('nsp psn$bedmonitor connection: ' + socket.id);
         self.socketClientsOfPSN$BedMonitor[socket.id] = socket;
         socket.on('disconnect', function() {
-            console.log('nsp member disconnect: ' + socket.id);
+            console.log('nsp psn$bedmonitor disconnect: ' + socket.id);
             delete self.socketClientsOfPSN$BedMonitor[socket.id];
         });
         socket.on(socketClientEvents.PSN.BED_MONITOR.SUBSCRIBE, function(data) {
