@@ -4777,6 +4777,82 @@ module.exports = {
                     };
                 }
             },
+            /**********************护士台*****************************/
+            {
+                method: 'elderlysByDistrictFloors',
+                verb: 'post',
+                url: this.service_url_prefix + "/elderlysByDistrictFloors", //按片区楼层查找入住老人
+                handler: function (app, options) {
+                    return function * (next) {
+                        var tenant, districtFloors, pairOfDistrictFloor, roomObjects, roomIds, elderlyObjects, elderlyIds;
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            // console.log('districtFloors:', this.request.body.districtFloors);
+                            var districtFloors = app._.map(this.request.body.districtFloors, (o) => {
+                                pairOfDistrictFloor = o.split('$');
+                                return {'$and':[{districtId: pairOfDistrictFloor[0]},{floor: pairOfDistrictFloor[1]}]};
+                            });
+
+                            // console.log('districtFloors:', districtFloors);
+                            roomObjects = yield app.modelFactory().model_query(app.models['psn_room'], {
+                                select: '_id',
+                                where: {
+                                    status: 1,
+                                    '$or': districtFloors,
+                                    tenantId: tenantId
+                                }
+                            });
+
+                            roomIds = app._.map(roomObjects, (o) => {
+                               return o._id;
+                            });
+                            // console.log('roomIds:', roomIds);
+                            elderlyObjects = yield app.modelFactory().model_query(app.models['psn_roomOccupancyChangeHistory'], {
+                                select: 'elderlyId',
+                                where: {
+                                    roomId: {'$in': roomIds},
+                                    in_flag: true,
+                                    check_out_time: {$exists: false},
+                                    tenantId: tenantId
+                                }
+                            });
+                            // console.log('elderlyObjects:', elderlyObjects);
+                            elderlyIds =  app._.map(elderlyObjects, (o) => {
+                                return o.elderlyId;
+                            });
+                            // console.log('elderlyIds:', elderlyIds);
+
+                            var rows = yield app.modelFactory().model_query(app.models['psn_elderly'],{
+                                select: 'name birthday nursingLevelId room_value',
+                                where: {
+                                    status: 1,
+                                    live_in_flag: true,
+                                    _id: {'$in': elderlyIds},
+                                    tenantId: tenantId
+                                }
+                            }).populate('nursingLevelId','short_name nursing_assessment_grade', 'psn_nursingLevel')
+                                .populate('room_value.roomId','name', 'psn_room');
+
+                            // console.log('elderlys:', rows);
+
+                            this.body = app.wrapper.res.rows(rows);
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
             /**********************出入库*****************************/
             {
                 method: 'inStock',

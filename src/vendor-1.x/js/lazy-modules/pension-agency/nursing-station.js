@@ -32,25 +32,25 @@
                 console.log(nodes);
                 return nodes;
             });
+            
+            vm.elderlyStatusMonitor = {};
 
-            vm.elderlys = _.range(80);
         }
 
         function onFloorChange () {
             console.log('onFloorChange:',vm.floorData);
-            vm.nursingStationBlocker.start();
-            vmh.timeout(function(){
-                vm.nursingStationBlocker.stop();
-            },5000);
-            // var yAxisDataFlatten = [];
-            // _.each(vm.yAxisData, function (o) {
-            //     for (var i = 1, len = o.capacity; i <= len; i++) {
-            //         var trackedKey =  o._id + '$' + i;
-            //         yAxisDataFlatten.push(_.extend({trackedKey: trackedKey, bed_no: i}, o));
-            //     }
-            // });
-            // vm.yAxisDataFlatten = yAxisDataFlatten;
-            // console.log('yAxisDataFlatten:',vm.yAxisDataFlatten);
+            if (vm.floorData.length > 0) {
+                vm.nursingStationBlocker.start();
+                vmh.psnService.elderlysByDistrictFloors(vm.tenantId, _.map(vm.floorData,function(o){
+                    return o._id;
+                })).then(function(data){
+                    vm.elderlys = data;
+                }).finally(function(){
+                    vm.nursingStationBlocker.stop();
+                });
+            } else {
+                vm.elderlys = [];
+            }
         }
 
     }
