@@ -1,4 +1,9 @@
 {
+  "PSN": {
+    "BED_MONITOR": {
+      "SUBSCRIBE": "psn$bed_monitor$subscribe"
+    }
+  },
   "MEMBER": {
     "LOGIN": "CM001"
   },

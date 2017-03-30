@@ -24,12 +24,20 @@ module.exports = {
             this.logger.info(this.file + " loaded!");
         }
 
+        this.channels = {};
         console.log(this.filename + ' ready... ');
  
         return this;
     },
     mountServer: function (server) {
         this.ioSocket = io.listen(server);
+    },
+    registerSocketChannel: function (channelProvider) {
+        var channelName = channelProvider.filename;
+        this.channels[channelName] = channelProvider.createChannel();
+    },
+    getChannel: function (channelName) {
+        return this.channels[channelName];
     },
     addMemberNamespace: function() {
         this.socketClientsOfMember = {};

@@ -10,10 +10,11 @@ form.search-form
             .avatar
                 .avatar-block
                     .user-block-status
-                        img.img-thumbnail.img-circle(ng-src="{{'https://img2.okertrip.com/avatar/oldman-1.jpg'+'?imageView2/1/w/65/h/85'}}", alt="姓名")
-            .room-info.text-center 1102-1
-                span.nursing-level (特七)
-            div(ng-class='{"bg-danger": elderly===15, "bg-success": elderly !== 15}')
-                .name.text-center {{ elderly % 2 === 0 ? '张小' : '张小谷' }}
-                    span.age (65)
+                        img.img-thumbnail.img-circle(ng-src="{{ elderly.avatar ? elderly.avatar + '?imageView2/1/w/62/h/81' : vm.defaultElderlyAvatar}}", alt="姓名")
+            div.text-center
+                .room-info {{elderly.room_value.roomId.name + '-' + elderly.room_value.bed_no}}
+                span.nursing-level ({{elderly.nursingLevelId.short_name}})
+            div(ng-class='{"bg-danger": vm.elderlyStatusMonitor[elderly.id], "bg-success": !vm.elderlyStatusMonitor[elderly.id]}')
+                .name.text-center {{ elderly.name }}
+                    span.age ({{utils.age(elderly.birthday)}})
 .clearfix
