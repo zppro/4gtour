@@ -14,7 +14,7 @@ form.search-form
             div.text-center
                 .room-info {{elderly.room_value.roomId.name + '-' + elderly.room_value.bed_no}}
                 span.nursing-level ({{elderly.nursingLevelId.short_name}})
-            div(ng-class='{"bg-danger": vm.elderlyStatusMonitor[elderly.id], "bg-success": !vm.elderlyStatusMonitor[elderly.id]}')
-                .name.text-center {{ elderly.name }}
+            div(ng-class='vm.elderlyStatusMonitor[elderly.id].status' ng-click="vm.elderlyStatusMonitor[elderly.id].status = 'warning' ")
+                .name.text-center {{ elderly.name }} {{vm.elderlyStatusMonitor[elderly.id].status}}
                     span.age ({{utils.age(elderly.birthday)}})
 .clearfix

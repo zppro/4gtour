@@ -20,7 +20,7 @@
             'app.core',
             'app.settings',
             'app.routes',
-            'app.sockets',
+            'app.socket',
             'app.sidebar',
             // 'app.navsearch',
             'app.preloader',

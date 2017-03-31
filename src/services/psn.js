@@ -4873,7 +4873,7 @@ module.exports = {
                                     tenantId: tenantId
                                 }
                             }).populate('nursingLevelId','short_name nursing_assessment_grade', 'psn_nursingLevel')
-                                .populate('room_value.roomId','name', 'psn_room');
+                                .populate('room_value.roomId','name bedMonitors', 'psn_room');
 
                             // console.log('elderlys:', rows);
 

@@ -17,7 +17,7 @@ module.exports = function(ctx,name) {
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
-            open_id: {type: String},//针对微信
+            open_id: {type: String},// 小程序针对微信, 机构存储为tenantId
             union_id: {type: String},//针对微信
             name: {type: String, required: true}, // 对外部的member_name
             passhash: {type: String, required: true}, //密码hash       

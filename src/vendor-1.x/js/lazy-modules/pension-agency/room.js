@@ -369,12 +369,12 @@
                     bedNos[bedMonitor._id] = bedMonitor.bed_no;
                 }
                 vm.bedNos = bedNos;
-                console.log(345);
+                console.log('vm.bedNos:', vm.bedNos);
+                console.log('vm.model.bedMonitors:',vm.model.bedMonitors);
             });
         }
 
         function onBedMonitorCheckChange(checkedNodes) {
-
             var bedMonitors = vm.model.bedMonitors, bedMonitorId;
             for(var i=0,len=checkedNodes.length;i<len;i++) {
                 var index = _.findIndex(bedMonitors, function (bedMonitor) {
@@ -389,7 +389,6 @@
                 }
             }
 
-            console.log(vm.model.bedMonitors);
         }
 
         function doSubmit() {
@@ -403,6 +402,14 @@
             //    console.log(vm.model);
             //
             //}
+            var bedMonitors = vm.model.bedMonitors, bedMonitor;
+            for(var i=0,len=bedMonitors.length;i<len;i++) {
+                bedMonitor = bedMonitors[i];
+                bedMonitor.bed_no = vm.bedNos[bedMonitor._id];
+                bedMonitor.bedMonitorName = bedMonitor.name;
+            }
+            
+            console.log(vm.model.bedMonitors); 
 
             if ($scope.theForm.$valid) {
                 if (vm.model.bedMonitors.length > vm.model.capacity) {
