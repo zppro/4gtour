@@ -1462,7 +1462,7 @@
                                 sortable: true
                             },
                             {
-                                label: '包装规格',
+                                label: '包装单位',
                                 name: 'unit',
                                 type: 'string',
                                 width: 60,
