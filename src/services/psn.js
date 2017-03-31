@@ -4935,10 +4935,11 @@ module.exports = {
                              var data ={
                                     status:1,
                                     elderlyId: elderlyId,
-                                    // elderly_name:elderly_json.name,
+                                    elderly_name:elderly_json.name,
                                     tenantId: tenantId,
                                     drugId: drugId,
-                                    // drug_full_name: drug.json.full_name,
+                                    drug_no:drug_json.drug_no,
+                                    drug_full_name: drug_json.full_name,
                                     current_quantity: in_out_quantity,
                                     unit: unit
                                 };
@@ -4946,7 +4947,9 @@ module.exports = {
                             if(!drugStock){
                                 yield app.modelFactory().model_create(app.models['psn_drugStock'],data);
                             }else{
-                                drugStock.current_quantity += in_out_quantity; 
+                                console.log(parseInt(drugStock.current_quantity));
+                                console.log(parseInt(in_out_quantity));
+                                drugStock.current_quantity = parseInt(drugStock.current_quantity) + parseInt(in_out_quantity); 
                                 yield drugStock.save();
                             }
                             this.body = app.wrapper.res.default();
@@ -4995,17 +4998,18 @@ module.exports = {
                             var in_out_quantity = this.request.body.in_out_quantity;
                             var unit = this.request.body.unit;
                             var type = this.request.body.type;
-                            yield app.modelFactory().model_create(app.models['psn_drugInOutStock'],{
-                                elderlyId: elderlyId,
-                                elderly_name:elderly_json.name,
-                                tenantId: tenantId,
-                                drugId: drugId,
-                                drug_full_name: drug.json.full_name,
-                                in_out_quantity: in_out_quantity,
-                                unit: unit,
-                                type: type,
-                                in_out_no: 'out-'+ Date.now.toString()
-                            });
+                            // yield app.modelFactory().model_create(app.models['psn_drugInOutStock'],{
+                            //     elderlyId: elderlyId,
+                            //     elderly_name:elderly_json.name,
+                            //     tenantId: tenantId,
+                            //     drugId: drugId,
+                            //     drug_no: drug_json.drug_no,
+                            //     drug_full_name: drug_json.full_name,
+                            //     in_out_quantity: in_out_quantity,
+                            //     unit: unit,
+                            //     type: type,
+                            //     in_out_no: 'out-'+ app.moment().format('YYYY-MM-DD HH:mm:ss')
+                            // });
                             var drugStock  = yield app.modelFactory().model_one(app.models['psn_drugStock'],{
                                     where: {
                                         status: 1,
@@ -5025,7 +5029,20 @@ module.exports = {
                                     yield next;
                                     return;
                                 }else{
-                                    drugStock.current_quantity -= in_out_quantity; 
+                                    yield app.modelFactory().model_create(app.models['psn_drugInOutStock'],{
+                                        elderlyId: elderlyId,
+                                        elderly_name:elderly_json.name,
+                                        tenantId: tenantId,
+                                        drugId: drugId,
+                                        drug_no: drug_json.drug_no,
+                                        drug_full_name: drug_json.full_name,
+                                        in_out_quantity: in_out_quantity,
+                                        unit: unit,
+                                        type: type,
+                                        in_out_type:0,
+                                        in_out_no: 'out-'+ app.moment().format('YYYYMMDDHHmmss')
+                                    });
+                                    drugStock.current_quantity = parseInt(drugStock.current_quantity) - parseInt(in_out_quantity);
                                     yield drugStock.save();
                                 }
                                 
