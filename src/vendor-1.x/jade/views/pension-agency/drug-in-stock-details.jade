@@ -15,9 +15,9 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                             span.text-danger(ng-show="utils.vinput(this.theForm,'elderly','autocomplete-required')") {{ "validator.REQUIRED" | translate}}
                     fieldset: .form-group
                         <!--药品目录-->
-                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-DRUG-NO') | translate}}:
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-DRUG-NAME') | translate}}:
                         .col-md-10
-                            div#drug(angucomplete-alt,input-name="drug_no",minlength="1",field-required="true",text-searching='{{"label.TEXT-SEARCHING"|translate}}',text-no-results='{{"label.TEXT-NO-RESULTS"|translate}}',placeholder="",pause="400",selected-object="vm.selectDrug",remote-api-handler="vm.queryDrug",title-field="drug_no",initial-value="vm.selectedDrug",input-class="form-control form-control-small")
+                            div#drug(angucomplete-alt,input-name="drug_no",minlength="1",field-required="true",text-searching='{{"label.TEXT-SEARCHING"|translate}}',text-no-results='{{"label.TEXT-NO-RESULTS"|translate}}',placeholder="",pause="400",selected-object="vm.selectDrug",remote-api-handler="vm.queryDrug",title-field="full_name",initial-value="vm.selectedDrug",input-class="form-control form-control-small")
                             span.text-danger(ng-show="utils.vinput(this.theForm,'drug_no','autocomplete-required')") {{ "validator.REQUIRED" | translate}}        
                     fieldset: .form-group
                         <!--药品来源-->
