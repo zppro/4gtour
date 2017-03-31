@@ -4906,6 +4906,7 @@ module.exports = {
                             }
 
                             var elderlyId = this.request.body.elderlyId;
+                            var elderly_name = this.request.body.elderly_name;
                             elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
                             if(!elderly || elderly.status == 0){
                                 this.body = app.wrapper.res.error({message: '无法找到老人!'});
@@ -4914,6 +4915,8 @@ module.exports = {
                             }
                             var elderly_json = elderly.toObject();
                             var drugId = this.request.body.drugId;
+                            var drug_no = this.request.body.drug_no;
+                            var drug_full_name = this.request.body.drug_full_name; 
                             drug = yield app.modelFactory().model_read(app.models['psn_drugDirectory'],drugId);
                             if(!drug || drug.status == 0){
                                 this.body = app.wrapper.res.error({message: '无法找到药品!'});
@@ -4935,11 +4938,13 @@ module.exports = {
                              var data ={
                                     status:1,
                                     elderlyId: elderlyId,
-                                    // elderly_name:elderly_json.name,
+                                    elderly_name:elderly_name,
                                     tenantId: tenantId,
                                     drugId: drugId,
-                                    // drug_full_name: drug.json.full_name,
+                                    drug_no: drug_no,
+                                    drug_full_name:drug_full_name,
                                     current_quantity: in_out_quantity,
+                                    type:type,
                                     unit: unit
                                 };
                                 console.log(data);
