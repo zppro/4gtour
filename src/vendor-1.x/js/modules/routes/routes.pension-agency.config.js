@@ -1427,24 +1427,32 @@
                             },
                             {
                                 label: '被看护人',
-                                name: 'elderlyId',
+                                name: 'elderly_name',
                                 type: 'string',
-                                width: 80,
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '药品名称',
+                                name: 'drug_full_name',
+                                type: 'string',
+                                width: 60,
                                 sortable: true
                             },
                             {
                                 label: '药品编码',
-                                name: 'drugId',
+                                name: 'drug_no',
                                 type: 'string',
-                                width: 100,
+                                width: 80,
                                 sortable: true
                             },
                             {
                                 label: '药品来源',
                                 name: 'type',
                                 type: 'string',
-                                width: 60,
-                                sortable: true
+                                width: 100,
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3014/object'),
+                                sortable: false
                             },
                             {
                                 label: '入库数量',
@@ -1458,7 +1466,8 @@
                                 name: 'unit',
                                 type: 'string',
                                 width: 60,
-                                sortable: true
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3013/object'),
+                                sortable: false
                             }, 
                             {
                                 label: '操作',
