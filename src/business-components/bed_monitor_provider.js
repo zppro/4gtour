@@ -34,7 +34,6 @@
            try {
                var key = self.CACHE_MODULE + self.CACHE_ITEM_SESSION + '@' + gen_session_key;
                console.log("getToken1");
-               console.log(self.ctx.cache.get(key));
                if (!self.ctx.cache.get(key)) {
                    console.log("getToken2");
                    var member_session_id_hzfanweng = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
@@ -43,7 +42,6 @@
                        open_id: gen_session_key
                    }
                });
-                   console.log("member_session_id_hzfanweng:",member_session_id_hzfanweng);
                    return member_session_id_hzfanweng;
                }
                return self.ctx.cache.get(key);
@@ -80,21 +78,16 @@
     return co(function*() {
        try {
         console.log("login again");
-        console.log(openId);
         var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
            where: {
                open_id: openId,
                status: 1
            }
        });
-        console.log("+++++++++++++++++++++==");
-        console.log(member);
         if(member){
-            console.log("+++++++++++++++++++++");
             var token = yield self.getToken(member.open_id);           
             var ret=yield self.userAuthenticate(member,token);              
             var session_id = yield self.getSession(openId);
-            console.log(session_id);
             return session_id;
         }
     } 
@@ -473,23 +466,6 @@ updateDeviceAttachState: function (sendData) {
    }).catch(self.ctx.coOnError);
 
 },
-setBedStatus:function(tenantId,devId,bedStatus){
- var self = this;
- return co(function*() {
-   try {
-       var myDate = new Date();
-       var key =tenantId+'$'+devId;
-       self.ctx.cache.put(key, bedStatus,60000,function(key,value){
-        console.log(key+"setBedStatus"+value);
-        console.log(myDate.toLocaleString());
-    });          
-   }
-   catch (e) {
-       console.log(e);
-       self.logger.error(e.message);
-   }
-}).catch(self.ctx.coOnError);
-},
 autoRegistLogin:function(){
  var self = this;
  return co(function*() {
@@ -513,7 +489,6 @@ autoRegistLogin:function(){
         };
         var member = yield self.regist(session,userInfo,tenants[i]._id);
         if(member){
-            console.log("getToken");
             var token = yield self.getToken(member.open_id);
             var ret= yield self.userAuthenticate(member,token);
             console.log('login success:',ret);
@@ -562,13 +537,10 @@ UpdatebedMonitorInfo:function(){
         var key;
         var bedStatus;
         var sessionId = yield self.getSession(devIds[i].tenantId);
-        console.log(i);
         sessionId  =  yield self.sessionIsExpired(sessionId,devIds[i].tenantId);
-        console.log(sessionId);
         var ret = yield self.getLatestSmbPerMinuteRecord(sessionId,devIds[i].name);
         if(ret.retCode == 'fail'){
             if(ret.retValue == 'device_offline'){
-                console.log(DIC.D3009.OnLine);
                 if(devIds[i].device_status != DIC.D3009.OffLine){
                     devIds[i].device_status = DIC.D3009.OffLine;
                     yield devIds[i].save();
@@ -586,6 +558,7 @@ UpdatebedMonitorInfo:function(){
                 isBed:ret.retValue.inBed
             };
             self.ctx.cache.put(key, bedStatus);   
+            console.log('gotobed');
         }else{
           key =devIds[i].tenantId+'$'+devIds[i].name;      
           var bedStatus =  self.ctx.cache.get(key);
@@ -595,7 +568,7 @@ UpdatebedMonitorInfo:function(){
                 tenantId:devIds[i].tenantId,
                 isBed:ret.retValue.inBed
             };
-            self.ctx.cache.put(key, bedStatus,30000,function(){
+            self.ctx.cache.put(key, bedStatus,300000,function(){
                 console.log('Alarm');
             }); 
             console.log(self.ctx.cache.get(key));                   

@@ -14,19 +14,15 @@
     register: function (ctx) {
         if (this.needRegister) {
             return co(function*() {
-             try {
+            
                 yield ctx.bed_monitor_provider.autoRegistLogin();
             var job_rule = '*/1 * * * *';//每分钟
             ctx.jobManger.createJob(job_id, job_name, job_rule, ()=> {
                 console.log(ctx.moment().format('HH:mm:ss') + ' ' + job_id + '(' + job_name + ') => executing.');
-
+                    ctx.bed_monitor_provider.UpdatebedMonitorInfo();
                 // console.log(ctx.moment().format('HH:mm:ss') + ' ' + job_id + '(' + job_name + ') => executed.');
             }, {printLog: printLog});
-        }
-        catch (e) {
-         console.log(e);
-         logger.error(e.message);
-     }
+        
  }).catch(ctx.coOnError);
         }
         else {
