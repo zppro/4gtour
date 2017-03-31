@@ -352,8 +352,6 @@ module.exports = {
 
                                 if (bedMonitor.disableCheck ) {
                                     bedMonitor.name = bedMonitor.name + ' (正服务于' + dicBedMonitorToRoom[bedMonitor.id] + ')';
-                                } else {
-                                    bedMonitor.name = bedMonitor.code + ' [' + bedMonitor.name + ']'
                                 }
                                 bedMonitor.bedMonitorId = bedMonitor.id;
 

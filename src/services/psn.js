@@ -4798,7 +4798,7 @@ module.exports = {
                             });
 
                             if(keyword){
-                                data.where.drug_no = new RegExp(keyword);
+                                data.where.full_name = new RegExp(keyword);
                             }
                             var rows = yield app.modelFactory().model_query(app.models['psn_drugDirectory'], data);
                             this.body = app.wrapper.res.rows(rows);
@@ -4873,7 +4873,7 @@ module.exports = {
                                     tenantId: tenantId
                                 }
                             }).populate('nursingLevelId','short_name nursing_assessment_grade', 'psn_nursingLevel')
-                                .populate('room_value.roomId','name', 'psn_room');
+                                .populate('room_value.roomId','name bedMonitors', 'psn_room');
 
                             // console.log('elderlys:', rows);
 
@@ -4898,29 +4898,12 @@ module.exports = {
                         var tenant, elderly, drug;
                         try {
                             var tenantId = this.request.body.tenantId;
-                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
-                            if(!tenant || tenant.status == 0){
-                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
-                                yield next;
-                                return;
-                            }
-
                             var elderlyId = this.request.body.elderlyId;
-                            elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
-                            if(!elderly || elderly.status == 0){
-                                this.body = app.wrapper.res.error({message: '无法找到老人!'});
-                                yield next;
-                                return;
-                            }
-                            var elderly_json = elderly.toObject();
+                            var elderly_name = this.request.body.elderly_name;
+
                             var drugId = this.request.body.drugId;
-                            drug = yield app.modelFactory().model_read(app.models['psn_drugDirectory'],drugId);
-                            if(!drug || drug.status == 0){
-                                this.body = app.wrapper.res.error({message: '无法找到药品!'});
-                                yield next;
-                                return;
-                            }
-                            var drug_json = drug.toObject();
+                            var drug_no = this.request.body.drug_no;
+                            var drug_full_name = this.request.body.drug_full_name; 
                             var in_out_quantity = this.request.body.in_out_quantity;
                             var unit = this.request.body.unit;
                             var type = this.request.body.type;
@@ -4932,20 +4915,23 @@ module.exports = {
                                         tenantId: tenantId
                                     }
                                 });
-                             var data ={
+                              
+                                 
+                            if(!drugStock){
+                                yield app.modelFactory().model_create(app.models['psn_drugStock'],{
                                     status:1,
                                     elderlyId: elderlyId,
-                                    elderly_name:elderly_json.name,
+
+                                    elderly_name:elderly_name,
                                     tenantId: tenantId,
                                     drugId: drugId,
-                                    drug_no:drug_json.drug_no,
-                                    drug_full_name: drug_json.full_name,
+                                    drug_no: drug_no,
+                                    drug_full_name:drug_full_name,
+
                                     current_quantity: in_out_quantity,
+                                    type:type,
                                     unit: unit
-                                };
-                                console.log(data);
-                            if(!drugStock){
-                                yield app.modelFactory().model_create(app.models['psn_drugStock'],data);
+                                });
                             }else{
                                 console.log(parseInt(drugStock.current_quantity));
                                 console.log(parseInt(in_out_quantity));

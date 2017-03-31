@@ -143,8 +143,8 @@
 
         function buildVMHelper() {
 
-            return ['$timeout', '$q', '$translate', '$http', 'Browser', 'blockUI', 'cfpLoadingBar', 'shareNode', 'extensionNode', 'mwsNode', 'psnNode', 'idtNode', 'debugNode', 'clientData', 'treeFactory', 'Notify', 'GridUtils', 'ViewUtils',
-                function ($timeout, $q, $translate, $http, Browser, blockUI, cfpLoadingBar, shareNode, extensionNode, mwsNode, psnNode, idtNode, debugNode, clientData, treeFactory, Notify, GridUtils, ViewUtils) {
+            return ['$timeout', '$q', '$location', '$translate', '$http', 'Browser', 'blockUI', 'cfpLoadingBar', 'shareNode', 'extensionNode', 'mwsNode', 'psnNode', 'idtNode', 'debugNode', 'clientData', 'treeFactory', 'Notify', 'GridUtils', 'ViewUtils',
+                function ($timeout, $q, $location, $translate, $http, Browser, blockUI, cfpLoadingBar, shareNode, extensionNode, mwsNode, psnNode, idtNode, debugNode, clientData, treeFactory, Notify, GridUtils, ViewUtils) {
 
                 function promiseWrapper() {
                     if (arguments.length > 0) {
@@ -228,6 +228,11 @@
                     }
                 }
 
+                function getRoot () {
+                    var port = $location.port();
+                    return $location.host() + port === 80 ? '' : ':' + port;
+                }
+
                 return {
                     q: $q,
                     timeout: $timeout,
@@ -257,7 +262,8 @@
                         v: ViewUtils
                     },
                     alertWarning: alertWarning,
-                    alertSuccess: alertSuccess
+                    alertSuccess: alertSuccess,
+                    getRoot: getRoot
                 };
             }];
         }

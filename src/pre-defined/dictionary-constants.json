@@ -3,6 +3,14 @@
     "MOBILE": "A0001",
     "PC": "A0003"
   },
+  "D1002": {
+    "INTEGRATION_ORG": "A0000",
+    "MINI_PENSION_ORG": "A0001",
+    "MIDDLE_SIZE_PENSION_ORG": "A0002",
+    "LARGE_SCALE_ORG": "A0003",
+    "FIRST_AGENT": "A1001",
+    "SECOND_AGENT": "A1002"
+  },
   "D1006":{
     "MALE" : "M",
     "FEMALE":"F"

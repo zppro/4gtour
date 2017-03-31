@@ -1,9 +1,12 @@
 {
   "PSN": {
     "BED_MONITOR": {
+      "ON_LINE": "psn$bed_monitor$on_line",
+      "OFF_LINE": "psn$bed_monitor$off_line",
       "LEAVE": "psn$bed_monitor$leave",
       "LEAVE_TIME": "psn$bed_monitor$leave_time",
-      "COME": "psn$bed_monitor$come"
+      "COME": "psn$bed_monitor$come",
+      "ALARM_LEAVE_TIMEOUT": "psn$bed_monitor$alarm_leave_timeout"
     }
   },
   "MEMBER": {
