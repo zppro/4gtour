@@ -623,8 +623,8 @@
                     return $http.post(baseUrl + 'leaveAccompanierSyncElderlyFamilyMembers/' + leaveId);
                 }
 
-                function drugInStock(tenantId,elderlyId,drugId,in_out_quantity,type,unit){
-                     return $http.post(baseUrl + 'inStock', {tenantId: tenantId, elderlyId: elderlyId, drugId: drugId,in_out_quantity:in_out_quantity,type: type, unit: unit});
+                function drugInStock(tenantId,elderlyId,elderly_name,drugId,drug_no,drug_full_name,in_out_quantity,type,unit){
+                     return $http.post(baseUrl + 'inStock', {tenantId: tenantId, elderlyId: elderlyId,elderly_name:elderly_name,drugId: drugId,drug_no:drug_no,drug_full_name:drug_full_name,in_out_quantity:in_out_quantity,type: type, unit: unit});
                 }
 
                 function checkCanChangeBookingOrUnbookingRecharge(rechargeId){

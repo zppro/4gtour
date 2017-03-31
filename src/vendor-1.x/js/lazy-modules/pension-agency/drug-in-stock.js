@@ -74,10 +74,11 @@
         }
 
         function selectElerly(o) {
+            console.log(o);
             if(o){
                 // vm.model.enter_code = o.originalObject.enter_code;
                 vm.model.elderlyId = o.originalObject._id;
-                vm.model.elderly_name = o.title;
+                vm.model.elderly_name = o.originalObject.name;
             }
         }
          
@@ -90,6 +91,7 @@
             if(o){
                 vm.model.drugId = o.originalObject._id;
                 vm.model.drug_no = o.originalObject.drug_no;
+                vm.model.drug_full_name = o.originalObject.full_name;
             }
         }
  
@@ -97,7 +99,7 @@
         function doSubmit() {
             if ($scope.theForm.$valid) {
                 vm.save(true).then(function(ret){
-                    vmh.psnService.drugInStock(vm.tenantId,vm.model.elderlyId,vm.model.drugId,vm.model.in_out_quantity,vm.model.type,vm.model.unit).then(function(ret) {
+                    vmh.psnService.drugInStock(vm.tenantId,vm.model.elderlyId,vm.model.elderly_name,vm.model.drugId,vm.model.drug_no,vm.model.drug_full_namess,vm.model.in_out_quantity,vm.model.type,vm.model.unit).then(function(ret) {
                             vmh.alertSuccess(vm.viewTranslatePath('SYNC_FAMILY_MEMBERS_SUCCESS'), true);
                             vm.returnBack();
                         });
