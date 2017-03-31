@@ -458,6 +458,7 @@
                     disableEnterRelatedAction: disableEnterRelatedAction,
                     checkBeforeAddEnter: checkBeforeAddEnter,
                     queryElderly: queryElderly,
+                    queryDrug:queryDrug,
                     elderlyInfo: elderlyInfo,
                     changeElderlyRoomBed: changeElderlyRoomBed,
                     changeElderlyChargeItem: changeElderlyChargeItem,
@@ -465,6 +466,7 @@
                     changeElderlyNursingLevel: changeElderlyNursingLevel,
                     receptionVisiterSyncElderlyFamilyMembers: receptionVisiterSyncElderlyFamilyMembers,
                     leaveAccompanierSyncElderlyFamilyMembers: leaveAccompanierSyncElderlyFamilyMembers,
+                    drugInStock:drugInStock,
                     checkCanChangeBookingOrUnbookingRecharge: checkCanChangeBookingOrUnbookingRecharge,
                     bookingRecharge: bookingRecharge,
                     disableRechargeAndUnbooking: disableRechargeAndUnbooking,
@@ -569,6 +571,14 @@
                     }});
                 }
 
+                function queryDrug(tenantId,keyword,where,select,sort) {
+                    return $http.post(baseUrl + 'q/drug', {tenantId: tenantId, keyword: keyword,  data: {
+                        where: where,
+                        select: select,
+                        sort: sort
+                    }});
+                }
+
                 function elderlyInfo(elderlyId,select) {
                     return $http.get(baseUrl + 'elderlyInfo/' + elderlyId + '/' + select);
                 }
@@ -613,6 +623,9 @@
                     return $http.post(baseUrl + 'leaveAccompanierSyncElderlyFamilyMembers/' + leaveId);
                 }
 
+                function drugInStock(tenantId,elderlyId,drugId,in_out_quantity,type,unit){
+                     return $http.post(baseUrl + 'inStock', {tenantId: tenantId, elderlyId: elderlyId, drugId: drugId,in_out_quantity:in_out_quantity,type: type, unit: unit});
+                }
 
                 function checkCanChangeBookingOrUnbookingRecharge(rechargeId){
                     return $http.get(baseUrl + 'checkCanChangeBookingOrUnbookingRecharge/' + rechargeId);

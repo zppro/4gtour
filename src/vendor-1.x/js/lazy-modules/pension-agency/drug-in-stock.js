@@ -26,7 +26,7 @@
             vm.query();
         }
     }
-     DrugInstockDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
+    DrugInstockDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
 
     function DrugInstockDetailsController($scope, ngDialog, vmh, vm) {
 
@@ -39,6 +39,10 @@
 
             vm.init({removeDialog: ngDialog});
             vm.doSubmit = doSubmit;
+            vm.queryElderly = queryElderly;
+            vm.selectElerly = selectElerly;
+            vm.queryDrug = queryDrug;
+            vm.selectDrug = selectDrug;
             vm.tab1 = {cid: 'contentTab1'};
             
             vmh.parallel([
@@ -47,20 +51,57 @@
                 vm.selectBinding.unit = results[0];
             })   
 
-            vm.hobbiesPromise = vmh.shareService.d('D3014').then(function (hobbies) {
+            vm.typePromise = vmh.shareService.d('D3014').then(function (hobbies) {
                 vmh.utils.v.changeProperyName(hobbies, [{o: 'value', n: '_id'}]);
                 return hobbies;
             });
 
-            vm.load();
+            vm.load().then(function(){
+                if(vm.model.elderlyId){
+                    vm.selectedElderly = {_id: vm.model.elderlyId, name: vm.model.elderly_name};
+                    vm.selectedDrug = {_id:vm.model.drugId,name:vm.model.drug_no};
+                }
+            });
 
         }
+        
+        function queryElderly(keyword) {
+            console.log('keyword', keyword)
+            return vmh.fetch(vmh.psnService.queryElderly(vm.tenantId, keyword, {
+                  live_in_flag: true,
+                  // sbegin_exit_flow: {'$in':[false,undefined]}
+            }, 'name'));
+        }
 
+        function selectElerly(o) {
+            if(o){
+                // vm.model.enter_code = o.originalObject.enter_code;
+                vm.model.elderlyId = o.originalObject._id;
+                vm.model.elderly_name = o.title;
+            }
+        }
+         
+        function queryDrug(keyword) {
+            return vmh.fetch(vmh.psnService.queryDrug(vm.tenantId, keyword, {}, 'drug_no full_name'));
+        }
+
+        function selectDrug(o) {
+            console.log(o);
+            if(o){
+                vm.model.drugId = o.originalObject._id;
+                vm.model.drug_no = o.originalObject.drug_no;
+            }
+        }
+ 
 
         function doSubmit() {
-
             if ($scope.theForm.$valid) {
-                vm.save();
+                vm.save(true).then(function(ret){
+                    vmh.psnService.drugInStock(vm.tenantId,vm.model.elderlyId,vm.model.drugId,vm.model.in_out_quantity,vm.model.type,vm.model.unit).then(function(ret) {
+                            vmh.alertSuccess(vm.viewTranslatePath('SYNC_FAMILY_MEMBERS_SUCCESS'), true);
+                            vm.returnBack();
+                        });
+                })
             }
             else {
                 if ($scope.utils.vtab(vm.tab1.cid)) {

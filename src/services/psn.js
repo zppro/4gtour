@@ -44,8 +44,9 @@ module.exports = {
                             if(keyword){
                                 data.where.name = new RegExp(keyword);
                             }
+                            console.log(data);
                             var rows = yield app.modelFactory().model_query(app.models['psn_elderly'], data);
-
+                            console.log(rows);
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
@@ -4777,6 +4778,7 @@ module.exports = {
                     };
                 }
             },
+ 
 
             /**********************药品相关*****************************/
             {
@@ -4796,10 +4798,9 @@ module.exports = {
                             });
 
                             if(keyword){
-                                data.where.full_name = new RegExp(keyword);
+                                data.where.drug_no = new RegExp(keyword);
                             }
-                            var rows = yield app.modelFactory().model_query(app.models['psn_drug'], data);
-
+                            var rows = yield app.modelFactory().model_query(app.models['psn_drugDirectory'], data);
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                           console.log(e);
@@ -4931,30 +4932,22 @@ module.exports = {
                                         tenantId: tenantId
                                     }
                                 });
-                            yield app.modelFactory().model_create(app.models['psn_drugInOutStock'],{
-                                elderlyId: elderlyId,
-                                elderly_name:elderly_json.name,
-                                tenantId: tenantId,
-                                drugId: drugId,
-                                drug_full_name: drug.json.full_name,
-                                in_out_quantity: in_out_quantity,
-                                unit: unit,
-                                type: type,
-                                in_out_no: 'in-'+ Date.now.toString()
-                            });
-                            if(!drugStock){
-                                yield app.modelFactory().model_create(app.models['psn_drugStock'],{
+                             var data ={
+                                    status:1,
                                     elderlyId: elderlyId,
-                                    elderly_name:elderly_json.name,
+                                    // elderly_name:elderly_json.name,
                                     tenantId: tenantId,
                                     drugId: drugId,
-                                    drug_full_name: drug.json.full_name,
+                                    // drug_full_name: drug.json.full_name,
                                     current_quantity: in_out_quantity,
                                     unit: unit
-                                });
+                                };
+                                console.log(data);
+                            if(!drugStock){
+                                yield app.modelFactory().model_create(app.models['psn_drugStock'],data);
                             }else{
-                                durgStock.current_quantity += in_out_quantity; 
-                                yield durgStock.save();
+                                drugStock.current_quantity += in_out_quantity; 
+                                yield drugStock.save();
                             }
                             this.body = app.wrapper.res.default();
                         }
@@ -5032,8 +5025,8 @@ module.exports = {
                                     yield next;
                                     return;
                                 }else{
-                                    durgStock.current_quantity -= in_out_quantity; 
-                                    yield durgStock.save();
+                                    drugStock.current_quantity -= in_out_quantity; 
+                                    yield drugStock.save();
                                 }
                                 
                             }
