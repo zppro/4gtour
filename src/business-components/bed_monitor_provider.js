@@ -6,6 +6,7 @@
  var externalSystemConfig = require('../pre-defined/external-system-config.json');
  var DIC = require('../pre-defined/dictionary-constants.json');
  var socketServerEvents = require('../pre-defined/socket-server-events.json');
+ var mt = require('moment');
  module.exports= {
    init: function (ctx) {
        console.log('init sleep... ');
@@ -350,8 +351,8 @@ getDeviceInfo:function(openid){
                care_by:member._id,
                bedMonitorId:devices[i]._id
            }
-       });
-
+       });    
+       var sleepStatus = yield self.getSleepBriefReport();
        deviceInfo[i] = {
         deviceId:devices[i].name,
         memberName:memberCarePerson.name,
@@ -506,6 +507,36 @@ updateDeviceAttachState: function (sendData) {
 
    }).catch(self.ctx.coOnError);
 
+},
+getSleepBriefReport: function () {
+   var self = this;
+   return co(function *() {
+       try {
+           var  endTime =self.ctx.moment(self.ctx.moment().format('YYYY-MM-DD 12:00:00'));
+           var startTime = endTime.subtract(1,'days');
+          // var s = perTime.unix();
+           console.log('nowTime:',endTime.unix());
+           console.log('perTime:',startTime.unix());
+                 var ret = yield rp({
+                    method: 'POST',
+                 url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/devicews/getSleepBriefReport.json',
+                 //form:{sessionId:sessionId,devId:devId,startTime:startTime.unix(),endTime:endTime.unix()}
+                 form:{sessionId:'201703211139280000020107339802',devId:'A1100123',startTime:startTime.unix(),endTime:endTime.unix()}
+            });
+                 ret = JSON.parse(ret);
+                 console.log(ret);
+                 console.log(typeof(ret.retValue));
+                 var value = ret.retValue
+                if (value.fallAsleepTime=='0') {
+                    return app.wrapper.res.ret({status:'no sleep'});
+                }
+                return app.wrapper.res.ret({fallAsleepTime:value.fallAsleepTime,awakeTime:value.awakeTime,deepSleepTime:value.deepSleepTime});
+       }
+       catch (e) {
+           console.log(e);
+           self.logger.error(e.message);
+       }
+   }).catch(self.ctx.coOnError);
 },
 autoRegistLogin: function () {
    var self = this;
