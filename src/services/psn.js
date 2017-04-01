@@ -5026,7 +5026,7 @@ module.exports = {
                                         unit: unit,
                                         type: type,
                                         in_out_type:0,
-                                        in_out_no: 'out-'+ app.moment().format('YYYYMMDDHHmmss')
+                                        in_out_no: 'OUT-'+ new Date().valueOf()
                                     });
                                     drugStock.current_quantity = parseInt(drugStock.current_quantity) - parseInt(in_out_quantity);
                                     yield drugStock.save();

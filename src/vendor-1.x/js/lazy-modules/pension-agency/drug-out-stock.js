@@ -35,7 +35,6 @@
         init();
 
         function init() {
-
             vm.init({removeDialog: ngDialog});
             vm.doSubmit = doSubmit;
             vm.queryElderly = queryElderly;

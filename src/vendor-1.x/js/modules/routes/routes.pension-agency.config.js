@@ -1394,7 +1394,7 @@
                         modelName: 'psn-drugStock',
                         model: {},
                         blockUI: true
-                    })
+                    }), deps: helper.resolveFor2('angucomplete-alt')
                 }
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-in-stock', {
@@ -1573,14 +1573,14 @@
                                 width: 60,
                                 sortable: true,
                             },
-                            {
-                                label: '包装规格',
-                                name: 'unit',
-                                type: 'string',
-                                width: 60,
-                                sortable: true,
-                                 formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3013/object')
-                            }, 
+                            // {
+                            //     label: '包装规格',
+                            //     name: 'unit',
+                            //     type: 'string',
+                            //     width: 60,
+                            //     sortable: true,
+                            //      formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3013/object')
+                            // }, 
                             {
                                 label: '操作',
                                 name: 'actions',
