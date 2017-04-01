@@ -31,9 +31,9 @@
                         td.text-center {{::row.elderly_name}}
                         td.text-center {{::row.drug_full_name}}
                         td.text-center {{::row.drug_no}}
-                        td.text-center {{::row.type}}
+                        td.text-center {{::row.type|formatter:'type':vm.columns}}
                         td.text-center {{::row.in_out_quantity}}
-                        td.text-center {{::row.unit}}
+                        td.text-center {{::row.unit|formatter:'unit':vm.columns}}
                         td
                             .btn-group
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")

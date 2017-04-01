@@ -67,7 +67,6 @@
         }
         
         function queryElderly(keyword) {
-            console.log('keyword', keyword)
             return vmh.fetch(vmh.psnService.queryElderly(vm.tenantId, keyword, {
                   live_in_flag: true,
                   // sbegin_exit_flow: {'$in':[false,undefined]}
@@ -75,7 +74,6 @@
         }
 
         function selectElerly(o) {
-            console.log(o);
             if(o){
                 // vm.model.enter_code = o.originalObject.enter_code;
                 vm.model.elderlyId = o.originalObject._id;
@@ -88,7 +86,6 @@
         }
 
         function selectDrug(o) {
-            console.log(o);
             if(o){
                 vm.model.drugId = o.originalObject._id;
                 vm.model.drug_no = o.originalObject.drug_no;
@@ -99,7 +96,8 @@
 
         function doSubmit() {
             if ($scope.theForm.$valid) {
-                vm.model.in_out_no= "IN-"+new Date().toLocaleDateString()+"-"+(Math.floor(Math.random()*8999)+1000);
+            
+                vm.model.in_out_no= "IN-"+new Date().valueOf();
                 vm.save(true).then(function(ret){
                     vmh.psnService.drugInStock(vm.tenantId,vm.model.elderlyId,vm.model.elderly_name,vm.model.drugId,vm.model.drug_no,vm.model.drug_full_namess,vm.model.in_out_quantity,vm.model.type,vm.model.unit).then(function(ret) {
                             vmh.alertSuccess(vm.viewTranslatePath('SYNC_FAMILY_MEMBERS_SUCCESS'), true);
