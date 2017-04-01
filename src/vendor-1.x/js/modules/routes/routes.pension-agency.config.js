@@ -1370,7 +1370,8 @@
                                 name: 'unit',
                                 type: 'string',
                                 width: 60,
-                                sortable: true
+                                sortable: true,
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3013/object'),
                             },
                             {
                                 label: '操作',

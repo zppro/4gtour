@@ -9,19 +9,16 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         i.glyphicon.glyphicon-minus-sign
                 div#contentTab1
                     fieldset: .form-group
-                        <!--探望老人-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-ELDERLY-NAME') | translate}}:
                         .col-md-10
                             div#elderly(angucomplete-alt,input-name="elderly",minlength="1",field-required="true",text-searching='{{"label.TEXT-SEARCHING"|translate}}',text-no-results='{{"label.TEXT-NO-RESULTS"|translate}}',placeholder="",pause="400",selected-object="vm.selectElerly",remote-api-handler="vm.queryElderly",title-field="name",initial-value="vm.selectedElderly",input-class="form-control form-control-small")
                             span.text-danger(ng-show="utils.vinput(this.theForm,'elderly','autocomplete-required')") {{ "validator.REQUIRED" | translate}}
                     fieldset: .form-group
-                        <!--药品目录-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-DRUG-NO') | translate}}:
                         .col-md-10
                             div#drug(angucomplete-alt,input-name="drug_no",minlength="1",field-required="true",text-searching='{{"label.TEXT-SEARCHING"|translate}}',text-no-results='{{"label.TEXT-NO-RESULTS"|translate}}',placeholder="",pause="400",selected-object="vm.selectDrug",remote-api-handler="vm.queryDrug",title-field="drug_no",initial-value="vm.selectedDrug",input-class="form-control form-control-small")
                             span.text-danger(ng-show="utils.vinput(this.theForm,'drug_no','autocomplete-required')") {{ "validator.REQUIRED" | translate}}        
                     fieldset: .form-group
-                        <!--药品来源-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-TYPE') | translate}}:
                         .col-md-10
                             .tree.tree-dropdown(name='type',s-tree,s-tree-data="vm.typePromise",s-tree-height="200", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',layout:'dropdown',readonly:{{vm.readonly}}}",ng-model="vm.model.type",required='')
@@ -31,13 +28,12 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         .col-md-10
                             input.form-control(type='text', name='in_out_quantity',ng-model='vm.model.in_out_quantity',placeholder='' ,required='')
                             span.text-danger(ng-show="utils.vinput(this.theForm,'in_out_quantity','required')") {{ "validator.REQUIRED" | translate}}
-                    fieldset: .form-group
-                        <!--包装单位-->
-                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UNIT') | translate}}:
-                        .col-md-10
-                            .btn-group
-                                .btn.btn-primary(name='unit',ng-repeat='item in vm.selectBinding.unit',ng-model='vm.model.unit',btn-radio="item.value",required='') {{item.name}}
-                            span.text-danger(ng-show="utils.vinput(this.theForm,'unit','required')") {{ "validator.REQUIRED" | translate}}
+                    //- fieldset: .form-group
+                    //-     label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-UNIT') | translate}}:
+                    //-     .col-md-10
+                    //-         .btn-group
+                    //-             .btn.btn-primary(name='unit',ng-repeat='item in vm.selectBinding.unit',ng-model='vm.model.unit',btn-radio="item.value",required='') {{item.name}}
+                    //-         span.text-danger(ng-show="utils.vinput(this.theForm,'unit','required')") {{ "validator.REQUIRED" | translate}}
                         
     .text-right.mt-lg
         button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}
