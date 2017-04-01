@@ -4801,6 +4801,8 @@ module.exports = {
                                 data.where.full_name = new RegExp(keyword);
                             }
                             var rows = yield app.modelFactory().model_query(app.models['psn_drugDirectory'], data);
+                            var rows = app._.map(rows,function(r){ r.full_name+="--"+r.drug_no; return r});
+                            console.log(rows);
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                           console.log(e);
@@ -4858,11 +4860,9 @@ module.exports = {
                                     tenantId: tenantId
                                 }
                             });
-                            // console.log('elderlyObjects:', elderlyObjects);
                             elderlyIds =  app._.map(elderlyObjects, (o) => {
                                 return o.elderlyId;
                             });
-                            // console.log('elderlyIds:', elderlyIds);
 
                             var rows = yield app.modelFactory().model_query(app.models['psn_elderly'],{
                                 select: 'name birthday nursingLevelId room_value',
@@ -4873,10 +4873,7 @@ module.exports = {
                                     tenantId: tenantId
                                 }
                             }).populate('nursingLevelId','short_name nursing_assessment_grade', 'psn_nursingLevel')
-                                .populate('room_value.roomId','name bedMonitors', 'psn_room');
-
-                            // console.log('elderlys:', rows);
-
+                              .populate('room_value.roomId','name bedMonitors', 'psn_room');
                             this.body = app.wrapper.res.rows(rows);
                         }
                         catch (e) {
@@ -4921,20 +4918,16 @@ module.exports = {
                                 yield app.modelFactory().model_create(app.models['psn_drugStock'],{
                                     status:1,
                                     elderlyId: elderlyId,
-
                                     elderly_name:elderly_name,
                                     tenantId: tenantId,
                                     drugId: drugId,
                                     drug_no: drug_no,
                                     drug_full_name:drug_full_name,
-
                                     current_quantity: in_out_quantity,
                                     type:type,
                                     unit: unit
                                 });
                             }else{
-                                console.log(parseInt(drugStock.current_quantity));
-                                console.log(parseInt(in_out_quantity));
                                 drugStock.current_quantity = parseInt(drugStock.current_quantity) + parseInt(in_out_quantity); 
                                 yield drugStock.save();
                             }

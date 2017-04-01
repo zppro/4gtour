@@ -423,7 +423,7 @@
       "details": {
         "TITLE": "养老机构-药品管理-药品入库-详情",
         "TAB1":"入库信息",
-        "TAB1-LABEL-ELDERLY-NAME":"被看护人",
+        "TAB1-LABEL-ELDERLY-NAME":"老人",
         "TAB1-LABEL-DRUG-NAME":"药品名称",
         "TAB1-LABEL-TYPE":"药品来源",
         "TAB1-LABEL-QUANTITY":"入库数量",

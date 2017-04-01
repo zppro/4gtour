@@ -1422,7 +1422,7 @@
                 resolve: {
                     entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'drug-in-stock.list', {
                         modelName: 'psn-drugInOutStock',
-                        searchForm: {"status": 1},
+                        searchForm: {"status": 1,"in_out_type":1},
                         serverPaging: true,
                         columns: [
                             {
@@ -1433,7 +1433,7 @@
                                 sortable: true
                             },
                             {
-                                label: '被看护人',
+                                label: '老人',
                                 name: 'elderly_name',
                                 type: 'string',
                                 width: 60,
