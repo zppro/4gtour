@@ -22,7 +22,14 @@
 
         function init() {
             vm.init({removeDialog: ngDialog});
+            vm.drugOutStockInvalid = drugOutStockInvalid;
             vm.query();
+        }
+
+        function drugOutStockInvalid(o){
+            console.log("==============================");
+            console.log(o);
+            vmh.psnService.drugOutStockInvalid(o);
         }
     }
     DrugOutStockDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
@@ -91,6 +98,8 @@
                 vm.model.drug_full_name = o.originalObject.full_name;
             }
         }
+
+        
  
 
         function doSubmit() {

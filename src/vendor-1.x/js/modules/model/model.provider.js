@@ -468,6 +468,7 @@
                     leaveAccompanierSyncElderlyFamilyMembers: leaveAccompanierSyncElderlyFamilyMembers,
                     drugInStock:drugInStock,
                     drugOutStock:drugOutStock,
+                    drugOutStockInvalid:drugOutStockInvalid,
                     checkCanChangeBookingOrUnbookingRecharge: checkCanChangeBookingOrUnbookingRecharge,
                     bookingRecharge: bookingRecharge,
                     disableRechargeAndUnbooking: disableRechargeAndUnbooking,
@@ -578,6 +579,10 @@
                         select: select,
                         sort: sort
                     }});
+                }
+
+                function drugOutStockInvalid(drugInOutStockId){
+                    return $http.post(baseUrl + 'drugOutStockInvalid', {drugInOutStockId: drugInOutStockId});
                 }
 
                 function elderlyInfo(elderlyId,select) {

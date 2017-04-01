@@ -26,6 +26,7 @@ module.exports = function(ctx,name) {
             in_out_no:{type: String},//出入库单号
             type:{type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3014"])},//出入库类别(子女送药、机构采购、过期……)
             in_out_type:{type: Number, min: 0, max: 1},//出库还是入库（0：出库，1：入库）
+            valid_flag:{type: Number, min: 0, max: 1,default: 1},//该条记录是否有效（0：失效,1：有效）
             in_out_quantity:{type:Number},//出入库数量
             unit:{type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3013"])},//包装单位
             tenantId: {type: mongoose.Schema.Types.ObjectId,required: true,ref:'pub_tenant'}//关联机构
