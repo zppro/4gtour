@@ -1370,7 +1370,8 @@
                                 name: 'unit',
                                 type: 'string',
                                 width: 60,
-                                sortable: true
+                                sortable: true,
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3013/object'),
                             },
                             {
                                 label: '操作',
@@ -1393,7 +1394,7 @@
                         modelName: 'psn-drugStock',
                         model: {},
                         blockUI: true
-                    })
+                    }), deps: helper.resolveFor2('angucomplete-alt')
                 }
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-in-stock', {
@@ -1422,7 +1423,7 @@
                 resolve: {
                     entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'drug-in-stock.list', {
                         modelName: 'psn-drugInOutStock',
-                        searchForm: {"status": 1},
+                        searchForm: {"status": 1,"in_out_type":1},
                         serverPaging: true,
                         columns: [
                             {
@@ -1572,14 +1573,14 @@
                                 width: 60,
                                 sortable: true,
                             },
-                            {
-                                label: '包装规格',
-                                name: 'unit',
-                                type: 'string',
-                                width: 60,
-                                sortable: true,
-                                 formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3013/object')
-                            }, 
+                            // {
+                            //     label: '包装规格',
+                            //     name: 'unit',
+                            //     type: 'string',
+                            //     width: 60,
+                            //     sortable: true,
+                            //      formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3013/object')
+                            // }, 
                             {
                                 label: '操作',
                                 name: 'actions',

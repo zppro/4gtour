@@ -4888,7 +4888,7 @@ module.exports = {
                     };
                 }
             },
-            /**********************出入库*****************************/
+            /**********************药品出入库*****************************/
             {
                 method: 'inStock',
                 verb: 'post',
@@ -5026,12 +5026,56 @@ module.exports = {
                                         unit: unit,
                                         type: type,
                                         in_out_type:0,
-                                        in_out_no: 'out-'+ app.moment().format('YYYYMMDDHHmmss')
+                                        in_out_no: 'OUT-'+ new Date().valueOf()
                                     });
                                     drugStock.current_quantity = parseInt(drugStock.current_quantity) - parseInt(in_out_quantity);
                                     yield drugStock.save();
                                 }
                                 
+                            }
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'drugOutStockInvalid',
+                verb: 'post',
+                url: this.service_url_prefix + "/drugOutStockInvalid", 
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var drugInOutStockId = this.request.body.drugInOutStockId;
+                            console.log(drugInOutStockId);
+                            var drugInOutStock = yield app.modelFactory().model_read(app.models['psn_drugInOutStock'], drugInOutStockId);
+                            if(!drugInOutStock || drugInOutStock.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到出入库记录!'});
+                                yield next;
+                                return;
+                            }else{
+                                var drugStock  = yield app.modelFactory().model_one(app.models['psn_drugStock'],{
+                                        where: {
+                                            status: 1,
+                                            elderlyId: drugInOutStock.elderlyId,
+                                            drugId: drugInOutStock.drugId,
+                                            tenantId: drugInOutStock.tenantId
+                                        }
+                                    });
+                                if(drugInOutStock.in_out_type == 0){
+                                    drugStock.current_quantity = parseInt(drugStock.current_quantity) + parseInt(drugInOutStock.in_out_quantity);
+                                }else{
+                                    drugStock.current_quantity = parseInt(drugStock.current_quantity) - parseInt(drugInOutStock.in_out_quantity);
+                                }
+                                yield drugStock.save();
+                                drugInOutStock.valid_flag = 0;
+                                yield drugInOutStock.save();
+                                 
                             }
                             this.body = app.wrapper.res.default();
                         }

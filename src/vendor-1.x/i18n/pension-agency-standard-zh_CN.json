@@ -413,8 +413,8 @@
       "details": {
         "TITLE": "养老机构-药品管理-库存-详情",
         "TAB1":"库存信息",
-        "TAB1-LABEL-DRUGID":"药品",
-        "TAB1-LABEL-ELDERLYID":"老人",
+        "TAB1-LABEL-DRUG-NO":"药品编码",
+        "TAB1-LABEL-ELDERLY-NAME":"老人",
         "TAB1-LABEL-CURRENT-QUANTITY":"当前库存量",
         "TAB1-LABEL-UNIT":"单位"
       }
