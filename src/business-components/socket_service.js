@@ -39,6 +39,14 @@ module.exports = {
     getChannel: function (channelName) {
         return this.channels[channelName];
     },
+    sendToChannel: function (channelName) {
+        var channel = this.channels[channelName];
+        if (channel) {
+            channel.sendToClient.apply(channel, Array.prototype.slice.call(arguments,1));
+        } else {
+            console.log('channel is not exist:', channelName);
+        }
+    },
     addMemberNamespace: function() {
         this.socketClientsOfMember = {};
         this.memberClientsOfMember = {};

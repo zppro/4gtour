@@ -38,7 +38,7 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                                             td.text-left
                                                 span {{bedMonitor.name}}
                                             td.text-center
-                                                input.form-control(name="row$bed_no{{$index}}",type="number",ng-model='bedMonitor.bed_no',required='' , ui-validate="{min:'$value>=1', max:'$value<=vm.model.capacity'}")
+                                                input.form-control(name="row$bed_no{{$index}}",type="number",ng-model='vm.bedNos[bedMonitor._id]',required='' , ui-validate="{min:'$value>=1', max:'$value<=vm.model.capacity'}")
                                                 span.text-danger(ng-show="utils.vinput(this.theForm,'row$bed_no{{$index}}','required')") {{ "validator.REQUIRED" | translate}}
                                                 span.text-danger(ng-show="utils.vinput(this.theForm,'row$bed_no{{$index}}','number')") {{ "validator.NUMBER" | translate}}
                                                 span.text-danger(ng-show="utils.vinput(this.theForm,'row$bed_no{{$index}}','min')") {{ "validator.MIN" | translate:{min:1} }}

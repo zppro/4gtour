@@ -26,7 +26,8 @@ module.exports = function(ctx,name) {
             robots:[{type: mongoose.Schema.Types.ObjectId, ref: 'pub_robot'}],
             bedMonitors:[{
                 bed_no: {type: Number, min: 1},
-                bedMonitorId: {type: mongoose.Schema.Types.ObjectId, ref: 'pub_bedMonitor'}
+                bedMonitorId: {type: mongoose.Schema.Types.ObjectId, ref: 'pub_bedMonitor'},
+                bedMonitorName: {type: String}
             }],
             tenantId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'pub_tenant'}
         });

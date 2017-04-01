@@ -1,4 +1,5 @@
-//-  Created by yrm on 17-3-28.
+//- Created by yrm on 17-3-31.
+ 
 .col-xs-12.text-center
     .row
         form.form-search
@@ -25,12 +26,14 @@
                             .checkbox.c-checkbox
                                 label
                                     input(type='checkbox' data="trBubble" ng-model="row.checked" )
-                                    span.fa.fa-check(data="trBubble")   
+                                    span.fa.fa-check(data="trBubble")
+                        td.text-center {{::row.in_out_no}}    
                         td.text-center {{::row.drug_no}}
-                        td.text-center {{::row.drug_full_name}}
+                        td.text-center {{::row.drug_full_name}}            
                         td.text-center {{::row.elderly_name}}
-                        td.text-center {{::row.current_quantity}}
-                        td.text-center {{::row.unit}}
+                        td {{::row.type|formatter:'type':vm.columns}}
+                        td.text-center {{::row.in_out_quantity}}
+                        td.text-center {{::row.unit|formatter:'unit':vm.columns}}
                         td
                             .btn-group
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
@@ -41,11 +44,11 @@
             .panel-footer
                 .row
                     .col-md-4.text-left
-                    //-     .btn-toolbar
-                    //-         .btn-group
-                    //-             a.btn.btn-primary.btn-sm(title="{{'button.ADD'|translate}}",ng-click="vm.addEx()")
-                    //-                 i.glyphicon.glyphicon-plus
-                    //-             a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.disable(vm.disableEnterRelatedAction)")
-                    //-                 i.glyphicon.glyphicon-minus
+                        .btn-toolbar
+                            .btn-group
+                                a.btn.btn-primary.btn-sm(title="{{'button.ADD'|translate}}",ng-click="vm.add()")
+                                    i.glyphicon.glyphicon-plus
+                                a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.remove()")
+                                    i.glyphicon.glyphicon-minus
                     .col-md-8
                         pagination.pagination-sm.pull-right(total-items="vm.page.totals",ng-model="vm.page.no",max-size="5",items-per-page="vm.page.size",boundary-links="true" ,ng-change="vm.paging()")

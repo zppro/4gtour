@@ -1338,15 +1338,22 @@
                         serverPaging: true,
                         columns: [
                             {
-                                label: '药品',
-                                name: 'drugId',
+                                label: '药品编码',
+                                name: 'drug_no',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '药品名称',
+                                name: 'drug_full_name',
                                 type: 'string',
                                 width: 80,
                                 sortable: true
                             },
                             {
                                 label: '老人',
-                                name: 'elderlyId',
+                                name: 'elderly_name',
                                 type: 'string',
                                 width: 100,
                                 sortable: true
@@ -1487,6 +1494,110 @@
                 params:{autoSetTab:null},
                 resolve: {
                     entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'drug-in-stock.details', {
+                        modelName: 'psn-drugInOutStock',
+                        model: {},
+                        blockUI: true
+                    }), deps: helper.resolveFor2('angucomplete-alt')
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-out-stock', {
+                url: '/drug-out-stock',
+                title: '药品出库',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'DRUG-OUT-STOCK'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'drug-out-stock.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-out-stock.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'drug-out-stock-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'DrugOutStockGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'drug-out-stock.list', {
+                        modelName: 'psn-drugInOutStock',
+                        searchForm: {"status": 1,"in_out_type":0},
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '出库单',
+                                name: 'in_out_no',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '药品编码',
+                                name: 'drug_no',
+                                type: 'string',
+                                width: 100,
+                                sortable: true
+                            },
+                            {
+                                label: '药品名称',
+                                name: 'drug_full_name',
+                                type: 'string',
+                                width: 100,
+                                sortable: true
+                            },
+                            {
+                                label: '老人',
+                                name: 'elderly_name',
+                                type: 'string',
+                                width: 80,
+                                sortable: true
+                            },
+                            {
+                                label: '药品去处',
+                                name: 'type',
+                                type: 'string',
+                                width: 60,
+                                sortable: true,
+                                formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3014/object')
+                            },
+                            {
+                                label: '出库数量',
+                                name: 'in_out_quantity',
+                                type: 'number',
+                                width: 60,
+                                sortable: true,
+                            },
+                            {
+                                label: '包装规格',
+                                name: 'unit',
+                                type: 'string',
+                                width: 60,
+                                sortable: true,
+                                 formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3013/object')
+                            }, 
+                            {
+                                label: '操作',
+                                name: 'actions',
+                                sortable: false,
+                                width: 40
+                            }
+                        ]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-out-stock.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'drug-out-stock-details.html'),
+                controller: 'DrugOutStockDetailsController',
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                params:{autoSetTab:null},
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'drug-out-stock.details', {
                         modelName: 'psn-drugInOutStock',
                         model: {},
                         blockUI: true

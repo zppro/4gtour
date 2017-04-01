@@ -3,6 +3,8 @@
  */
 var co = require('co');
 var socketClientEvents = require('../pre-defined/socket-client-events.json');
+var socketServerEvents = require('../pre-defined/socket-server-events.json');
+var DIC = require('../pre-defined/dictionary-constants.json');
 module.exports = {
     init: function (ctx, ioSocket) {
         console.log('init psn_bed_monitor socketProvider... ');
@@ -19,23 +21,28 @@ module.exports = {
             this.logger.info(this.file + " loaded!");
         }
         this.ioSocket = ioSocket;
-        this.addPSN$BedMonitorNamespace();
+
+        // add namespace
+        this.socketClientsOfPSN$BedMonitor = {};
+        this.nspOfPSN$bed_monitor = this.ioSocket.of('/psn$bed_monitor');
+        this.nspOfPSN$bed_monitor.on('connection', this.onConnection.bind(this));
+
         console.log(this.filename + ' ready... ');
  
         return this;
     },
-    addPSN$BedMonitorNamespace: function() {
-        this.socketClientsOfPSN$BedMonitor = {};
-        this.nspOfPSN$bed_monitor = this.ioSocket.of('/psn$bed_monitor');
-        this.nspOfPSN$bed_monitor.on('connection', this.onPSN$BedMonitorConnection.bind(this));
+    sendToClient: function (eventName, eventData) {
+        console.log('eventName: ', eventName);
+        console.log('eventData: ', eventData);
+        if (eventData.bedMonitorName) {
+            console.log('sendToClient psn$bed_monitor to bedMonitor : ' + 'bedMonitor_' + eventData.bedMonitorName);
+            this.nspOfPSN$bed_monitor.to('bedMonitor_' + eventData.bedMonitorName).emit(eventName, eventData);
+        } else {
+            console.log('sendToClient psn$bed_monitor to whole channel');
+            this.nspOfPSN$bed_monitor.emit(eventName, eventData);
+        }
     },
-    sendPSN$BedMonitorEvent: function (bedMonitorName, eventName, eventData) {
-        console.log('sendPSN$BedMonitorEvent with bedMonitor id: ' + 'bedMonitor_' + bedMonitorName);
-        console.log('eventName: ' + eventName);
-        console.log('reason: ' + eventData.reason);
-        this.nspOfPSN$bed_monitor.to('bedMonitor_' + bedMonitorName).emit(eventName, eventData);
-    },
-    onPSN$BedMonitorConnection: function (socket) {
+    onConnection: function (socket) {
         var self = this;
         console.log('nsp psn$bedmonitor connection: ' + socket.id);
         self.socketClientsOfPSN$BedMonitor[socket.id] = socket;
@@ -47,10 +54,33 @@ module.exports = {
             return co(function *() {
                 try {
                     console.log(socketClientEvents.PSN.BED_MONITOR.SUBSCRIBE + ':' + socket.id + '  => data  ' +  JSON.stringify(data));
-                    var bedMonitorName = data;
-
-                    socket.join('bedMonitor_' + bedMonitorName);
-
+                    var bedMonitorNames = data.bedMonitorNames, tenantId = data.tenantId, bedMonitorName, bedMonitorStatus;
+                    if (bedMonitorNames) {
+                        console.log('bedMonitorNames ', bedMonitorNames);
+                        for (var i = 0, len = bedMonitorNames.length; i < len; i++) {
+                            socket.join('bedMonitor_' + bedMonitorNames[i]);
+                        }
+                        var bedMonitors = yield self.ctx.modelFactory().model_query(self.ctx.models['pub_bedMonitor'], {
+                            select: 'name device_status',
+                            where: {
+                                status: 1,
+                                name: { '$in': bedMonitorNames},
+                                tenantId: tenantId
+                            }
+                        });
+                        console.log('bedMonitors ', bedMonitors);
+                        for (var i = 0, len = bedMonitors.length; i < len; i++) {
+                            bedMonitorName = bedMonitors[i].name;
+                            bedMonitorStatus = bedMonitors[i].device_status;
+                            if(bedMonitorStatus === DIC.D3009.OffLine){
+                                // self.sendToClient(socketServerEvents.PSN.BED_MONITOR.OFF_LINE, {bedMonitorName: bedMonitorName});
+                                socket.emit(socketServerEvents.PSN.BED_MONITOR.OFF_LINE, {bedMonitorName: bedMonitorName});
+                            } else if (bedMonitorStatus === DIC.D3009.OnLine) {
+                                // self.sendToClient(socketServerEvents.PSN.BED_MONITOR.ON_LINE, {bedMonitorName: bedMonitorName});
+                                socket.emit(socketServerEvents.PSN.BED_MONITOR.ON_LINE, {bedMonitorName: bedMonitorName});
+                            }
+                        }
+                    }
                     console.log('PSN.BED_MONITOR.SUBSCRIBE finished')
                 }
                 catch (e) {
