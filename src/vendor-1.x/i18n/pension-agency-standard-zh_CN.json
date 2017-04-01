@@ -271,7 +271,10 @@
       }
     },
     "nursing-station": {
-      "TITLE": "养老机构-护理管理-护士台"
+      "TITLE": "养老机构-护理管理-护士台",
+      "EXPAND-ALARM-QUEUE": "展开报警队列",
+      "COLLAPSE-ALARM-QUEUE": "折叠报警队列",
+      "MIS-ALARM": "设备误报"
     },
     "nursing-plan": {
       "TITLE": "养老机构-护理管理-护理计划-编排",

@@ -7,9 +7,9 @@
     angular.module('app.socket')
         .service('SocketManager', SocketManager);
 
-    SocketManager.$inject = ['$location'];
+    SocketManager.$inject = ['$location', 'SOCKET_EVENTS'];
 
-    function SocketManager($location) {
+    function SocketManager($location, SOCKET_EVENTS) {
         return {
             socketChannels: {},
             registerChannel: function (channelName) {

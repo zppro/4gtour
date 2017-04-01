@@ -109,6 +109,7 @@
 
                 return {
                     shareDictionary: {},
+                    shareDictionary2: {},
                     shareTree: {},
                     d: function (id, forceRefresh) {
                         var promise;
@@ -121,6 +122,20 @@
                         }
                         else {
                             promise = $q.when(this.shareDictionary[id]);
+                        }
+                        return promise;
+                    },
+                    d2: function (id, forceRefresh) {
+                        var promise;
+                        if (forceRefresh || this.shareDictionary2[id] == undefined) {
+                            var self = this;
+                            promise = $http.get(baseUrl + 'dictionary/' + id + '/object').then(function (ret) {
+                                self.shareDictionary2[id] = ret;
+                                return self.shareDictionary2[id];
+                            });
+                        }
+                        else {
+                            promise = $q.when(this.shareDictionary2[id]);
                         }
                         return promise;
                     },

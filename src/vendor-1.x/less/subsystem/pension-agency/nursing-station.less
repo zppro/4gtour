@@ -1,57 +1,167 @@
 /* ========================================================================
    Component: nursing-station Created by zppro on 17-3-29.
  ========================================================================== */
+.nursing-station-head{
+  position: relative;
+  .alarm-queue {
+    position: absolute;
+    top: 34px;
+    width: 100%;
+    background-color: white;
+    height: 136px;
+    border: solid 1px #7c7d7d;
+    z-index: 998;
+    overflow-x: auto;
+    .alarm-item {
+      width: 96px;
+      height: 128px;
+      background-color: #fafbfc;
+      border: solid 1px #dde6e9;
+      margin: 4px 4px;
+      display: inline-block;
+      .avatar {
+        position: relative;
+        cursor: pointer;
+        .avatar-block {
+          width: 62px;
+          margin: 0 auto;
+          margin-top: 2px;
+        }
+      }
+      .name-block{
+        background-color: #F05050;
+        color: white;
+        cursor: pointer;
+      }
+      .name {
+        font-size: 15px;
+        padding: 2px 0;
+      }
+      .reason {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: normal;
+      }
+    }
+  }
+}
 .nursing-station{
   width: 100%;
   margin: 0 auto;
   padding: 3px;
-  .elderly{
-    width:96px;
-    height:128px;
-    background-color: #fafbfc;
+  .monitor-objects {
     border: solid 1px #dde6e9;
-    margin: 4px 4px;
-    display: inline-block;
-    .avatar{
-      position: relative;
-      cursor: pointer;
-      .avatar-block{
-        width:62px;
-        margin: 0 auto;
-        margin-top: 2px;
+    padding: 5px;
+    min-height: 600px;
+    .elderly {
+      width: 96px;
+      height: 128px;
+      background-color: #fafbfc;
+      border: solid 1px #dde6e9;
+      margin: 4px 4px;
+      display: inline-block;
+      .avatar {
+        position: relative;
+        cursor: pointer;
+        .avatar-block {
+          width: 62px;
+          margin: 0 auto;
+          margin-top: 2px;
+        }
+      }
+      .name {
+        font-size: 15px;
+        padding: 2px 0;
+      }
+      .age {
+        font-size: 12px;
+      }
+      .room-info {
+        display: inline-block;
+        font-weight: bold;
+      }
+      .nursing-level {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: normal;
       }
     }
-    .name{
-      font-size: 15px;
-      padding:2px 0;
-    }
-    .age{
-      font-size: 12px;
-    }
-    .room-info{
-      display: inline-block;
-      font-weight: bold;
-    }
-    .nursing-level{
-      display: inline-block;
-      font-size: 12px;
-      font-weight: normal;
-    }
   }
+
+
   .online{
     background-color: #27C24C;
     color: white;
+    cursor: default;
   }
   .offline{
     background-color: #7c7d7d;
     color: white;
+    cursor: default;
   }
   .warning {
     background-color: #FF902B;
     color: white;
+    cursor: default;
   }
   .alarm{
     background-color: #F05050;
     color: white;
+    cursor: pointer;
+  }
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-nursing-station-alarm {
+  .ngdialog-content {
+    background-color: white;
+    .ngdialog-title{
+      width:100%;
+      position: absolute;
+      height:40px;
+      line-height: 40px;
+      top: 0;
+      left:0;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      background-color: #F05050;
+      color:white;
+      font-size: 20px;
+      font-weight: bold;
+      font-family: 黑体;
+      text-indent: 10px;
+      i{
+        height:40px;
+        line-height: 40px;
+        font-size: 20px;
+        margin-right:5px;
+      }
+    }
+    .ngdialog-input {
+      margin-top: 40px;
+      margin-bottom: 5px;
+      overflow-y: auto;
+      .name {
+        font-size: 22px;
+        padding: 5px;
+      }
+      .age {
+        font-size: 18px;
+      }
+      .room-info {
+        font-size: 20px;
+        color: #cccccc;
+        padding: 5px;
+      }
+      .nursing-level {
+        display: inline-block;
+        font-size: 18px;
+        font-weight: normal;
+        color: #cccccc;
+        padding: 5px;
+      }
+      .alarm-reason-archive{
+        height: 80px;
+      }
+    }
   }
 }
