@@ -1423,7 +1423,7 @@
                 resolve: {
                     entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'drug-in-stock.list', {
                         modelName: 'psn-drugInOutStock',
-                        searchForm: {"status": 1},
+                        searchForm: {"status": 1,"in_out_type":1},
                         serverPaging: true,
                         columns: [
                             {
