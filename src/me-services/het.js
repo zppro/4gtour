@@ -68,17 +68,17 @@
     }
 },
 {
-    method: 'sleepDevicews$updateDevice',
+    method: 'sleepDevicews$getAttachDevice',
     verb: 'post',
-    url: this.service_url_prefix + "/sleepDevicews$updateDevice",
+    url: this.service_url_prefix + "/sleepDevicews$getAttachDevice",
     handler: function (app, options) {
         return function *(next) {
            try {
               console.log("body:");
-              console.log(this.request.body.setUserConcernPersonJson)
-              console.log(typeof(this.request.body.setUserConcernPersonJson));
-              
-              this.body = "ok";
+              console.log(this.request.body)
+            var ret = yield app.bed_monitor_provider.getDeviceInfo(this.request.body.session.openid);
+              console.log("ret++++:",ret);
+              this.body = app.wrapper.res.ret(ret);
           } catch (e) {
             self.logger.error(e.message);
             this.body = app.wrapper.res.error(e);
@@ -89,14 +89,14 @@
 },
 {
     method: 'sleepDevicews$test',
-    verb: 'post',
+    verb: 'get',
     url: this.service_url_prefix + "/sleepDevicews$test",
     handler: function (app, options) {
         return function *(next) {
            try {
-              console.log("body:");
-              console.log(this.request.body)
-              this.body = yield app.bed_monitor_provider.UpdatebedMonitorInfo(this.request.body.sessionId);
+              // console.log("body:");
+              //console.log(this.request.body)
+              this.body = yield app.bed_monitor_provider.getDeviceInfo("oYoT70Fw1BPC-oTUI7-Q-NiHKOq8");
               this.body = "ok";
           } catch (e) {
             self.logger.error(e.message);
