@@ -28,7 +28,7 @@
         }
 
         function abolish(row){
-            if(row.valid_flag === false) return;
+            if(!row.valid_flag) return;
             vm.removeDialog.openConfirm({
                 template: 'normalConfirmDialog.html',
                 className: 'ngdialog-theme-default'
@@ -115,7 +115,7 @@
                 vm.model.in_out_no= "IN-"+new Date().valueOf();
                 vm.model.in_out_type =1;
                 vm.save(true).then(function(ret){
-                    vmh.psnService.drugInStock(vm.tenantId,vm.model.elderlyId,vm.model.elderly_name,vm.model.drugId,vm.model.drug_no,vm.model.drug_full_namess,vm.model.in_out_quantity,vm.model.type,vm.model.unit).then(function(ret) {
+                    vmh.psnService.drugInStock(vm.tenantId,vm.model.elderlyId,vm.model.elderly_name,vm.model.drugId,vm.model.drug_no,vm.model.drug_full_name,vm.model.in_out_quantity,vm.model.type,vm.model.unit).then(function(ret) {
                             vmh.alertSuccess(vm.viewTranslatePath('SYNC_FAMILY_MEMBERS_SUCCESS'), true);
                             vm.returnBack();
                         });
