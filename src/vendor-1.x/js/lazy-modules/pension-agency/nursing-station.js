@@ -10,6 +10,7 @@
         .module('subsystem.pension-agency')
         .controller('NursingStationController', NursingStationController)
         .controller('NursingStationAlarmDialogController', NursingStationAlarmDialogController)
+        .controller('NursingStationElderlyDialogController', NursingStationElderlyDialogController)
     ;
 
     NursingStationController.$inject = ['$scope', 'ngDialog', 'blockUI' ,'SOCKET_EVENTS', 'SocketManager', 'vmh', 'instanceVM'];
@@ -26,9 +27,10 @@
             vm.init({removeDialog: ngDialog});
 
             vm.onFloorChange = onFloorChange;
+            vm.toggleAlarmQueue = toggleAlarmQueue;
             vm.openAlarmDialogByAlarm = openAlarmDialogByAlarm;
             vm.openAlarmDialogByMonitorObject = openAlarmDialogByMonitorObject;
-            vm.toggleAlarmQueue = toggleAlarmQueue;
+            vm.openElderlyDialog = openElderlyDialog;
 
             vm.elderlyStatusMonitor = {};
             vm.bedMonitorMappingElderly = {};
@@ -169,6 +171,12 @@
             }
         }
 
+        function toggleAlarmQueue () {
+            console.log('toggleAlarmQueue');
+            vm.alarmQueueVisible = !vm.alarmQueueVisible;
+            vm.toggleAlarmButton = vm.alarmQueueVisible ? vm.moduleTranslatePath('COLLAPSE-ALARM-QUEUE') : vm.moduleTranslatePath('EXPAND-ALARM-QUEUE');
+        }
+
         function processAlarmQueue () {
             console.log('processAlarmQueue:', vm.alarmQueue.length);
             if(vm.alarmQueue.length > 0) {
@@ -203,10 +211,8 @@
         }
 
         function openAlarmDialog (alarm) {
-            console.log('vm.D3016:',vm.D3016);
-            console.log('reason:',alarm.reason);
             ngDialog.open({
-                template: 'nursing-station-alarm-template.html',
+                template: 'nursing-station-alarm.html',
                 controller: 'NursingStationAlarmDialogController',
                 className: 'ngdialog-theme-default ngdialog-nursing-station-alarm',
                 data: {
@@ -236,11 +242,26 @@
             });
         }
 
-        function toggleAlarmQueue () {
-            console.log('toggleAlarmQueue');
-            vm.alarmQueueVisible = !vm.alarmQueueVisible;
-            vm.toggleAlarmButton = vm.alarmQueueVisible ? vm.moduleTranslatePath('COLLAPSE-ALARM-QUEUE') : vm.moduleTranslatePath('EXPAND-ALARM-QUEUE');
+        function openElderlyDialog (elderly) {
+            ngDialog.open({
+                template: 'nursing-station-elderly.html',
+                controller: 'NursingStationElderlyDialogController',
+                className: 'ngdialog-theme-default ngdialog-nursing-station-elderly',
+                data: {
+                    vmh: vmh,
+                    moduleTranslatePathRoot: vm.moduleTranslatePath(),
+                    defaultElderlyAvatar: vm.defaultElderlyAvatar,
+                    elderly: elderly,
+                    tenantId: vm.tenantId,
+                    operated_by: vm.operated_by,
+                    operated_by_name: vm.operated_by_name
+                }
+            }).closePromise.then(function (ret) {
+                if(ret.value!='$document' && ret.value!='$closeButton' && ret.value!='$escape' ) {
+                }
+            });
         }
+        
     }
 
     NursingStationAlarmDialogController.$inject = ['$scope','ngDialog'];
@@ -267,32 +288,15 @@
             vm.operated_by_name = $scope.ngDialogData.operated_by_name;
             vm.reasonMap = {};
             vm.closeAlarm = closeAlarm;
-            vm.onChange = onChange;
         }
 
-        function onChange(alarmReasonArchived) {
-            console.log(alarmReasonArchived)
-            var selected;
-            for(var key in vm.reasonMap){
-                if (vm.reasonMap[key]) {
-                    selected = key;
-                    break;
-                }
-            }
-
-            if (vm.reasonMap[alarmReasonArchived]) {
-                if (selected !== alarmReasonArchived) vm.reasonMap[alarmReasonArchived] = false;
-            } else {
-                vm.reasonMap[selected] =false;
-            }
-        }
 
         function closeAlarm() {
             var promise = ngDialog.openConfirm({
                 template: 'customConfirmDialog.html',
                 className: 'ngdialog-theme-default',
                 controller: ['$scope', function ($scopeConfirm) {
-                    $scopeConfirm.message = vm.moduleTranslatePath('TO-CONFIRM-CLOSE-ALARM')
+                    $scopeConfirm.message = vm.moduleTranslatePath('DLG-ALARM-TO-CONFIRM-CLOSE')
                 }]
             }).then(function () {
                 $scope.closeThisDialog({alarmClosed: true});
@@ -307,5 +311,43 @@
                 });
             });
         }
+    }
+
+    NursingStationElderlyDialogController.$inject = ['$scope','ngDialog'];
+
+    function NursingStationElderlyDialogController($scope, ngDialog) {
+
+        var vm = $scope.vm = {};
+        var vmh = $scope.ngDialogData.vmh;
+
+        $scope.utils = vmh.utils.v;
+
+        init();
+
+        function init() {
+            vm.moduleTranslatePathRoot = $scope.ngDialogData.moduleTranslatePathRoot;
+            vm.moduleTranslatePath = function(key) {
+                return vm.moduleTranslatePathRoot + '.' + key;
+            };
+            vm.defaultElderlyAvatar = $scope.ngDialogData.defaultElderlyAvatar;
+            vm.elderly = $scope.ngDialogData.elderly;
+            vm.tenantId = $scope.ngDialogData.tenantId;
+            vm.operated_by = $scope.ngDialogData.operated_by;
+            vm.operated_by_name = $scope.ngDialogData.operated_by_name;
+
+            // vm.tab1 = {cid: 'contentTab1', active: true};
+            vm.nursingRecords = [
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true}
+            ]
+        }
+
     }
 })();

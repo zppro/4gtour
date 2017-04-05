@@ -23,7 +23,7 @@ form.search-form
 .nursing-station
     .col-md-12.monitor-objects(block-ui="nursing-station")
         .elderly(ng-repeat="elderly in vm.elderlys")
-            .avatar
+            .avatar(ng-click="vm.openElderlyDialog(elderly)")
                 .avatar-block
                     .user-block-status
                         img.img-thumbnail.img-circle(ng-src="{{ elderly.avatar ? elderly.avatar + '?imageView2/1/w/62/h/81' : vm.defaultElderlyAvatar}}", alt="姓名")
@@ -34,8 +34,57 @@ form.search-form
                 .name.text-center {{ elderly.name }}
                     span.age ({{utils.age(elderly.birthday)}})
 .clearfix
-
-script(type="text/ng-template", id="nursing-station-alarm-template.html")
+script(type="text/ng-template", id="nursing-station-elderly.html")
+    .ngdialog-title
+        i.glyphicon.glyphicon-info-sign
+        | {{ vm.moduleTranslatePath('DLG-ELDERLY-TITLE') | translate }}
+    .ngdialog-input
+        .col-md-2
+            .avatar
+                .avatar-block
+                    .user-block-status
+                        img.img-thumbnail.img-circle(ng-src="{{ vm.elderly.avatar ? vm.elderly.avatar + '?imageView2/1/w/62/h/81' : vm.defaultElderlyAvatar}}", alt="姓名")
+                a.btn.btn-sm.btn-primary.text-align(ng-click="vm.closeAlarm()") {{ vm.moduleTranslatePath('DLG-ELDERLY-BTN-AVATAR') | translate}}
+        .col-md-10
+            .row
+                .label.col-md-2.field-label {{ vm.moduleTranslatePath('DLG-ELDERLY-LABEL-NAME') | translate }}
+                .col-md-4.field-value.name {{ vm.elderly.name }}
+                .label.col-md-2.field-label {{ vm.moduleTranslatePath('DLG-ELDERLY-LABEL-AGE') | translate }}
+                .col-md-4.field-value.age {{utils.age(vm.elderly.birthday)}}
+            .row
+                .label.col-md-2.field-label {{ vm.moduleTranslatePath('DLG-ELDERLY-LABEL-ROOM_INFO') | translate }}
+                .col-md-4.field-value.room-info {{vm.elderly.room_value.roomId.name + '-' + vm.elderly.room_value.bed_no}}
+                .label.col-md-2.field-label {{ vm.moduleTranslatePath('DLG-ELDERLY-LABEL-NURING_WORKER') | translate }}
+                .col-md-4.field-value.nuring-worker
+            .row
+                .label.col-md-2.field-label {{ vm.moduleTranslatePath('DLG-ELDERLY-LABEL-NURSING_ASSESSMENT_GRADE') | translate }}
+                .col-md-4.field-value.nursing-assessment-grade
+                .label.col-md-2.field-label {{ vm.moduleTranslatePath('DLG-ELDERLY-LABEL-NURSING_LEVEL') | translate }}
+                .col-md-4.field-value.nursing-level {{vm.elderly.nursingLevelId.name}}
+            .row
+                .label.col-md-2.field-label {{ vm.moduleTranslatePath('DLG-ELDERLY-LABEL-FAMILY_MEMBERS') | translate }}
+                .col-md-10.field-value.family-members
+        .elderly-more-info.col-md-12
+            .panel.panel-default.panel-grid
+                table.grid.table.table-bordered.table-hover.table-striped
+                    thead
+                        tr
+                            th.text-center(width="80")
+                                | {{ vm.moduleTranslatePath('DLG-ELDERLY-TH-EXEC_ON') | translate}}
+                            th.text-center(width="445")
+                                | {{ vm.moduleTranslatePath('DLG-ELDERLY-TH-NAME') | translate}}
+                            th.text-center(width="80")
+                                | {{ vm.moduleTranslatePath('DLG-ELDERLY-TH-ASSIGNED_WORKER') | translate}}
+                            th.text-center(width="100")
+                                | {{ vm.moduleTranslatePath('DLG-ELDERLY-TH-CONFIRM_FLAG') | translate}}
+                    tbody
+                        tr(ng-repeat="row in vm.nursingRecords")
+                            td.text-center(width="80") {{::row.exec_on|date: 'HH:mm'}}
+                            td.text-left(width="445") {{::row.name}}
+                            td.text-center(width="80") {{::row.assigned_worker.name}}
+                            td.text-center(width="100") {{::row.confirmed_flag}}
+                            td
+script(type="text/ng-template", id="nursing-station-alarm.html")
     .ngdialog-title
         i.glyphicon.glyphicon-info-sign
         | {{ vm.title }}
@@ -62,7 +111,7 @@ script(type="text/ng-template", id="nursing-station-alarm-template.html")
             //        label
             //            input#misAlarm(type='checkbox', ng-model='vm.reasonMap["00000"]', ng-change="vm.onChange('00000')")
             //            span.fa.fa-check
-            //    label(for="misAlarm") {{ vm.moduleTranslatePath('MIS-ALARM') | translate}}
+            //    label(for="misAlarm") {{ vm.moduleTranslatePath('DLG-MIS-ALARM') | translate}}
             button.btn.btn-success.alarm-close-btn(ng-click="vm.closeAlarm()") {{ "button.CLOSE" | translate}}
         .col-md-12
-            .alarm-tip.text-danger {{ vm.moduleTranslatePath('ALARM-TIP') | translate}}
+            .alarm-tip.text-danger {{ vm.moduleTranslatePath('DLG-ALARM-TIP') | translate}}
