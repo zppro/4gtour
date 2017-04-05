@@ -4778,39 +4778,6 @@ module.exports = {
                 }
             },
 
-
-            /**********************药品相关*****************************/
-            {
-                method: 'queryDrug',
-                verb: 'post',
-                url: this.service_url_prefix + "/q/drug",
-                handler: function (app, options) {
-                    return function* (next) {
-                        try {
-                            var tenantId = this.request.body.tenantId;
-                            var keyword = this.request.body.keyword;
-                            var data = this.request.body.data;
-
-                            app._.extend(data.where, {
-                                status: 1,
-                                tenantId: tenantId
-                            });
-
-                            if (keyword) {
-                                data.where.full_name = new RegExp(keyword);
-                            }
-                            var rows = yield app.modelFactory().model_query(app.models['psn_drugDirectory'], data);
-                            this.body = app.wrapper.res.rows(rows);
-                        } catch (e) {
-                            console.log(e);
-                            self.logger.error(e.message);
-                            this.body = app.wrapper.res.error(e);
-                        }
-                        yield next;
-                    };
-                }
-            },
-
             /**********************护士台*****************************/
             {
                 method: 'elderlysByDistrictFloors',
@@ -4857,11 +4824,12 @@ module.exports = {
                                     tenantId: tenantId
                                 }
                             });
+
                             // console.log('elderlyObjects:', elderlyObjects);
                             elderlyIds = app._.map(elderlyObjects, (o) => {
+
                                 return o.elderlyId;
                             });
-                            // console.log('elderlyIds:', elderlyIds);
 
                             var rows = yield app.modelFactory().model_query(app.models['psn_elderly'], {
                                 select: 'name birthday nursingLevelId room_value',
@@ -4871,6 +4839,7 @@ module.exports = {
                                     _id: { '$in': elderlyIds },
                                     tenantId: tenantId
                                 }
+
                             }).populate('nursingLevelId', 'name short_name nursing_assessment_grade', 'psn_nursingLevel')
                                 .populate('room_value.roomId', 'name bedMonitors', 'psn_room');
 
@@ -4882,6 +4851,112 @@ module.exports = {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'nursingStationCloseBedMonitorAlarm',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingStationCloseBedMonitorAlarm", //关闭离床报警,此处永远为插入记录,因为采用报警数据后置插入模型
+                handler: function (app, options) {
+                    return function * (next) {
+                        var tenant, elderly, bedMonitor;
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            var elderlyId = this.request.body.elderlyId;
+                            elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
+                            if(!elderly || elderly.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到老人!'});
+                                yield next;
+                                return;
+                            }
+                            
+                            var bedMonitorName = this.request.body.bedMonitorName;
+
+                            bedMonitor = yield app.modelFactory().model_one(app.models['pub_bedMonitor'], {
+                                select: 'name',
+                                where: {
+                                    status: 1,
+                                    name: bedMonitorName,
+                                    tenantId: tenantId
+                                }
+                            });
+
+                            if(!bedMonitor){
+                                this.body = app.wrapper.res.error({message: '无法找到睡眠带!'});
+                                yield next;
+                                return;
+                            }
+
+                            var reason = this.request.body.reason;
+                            var operated_by = this.request.body.operated_by;
+                            var operated_by_name = this.request.body.operated_by_name;
+
+                            console.log('前置检查完成');
+
+                            yield app.modelFactory().model_create(app.models['pub_alarm'],{
+                                subject: 'pub_bedMonitor',
+                                subjectId: bedMonitor._id,
+                                subject_name: bedMonitor.name,
+                                object: 'psn_elderly',
+                                objectId: elderly._id,
+                                object_name: elderly.name,
+                                reason: reason,
+                                process_flag: true,
+                                processed_on: app.moment(),
+                                processed_by: operated_by,
+                                processed_by_name: operated_by_name,
+                                tenantId: tenantId
+                            });
+
+                            app.bed_monitor_provider.closeAlarm(bedMonitorName);
+
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            /**********************药品相关*****************************/
+            {
+                method: 'queryDrug',
+                verb: 'post',
+                url: this.service_url_prefix + "/q/drug",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            var keyword = this.request.body.keyword;
+                            var data = this.request.body.data;
+
+                            app._.extend(data.where,{
+                                status: 1,
+                                tenantId: tenantId
+                            });
+
+                            if(keyword){
+                                data.where.full_name = new RegExp(keyword);
+                            }
+                            var rows = yield app.modelFactory().model_query(app.models['psn_drugDirectory'], data);
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                          console.log(e);
+                          self.logger.error(e.message);
+                          this.body = app.wrapper.res.error(e);
                         }
                         yield next;
                     };
@@ -4906,41 +4981,84 @@ module.exports = {
                             var in_out_quantity = this.request.body.in_out_quantity;
                             var unit = this.request.body.unit;
                             var type = this.request.body.type;
-                            var drugStock = yield app.modelFactory().model_one(app.models['psn_drugStock'], {
-                                where: {
-                                    status: 1,
+
+                            var drugStock  = yield app.modelFactory().model_one(app.models['psn_drugStock'],{
+                                    where: {
+                                        status: 1,
+                                        elderlyId: elderlyId,
+                                        drugId: drugId,
+                                        tenantId: tenantId,
+                                        unit:unit
+                                    }
+                                });
+                              
+                                 
+                            if(!drugStock){
+                                yield app.modelFactory().model_create(app.models['psn_drugStock'],{
+                                    status:1,
                                     elderlyId: elderlyId,
-                                    drugId: drugId,
-                                    tenantId: tenantId
-                                }
-                            });
-
-
-                            if (!drugStock) {
-                                yield app.modelFactory().model_create(app.models['psn_drugStock'], {
-                                    status: 1,
-                                    elderlyId: elderlyId,
-
-                                    elderly_name: elderly_name,
+                                    elderly_name:elderly_name,
                                     tenantId: tenantId,
                                     drugId: drugId,
                                     drug_no: drug_no,
-                                    drug_full_name: drug_full_name,
-
+                                    drug_full_name:drug_full_name,
                                     current_quantity: in_out_quantity,
                                     type: type,
                                     unit: unit
                                 });
-                            } else {
-                                console.log(parseInt(drugStock.current_quantity));
-                                console.log(parseInt(in_out_quantity));
-                                drugStock.current_quantity = parseInt(drugStock.current_quantity) + parseInt(in_out_quantity);
+
+                            }else{
+                                drugStock.current_quantity = parseInt(drugStock.current_quantity) + parseInt(in_out_quantity); 
                                 yield drugStock.save();
                             }
                             this.body = app.wrapper.res.default();
                         }
                         catch (e) {
                             console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'inStockAbolish',
+                verb: 'get',
+                url: this.service_url_prefix + "/inStockAbolish/:_id",//:select需要提取的字段域用逗号分割 e.g. name,type
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var inStock = yield app.modelFactory().model_read(app.models['psn_drugInOutStock'], this.params._id);
+                            var inStockJson =  inStock.toObject();
+                            
+                            var drugStock  = yield app.modelFactory().model_one(app.models['psn_drugStock'],{
+                                    where: {
+                                        status: 1,
+                                        elderlyId: inStockJson.elderlyId,
+                                        drugId: inStockJson.drugId,
+                                        unit: inStockJson.unit,
+                                    }
+                                });
+                            // console.log(drugStock);
+                            if(!drugStock){
+                                this.body = app.wrapper.res.error({message: '当前无库存，无法取消记录'});
+                                yield next;
+                                return;
+                            }else{
+                                if(drugStock.current_quantity < inStockJson.in_out_quantity){
+                                    this.body = app.wrapper.res.error({message: '库存不足，无法取消记录!'});
+                                    yield next;
+                                    return;
+                                }else{
+                                    inStock.valid_flag = false;
+                                    yield inStock.save();        
+                                    drugStock.current_quantity = parseInt(drugStock.current_quantity) - parseInt(inStockJson.in_out_quantity);
+                                    yield drugStock.save();
+                                }
+                            }
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
                         }

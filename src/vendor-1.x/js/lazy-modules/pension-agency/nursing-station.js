@@ -10,6 +10,7 @@
         .module('subsystem.pension-agency')
         .controller('NursingStationController', NursingStationController)
         .controller('NursingStationAlarmDialogController', NursingStationAlarmDialogController)
+        .controller('NursingStationElderlyDialogController', NursingStationElderlyDialogController)
     ;
 
     NursingStationController.$inject = ['$scope', 'ngDialog', 'blockUI' ,'SOCKET_EVENTS', 'SocketManager', 'vmh', 'instanceVM'];
@@ -26,9 +27,10 @@
             vm.init({removeDialog: ngDialog});
 
             vm.onFloorChange = onFloorChange;
+            vm.toggleAlarmQueue = toggleAlarmQueue;
             vm.openAlarmDialogByAlarm = openAlarmDialogByAlarm;
             vm.openAlarmDialogByMonitorObject = openAlarmDialogByMonitorObject;
-            vm.toggleAlarmQueue = toggleAlarmQueue;
+            vm.openElderlyDialog = openElderlyDialog;
 
             vm.elderlyStatusMonitor = {};
             vm.bedMonitorMappingElderly = {};
@@ -48,6 +50,7 @@
             
 
             subscribeBedMonitor();
+            processAlarmQueue();
         }
 
         function subscribeBedMonitor () {
@@ -113,7 +116,8 @@
                     var elderly = _.find(vm.elderlys, function (elderly) {
                         return elderly._id == elderlyId;
                     });
-                    vm.alarmQueue.push(_.extend({elderly: elderly, processed: false}, data));
+                    var alarm = _.extend({elderly: elderly, processed: false}, data);
+                    vm.alarmQueue.push(alarm);
                     console.log('vm.alarmQueue:', vm.alarmQueue);
                 }
                 var bedMonitorStatus = vm.elderlyStatusMonitor[elderlyId];
@@ -167,6 +171,23 @@
             }
         }
 
+        function toggleAlarmQueue () {
+            console.log('toggleAlarmQueue');
+            vm.alarmQueueVisible = !vm.alarmQueueVisible;
+            vm.toggleAlarmButton = vm.alarmQueueVisible ? vm.moduleTranslatePath('COLLAPSE-ALARM-QUEUE') : vm.moduleTranslatePath('EXPAND-ALARM-QUEUE');
+        }
+
+        function processAlarmQueue () {
+            console.log('processAlarmQueue:', vm.alarmQueue.length);
+            if(vm.alarmQueue.length > 0) {
+                openAlarmDialog(vm.alarmQueue[0]);
+            } else {
+                vmh.timeout(function () {
+                    processAlarmQueue();
+                }, 1000);
+            }
+        }
+
         function openAlarmDialogByAlarm (index) {
             console.log('openAlarmDialogByAlarm:',index);
             if (index >=0 && index < vm.alarmQueue.length) {
@@ -190,9 +211,8 @@
         }
 
         function openAlarmDialog (alarm) {
-
             ngDialog.open({
-                template: 'nursing-station-alarm-template.html',
+                template: 'nursing-station-alarm.html',
                 controller: 'NursingStationAlarmDialogController',
                 className: 'ngdialog-theme-default ngdialog-nursing-station-alarm',
                 data: {
@@ -205,14 +225,43 @@
                     operated_by: vm.operated_by,
                     operated_by_name: vm.operated_by_name
                 }
+            }).closePromise.then(function (ret) {
+                if(ret.value!='$document' && ret.value!='$closeButton' && ret.value!='$escape' ) {
+                    console.log(ret);
+                    var index = _.findIndex(vm.alarmQueue, function(o) {
+                       return o === alarm;
+                    });
+                    if(index != -1) {
+                        vm.alarmQueue.splice(index);
+                        vmh.alertSuccess('button.CLOSE', true);
+                    }
+                }
+                vmh.timeout(function () {
+                    processAlarmQueue();
+                }, 1000);
             });
         }
 
-        function toggleAlarmQueue () {
-            console.log('toggleAlarmQueue');
-            vm.alarmQueueVisible = !vm.alarmQueueVisible;
-            vm.toggleAlarmButton = vm.alarmQueueVisible ? vm.moduleTranslatePath('COLLAPSE-ALARM-QUEUE') : vm.moduleTranslatePath('EXPAND-ALARM-QUEUE');
+        function openElderlyDialog (elderly) {
+            ngDialog.open({
+                template: 'nursing-station-elderly.html',
+                controller: 'NursingStationElderlyDialogController',
+                className: 'ngdialog-theme-default ngdialog-nursing-station-elderly',
+                data: {
+                    vmh: vmh,
+                    moduleTranslatePathRoot: vm.moduleTranslatePath(),
+                    defaultElderlyAvatar: vm.defaultElderlyAvatar,
+                    elderly: elderly,
+                    tenantId: vm.tenantId,
+                    operated_by: vm.operated_by,
+                    operated_by_name: vm.operated_by_name
+                }
+            }).closePromise.then(function (ret) {
+                if(ret.value!='$document' && ret.value!='$closeButton' && ret.value!='$escape' ) {
+                }
+            });
         }
+        
     }
 
     NursingStationAlarmDialogController.$inject = ['$scope','ngDialog'];
@@ -238,55 +287,67 @@
             vm.operated_by = $scope.ngDialogData.operated_by;
             vm.operated_by_name = $scope.ngDialogData.operated_by_name;
             vm.reasonMap = {};
-            vm.doSubmit = doSubmit;
-            vm.onChange = onChange;
+            vm.closeAlarm = closeAlarm;
         }
 
-        function onChange(alarmReasonArchived) {
-            console.log(alarmReasonArchived)
-            var selected;
-            for(var key in vm.reasonMap){
-                if (vm.reasonMap[key]) {
-                    selected = key;
-                    break;
-                }
-            }
 
-            if (vm.reasonMap[alarmReasonArchived]) {
-                if (selected !== alarmReasonArchived) vm.reasonMap[alarmReasonArchived] = false;
-            } else {
-                vm.reasonMap[selected] =false;
-            }
-        }
-
-        function doSubmit() {
-            vm.authMsg = null;
-            if ($scope.theForm.$valid) {
-                var promise = ngDialog.openConfirm({
-                    template: 'customConfirmDialog.html',
-                    className: 'ngdialog-theme-default',
-                    controller: ['$scope', function ($scopeConfirm) {
-                        $scopeConfirm.message = vm.viewTranslatePath('TO-CONFIRM-SETTLEMENT-CONFIRM-MESSAGE')
-                    }]
-                }).then(function () {
-
-                    //var ret = {
-                    //    settlement_flag: true,
-                    //    advance_payment_amount: vm.advancePayment,
-                    //    charge_total: vm.recorded_charge_total + vm.unrecorded_charge_total
-                    //};
-                    //$scope.closeThisDialog(ret);
-
-                    vmh.psnService.exitSettlement(vm.exitId, {
-                        operated_by: vm.operated_by,
-                        operated_by_name: vm.operated_by_name
-                    }).then(function (ret) {
-                        $scope.closeThisDialog(ret);
-                    }, function (err) {
-                        vm.authMsg = err;
-                    });
+        function closeAlarm() {
+            var promise = ngDialog.openConfirm({
+                template: 'customConfirmDialog.html',
+                className: 'ngdialog-theme-default',
+                controller: ['$scope', function ($scopeConfirm) {
+                    $scopeConfirm.message = vm.moduleTranslatePath('DLG-ALARM-TO-CONFIRM-CLOSE')
+                }]
+            }).then(function () {
+                $scope.closeThisDialog({alarmClosed: true});
+                vmh.psnService.nursingStationCloseBedMonitorAlarm(vm.alarm, {
+                    tenantId: vm.tenantId,
+                    operated_by: vm.operated_by,
+                    operated_by_name: vm.operated_by_name
+                }).then(function (ret) {
+                    $scope.closeThisDialog({alarmClosed: true});
+                }, function (err) {
+                    console.log(err);
                 });
-            }
+            });
         }
+    }
+
+    NursingStationElderlyDialogController.$inject = ['$scope','ngDialog'];
+
+    function NursingStationElderlyDialogController($scope, ngDialog) {
+
+        var vm = $scope.vm = {};
+        var vmh = $scope.ngDialogData.vmh;
+
+        $scope.utils = vmh.utils.v;
+
+        init();
+
+        function init() {
+            vm.moduleTranslatePathRoot = $scope.ngDialogData.moduleTranslatePathRoot;
+            vm.moduleTranslatePath = function(key) {
+                return vm.moduleTranslatePathRoot + '.' + key;
+            };
+            vm.defaultElderlyAvatar = $scope.ngDialogData.defaultElderlyAvatar;
+            vm.elderly = $scope.ngDialogData.elderly;
+            vm.tenantId = $scope.ngDialogData.tenantId;
+            vm.operated_by = $scope.ngDialogData.operated_by;
+            vm.operated_by_name = $scope.ngDialogData.operated_by_name;
+
+            // vm.tab1 = {cid: 'contentTab1', active: true};
+            vm.nursingRecords = [
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
+                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true}
+            ]
+        }
+
     }
 })();
