@@ -34,10 +34,11 @@
                         td.text-center {{::row.type|formatter:'type':vm.columns}}
                         td.text-center {{::row.in_out_quantity}}
                         td.text-center {{::row.unit|formatter:'unit':vm.columns}}
+                        td.text-center {{::row.valid_flag|boolFilter}}
                         td
                             .btn-group
-                                a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
-                                    i.glyphicon.glyphicon-pencil
+                                a.btn.btn-primary.btn-xs(title="{{'button.ABOLISH'|translate}}",ng-click="vm.abolish(row)")
+                                    i.glyphicon.glyphicon-ban-circle
 
                     tr(ng-if="vm.paged.length==0")
                         td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}
@@ -48,7 +49,5 @@
                             .btn-group
                                 a.btn.btn-primary.btn-sm(title="{{'button.ADD'|translate}}",ng-click="vm.add()")
                                     i.glyphicon.glyphicon-plus
-                                a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.remove()")
-                                    i.glyphicon.glyphicon-minus
                     .col-md-8
                         pagination.pagination-sm.pull-right(total-items="vm.page.totals",ng-model="vm.page.no",max-size="5",items-per-page="vm.page.size",boundary-links="true" ,ng-change="vm.paging()")

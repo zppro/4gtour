@@ -1475,7 +1475,14 @@
                                 width: 60,
                                 formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3013/object'),
                                 sortable: false
-                            }, 
+                            },
+                            {
+                                label: '是否有效',
+                                name: 'valid_flag',
+                                type: 'bool',
+                                width: 80,
+                                sortable: false
+                            },
                             {
                                 label: '操作',
                                 name: 'actions',

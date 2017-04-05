@@ -4909,7 +4909,8 @@ module.exports = {
                                         status: 1,
                                         elderlyId: elderlyId,
                                         drugId: drugId,
-                                        tenantId: tenantId
+                                        tenantId: tenantId,
+                                        unit:unit
                                     }
                                 });
                               
@@ -4935,6 +4936,50 @@ module.exports = {
                         }
                         catch (e) {
                             console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'inStockAbolish',
+                verb: 'get',
+                url: this.service_url_prefix + "/inStockAbolish/:_id",//:select需要提取的字段域用逗号分割 e.g. name,type
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var inStock = yield app.modelFactory().model_read(app.models['psn_drugInOutStock'], this.params._id);
+                            var inStockJson =  inStock.toObject();
+                            
+                            var drugStock  = yield app.modelFactory().model_one(app.models['psn_drugStock'],{
+                                    where: {
+                                        status: 1,
+                                        elderlyId: inStockJson.elderlyId,
+                                        drugId: inStockJson.drugId,
+                                        unit: inStockJson.unit,
+                                    }
+                                });
+                            // console.log(drugStock);
+                            if(!drugStock){
+                                this.body = app.wrapper.res.error({message: '当前无库存，无法取消记录'});
+                                yield next;
+                                return;
+                            }else{
+                                if(drugStock.current_quantity < inStockJson.in_out_quantity){
+                                    this.body = app.wrapper.res.error({message: '库存不足，无法取消记录!'});
+                                    yield next;
+                                    return;
+                                }else{
+                                    inStock.valid_flag = false;
+                                    yield inStock.save();        
+                                    drugStock.current_quantity = parseInt(drugStock.current_quantity) - parseInt(inStockJson.in_out_quantity);
+                                    yield drugStock.save();
+                                }
+                            }
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
                         }

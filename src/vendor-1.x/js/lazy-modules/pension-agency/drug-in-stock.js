@@ -18,12 +18,28 @@
 
         $scope.vm = vm;
         $scope.utils = vmh.utils.g;
+        vm.abolish = abolish;
 
         init();
 
         function init() {
             vm.init({removeDialog: ngDialog});
             vm.query();
+        }
+
+        function abolish(row){
+            if(row.valid_flag === false) return;
+            vm.removeDialog.openConfirm({
+                template: 'normalConfirmDialog.html',
+                className: 'ngdialog-theme-default'
+            }).then(function(){
+
+                vmh.psnService.instockAbolish(row._id)
+                   .then(function(ret) {
+                        vmh.alertSuccess(vm.viewTranslatePath('SYNC_FAMILY_MEMBERS_SUCCESS'), true);
+                        vm.query();
+                    });
+            })
         }
     }
     DrugInstockDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
