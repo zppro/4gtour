@@ -4872,16 +4872,12 @@ module.exports = {
                                     _id: {'$in': elderlyIds},
                                     tenantId: tenantId
                                 }
-<<<<<<< HEAD
-                            }).populate('nursingLevelId','short_name nursing_assessment_grade', 'psn_nursingLevel')
-                              .populate('room_value.roomId','name bedMonitors', 'psn_room');
-=======
+
                             }).populate('nursingLevelId','name short_name nursing_assessment_grade', 'psn_nursingLevel')
                                 .populate('room_value.roomId','name bedMonitors', 'psn_room');
 
                             // console.log('elderlys:', rows);
 
->>>>>>> 1da84e9f32f7084a9a24367661a8fdb17132ab7f
                             this.body = app.wrapper.res.rows(rows);
                         }
                         catch (e) {
