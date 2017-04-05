@@ -51,16 +51,18 @@ script(type="text/ng-template", id="nursing-station-alarm-template.html")
             .room-info {{vm.alarm.elderly.room_value.roomId.name + '-' + vm.alarm.elderly.room_value.bed_no}}
             .nursing-level {{vm.alarm.elderly.nursingLevelId.short_name}}
         .col-md-4.bl
-            .alarm-reason-archive
-                | {{vm.reasonMap}}
-                .checkbox.c-checkbox
-                    label
-                        input#alarmReason(type='checkbox',ng-model='vm.reasonMap[vm.alarm.reason]' ng-change="vm.onChange(vm.alarm.reason)")
-                        span.fa.fa-check
-                 label(for="alarmReason") {{vm.title}}
-                .checkbox.c-checkbox
-                    label
-                        input#misAlarm(type='checkbox', ng-model='vm.reasonMap["00000"]', ng-change="vm.onChange('00000')")
-                        span.fa.fa-check
-                label(for="misAlarm") {{ vm.moduleTranslatePath('MIS-ALARM') | translate}}
-            button.btn.btn-success(type='submit') {{ "button.CONFIRM" | translate}}
+            //.alarm-reason-archive
+            //    | {{vm.reasonMap}}
+            //    .checkbox.c-checkbox
+            //        label
+            //            input#alarmReason(type='checkbox',ng-model='vm.reasonMap[vm.alarm.reason]' ng-change="vm.onChange(vm.alarm.reason)")
+            //            span.fa.fa-check
+            //     label(for="alarmReason") {{vm.title}}
+            //    .checkbox.c-checkbox
+            //        label
+            //            input#misAlarm(type='checkbox', ng-model='vm.reasonMap["00000"]', ng-change="vm.onChange('00000')")
+            //            span.fa.fa-check
+            //    label(for="misAlarm") {{ vm.moduleTranslatePath('MIS-ALARM') | translate}}
+            button.btn.btn-success.alarm-close-btn(ng-click="vm.closeAlarm()") {{ "button.CLOSE" | translate}}
+        .col-md-12
+            .alarm-tip.text-danger {{ vm.moduleTranslatePath('ALARM-TIP') | translate}}

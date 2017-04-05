@@ -48,6 +48,7 @@
             
 
             subscribeBedMonitor();
+            processAlarmQueue();
         }
 
         function subscribeBedMonitor () {
@@ -113,7 +114,8 @@
                     var elderly = _.find(vm.elderlys, function (elderly) {
                         return elderly._id == elderlyId;
                     });
-                    vm.alarmQueue.push(_.extend({elderly: elderly, processed: false}, data));
+                    var alarm = _.extend({elderly: elderly, processed: false}, data);
+                    vm.alarmQueue.push(alarm);
                     console.log('vm.alarmQueue:', vm.alarmQueue);
                 }
                 var bedMonitorStatus = vm.elderlyStatusMonitor[elderlyId];
@@ -167,6 +169,17 @@
             }
         }
 
+        function processAlarmQueue () {
+            console.log('processAlarmQueue:', vm.alarmQueue.length);
+            if(vm.alarmQueue.length > 0) {
+                openAlarmDialog(vm.alarmQueue[0]);
+            } else {
+                vmh.timeout(function () {
+                    processAlarmQueue();
+                }, 1000);
+            }
+        }
+
         function openAlarmDialogByAlarm (index) {
             console.log('openAlarmDialogByAlarm:',index);
             if (index >=0 && index < vm.alarmQueue.length) {
@@ -190,7 +203,8 @@
         }
 
         function openAlarmDialog (alarm) {
-
+            console.log('vm.D3016:',vm.D3016);
+            console.log('reason:',alarm.reason);
             ngDialog.open({
                 template: 'nursing-station-alarm-template.html',
                 controller: 'NursingStationAlarmDialogController',
@@ -205,6 +219,20 @@
                     operated_by: vm.operated_by,
                     operated_by_name: vm.operated_by_name
                 }
+            }).closePromise.then(function (ret) {
+                if(ret.value!='$document' && ret.value!='$closeButton' && ret.value!='$escape' ) {
+                    console.log(ret);
+                    var index = _.findIndex(vm.alarmQueue, function(o) {
+                       return o === alarm;
+                    });
+                    if(index != -1) {
+                        vm.alarmQueue.splice(index);
+                        vmh.alertSuccess('button.CLOSE', true);
+                    }
+                }
+                vmh.timeout(function () {
+                    processAlarmQueue();
+                }, 1000);
             });
         }
 
@@ -238,7 +266,7 @@
             vm.operated_by = $scope.ngDialogData.operated_by;
             vm.operated_by_name = $scope.ngDialogData.operated_by_name;
             vm.reasonMap = {};
-            vm.doSubmit = doSubmit;
+            vm.closeAlarm = closeAlarm;
             vm.onChange = onChange;
         }
 
@@ -259,34 +287,25 @@
             }
         }
 
-        function doSubmit() {
-            vm.authMsg = null;
-            if ($scope.theForm.$valid) {
-                var promise = ngDialog.openConfirm({
-                    template: 'customConfirmDialog.html',
-                    className: 'ngdialog-theme-default',
-                    controller: ['$scope', function ($scopeConfirm) {
-                        $scopeConfirm.message = vm.viewTranslatePath('TO-CONFIRM-SETTLEMENT-CONFIRM-MESSAGE')
-                    }]
-                }).then(function () {
-
-                    //var ret = {
-                    //    settlement_flag: true,
-                    //    advance_payment_amount: vm.advancePayment,
-                    //    charge_total: vm.recorded_charge_total + vm.unrecorded_charge_total
-                    //};
-                    //$scope.closeThisDialog(ret);
-
-                    vmh.psnService.exitSettlement(vm.exitId, {
-                        operated_by: vm.operated_by,
-                        operated_by_name: vm.operated_by_name
-                    }).then(function (ret) {
-                        $scope.closeThisDialog(ret);
-                    }, function (err) {
-                        vm.authMsg = err;
-                    });
+        function closeAlarm() {
+            var promise = ngDialog.openConfirm({
+                template: 'customConfirmDialog.html',
+                className: 'ngdialog-theme-default',
+                controller: ['$scope', function ($scopeConfirm) {
+                    $scopeConfirm.message = vm.moduleTranslatePath('TO-CONFIRM-CLOSE-ALARM')
+                }]
+            }).then(function () {
+                $scope.closeThisDialog({alarmClosed: true});
+                vmh.psnService.nursingStationCloseBedMonitorAlarm(vm.alarm, {
+                    tenantId: vm.tenantId,
+                    operated_by: vm.operated_by,
+                    operated_by_name: vm.operated_by_name
+                }).then(function (ret) {
+                    $scope.closeThisDialog({alarmClosed: true});
+                }, function (err) {
+                    console.log(err);
                 });
-            }
+            });
         }
     }
 })();

@@ -274,6 +274,8 @@
       "TITLE": "养老机构-护理管理-护士台",
       "EXPAND-ALARM-QUEUE": "展开报警队列",
       "COLLAPSE-ALARM-QUEUE": "折叠报警队列",
+      "ALARM-TIP": "请你先到现场确认后再关闭报警对话框",
+      "TO-CONFIRM-CLOSE-ALARM": "当前报警信息将被关闭,确定要继续吗？",
       "MIS-ALARM": "设备误报"
     },
     "nursing-plan": {

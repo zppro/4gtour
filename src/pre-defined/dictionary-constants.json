@@ -32,7 +32,7 @@
     "OffLine":"A0003"
   },
   "D3016":{
-    "LEAVE_BED_TIMEOUT":"A0001"
+    "LEAVE_BED_TIMEOUT":"A1000"
   },
   "TRV00": {
     "FEELING": "A0001",

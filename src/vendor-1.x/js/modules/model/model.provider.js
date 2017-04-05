@@ -502,7 +502,8 @@
                     nursingPlanSaveWorkItem: nursingPlanSaveWorkItem,
                     nursingPlanSaveRemark: nursingPlanSaveRemark,
                     nursingRecordGenerate: nursingRecordGenerate,
-                    elderlysByDistrictFloors: elderlysByDistrictFloors
+                    elderlysByDistrictFloors: elderlysByDistrictFloors,
+                    nursingStationCloseBedMonitorAlarm: nursingStationCloseBedMonitorAlarm
                 };
 
                 function roomStatusInfo(tenantId) {
@@ -731,6 +732,10 @@
                 
                 function elderlysByDistrictFloors(tenantId, districtFloors) {
                     return $http.post(baseUrl + 'elderlysByDistrictFloors', {tenantId: tenantId, districtFloors: districtFloors});
+                }
+                
+                function nursingStationCloseBedMonitorAlarm(alarm, sharedData) {
+                    return $http.post(baseUrl + 'nursingStationCloseBedMonitorAlarm', {elderlyId: alarm.elderly._id, bedMonitorName: alarm.bedMonitorName, reason: alarm.reason, tenantId: sharedData.tenantId,  operated_by: sharedData.operated_by, operated_by_name: sharedData.operated_by_name});
                 }
             }]
         };
