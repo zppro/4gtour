@@ -23,7 +23,7 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         <!--药品来源-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-TYPE') | translate}}:
                         .col-md-10
-                            .tree.tree-dropdown(name='type',s-tree,s-tree-data="vm.typePromise",s-tree-height="200", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',layout:'dropdown',readonly:{{vm.readonly}}}",ng-model="vm.model.type",required='')
+                            .tree.tree-dropdown(name='type',s-tree,s-tree-data="vm.typePromise",s-tree-height="150", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{layout:'dropdown'}",ng-model="vm.model.type",required='')
                             span.text-danger(ng-show="utils.vinput(this.theForm,'type','required')") {{ "validator.REQUIRED" | translate}}
                     fieldset: .form-group
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-QUANTITY') | translate}}:

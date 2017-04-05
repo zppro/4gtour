@@ -482,6 +482,7 @@
                     receptionVisiterSyncElderlyFamilyMembers: receptionVisiterSyncElderlyFamilyMembers,
                     leaveAccompanierSyncElderlyFamilyMembers: leaveAccompanierSyncElderlyFamilyMembers,
                     drugInStock:drugInStock,
+                    instockAbolish:instockAbolish,
                     drugOutStock:drugOutStock,
                     drugOutStockInvalid:drugOutStockInvalid,
                     checkCanChangeBookingOrUnbookingRecharge: checkCanChangeBookingOrUnbookingRecharge,
@@ -595,6 +596,9 @@
                         select: select,
                         sort: sort
                     }});
+                }
+                function instockAbolish(inStockId){
+                    return $http.get(baseUrl + 'inStockAbolish/' + inStockId);
                 }
 
                 function drugOutStockInvalid(drugInOutStockId){

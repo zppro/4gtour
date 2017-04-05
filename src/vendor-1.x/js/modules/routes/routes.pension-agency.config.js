@@ -1434,7 +1434,7 @@
                                 sortable: true
                             },
                             {
-                                label: '被看护人',
+                                label: '老人',
                                 name: 'elderly_name',
                                 type: 'string',
                                 width: 60,
@@ -1476,7 +1476,14 @@
                                 width: 60,
                                 formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3013/object'),
                                 sortable: false
-                            }, 
+                            },
+                            {
+                                label: '是否有效',
+                                name: 'valid_flag',
+                                type: 'bool',
+                                width: 80,
+                                sortable: false
+                            },
                             {
                                 label: '操作',
                                 name: 'actions',
