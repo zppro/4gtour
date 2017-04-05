@@ -54,7 +54,7 @@ module.exports = {
             return co(function *() {
                 try {
                     console.log(socketClientEvents.PSN.BED_MONITOR.SUBSCRIBE + ':' + socket.id + '  => data  ' +  JSON.stringify(data));
-                    var bedMonitorNames = data.bedMonitorNames, tenantId = data.tenantId, bedMonitorName, bedMonitorStatus;
+                    var bedMonitorNames = data.bedMonitorNames, tenantId = data.tenantId, bedMonitorName, bedMonitorStatus, bedStatus;
                     if (bedMonitorNames) {
                         console.log('bedMonitorNames ', bedMonitorNames);
                         for (var i = 0, len = bedMonitorNames.length; i < len; i++) {
@@ -72,12 +72,29 @@ module.exports = {
                         for (var i = 0, len = bedMonitors.length; i < len; i++) {
                             bedMonitorName = bedMonitors[i].name;
                             bedMonitorStatus = bedMonitors[i].device_status;
-                            if(bedMonitorStatus === DIC.D3009.OffLine){
+                            if (bedMonitorStatus === DIC.D3009.OffLine) {
                                 // self.sendToClient(socketServerEvents.PSN.BED_MONITOR.OFF_LINE, {bedMonitorName: bedMonitorName});
                                 socket.emit(socketServerEvents.PSN.BED_MONITOR.OFF_LINE, {bedMonitorName: bedMonitorName});
                             } else if (bedMonitorStatus === DIC.D3009.OnLine) {
                                 // self.sendToClient(socketServerEvents.PSN.BED_MONITOR.ON_LINE, {bedMonitorName: bedMonitorName});
-                                socket.emit(socketServerEvents.PSN.BED_MONITOR.ON_LINE, {bedMonitorName: bedMonitorName});
+                                bedStatus = self.ctx.cache.get(bedMonitorName);
+                                console.log('bedStatus:', bedStatus);
+                                if (bedStatus) {
+                                    if (bedStatus.alarm) {
+                                        socket.emit(socketServerEvents.PSN.BED_MONITOR.ALARM_LEAVE_TIMEOUT, {
+                                            bedMonitorName: bedMonitorName,
+                                            reason: DIC.D3016.LEAVE_BED_TIMEOUT
+                                        });
+                                    } else {
+                                        if (bedStatus.isBed) {
+                                            socket.emit(socketServerEvents.PSN.BED_MONITOR.ON_LINE, {bedMonitorName: bedMonitorName});
+                                        } else {
+                                            socket.emit(socketServerEvents.PSN.BED_MONITOR.LEAVE, {bedMonitorName: bedMonitorName});
+                                        }
+                                    }
+                                } else {
+                                    socket.emit(socketServerEvents.PSN.BED_MONITOR.LEAVE, {bedMonitorName: bedMonitorName});
+                                }
                             }
                         }
                     }

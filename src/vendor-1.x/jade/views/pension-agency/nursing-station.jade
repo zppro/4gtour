@@ -1,11 +1,27 @@
 
 form.search-form
-    .row
+    .row.nursing-station-head
+        .col-md-2
+            a.btn.btn-danger.btn-md(ng-click="vm.toggleAlarmQueue()")
+                i.glyphicon(ng-class='{"glyphicon-folder-open":vm.alarmQueueVisible,"glyphicon-folder-close":!vm.alarmQueueVisible}')
+                span.pl-sm {{ vm.toggleAlarmButton | translate}}
+                span(ng-show="vm.alarmQueue.length > 0") ({{vm.alarmQueue.length}})
+        .col-md-6
         label.search-col.col-md-1.text-right 楼层房间
         .col-md-2
             .tree.tree-dropdown(name='floorTree',s-tree, s-tree-data="vm.floorDataPromise",s-tree-height="400", s-tree-template-url='tree-directive-default-renderer.html',s-tree-option="{mode:'check',layout:'dropdown',selectNodeFormat:'object'}",ng-model="vm.floorData", on-check-change="vm.onFloorChange()")
+        .alarm-queue(ng-show="vm.alarmQueueVisible")
+            .alarm-item(ng-repeat="alarm in vm.alarmQueue")
+                .avatar
+                    .avatar-block
+                        .user-block-status
+                            img.img-thumbnail.img-circle(ng-src="{{ alarm.elderly.avatar ? alarm.elderly.avatar + '?imageView2/1/w/62/h/81' : vm.defaultElderlyAvatar}}", alt="姓名")
+                div.text-center
+                    span.reason {{vm.D3016[alarm.reason].name}}
+                div.name-block(ng-click="vm.openAlarmDialogByAlarm($index)")
+                    .name.text-center {{ alarm.elderly.name }}
 .nursing-station
-    .col-md-12(block-ui="nursing-station")
+    .col-md-12.monitor-objects(block-ui="nursing-station")
         .elderly(ng-repeat="elderly in vm.elderlys")
             .avatar
                 .avatar-block
@@ -14,7 +30,37 @@ form.search-form
             div.text-center
                 .room-info {{elderly.room_value.roomId.name + '-' + elderly.room_value.bed_no}}
                 span.nursing-level ({{elderly.nursingLevelId.short_name}})
-            div(ng-class='vm.elderlyStatusMonitor[elderly.id].status' ng-click="vm.elderlyStatusMonitor[elderly.id].status = 'warning' ")
-                .name.text-center {{ elderly.name }} {{vm.elderlyStatusMonitor[elderly.id].status}}
+            div(ng-class='vm.elderlyStatusMonitor[elderly.id].status' ng-click="vm.openAlarmDialogByMonitorObject(elderly.id)")
+                .name.text-center {{ elderly.name }}
                     span.age ({{utils.age(elderly.birthday)}})
 .clearfix
+
+script(type="text/ng-template", id="nursing-station-alarm-template.html")
+    .ngdialog-title
+        i.glyphicon.glyphicon-info-sign
+        | {{ vm.title }}
+    .ngdialog-input
+        .col-md-3
+            .avatar
+                .avatar-block
+                    .user-block-status
+                        img.img-thumbnail.img-circle(ng-src="{{ vm.alarm.elderly.avatar ? vm.alarm.elderly.avatar + '?imageView2/1/w/62/h/81' : vm.defaultElderlyAvatar}}", alt="姓名")
+        .col-md-5
+            .name {{ vm.alarm.elderly.name }}
+                span.age ({{utils.age(vm.alarm.elderly.birthday)}})
+            .room-info {{vm.alarm.elderly.room_value.roomId.name + '-' + vm.alarm.elderly.room_value.bed_no}}
+            .nursing-level {{vm.alarm.elderly.nursingLevelId.short_name}}
+        .col-md-4.bl
+            .alarm-reason-archive
+                | {{vm.reasonMap}}
+                .checkbox.c-checkbox
+                    label
+                        input#alarmReason(type='checkbox',ng-model='vm.reasonMap[vm.alarm.reason]' ng-change="vm.onChange(vm.alarm.reason)")
+                        span.fa.fa-check
+                 label(for="alarmReason") {{vm.title}}
+                .checkbox.c-checkbox
+                    label
+                        input#misAlarm(type='checkbox', ng-model='vm.reasonMap["00000"]', ng-change="vm.onChange('00000')")
+                        span.fa.fa-check
+                label(for="misAlarm") {{ vm.moduleTranslatePath('MIS-ALARM') | translate}}
+            button.btn.btn-success(type='submit') {{ "button.CONFIRM" | translate}}
