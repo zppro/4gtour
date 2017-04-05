@@ -1,6 +1,6 @@
 /**
  * Created by zppro on 17-3-8.
- * 养老机构 护理离床监测
+ * 公共 护理离床监测
  */
 var mongoose = require('mongoose');
 var D3009 = require('../../pre-defined/dictionary.json')['D3009'];

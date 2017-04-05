@@ -4778,42 +4778,6 @@ module.exports = {
                     };
                 }
             },
- 
-
-            /**********************药品相关*****************************/
-            {
-                method: 'queryDrug',
-                verb: 'post',
-                url: this.service_url_prefix + "/q/drug",
-                handler: function (app, options) {
-                    return function * (next) {
-                        try {
-                            var tenantId = this.request.body.tenantId;
-                            var keyword = this.request.body.keyword;
-                            var data = this.request.body.data;
-
-                            app._.extend(data.where,{
-                                status: 1,
-                                tenantId: tenantId
-                            });
-
-                            if(keyword){
-                                data.where.full_name = new RegExp(keyword);
-                            }
-                            var rows = yield app.modelFactory().model_query(app.models['psn_drugDirectory'], data);
-                            var rows = app._.map(rows,function(r){ r.full_name+="--"+r.drug_no; return r});
-                            console.log(rows);
-                            this.body = app.wrapper.res.rows(rows);
-                        } catch (e) {
-                          console.log(e);
-                          self.logger.error(e.message);
-                          this.body = app.wrapper.res.error(e);
-                        }
-                        yield next;
-                    };
-                }
-            },
-
             /**********************护士台*****************************/
             {
                 method: 'elderlysByDistrictFloors',
@@ -4848,7 +4812,7 @@ module.exports = {
                             });
 
                             roomIds = app._.map(roomObjects, (o) => {
-                               return o._id;
+                                return o._id;
                             });
                             // console.log('roomIds:', roomIds);
                             elderlyObjects = yield app.modelFactory().model_query(app.models['psn_roomOccupancyChangeHistory'], {
@@ -4884,6 +4848,145 @@ module.exports = {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'nursingStationCloseBedMonitorAlarm',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingStationCloseBedMonitorAlarm", //关闭离床报警,此处永远为插入记录,因为采用报警数据后置插入模型
+                handler: function (app, options) {
+                    return function * (next) {
+                        var tenant, elderly, bedMonitor;
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if(!tenant || tenant.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                                yield next;
+                                return;
+                            }
+
+                            var elderlyId = this.request.body.elderlyId;
+                            elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
+                            if(!elderly || elderly.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到老人!'});
+                                yield next;
+                                return;
+                            }
+                            
+                            var bedMonitorName = this.request.body.bedMonitorName;
+
+                            bedMonitor = yield app.modelFactory().model_one(app.models['pub_bedMonitor'], {
+                                select: 'name',
+                                where: {
+                                    status: 1,
+                                    name: bedMonitorName,
+                                    tenantId: tenantId
+                                }
+                            });
+
+                            if(!bedMonitor){
+                                this.body = app.wrapper.res.error({message: '无法找到睡眠带!'});
+                                yield next;
+                                return;
+                            }
+
+                            var reason = this.request.body.reason;
+                            var operated_by = this.request.body.operated_by;
+                            var operated_by_name = this.request.body.operated_by_name;
+
+                            console.log('前置检查完成');
+
+                            yield app.modelFactory().model_create(app.models['pub_alarm'],{
+                                subject: 'pub_bedMonitor',
+                                subjectId: bedMonitor._id,
+                                subject_name: bedMonitor.name,
+                                object: 'psn_elderly',
+                                objectId: elderly._id,
+                                object_name: elderly.name,
+                                reason: reason,
+                                process_flag: true,
+                                processed_on: app.moment(),
+                                processed_by: operated_by,
+                                processed_by_name: operated_by_name,
+                                tenantId: tenantId
+                            });
+
+                            app.bed_monitor_provider.closeAlarm(bedMonitorName);
+
+                            this.body = app.wrapper.res.default();
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+           /**********************药品相关*****************************/
+            {
+                method: 'queryDrug',
+                verb: 'post',
+                url: this.service_url_prefix + "/q/drug",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            var keyword = this.request.body.keyword;
+                            var data = this.request.body.data;
+
+                            app._.extend(data.where,{
+                                status: 1,
+                                tenantId: tenantId
+                            });
+
+                            if(keyword){
+                                data.where.full_name = new RegExp(keyword);
+                            }
+                            var rows = yield app.modelFactory().model_query(app.models['psn_drugDirectory'], data);
+                            var rows = app._.map(rows,function(r){ r.full_name+="--"+r.drug_no; return r});
+                            console.log(rows);
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                          console.log(e);
+                          self.logger.error(e.message);
+                          this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            }
+            /**********************药品相关*****************************/
+            {
+                method: 'queryDrug',
+                verb: 'post',
+                url: this.service_url_prefix + "/q/drug",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            var keyword = this.request.body.keyword;
+                            var data = this.request.body.data;
+
+                            app._.extend(data.where,{
+                                status: 1,
+                                tenantId: tenantId
+                            });
+
+                            if(keyword){
+                                data.where.full_name = new RegExp(keyword);
+                            }
+                            var rows = yield app.modelFactory().model_query(app.models['psn_drugDirectory'], data);
+                            this.body = app.wrapper.res.rows(rows);
+                        } catch (e) {
+                          console.log(e);
+                          self.logger.error(e.message);
+                          this.body = app.wrapper.res.error(e);
                         }
                         yield next;
                     };
