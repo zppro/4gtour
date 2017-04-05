@@ -126,8 +126,7 @@
                 //                             });
                 // }
 
-                vmh.psnService.drugOutStock(vm.tenantId,vm.model.elderlyId,vm.model.drugId,vm.model.in_out_quantity,vm.model.type,vm.model.unit).then(function() {
-                            vmh.alertSuccess(vm.viewTranslatePath('SYNC_FAMILY_MEMBERS_SUCCESS'), true);
+                vmh.psnService.drugOutStock(vm.tenantId,vm.model.elderlyId,vm.model.drugId,vm.model.in_out_quantity,vm.model.type,vm.model.unit).then(function(ret) {
                             vm.returnBack();
                         });
                     
