@@ -258,6 +258,7 @@
                 }
             }).closePromise.then(function (ret) {
                 if(ret.value!='$document' && ret.value!='$closeButton' && ret.value!='$escape' ) {
+                    console.log('openElderlyDialog close')
                 }
             });
         }
