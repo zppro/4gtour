@@ -43,9 +43,9 @@ script(type="text/ng-template", id="nursing-station-elderly.html")
             .avatar
                 .avatar-block
                     .user-block-status
-                        img.img-thumbnail.img-circle(ng-src="{{ vm.elderly.avatar ? vm.elderly.avatar + '?imageView2/1/w/62/h/81' : vm.defaultElderlyAvatar}}", alt="姓名")
-                a.btn.btn-sm.btn-primary.text-align(ng-click="vm.closeAlarm()") {{ vm.moduleTranslatePath('DLG-ELDERLY-BTN-AVATAR') | translate}}
-        .col-md-10
+                        img.img-thumbnail.img-circle(ng-src="{{ vm.elderly.avatar ? vm.elderly.avatar + '?imageView2/1/w/96/h/125' : vm.defaultElderlyAvatar}}", alt="姓名")
+                .upload-avatar(qiniu-uploader, qiniu-uploader-template-url="qiniu-uploader-primary-sm.html", button-text="{{ vm.moduleTranslatePath('DLG-ELDERLY-BTN-AVATAR') | translate}}" bucket='4gimg',user='vm.elderly._id',ng-uploaded-url="vm.elderly.avatar", on-uploaded="vm.onAvatarUploaded(uploadedUrl)")
+        .col-md-9
             .row
                 .label.col-md-2.field-label {{ vm.moduleTranslatePath('DLG-ELDERLY-LABEL-NAME') | translate }}
                 .col-md-4.field-value.name {{ vm.elderly.name }}
@@ -55,17 +55,19 @@ script(type="text/ng-template", id="nursing-station-elderly.html")
                 .label.col-md-2.field-label {{ vm.moduleTranslatePath('DLG-ELDERLY-LABEL-ROOM_INFO') | translate }}
                 .col-md-4.field-value.room-info {{vm.elderly.room_value.roomId.name + '-' + vm.elderly.room_value.bed_no}}
                 .label.col-md-2.field-label {{ vm.moduleTranslatePath('DLG-ELDERLY-LABEL-NURING_WORKER') | translate }}
-                .col-md-4.field-value.nuring-worker
+                .col-md-4.field-value.nuring-worker {{ vm.nursingWorkerNames }}
             .row
                 .label.col-md-2.field-label {{ vm.moduleTranslatePath('DLG-ELDERLY-LABEL-NURSING_ASSESSMENT_GRADE') | translate }}
-                .col-md-4.field-value.nursing-assessment-grade
+                .col-md-4.field-value.nursing-assessment-grade {{vm.nursing_assessment_grade_name}}
                 .label.col-md-2.field-label {{ vm.moduleTranslatePath('DLG-ELDERLY-LABEL-NURSING_LEVEL') | translate }}
                 .col-md-4.field-value.nursing-level {{vm.elderly.nursingLevelId.name}}
             .row
-                .label.col-md-2.field-label {{ vm.moduleTranslatePath('DLG-ELDERLY-LABEL-FAMILY_MEMBERS') | translate }}
-                .col-md-10.field-value.family-members
+                .label.col-md-2.field-label.double-row-height {{ vm.moduleTranslatePath('DLG-ELDERLY-LABEL-FAMILY_MEMBERS') | translate }}
+                .col-md-10.field-value.family-members.double-row-height {{vm.family_members}}
         .elderly-more-info.col-md-12
             .panel.panel-default.panel-grid
+                .panel-heading-normal
+                    a {{ vm.moduleTranslatePath('DLG-ELDERLY-HEAD-NURSING_RECORDS_TODAY') | translate}}
                 table.grid.table.table-bordered.table-hover.table-striped
                     thead
                         tr
@@ -77,12 +79,14 @@ script(type="text/ng-template", id="nursing-station-elderly.html")
                                 | {{ vm.moduleTranslatePath('DLG-ELDERLY-TH-ASSIGNED_WORKER') | translate}}
                             th.text-center(width="100")
                                 | {{ vm.moduleTranslatePath('DLG-ELDERLY-TH-CONFIRM_FLAG') | translate}}
+                            th
                     tbody
                         tr(ng-repeat="row in vm.nursingRecords")
-                            td.text-center(width="80") {{::row.exec_on|date: 'HH:mm'}}
+                            td.text-center(ng-if="row.workItemId.repeat_type != 'A0001' " width="80") {{::row.exec_on|date: 'HH:mm'}}
+                            td.text-center(ng-if="row.workItemId.repeat_type == 'A0001' " width="80") {{::row.workItemId.repeat_type_name}}
                             td.text-left(width="445") {{::row.name}}
-                            td.text-center(width="80") {{::row.assigned_worker.name}}
-                            td.text-center(width="100") {{::row.confirmed_flag}}
+                            td.text-center(width="80") {{::row.assigned_worker.name }}
+                            td.text-center(width="100") {{::row.confirmed_flag|boolFilter}}
                             td
 script(type="text/ng-template", id="nursing-station-alarm.html")
     .ngdialog-title

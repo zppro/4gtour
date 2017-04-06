@@ -143,8 +143,8 @@
 
         function buildVMHelper() {
 
-            return ['$timeout', '$q', '$location', '$translate', '$http', 'Browser', 'blockUI', 'cfpLoadingBar', 'shareNode', 'extensionNode', 'mwsNode', 'psnNode', 'idtNode', 'debugNode', 'clientData', 'treeFactory', 'Notify', 'GridUtils', 'ViewUtils',
-                function ($timeout, $q, $location, $translate, $http, Browser, blockUI, cfpLoadingBar, shareNode, extensionNode, mwsNode, psnNode, idtNode, debugNode, clientData, treeFactory, Notify, GridUtils, ViewUtils) {
+            return ['$timeout', '$q', '$location', '$translate', '$http', 'Browser', 'blockUI', 'cfpLoadingBar', 'modelNode', 'shareNode', 'extensionNode', 'mwsNode', 'psnNode', 'idtNode', 'debugNode', 'clientData', 'treeFactory', 'Notify', 'GridUtils', 'ViewUtils',
+                function ($timeout, $q, $location, $translate, $http, Browser, blockUI, cfpLoadingBar, modelNode, shareNode, extensionNode, mwsNode, psnNode, idtNode, debugNode, clientData, treeFactory, Notify, GridUtils, ViewUtils) {
 
                 function promiseWrapper() {
                     if (arguments.length > 0) {
@@ -199,9 +199,9 @@
                     }));
                 }
 
-                function alertWarning(message, needTranslate) {
+                function alertWarning(message, needTranslate, translateObject) {
                     if (needTranslate) {
-                        $translate(message).then(function (ret) {
+                        $translate(message, translateObject).then(function (ret) {
                             Notify.alert('<div class="text-center"><em class="fa fa-warning"></em> ' + ret + '</div>', 'warning');
                         });
                     }
@@ -210,10 +210,10 @@
                     }
                 }
 
-                function alertSuccess(message, needTranslate) {
+                function alertSuccess(message, needTranslate, translateObject) {
                     if (message) {
                         if (needTranslate) {
-                            $translate(message).then(function (ret) {
+                            $translate(message, translateObject).then(function (ret) {
                                 Notify.alert('<div class="text-center"><em class="fa fa-check"></em> ' + ret + '</div>', 'success');
                             });
                         }
@@ -232,6 +232,10 @@
                     var port = $location.port();
                     return $location.host() + port === 80 ? '' : ':' + port;
                 }
+                    
+                function getModelService(modelName) {
+                    return modelNode.services[modelName] || {}
+                }
 
                 return {
                     q: $q,
@@ -245,6 +249,7 @@
                     blocking: blocking,
                     fetch: fetch,
                     parallel: parallel,
+                    getModelService: getModelService,
                     shareService: shareNode,
                     extensionService: extensionNode,
                     mwsService: mwsNode,

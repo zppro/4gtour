@@ -13,11 +13,17 @@
     qiniuRun.$inject = ['$templateCache'];
 
     function qiniuRun($templateCache) {
-        var templateContent = '<div id="{{containerId}}">\
+        var templateContentDefault = '<div id="{{containerId}}">\
                 <a class="btn btn-default btn-lg " id="{{buttonId}}" href="#" >\
                 <i class="glyphicon glyphicon-plus"></i>\
                 <span>{{buttonText}}</span></a></div>';
-        $templateCache.put("qiniu-uploader-default.html",templateContent);
+        $templateCache.put("qiniu-uploader-default.html",templateContentDefault);
+
+        var templateContentPrimarySM = '<div id="{{containerId}}">\
+                <a class="btn btn-primary btn-sm " id="{{buttonId}}" href="#" >\
+                <i class="glyphicon glyphicon-plus"></i>\
+                <span>{{buttonText}}</span></a></div>';
+        $templateCache.put("qiniu-uploader-primary-sm.html",templateContentPrimarySM);
 
     }
 })();

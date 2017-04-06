@@ -14,7 +14,7 @@
 
         var directive = {
             restrict: 'A',
-            scope: {ngUploadedUrl: '=',user:'=',bucket:'@'},
+            scope: {ngUploadedUrl: '=',user:'=',bucket:'@', onUploaded: '&'},
             link: link
         };
         return directive;
@@ -70,6 +70,9 @@
                             var sourceLink = domain + res.key; //获取上传成功后的文件的Url
                             $timeout(function(){
                                 scope.ngUploadedUrl = sourceLink;
+                                if (scope.onUploaded) {
+                                    scope.onUploaded({uploadedUrl: sourceLink});
+                                }
                             });
                         },
                         'Error': function(up, err, errTip) {

@@ -28,7 +28,7 @@
         }
 
         function abolish(row){
-            if(row.valid_flag === false) return;
+            if(!row.valid_flag) return;
             vm.removeDialog.openConfirm({
                 template: 'normalConfirmDialog.html',
                 className: 'ngdialog-theme-default'

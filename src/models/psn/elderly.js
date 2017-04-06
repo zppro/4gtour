@@ -24,6 +24,7 @@ module.exports = function(ctx,name) {
             operated_by_name: {type: String},
             status: {type: Number, min: 0, max: 1, default: 1},
             name: {type: String, required: true, maxlength: 20},
+            avatar:{type: String},
             id_no: {type: String, required: true, minlength: 18, maxlength: 18},
             sex: {type: String, required: true, minlength: 1, maxlength: 1, enum: ctx._.rest(ctx.dictionary.keys["D1006"])},
             birthday: {type: Date, required: true},
@@ -71,7 +72,7 @@ module.exports = function(ctx,name) {
                 disease_evaluation_level: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3007"])},
                 adl_level: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3008"])}
             },
-            nursingLevelId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'psn_nursingLevel'},
+            nursingLevelId: {type: mongoose.Schema.Types.ObjectId, ref: 'psn_nursingLevel'},
             subsidiary_ledger:{
                 self:{type: Number, default: 0.00},//自费账户
                 gov_subsidy:{type: Number, default: 0.00} //政府补助
