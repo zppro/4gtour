@@ -335,19 +335,30 @@
             vm.operated_by = $scope.ngDialogData.operated_by;
             vm.operated_by_name = $scope.ngDialogData.operated_by_name;
 
+            vm.onAvatarUploaded = onAvatarUploaded;
             // vm.tab1 = {cid: 'contentTab1', active: true};
-            vm.nursingRecords = [
-                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
-                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
-                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
-                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
-                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
-                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
-                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
-                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true},
-                {exec_on: moment('2017-04-05 07:00').toDate(), name:'asdfasfs', assigned_worker:{name: '张三'}, confirmed_flag: true}
-            ]
+
+            vmh.parallel([
+                vmh.shareService.d2('D1012'),
+                vmh.getModelService('psn-elderly').single({_id: vm.elderly._id},'nursing_assessment_grade family_members'),
+                vmh.psnService.nursingScheduleByElderlyDaily(vm.tenantId, vm.elderly._id),
+                vmh.psnService.nursingRecordsByElderlyToday(vm.tenantId, vm.elderly._id)
+            ]).then(function (results) {
+                vm.nursing_assessment_grade_name = results[1].nursing_assessment_grade_name;
+                vm.family_members = _.map(results[1].family_members, function (o) {
+                    return (results[0][o.relation_with] || {}).name + ':' + o.name + '(' + o.phone + ')'
+                }).join();
+                vm.nursingWorkerNames = _.map(results[2], function (o) {
+                   return (o.aggr_value || {}).name;
+                }).join();
+                vm.nursingRecords = results[3];
+            });
         }
 
+        function onAvatarUploaded (uploadedUrl) {
+            if (uploadedUrl) {
+                vmh.fetch(vmh.getModelService('psn-elderly').update(vm.elderly._id, {avatar: uploadedUrl}));
+            }
+        }
     }
 })();

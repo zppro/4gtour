@@ -70,7 +70,16 @@
                             return this._query({_id: '$query'}, {
                                 where: where,
                                 select: select,
-                                sort: sort
+                                sort: sort,
+                                populates: populates
+                            }, successFn, errorFn);
+                        };
+                        this.services[name].single = function (where, select, sort, populates, successFn, errorFn) {
+                            return this._post({_id: '$single'}, {
+                                where: where,
+                                select: select,
+                                sort: sort,
+                                populates: populates
                             }, successFn, errorFn);
                         };
                         this.services[name].totals = function (where, successFn, errorFn) {
@@ -500,10 +509,12 @@
                     nursingScheduleRemove: nursingScheduleRemove,
                     nursingScheduleTemplateImport: nursingScheduleTemplateImport,
                     nursingScheduleSaveAsTemplateWeekly: nursingScheduleSaveAsTemplateWeekly,
+                    nursingScheduleByElderlyDaily: nursingScheduleByElderlyDaily,
                     nursingPlansByRoom: nursingPlansByRoom,
                     nursingPlanSaveWorkItem: nursingPlanSaveWorkItem,
                     nursingPlanSaveRemark: nursingPlanSaveRemark,
                     nursingRecordGenerate: nursingRecordGenerate,
+                    nursingRecordsByElderlyToday: nursingRecordsByElderlyToday,
                     elderlysByDistrictFloors: elderlysByDistrictFloors,
                     nursingStationCloseBedMonitorAlarm: nursingStationCloseBedMonitorAlarm
                 };
@@ -722,6 +733,10 @@
                 function nursingScheduleSaveAsTemplateWeekly (tenantId, nursingScheduleTemplateName, toSaveRows) {
                     return $http.post(baseUrl + 'nursingScheduleSaveAsTemplateWeekly', {tenantId: tenantId, nursingScheduleTemplateName: nursingScheduleTemplateName, toSaveRows: toSaveRows});
                 }
+                
+                function nursingScheduleByElderlyDaily (tenantId, elderlyId, dateString) {
+                    return $http.post(baseUrl + 'nursingScheduleByElderlyDaily', {tenantId: tenantId, elderlyId: elderlyId, dateString: dateString});
+                }
 
                 function nursingPlansByRoom (tenantId, elderlySelectArray, nursingPlanSelectArray) {
                     return $http.post(baseUrl + 'nursingPlansByRoom', {tenantId: tenantId, elderlySelectArray: elderlySelectArray, nursingPlanSelectArray: nursingPlanSelectArray});
@@ -737,6 +752,10 @@
 
                 function nursingRecordGenerate(tenantId, elderlyId) {
                     return $http.post(baseUrl + 'nursingRecordGenerate', {tenantId: tenantId, elderlyId: elderlyId});
+                }
+                
+                function nursingRecordsByElderlyToday(tenantId, elderlyId) {
+                    return $http.post(baseUrl + 'nursingRecordsByElderlyToday', {tenantId: tenantId, elderlyId: elderlyId});
                 }
                 
                 function elderlysByDistrictFloors(tenantId, districtFloors) {

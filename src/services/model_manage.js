@@ -146,14 +146,44 @@ module.exports = {
                                 console.log('populates:');
                                 console.log(populates);
                                 if (app._.isArray(populates)) {
-                                    app._.each(populates, function(row) {
-                                        rows = rows.populate(row);
+                                    app._.each(populates, function(p) {
+                                        rows = rows.populate(p);
                                     });
                                 } else {
                                     rows = rows.populate(populates);
                                 }
                             }
                             this.body = app.wrapper.res.rows(yield rows);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'single',
+                verb: 'post',
+                url: this.service_url_prefix + "/:model/$single",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var modelOption = app.getModelOption(this);
+                            var theOne =  app.modelFactory().one(modelOption.model_name, modelOption.model_path, this.request.body);
+                            var populates = this.request.body.populates;
+                            if (populates) {
+                                console.log('single populates:');
+                                console.log(populates);
+                                if (app._.isArray(populates)) {
+                                    app._.each(populates, function(p) {
+                                        theOne = theOne.populate(p);
+                                    });
+                                } else {
+                                    theOne = theOne.populate(populates);
+                                }
+                            }
+                            this.body = app.wrapper.res.rows(yield theOne);
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);

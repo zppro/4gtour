@@ -23,6 +23,7 @@
     "GEN":"生成",
     "APPLY":"应用",
     "COPY": "复制",
+    "UPLOAD": "上传",
     "DOWNLOAD": "下载",
     "USER": "管理用户",
     "RESET-USER-PASSWORD":"重设密码",

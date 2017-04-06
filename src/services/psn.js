@@ -3858,7 +3858,7 @@ module.exports = {
                 url: this.service_url_prefix + "/nursingScheduleWeekly", //按周查找护理排班
                 handler: function (app, options) {
                     return function* (next) {
-                        var tenant;
+                        var tenant, xAxisValueStart, xAxisValueEnd;
                         try {
                             //this.request.body
                             var tenantId = this.request.body.tenantId;
@@ -4276,6 +4276,62 @@ module.exports = {
                             }
 
                             this.body = app.wrapper.res.ret(isCreate);
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'nursingScheduleByElderlyDaily',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingScheduleByElderlyDaily", //按老人和天查找护理排班
+                handler: function (app, options) {
+                    return function* (next) {
+                        var tenant, elderly, dateString, xAxisValueStart;
+                        try {
+                            //this.request.body
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if (!tenant || tenant.status == 0) {
+                                this.body = app.wrapper.res.error({ message: '无法找到养老机构!' });
+                                yield next;
+                                return;
+                            }
+
+                            var elderlyId = this.request.body.elderlyId;
+                            elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
+                            if(!elderly || elderly.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到老人!'});
+                                yield next;
+                                return;
+                            }
+
+                            dateString = this.request.body.dateString || app.moment().format('YYYY-MM-DD');
+                            console.log(dateString.format('YYYY-MM-DD HH:mm:ss'))
+                            xAxisValueStart = app.moment(dateString);
+
+                            console.log('前置检查完成');
+
+                            var rows = yield app.modelFactory().model_query(app.models['psn_nursingSchedule'], {
+                                select: 'aggr_value',
+                                where: {
+                                    tenantId: tenantId,
+                                    y_axis: elderly.room_value.roomId,
+                                    x_axis: {
+                                        '$gte': xAxisValueStart.toDate(),
+                                        '$lt': xAxisValueStart.add(1, 'days').toDate()
+                                    }
+                                }
+                            }).populate('aggr_value');
+
+                            // console.log(yAxisData);
+                            // console.log(rows);
+                            this.body = app.wrapper.res.rows(rows);
                         }
                         catch (e) {
                             console.log(e);
@@ -4777,7 +4833,51 @@ module.exports = {
                     };
                 }
             },
+            {
+                method: 'nursingRecordsByElderlyToday',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingRecordsByElderlyToday", //老人的今日的护理记录
+                handler: function (app, options) {
+                    return function* (next) {
+                        var tenant, elderly, nursingPlan;
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if (!tenant || tenant.status == 0) {
+                                this.body = app.wrapper.res.error({ message: '无法找到养老机构!' });
+                                yield next;
+                                return;
+                            }
 
+                            var elderlyId = this.request.body.elderlyId;
+                            elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
+                            if(!elderly || elderly.status == 0){
+                                this.body = app.wrapper.res.error({message: '无法找到老人!'});
+                                yield next;
+                                return;
+                            }
+
+                            var today = app.moment(app.moment().format('YYYY-MM-DD') + " 00:00:00");
+                            var rows = yield app.modelFactory().model_query(app.models['psn_nursingRecord'], {
+                                select: 'exec_on name description duration assigned_worker confirmed_flag confirmed_on',
+                                where: {
+                                    elderlyId: elderlyId,
+                                    exec_on:  {$gte: today.toDate(), $lte: today.add(1, 'days').toDate()},
+                                    tenantId: tenantId
+                                }
+                            }).populate('assigned_worker');
+                            console.log(rows);
+                            this.body = app.wrapper.res.rows(rows);
+                        }
+                        catch (e) {
+                            console.log(e);
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
             /**********************护士台*****************************/
             {
                 method: 'elderlysByDistrictFloors',
@@ -4832,7 +4932,7 @@ module.exports = {
                             });
 
                             var rows = yield app.modelFactory().model_query(app.models['psn_elderly'], {
-                                select: 'name birthday nursingLevelId room_value',
+                                select: 'name birthday nursingLevelId room_value avatar',
                                 where: {
                                     status: 1,
                                     live_in_flag: true,
