@@ -47,6 +47,7 @@
                 vmh.shareService.tmp('T3001/psn-workItem', 'name nursingLevelId', null),
             ]).then(function (results) {
                 vm.xAxisData = results[0];
+                console.log('nursingPlanAxis:', vm.xAxisData);
 
                 vm.selectBinding.nursingLevels = _.map(results[1],function(row){return {id: row._id, name: row.name, short_name: row.short_name }});
                 var nursingLevelMap = {};

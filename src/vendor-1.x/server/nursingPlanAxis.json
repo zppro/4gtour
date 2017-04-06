@@ -20,9 +20,14 @@
     "width": "80"
   },
   {
-    "_id": "nursing_catalogs",
-    "name": "护理内容",
+    "_id": "nursing_workitems_standard",
+    "name": "护理项目(标准)",
     "width": "240"
+  },
+  {
+    "_id": "nursing_workitems_customized",
+    "name": "护理项目(自定义)",
+    "width": "120"
   },
   {
     "_id": "remark",

@@ -37,9 +37,6 @@
                                 a.btn.btn-primary.btn-sm(ng-click="vm.switchReadonlyWorkItems(row.trackedKey)" ng-class="{'btn-primary': !vm.$editings[row.trackedKey]['workItems'], 'btn-warning': vm.$editings[row.trackedKey]['workItems']}")
                                     i.glyphicon.glyphicon-pencil
                                     span.ml-sm {{ vm.$editings[row.trackedKey]['workItems'] ? vm.moduleTranslatePath('BTN-DO-READONLY-WORK-ITEMS') : vm.moduleTranslatePath('BTN-CANCEL-READONLY-WORK-ITEMS') | translate}}
-                                a.btn.btn-primary.btn-sm(ng-click="vm.addCustomizedWorkItems(row.trackedKey)")
-                                    i.glyphicon.glyphicon-plus
-                                    span.ml-sm {{ vm.moduleTranslatePath('BTN-ADD-CUSTOMIZED-WORK-ITEMS') | translate}}
                                 a.btn.btn-primary.btn-sm(ng-click="vm.generateNursingRecord(row.trackedKey)")
                                     i.glyphicon.glyphicon-list
                                     span.ml-sm {{ vm.moduleTranslatePath('BTN-GEN-NURSING-CONTENT') | translate}}
@@ -50,6 +47,13 @@
                                         input(id="{{row.trackedKey + '$' +workItem.id}}",type='checkbox', ng-disabled="!vm.$editings[row.trackedKey]['workItems']", ng-model="vm.work_items[row.trackedKey + '$' + vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']][workItem.id]" ng-change="vm.workItemChecked(row.trackedKey, workItem.id)")
                                         span.fa.fa-check
                                 label(for="{{row.trackedKey + '$' +workItem.id}}") {{ workItem.name }}
+                        td
+                            .btn-group(ng-if="vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']")
+                                a.btn.btn-primary.btn-sm(ng-click="vm.addCustomizedWorkItems(row.trackedKey)")
+                                    i.glyphicon.glyphicon-plus
+                                    span.ml-sm {{ vm.moduleTranslatePath('BTN-ADD-CUSTOMIZED-WORK-ITEMS') | translate}}
+                            .split
+
                         td.text-center
                             div(ng-if="vm.aggrData[row.trackedKey]['elderly']['id']")
                                 span(ng-if="!vm.$editings[row.trackedKey]['remark'] && vm.aggrData[row.trackedKey]['nursing_plan']['remark']") {{vm.aggrData[row.trackedKey]['nursing_plan']['remark']}}
