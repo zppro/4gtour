@@ -33,7 +33,6 @@
         init();
 
         function init() {
-
             vm.init({removeDialog: ngDialog});
             vm.doSubmit = doSubmit;
             vm.queryElderly = queryElderly;
@@ -41,7 +40,6 @@
             vm.queryDrug = queryDrug;
             vm.selectDrug = selectDrug;
             vm.tab1 = {cid: 'contentTab1'};
-            
             vmh.parallel([
                 vmh.shareService.d('D3013'),
             ]).then(function(results){
@@ -49,6 +47,7 @@
             })   
 
             vm.load().then(function(){
+                vm.origin_quantity = vm.model.current_quantity
                 if(vm.model.elderlyId){
                     vm.selectedElderly = {_id: vm.model.elderlyId, name: vm.model.elderly_name};
                     vm.selectedDrug = {_id:vm.model.drugId,drug_no:vm.model.drug_no};
@@ -90,7 +89,11 @@
         function doSubmit() {
 
             if ($scope.theForm.$valid) {
-                vm.save();
+                vm.save(true).then(function(ret){
+                    vmh.psnService.drugStockEditLogInsert(vm.tenantId,vm.model._id,vm.origin_quantity,vm.model.current_quantity,vm.operated_by_name).then(function(ret){
+                         vm.returnBack();
+                    });
+                });
             }
             else {
                 if ($scope.utils.vtab(vm.tab1.cid)) {
