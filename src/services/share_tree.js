@@ -52,8 +52,9 @@ module.exports = {
                             var delta = this.request.body.where.delta || 0;
                             var f = (this.request.body.select || {}).format || 'MMDD(周E)';
                             var step = 7; //周段
+                            var dateFormat = 'YYYY-MM-DD';
 
-                            console.log(this.request.body);
+                            console.log('T0100:',this.request.body);
 
                             // var base = app.moment().add(delta*step,'days');
                             // console.log(base.day());
@@ -61,10 +62,10 @@ module.exports = {
                             // console.log(start.format('E'));
                             // console.log(start.format('YYYYMMDD'));
                             var start = app.moment().weekday(delta* step);
-                            var rows = [{_id: start.day(), name: start.format(f), value: start.format('L')}];
+                            var rows = [{_id: start.day(), name: start.format(f), value: start.format(dateFormat)}];
                             for(var i=1,len=step;i<len;i++) {
                                 var d = start.add(1, 'days');
-                                rows.push({_id: d.day(), name: d.format(f).replace(/周7/, '周日'), value: d.format('L')});
+                                rows.push({_id: d.day(), name: d.format(f).replace(/周7/, '周日'), value: d.format(dateFormat)});
                             }
                             console.log(rows);
                             this.body = app.wrapper.res.rows(rows);
