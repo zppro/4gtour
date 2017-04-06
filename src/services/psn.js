@@ -5118,7 +5118,8 @@ module.exports = {
                                     status: 1,
                                     elderlyId: elderlyId,
                                     drugId: drugId,
-                                    tenantId: tenantId
+                                    tenantId: tenantId,
+                                    unit:unit
                                 }
                             });
 
@@ -5181,16 +5182,14 @@ module.exports = {
                                         status: 1,
                                         elderlyId: drugInOutStock.elderlyId,
                                         drugId: drugInOutStock.drugId,
-                                        tenantId: drugInOutStock.tenantId
+                                        tenantId: drugInOutStock.tenantId,
+                                        unit:drugInOutStock.unit
                                     }
                                 });
-                                if (drugInOutStock.in_out_type == 0) {
-                                    drugStock.current_quantity = parseInt(drugStock.current_quantity) + parseInt(drugInOutStock.in_out_quantity);
-                                } else {
-                                    drugStock.current_quantity = parseInt(drugStock.current_quantity) - parseInt(drugInOutStock.in_out_quantity);
-                                }
+                                drugStock.current_quantity = parseInt(drugStock.current_quantity) + parseInt(drugInOutStock.in_out_quantity);
+                            
                                 yield drugStock.save();
-                                drugInOutStock.valid_flag = 0;
+                                drugInOutStock.valid_flag = false;
                                 yield drugInOutStock.save();
 
                             }

@@ -33,11 +33,12 @@
                         td.text-center {{::row.elderly_name}}
                         td {{::row.type|formatter:'type':vm.columns}}
                         td.text-center {{::row.in_out_quantity}}
-                        //- td.text-center {{::row.unit|formatter:'unit':vm.columns}}
+                        td.text-center {{::row.unit|formatter:'unit':vm.columns}}
+                        td.text-center {{::row.valid_flag|boolFilter}}
                         td
                             .btn-group
-                                a.btn.btn-primary.btn-xs(title="{{'button.REMOVE'|translate}}",ng-click="vm.drugOutStockInvalid(row._id)")
-                                    i.glyphicon.glyphicon-minus
+                                a.btn.btn-primary.btn-xs(title="{{'button.ABOLISH'|translate}}",ng-click="vm.drugOutStockInvalid(row)")
+                                    i.glyphicon.glyphicon-ban-circle
 
                     tr(ng-if="vm.paged.length==0")
                         td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}

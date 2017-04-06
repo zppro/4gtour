@@ -1541,26 +1541,26 @@
                                 label: '出库单',
                                 name: 'in_out_no',
                                 type: 'string',
-                                width: 80,
+                                width: 60,
                                 sortable: true
                             },
                             {
-                                label: '药品编码',
-                                name: 'drug_no',
+                                label: '老人',
+                                name: 'elderly_name',
                                 type: 'string',
-                                width: 100,
+                                width: 60,
                                 sortable: true
                             },
                             {
                                 label: '药品名称',
                                 name: 'drug_full_name',
                                 type: 'string',
-                                width: 100,
+                                width: 60,
                                 sortable: true
                             },
                             {
-                                label: '老人',
-                                name: 'elderly_name',
+                                label: '药品编码',
+                                name: 'drug_no',
                                 type: 'string',
                                 width: 80,
                                 sortable: true
@@ -1569,7 +1569,7 @@
                                 label: '药品去处',
                                 name: 'type',
                                 type: 'string',
-                                width: 60,
+                                width: 100,
                                 sortable: true,
                                 formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3014/object')
                             },
@@ -1577,17 +1577,25 @@
                                 label: '出库数量',
                                 name: 'in_out_quantity',
                                 type: 'number',
-                                width: 60,
+                                width: 80,
                                 sortable: true,
                             },
-                            // {
-                            //     label: '包装规格',
-                            //     name: 'unit',
-                            //     type: 'string',
-                            //     width: 60,
-                            //     sortable: true,
-                            //      formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3013/object')
-                            // }, 
+                            {
+                                label: '包装单位',
+                                name: 'unit',
+                                type: 'string',
+                                width: 60,
+                                sortable: true,
+                                 formatter: 'dictionary-remote:' + helper.remoteServiceUrl('share/dictionary/D3013/object')
+                            }, 
+                            {
+                                label: '是否有效',
+                                name: 'valid_flag',
+                                type: 'bool',
+                                width: 80,
+                                sortable: false
+                            },
+                            
                             {
                                 label: '操作',
                                 name: 'actions',
