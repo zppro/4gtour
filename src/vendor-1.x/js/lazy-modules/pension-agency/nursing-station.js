@@ -5,7 +5,7 @@
 
 (function() {
     'use strict';
-    
+
     angular
         .module('subsystem.pension-agency')
         .controller('NursingStationController', NursingStationController)
@@ -47,21 +47,20 @@
                 console.log(nodes);
                 return nodes;
             });
-            
+
 
             subscribeBedMonitor();
             processAlarmQueue();
         }
-
         function subscribeBedMonitor () {
             var channel = SocketManager.registerChannel(SOCKET_EVENTS.PSN.BED_MONITOR.$SOCKET_URL);
-            channel.on(SOCKET_EVENTS.SHARED.CONNECT, () => {
-                console.log('nursing-station socket connected')
+            channel.on(SOCKET_EVENTS.SHARED.CONNECT, function() {
+                console.log('nursing-station socket connected');
             });
-            channel.on(SOCKET_EVENTS.SHARED.DISCONNECT, () => {
-                console.log('nursing-station socket disconnected')
+            channel.on(SOCKET_EVENTS.SHARED.DISCONNECT, function() {
+                console.log('nursing-station socket disconnected');
             });
-            channel.off(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.ON_LINE).on(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.ON_LINE, (data) => {
+            channel.off(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.ON_LINE).on(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.ON_LINE, function(data) {
                 console.log('nursing-station socket ON_LINE =>', data);
                 // var bedMonitorStatus = vm.monitorStatus[data.bedMonitorName];
                 var elderlyId = vm.bedMonitorMappingElderly[data.bedMonitorName];
@@ -73,7 +72,7 @@
                     });
                 }
             });
-            channel.off(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.OFF_LINE).on(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.OFF_LINE, (data) => {
+            channel.off(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.OFF_LINE).on(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.OFF_LINE, function(data) {
                 console.log('nursing-station socket OFF_LINE =>', data);
                 var elderlyId = vm.bedMonitorMappingElderly[data.bedMonitorName];
                 var bedMonitorStatus = vm.elderlyStatusMonitor[elderlyId];
@@ -84,7 +83,7 @@
                     });
                 }
             });
-            channel.off(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.COME).on(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.COME, (data) => {
+            channel.off(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.COME).on(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.COME, function(data) {
                 console.log('nursing-station socket COME =>', data);
                 var elderlyId = vm.bedMonitorMappingElderly[data.bedMonitorName];
                 var bedMonitorStatus = vm.elderlyStatusMonitor[elderlyId];
@@ -95,7 +94,7 @@
                     });
                 }
             });
-            channel.off(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.LEAVE).on(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.LEAVE, (data) => {
+            channel.off(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.LEAVE).on(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.LEAVE, function(data) {
                 console.log('nursing-station socket LEAVE =>', data);
                 var elderlyId = vm.bedMonitorMappingElderly[data.bedMonitorName];
                 var bedMonitorStatus = vm.elderlyStatusMonitor[elderlyId];
@@ -106,7 +105,7 @@
                     })
                 }
             });
-            channel.off(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.ALARM_LEAVE_TIMEOUT).on(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.ALARM_LEAVE_TIMEOUT, (data) => {
+            channel.off(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.ALARM_LEAVE_TIMEOUT).on(SOCKET_EVENTS.PSN.BED_MONITOR.S2C.ALARM_LEAVE_TIMEOUT, function(data){
                 console.log('nursing-station socket ALARM_LEAVE_TIMEOUT =>', data);
                 var elderlyId = vm.bedMonitorMappingElderly[data.bedMonitorName];
                 console.log('on alarm elderlyId=>', elderlyId);
@@ -229,7 +228,7 @@
                 if(ret.value!='$document' && ret.value!='$closeButton' && ret.value!='$escape' ) {
                     console.log(ret);
                     var index = _.findIndex(vm.alarmQueue, function(o) {
-                       return o === alarm;
+                        return o === alarm;
                     });
                     if(index != -1) {
                         vm.alarmQueue.splice(index);
@@ -262,7 +261,7 @@
                 }
             });
         }
-        
+
     }
 
     NursingStationAlarmDialogController.$inject = ['$scope','ngDialog'];
@@ -350,7 +349,7 @@
                     return (results[0][o.relation_with] || {}).name + ':' + o.name + '(' + o.phone + ')'
                 }).join();
                 vm.nursingWorkerNames = _.map(results[2], function (o) {
-                   return (o.aggr_value || {}).name;
+                    return (o.aggr_value || {}).name;
                 }).join();
                 vm.nursingRecords = results[3];
             });
