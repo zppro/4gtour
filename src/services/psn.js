@@ -4859,13 +4859,14 @@ module.exports = {
 
                             var today = app.moment(app.moment().format('YYYY-MM-DD') + " 00:00:00");
                             var rows = yield app.modelFactory().model_query(app.models['psn_nursingRecord'], {
-                                select: 'exec_on name description duration assigned_worker confirmed_flag confirmed_on',
+                                select: 'exec_on name description duration assigned_worker confirmed_flag confirmed_on workItemId',
                                 where: {
                                     elderlyId: elderlyId,
                                     exec_on:  {$gte: today.toDate(), $lte: today.add(1, 'days').toDate()},
                                     tenantId: tenantId
-                                }
-                            }).populate('assigned_worker');
+                                },
+                                sort: 'exec_on'
+                            }).populate('assigned_worker').populate('workItemId');
                             console.log(rows);
                             this.body = app.wrapper.res.rows(rows);
                         }

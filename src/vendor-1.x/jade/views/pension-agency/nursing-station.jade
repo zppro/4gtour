@@ -82,10 +82,11 @@ script(type="text/ng-template", id="nursing-station-elderly.html")
                             th
                     tbody
                         tr(ng-repeat="row in vm.nursingRecords")
-                            td.text-center(width="80") {{::row.exec_on|date: 'HH:mm'}}
+                            td.text-center(ng-if="row.workItemId.repeat_type != 'A0001' " width="80") {{::row.exec_on|date: 'HH:mm'}}
+                            td.text-center(ng-if="row.workItemId.repeat_type == 'A0001' " width="80") {{::row.workItemId.repeat_type_name}}
                             td.text-left(width="445") {{::row.name}}
-                            td.text-center(width="80") {{::row.assigned_worker.name}}
-                            td.text-center(width="100") {{::row.confirmed_flag}}
+                            td.text-center(width="80") {{::row.assigned_worker.name }}
+                            td.text-center(width="100") {{::row.confirmed_flag|boolFilter}}
                             td
 script(type="text/ng-template", id="nursing-station-alarm.html")
     .ngdialog-title

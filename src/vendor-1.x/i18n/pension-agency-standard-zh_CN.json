@@ -290,7 +290,7 @@
       "DLG-ELDERLY-TH-EXEC_ON": "时间",
       "DLG-ELDERLY-TH-NAME": "项目",
       "DLG-ELDERLY-TH-ASSIGNED_WORKER": "护工",
-      "DLG-ELDERLY-TH-CONFIRM_FLAG": "确认完成"
+      "DLG-ELDERLY-TH-CONFIRM_FLAG": "完成情况"
     },
     "nursing-plan": {
       "TITLE": "养老机构-护理管理-护理计划-编排",
