@@ -4859,13 +4859,14 @@ module.exports = {
 
                             var today = app.moment(app.moment().format('YYYY-MM-DD') + " 00:00:00");
                             var rows = yield app.modelFactory().model_query(app.models['psn_nursingRecord'], {
-                                select: 'exec_on name description duration assigned_worker confirmed_flag confirmed_on',
+                                select: 'exec_on name description duration assigned_worker confirmed_flag confirmed_on workItemId',
                                 where: {
                                     elderlyId: elderlyId,
                                     exec_on:  {$gte: today.toDate(), $lte: today.add(1, 'days').toDate()},
                                     tenantId: tenantId
-                                }
-                            }).populate('assigned_worker');
+                                },
+                                sort: 'exec_on'
+                            }).populate('assigned_worker').populate('workItemId');
                             console.log(rows);
                             this.body = app.wrapper.res.rows(rows);
                         }
@@ -5218,7 +5219,8 @@ module.exports = {
                                     status: 1,
                                     elderlyId: elderlyId,
                                     drugId: drugId,
-                                    tenantId: tenantId
+                                    tenantId: tenantId,
+                                    unit:unit
                                 }
                             });
 
@@ -5281,16 +5283,14 @@ module.exports = {
                                         status: 1,
                                         elderlyId: drugInOutStock.elderlyId,
                                         drugId: drugInOutStock.drugId,
-                                        tenantId: drugInOutStock.tenantId
+                                        tenantId: drugInOutStock.tenantId,
+                                        unit:drugInOutStock.unit
                                     }
                                 });
-                                if (drugInOutStock.in_out_type == 0) {
-                                    drugStock.current_quantity = parseInt(drugStock.current_quantity) + parseInt(drugInOutStock.in_out_quantity);
-                                } else {
-                                    drugStock.current_quantity = parseInt(drugStock.current_quantity) - parseInt(drugInOutStock.in_out_quantity);
-                                }
+                                drugStock.current_quantity = parseInt(drugStock.current_quantity) + parseInt(drugInOutStock.in_out_quantity);
+                            
                                 yield drugStock.save();
-                                drugInOutStock.valid_flag = 0;
+                                drugInOutStock.valid_flag = false;
                                 yield drugInOutStock.save();
 
                             }

@@ -26,10 +26,19 @@
             vm.query();
         }
 
-        function drugOutStockInvalid(o){
-            console.log("==============================");
-            console.log(o);
-            vmh.psnService.drugOutStockInvalid(o);
+        function drugOutStockInvalid(row){
+            // console.log("==============================");
+            // console.log(o);
+            // vmh.psnService.drugOutStockInvalid(o);
+            if(row.valid_flag === false) return;
+            vm.removeDialog.openConfirm({
+                template: 'normalConfirmDialog.html',
+                className: 'ngdialog-theme-default'
+            }).then(function(){
+              vmh.psnService.drugOutStockInvalid(row._id).then(function(){
+                  vm.query();
+              });
+            })
         }
     }
     DrugOutStockDetailsController.$inject = ['$scope', 'ngDialog', 'vmh', 'entityVM'];
