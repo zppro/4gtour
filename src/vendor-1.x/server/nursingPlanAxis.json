@@ -15,6 +15,11 @@
     "width": "50"
   },
   {
+    "_id":"generate_nursing_content",
+     "name": "生成护理",
+    "width": "80"
+  },
+  {
     "_id": "nursing_level_name",
     "name": "护理等级",
     "width": "80"
@@ -26,7 +31,7 @@
   },
   {
     "_id": "nursing_workitems_customized",
-    "name": "护理项目(自定义)",
+    "name": "用药管理",
     "width": "120"
   },
   {

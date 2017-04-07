@@ -16,6 +16,11 @@
                         td.text-center {{vm.aggrData[row.trackedKey]['room_name']}}
                         td.text-center {{vm.aggrData[row.trackedKey]['bed_no']}}
                         td.text-center {{vm.aggrData[row.trackedKey]['elderly']['name']}}
+                        td.text-center 
+                            .btn-group(ng-if="vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']")
+                                a.btn.btn-primary.btn-sm(ng-click="vm.generateNursingRecord(row.trackedKey)")
+                                    i.glyphicon.glyphicon-list
+                                    span.ml-sm {{ vm.moduleTranslatePath('BTN-GEN-NURSING-CONTENT') | translate}}
                         td.text-center
                             div(ng-if="vm.aggrData[row.trackedKey]['elderly']['id']")
                                 span(ng-if="!vm.$editings[row.trackedKey]['nursingLevelId'] && vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']") {{vm.nursingLevelMap[vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']]}}
@@ -37,9 +42,6 @@
                                 a.btn.btn-primary.btn-sm(ng-click="vm.switchReadonlyWorkItems(row.trackedKey)" ng-class="{'btn-primary': !vm.$editings[row.trackedKey]['workItems'], 'btn-warning': vm.$editings[row.trackedKey]['workItems']}")
                                     i.glyphicon.glyphicon-pencil
                                     span.ml-sm {{ vm.$editings[row.trackedKey]['workItems'] ? vm.moduleTranslatePath('BTN-DO-READONLY-WORK-ITEMS') : vm.moduleTranslatePath('BTN-CANCEL-READONLY-WORK-ITEMS') | translate}}
-                                a.btn.btn-primary.btn-sm(ng-click="vm.generateNursingRecord(row.trackedKey)")
-                                    i.glyphicon.glyphicon-list
-                                    span.ml-sm {{ vm.moduleTranslatePath('BTN-GEN-NURSING-CONTENT') | translate}}
                             .split
                             .btn-group.work-item(ng-if="vm.aggrData[row.trackedKey]['elderly']['id'] && vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']", ng-repeat="workItem in vm.workItemMap[vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']]")
                                 .checkbox.c-checkbox
