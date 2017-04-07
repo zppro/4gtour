@@ -55,7 +55,7 @@ app.conf = {
         ignorePaths: ['/me-services/api/FourSeasonTour', '/me-services/api/proxyLogin', '/me-services/api/proxyLoginByToken', '/me-services/api/updateContent', '/me-services/api/reStatMemberInfo', '/me-services/mws', '/me-services/weixin/app','/me-services/het']
     },
     crossDomainInterceptor:{
-        toPaths:['/me-services']
+        toPaths:['/me-services/psn']
     },
     db: {
         //mssql数据库配置
