@@ -67,6 +67,7 @@
                 {name:'subsystem.pension-agency.enter-payment.js',files:['app/js/lazy-modules/pension-agency/enter-payment.js']},
                 {name:'subsystem.pension-agency.recharge.js',files:['app/js/lazy-modules/pension-agency/recharge.js']},
                 {name:'subsystem.pension-agency.exit-settlement.js',files:['app/js/lazy-modules/pension-agency/exit-settlement.js']},
+                {name:'subsystem.pension-agency.drug-use-item.js',files:['app/js/lazy-modules/pension-agency/drug-use-item.js']},
                 {name:'subsystem.pension-agency.drug-directory.js',files:['app/js/lazy-modules/pension-agency/drug-directory.js']},
                 {name:'subsystem.pension-agency.drug-stock.js',files:['app/js/lazy-modules/pension-agency/drug-stock.js']},
                 {name:'subsystem.pension-agency.drug-in-stock.js',files:['app/js/lazy-modules/pension-agency/drug-in-stock.js']},
