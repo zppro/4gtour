@@ -1288,8 +1288,8 @@
                             duration: 30
                         }
                         , blockUI: true,
-                        toList: ['nursingLevelId']
-                    })
+                         
+                    }),deps: helper.resolveFor2('angucomplete-alt')
                 }
             })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-directory', {

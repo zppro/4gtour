@@ -1,4 +1,4 @@
- .col-xs-2(ng-if="vm.switches.leftTree")
+.col-xs-2(ng-if="vm.switches.leftTree")
     .tree.tree-basic#tree1(ng-style="{height:vm.size.h-15}")
         ul
             li.repeat-modify(ng-repeat='node in vm.trees[0].treeData',ng-include="'tree-basic-renderer.html'",ng-init="tIndex=0;nIndex = $index")
