@@ -22,7 +22,10 @@ module.exports = function(ctx,name) {
             elderlyId: {type: mongoose.Schema.Types.ObjectId, ref: 'psn_elderly'},
             elderly_name: {type: String},
             work_items:[{
+                type: {type: String, minlength: 5, maxlength: 5, enum: ctx._.rest(ctx.dictionary.keys["D3017"])},
                 workItemId: {type: mongoose.Schema.Types.ObjectId, ref: 'psn_workItem'},
+                drugUseItemId: {type: mongoose.Schema.Types.ObjectId, ref: 'psn_drugUseItem'},
+                drugId: {type: mongoose.Schema.Types.ObjectId, ref: 'psn_drugUseItem'},
                 check_in_time: {type: Date, default: Date.now},
                 customize_flag: {type: Boolean, default: false}, // 自定义标识,一旦确定无法修改
                 name: {type: String, required: true, maxlength: 100},
