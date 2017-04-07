@@ -88,6 +88,86 @@
 }
 },
 {
+    method: 'sleepDevicews$removeDevice',
+    verb: 'post',
+    url: this.service_url_prefix + "/sleepDevicews$removeDevice",
+    handler: function (app, options) {
+        return function *(next) {
+           try {
+              console.log("body:");
+              console.log(this.request.body)
+            var ret = yield app.bed_monitor_provider.removeDevice(this.request.body.session.openid,this.request.body.deviceId,this.request.body.tenantId);
+              console.log("ret++++:",ret);
+              this.body = app.wrapper.res.ret(ret);
+          } catch (e) {
+            self.logger.error(e.message);
+            this.body = app.wrapper.res.error(e);
+        }
+        yield next;
+    };
+}
+},
+{
+    method: 'sleepDevicews$getDeviceDetails',
+    verb: 'post',
+    url: this.service_url_prefix + "/sleepDevicews$getDeviceDetails",
+    handler: function (app, options) {
+        return function *(next) {
+           try {
+              console.log("body:");
+              console.log(this.request.body)
+            var ret = yield app.bed_monitor_provider.getDeviceDetails(this.request.body.session.openid,this.request.body.devId,this.request.body.tenantId);
+              console.log("ret++++:",ret);
+              this.body = app.wrapper.res.ret(ret);
+          } catch (e) {
+            self.logger.error(e.message);
+            this.body = app.wrapper.res.error(e);
+        }
+        yield next;
+    };
+}
+},
+{
+    method: 'sleepDevicews$changeDeviceInfo',
+    verb: 'post',
+    url: this.service_url_prefix + "/sleepDevicews$changeDeviceInfo",
+    handler: function (app, options) {
+        return function *(next) {
+           try {
+              console.log("body:");
+              console.log(this.request.body)
+            var ret = yield app.bed_monitor_provider.changeDeviceInfo(this.request.body.session.openid,this.request.body.deviceInfo,this.request.body.tenantId);
+              console.log("ret++++:",ret);
+              this.body = app.wrapper.res.ret(ret);
+          } catch (e) {
+            self.logger.error(e.message);
+            this.body = app.wrapper.res.error(e);
+        }
+        yield next;
+    };
+}
+},
+{
+    method: 'sleepDevicews$isAttach',
+    verb: 'post',
+    url: this.service_url_prefix + "/sleepDevicews$isAttach",
+    handler: function (app, options) {
+        return function *(next) {
+           try {
+              console.log("body:");
+              console.log(this.request.body)
+             var ret = yield app.bed_monitor_provider.checkIsAttach(this.request.body.session.openid,this.request.body.deviceId,this.request.body.tenantId);
+              console.log("isAttach:",ret);
+              this.body = ret;
+          } catch (e) {
+            self.logger.error(e.message);
+            this.body = app.wrapper.res.error(e);
+        }
+        yield next;
+    };
+}
+},
+{
     method: 'sleepDevicews$test',
     verb: 'get',
     url: this.service_url_prefix + "/sleepDevicews$test",
@@ -95,8 +175,8 @@
         return function *(next) {
            try {
               // console.log("body:");
-              //console.log(this.request.body)
-              this.body = yield app.bed_monitor_provider.getDeviceInfo("oYoT70Fw1BPC-oTUI7-Q-NiHKOq8");
+              //console.log(this.request.body)"oYoT70Fw1BPC-oTUI7-Q-NiHKOq8"
+              yield app.bed_monitor_provider.getSleepBriefReport();
               this.body = "ok";
           } catch (e) {
             self.logger.error(e.message);
