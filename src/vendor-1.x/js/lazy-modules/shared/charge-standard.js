@@ -39,8 +39,13 @@
                 if (vm.selectBinding.standards.length > 0) {
                     return vmh.parallel([
                         vmh.extensionService.tenantChargeItemCustomizedAsTree(vm.model['tenantId'], PENSION_AGENCY_DEFAULT_CHARGE_STANDARD, vm._subsystem_),
-                        vmh.fetch(tenantService.query({_id: vm.model['tenantId']}, 'charge_standards'))
+                        
+                        vmh.fetch(tenantService.query({_id: vm.model['tenantId']}, 'charge_standards')),
+                        vmh.extensionService.tenantChargeItemNursingLevelAsTree(vm.model['tenantId'], PENSION_AGENCY_DEFAULT_CHARGE_STANDARD,vm._subsystem_)
+                        
                     ]).then(function (results) {
+                        console.log("==============00000000000000");
+                        console.log(results);
                         var tenantChargeStandard = _.find(results[1][0].charge_standards, function(o){
                             console.log(o.subsystem )
                             console.log(vm._subsystem_)
@@ -64,6 +69,10 @@
 
                         if(results[0].children.length>0) {
                             selectedStandard.children.push(results[0]);
+                        }
+
+                        if(results[2].children.length>0){
+                            selectedStandard.children.push(results[2]);
                         }
 
                         setCheckedChargeItems();

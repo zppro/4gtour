@@ -42,6 +42,77 @@ module.exports = {
                 }
             },
             {
+                method: 'tenantChargeItemNursingLevelAsTree',
+                verb: 'get',
+                url: this.service_url_prefix + "/tenantChargeItemNursingLevelAsTree/:id,:charge_standard,:subsystem",
+                handler: function (app, options) {
+                    console.log(3333333333333333333333);
+                    return function * (next) {
+                        console.log(3333333333333333333333);
+                        try {
+                            console.log(3333333333333333333333);
+                            var tenantId = this.params.id;
+                            var tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if (!tenant || tenant.status == 0) {
+                                this.body = app.wrapper.res.error({message: '无法找到租户!'});
+                                yield next;
+                                return;
+                            }
+                            var charge_standard = this.params.charge_standard;
+                            if (!charge_standard) {
+                                this.body = app.wrapper.res.error({message: '无法找到收费标准!'});
+                                yield next;
+                                return;
+                            }
+                            var subsytem = this.params.subsystem;
+                            if (!subsytem || !app.modelVariables[subsytem.toUpperCase()]) {
+                                this.body = app.wrapper.res.error({message: '无法找到子系统!'});
+                                yield next;
+                                return;
+                            }
+                            var where = {
+                                status: 1,
+                                tenantId: tenantId
+                            };
+                            // if(subsytem) {
+                            //     where['subsystem'] = subsytem;
+                            // }
+                            var chargeItems = yield app.modelFactory().model_query(app.models['psn_nursingLevel'], {
+                                where: where
+                            });
+                            var charge_standard_object = app._.find(tenant.charge_standards, function(o) {
+                               return o.charge_standard == charge_standard && o.subsystem == subsytem;
+                            });
+                            if(!charge_standard_object) {
+                                charge_standard = app.modelVariables[subsytem.toUpperCase()].DEFAULT_CHARGE_STANDARD
+                            }
+                            var ret = {
+                                _id: app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_PREFIX + app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_NURSING_LEVEL_CATAGORY._ID + '-' + charge_standard,
+                                name: app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_NURSING_LEVEL_CATAGORY.NAME,
+                                children: []
+                            };
+
+                            for (var i = 0; i < chargeItems.length; i++) {
+                                console.log(i);
+                                if ((app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_PREFIX + app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_NURSING_LEVEL_CATAGORY._ID + '-' + charge_standard) == ret._id){
+                                    ret.children.push({
+                                        _id: app.modelVariables[subsytem.toUpperCase()].CHARGE_ITEM_PREFIX + chargeItems[i]._id,
+                                        name: chargeItems[i].name,
+                                        data: {manual_seletable: true}
+                                    });
+                                }
+                            }
+                            console.log(ret);
+                            this.body = app.wrapper.res.ret(ret);
+                            
+                        } catch (error) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                    }
+                }
+            },
+            {
                 method: 'tenantChargeItemCustomizedAsTree',
                 verb: 'get',
                 url: this.service_url_prefix + "/tenantChargeItemCustomizedAsTree/:id,:charge_standard,:subsystem",

@@ -259,6 +259,7 @@
 
                 return {
                     tenantInfo: tenantInfo,
+                    tenantChargeItemNursingLevelAsTree: tenantChargeItemNursingLevelAsTree,
                     tenantChargeItemCustomizedAsTree: tenantChargeItemCustomizedAsTree,
                     saveTenantChargeItemCustomized: saveTenantChargeItemCustomized,
                     queryVoucherNo: queryVoucherNo,
@@ -272,6 +273,10 @@
 
                 function tenantInfo(tenantId,select) {
                     return $http.get(baseUrl + 'tenantInfo/' + tenantId + '/' + select);
+                }
+
+                function tenantChargeItemNursingLevelAsTree(tenantId, charge_standard, subsystem){
+                    return $http.get(baseUrl + 'tenantChargeItemNursingLevelAsTree/' + tenantId + ',' + charge_standard + ',' + subsystem);
                 }
 
                 function tenantChargeItemCustomizedAsTree(tenantId, charge_standard, subsystem){
