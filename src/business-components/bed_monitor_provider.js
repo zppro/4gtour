@@ -889,7 +889,7 @@ module.exports= {
             }
             catch (e) {
                 console.log(e);
-                self.logger.error(e.message);
+                self.logger.error(e);
                 self.isExecuting = false;
             }
         }).catch(self.ctx.coOnError);
