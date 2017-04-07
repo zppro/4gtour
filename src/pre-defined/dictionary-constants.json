@@ -34,6 +34,10 @@
   "D3016":{
     "LEAVE_BED_TIMEOUT":"A1000"
   },
+  "D3017":{
+    "NURSING_ITEM":"A0001",
+    "DRUG_USE_ITEM":"A0003"
+  },
   "TRV00": {
     "FEELING": "A0001",
     "ROUTE": "A0003"
