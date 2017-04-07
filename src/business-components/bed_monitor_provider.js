@@ -201,6 +201,48 @@ module.exports= {
         }).catch(self.ctx.coOnError);
 
     },
+     checkIsAttach: function (openId,deviceId,tenantId) {
+        var self = this;
+        return co(function*() {
+            try {
+                var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
+                    where: {
+                        open_id: openId,
+                        status: 1
+                    }
+                });
+                console.log('deviceId:',deviceId);
+                 console.log('tenantId:',tenantId);
+                var device = yield self.ctx.modelFactory().model_one(self.ctx.models['pub_bedMonitor'], {
+                    where: {
+                        name: deviceId,
+                        status: 1,
+                        tenantId:tenantId
+                    }
+                });
+                console.log('device:',device);
+                if(!device){
+                    return false;
+                }
+                carePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
+                        status:1,
+                        care_by: member._id,
+                        bedMonitorId: device._id,
+                        tenantId: tenantId
+                    });
+                console.log(carePerson);
+                if(!carePerson){
+                    return false;
+                }
+                return true;
+
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+            }
+        }).catch(self.ctx.coOnError);
+    },
     addDevice: function (deviceInfo, session, tenantId) {
         var self = this;
         return co(function *() {
@@ -214,7 +256,7 @@ module.exports= {
                 var age = deviceInfo.cpNewAge;
                 var carePerson;
                 var member;
-                if (deviceInfo.sex == "MALE") {
+                if (deviceInfo.sex == "男") {
                     cpNewGender = 0;
                     sex = DIC.D1006.MALE;
                 } else {
@@ -558,7 +600,7 @@ module.exports= {
         }).catch(self.ctx.coOnError);
 
     },
-    getSleepBriefReport: function (sessionId, devId) {
+    getSleepBriefReport: function (sessionId, devId) {//报表
         var self = this;
         return co(function *() {
             try {
@@ -569,13 +611,13 @@ module.exports= {
                 var ret = yield rp({
                     method: 'POST',
                     url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/devicews/getSleepBriefReport.json',
-                    // form:{sessionId:sessionId,devId:devId,startTime:startTime.unix(),endTime:endTime.unix()}
-                    form: {
-                        sessionId: '201703211139280000020107339802',
-                        devId: 'A1100123',
-                        startTime: startTime.unix(),
-                        endTime: endTime.unix()
-                    }
+                 form:{sessionId:sessionId,devId:devId,startTime:startTime.unix(),endTime:endTime.unix()}
+                    // form: {
+                    //     sessionId: '201703211139280000020107339802',
+                    //     devId: 'A1100123',
+                    //     startTime: startTime.unix(),
+                    //     endTime: endTime.unix()
+                    // }
                 });
                 ret = JSON.parse(ret);
                 console.log(ret);
@@ -583,16 +625,16 @@ module.exports= {
                 var value = ret.retValue;
                 var evalution = value.evalution;
                 if (evalution == '差') {
-                    evalution = 40 + Math.random() * 10;
+                    evalution = 40 + parseInt(Math.random() * 10);
                 } else if (evalution == '一般') {
-                    evalution = 60 + Math.random() * 10;
+                    evalution = 60 + parseInt(Math.random() * 10);
                 } else if (evalution == '良好') {
-                    evalution = 70 + Math.random() * 15;
+                    evalution = 70 + parseInt(Math.random() * 15);
                 }
                 else if (evalution == '优') {
-                    evalution = 85 + Math.random() * 10;
+                    evalution = 85 + parseInt(Math.random() * 10);
                 } else {
-                    evalution = 0 + Math.random() * 10;
+                    evalution = 0;
                 }
                 if (value.fallAsleepTime == '0') {
                     ret = {
