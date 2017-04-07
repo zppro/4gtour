@@ -175,8 +175,8 @@
         return function *(next) {
            try {
               // console.log("body:");
-              //console.log(this.request.body)
-              this.body = yield app.bed_monitor_provider.getDeviceInfo("oYoT70Fw1BPC-oTUI7-Q-NiHKOq8");
+              //console.log(this.request.body)"oYoT70Fw1BPC-oTUI7-Q-NiHKOq8"
+              yield app.bed_monitor_provider.getSleepBriefReport();
               this.body = "ok";
           } catch (e) {
             self.logger.error(e.message);
