@@ -324,46 +324,6 @@ module.exports= {
             }
         }).catch(self.ctx.coOnError);
     },
-    getDeviceInfo: function (openid) {
-        var self = this;
-        return co(function *() {
-            var deviceInfo = new Array();
-            var myDate = new Date();
-            var nowYear = myDate.getFullYear();
-            console.log(openid);
-            var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
-                where: {
-                    status: 1,
-                    open_id: openid
-                }
-            });
-            console.log(member);
-            var devices = yield self.ctx.modelFactory().model_query(self.ctx.models['pub_bedMonitor'], {
-                where: {
-                    status: 1,
-                    _id: {'$in': member.bindingBedMonitors}
-                }
-            });
-            for (var i = 0; i < devices.length; i++) {
-                var memberCarePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
-                    where: {
-                        status: 1,
-                        care_by: member._id,
-                        bedMonitorId: devices[i]._id
-                    }
-                });
-
-                deviceInfo[i] = {
-                    deviceId: devices[i].name,
-                    memberName: memberCarePerson.name,
-                    sex: memberCarePerson.sex,
-                    age: nowYear - Number(memberCarePerson.birthYear)
-                }
-                deviceInfo.unshift();
-            }
-            return deviceInfo;
-        }).catch(self.ctx.coOnError);
-    },
     removeDevice: function (openid, devId, tenantId) {
         var self = this;
         return co(function *() {
@@ -442,9 +402,8 @@ module.exports= {
     getDeviceInfo: function (openid) {
         var self = this;
         return co(function *() {
-            var deviceInfo = new Array();
-            var myDate = new Date();
-            var nowYear = myDate.getFullYear();
+            var devices = [];
+            var nowYear = self.ctx.moment().format('YYYY');
             console.log(openid);
             sessionId = yield self.getSession(openid);
             var sessionIsExpired = yield self.checkSessionIsExpired(sessionId);
@@ -473,22 +432,20 @@ module.exports= {
                         bedMonitorId: devices[i]._id
                     }
                 });
-                if (!memberCarePerson) {
-                    console.log("kong");
-                    return self.ctx.wrapper.res.ret({ret: 'null'});
+                if (memberCarePerson) {
+                    var sleepStatus = yield self.getSleepBriefReport(sessionId, devices[i].name);
+                    devices[i] = {
+                        deviceId: devices[i].name,
+                        memberName: memberCarePerson.name,
+                        sex: memberCarePerson.sex,
+                        age: Number(nowYear) - Number(memberCarePerson.birthYear),
+                        sleepStatus: sleepStatus.ret
+                    }
+                    devices.unshift();
                 }
-                var sleepStatus = yield self.getSleepBriefReport(sessionId, devices[i].name);
-                deviceInfo[i] = {
-                    deviceId: devices[i].name,
-                    memberName: memberCarePerson.name,
-                    sex: memberCarePerson.sex,
-                    age: nowYear - Number(memberCarePerson.birthYear),
-                    sleepStatus: sleepStatus.ret
-                }
-                deviceInfo.unshift();
-                console.log('deviceInfo:', deviceInfo);
             }
-            return self.ctx.wrapper.res.ret({ret: deviceInfo});
+            console.log('devices:', devices);
+            return self.ctx.wrapper.res.rows(devices);
         }).catch(self.ctx.coOnError);
     },
     changeDeviceInfo: function (openid, deviceInfo, tenantId) {
@@ -536,29 +493,7 @@ module.exports= {
             return self.ctx.wrapper.res.default();
         }).catch(self.ctx.coOnError);
     },
-    updateDeviceAttachState: function (sendData) {
-        var self = this;
-        return co(function*() {
-            try {
-                var ret = yield rp({
-                    method: 'POST',
-                    url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/devicews/updateDeviceAttachState',
-                    form: sendData,
-                    json: true
-                });
-
-                console.log(ret);
-                return self.ctx.wrapper.res.default();
-            }
-            catch (e) {
-                console.log(e);
-                self.logger.error(e.message);
-            }
-
-        }).catch(self.ctx.coOnError);
-
-    },
-    getSleepBriefReport: function (sessionId, devId) {
+    getSleepBriefReport: function (sessionId, devId) {//报表
         var self = this;
         return co(function *() {
             try {
@@ -569,13 +504,7 @@ module.exports= {
                 var ret = yield rp({
                     method: 'POST',
                     url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/devicews/getSleepBriefReport.json',
-                    // form:{sessionId:sessionId,devId:devId,startTime:startTime.unix(),endTime:endTime.unix()}
-                    form: {
-                        sessionId: '201703211139280000020107339802',
-                        devId: 'A1100123',
-                        startTime: startTime.unix(),
-                        endTime: endTime.unix()
-                    }
+                    form:{sessionId:sessionId,devId:devId,startTime:startTime.unix(),endTime:endTime.unix()}
                 });
                 ret = JSON.parse(ret);
                 console.log(ret);
@@ -583,16 +512,16 @@ module.exports= {
                 var value = ret.retValue;
                 var evalution = value.evalution;
                 if (evalution == '差') {
-                    evalution = 40 + Math.random() * 10;
+                    evalution = 40 + parseInt(Math.random() * 10);
                 } else if (evalution == '一般') {
-                    evalution = 60 + Math.random() * 10;
+                    evalution = 60 + parseInt(Math.random() * 10);
                 } else if (evalution == '良好') {
-                    evalution = 70 + Math.random() * 15;
+                    evalution = 70 + parseInt(Math.random() * 15);
                 }
                 else if (evalution == '优') {
-                    evalution = 85 + Math.random() * 10;
+                    evalution = 85 + parseInt(Math.random() * 10);
                 } else {
-                    evalution = 0 + Math.random() * 10;
+                    evalution = 0;
                 }
                 if (value.fallAsleepTime == '0') {
                     ret = {
@@ -641,7 +570,6 @@ module.exports= {
             }
         }).catch(self.ctx.coOnError);
     },
-
     userAuthenticate: function (member, token) {
         var self = this;
         return co(function*() {
@@ -673,7 +601,6 @@ module.exports= {
         }).catch(self.ctx.coOnError);
 
     },
-
     updateDevice: function (sendData, tryTimes) {
         var self = this;
         tryTimes = tryTimes === undefined ? 1 : tryTimes;
@@ -743,7 +670,6 @@ module.exports= {
         }).catch(self.ctx.coOnError);
 
     },
-
     updateDeviceAttachState: function (sendData) {
         var self = this;
         return co(function*() {
@@ -1003,7 +929,7 @@ module.exports= {
 
         }).catch(self.ctx.coOnError);
     },
-checkIsAttach: function (openId,deviceId,tenantId) {
+    checkIsAttach: function (openId,deviceId,tenantId) {
         var self = this;
         return co(function*() {
             try {

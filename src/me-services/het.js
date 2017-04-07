@@ -75,10 +75,8 @@
         return function *(next) {
            try {
               console.log("body:");
-              console.log(this.request.body)
-            var ret = yield app.bed_monitor_provider.getDeviceInfo(this.request.body.session.openid);
-              console.log("ret++++:",ret);
-              this.body = app.wrapper.res.ret(ret);
+              console.log(this.request.body);
+              this.body = yield app.bed_monitor_provider.getDeviceInfo(this.request.body.session.openid);
           } catch (e) {
             self.logger.error(e.message);
             this.body = app.wrapper.res.error(e);
