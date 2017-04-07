@@ -1183,6 +1183,115 @@
                     })
                 }
             })
+             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-use-item', {
+                url: '/drug-use-item',
+                title: '用药管理',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data:{
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'DRUG-USE-ITEM'//业务系统使用
+                }
+                , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'drug-use-item.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-use-item.list', {
+                url: '/list/:action/:nursingLevelId',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'drug-use-item-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'DrugUseItemGridController',
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'drug-use-item.list', {
+                        modelName: 'psn-workItem',
+                        searchForm: {"status": 1},
+                        serverPaging: true,
+                        columns: [
+                            {
+                                label: '护理等级',
+                                name: 'nursing_level_name',
+                                type: 'string',
+                                width: 80,
+                                formatter: {type:'populate' ,options: {path:'nursingLevelId', select:'-_id name'}}
+                            },
+                            {
+                                label: '项目名称',
+                                name: 'name',
+                                type: 'string',
+                                width: 100,
+                                sortable: true
+                            },
+                            {
+                                label: '重复',
+                                name: 'repeat',
+                                type: 'string',
+                                width: 100,
+                                sortable: true
+                            },
+                            {
+                                label: '时长(分)',
+                                name: 'duration',
+                                type: 'string',
+                                width: 60,
+                                sortable: true
+                            },
+                            {
+                                label: '护工确认',
+                                name: 'confirm_flag',
+                                type: 'bool',
+                                width: 80
+                            },
+                            {
+                                label: '提醒',
+                                name: 'remind_flag',
+                                type: 'bool',
+                                width: 80
+                            },
+                            {
+                                label: '提醒方式',
+                                name: 'remind_mode',
+                                type: 'bool',
+                                width: 80
+                            },
+                            {
+                                label: '提醒次数',
+                                name: 'remind_times',
+                                type: 'number',
+                                width: 80
+                            },
+                            {
+                                label: '',
+                                name: 'actions',
+                                sortable: false,
+                                width: 60
+                            }
+                        ],
+                        switches: {leftTree: true},
+                        toDetails: ['nursingLevelId']
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-use-item.details', {
+                url: '/details/:action/:_id/:nursingLevelId',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'drug-use-item-details.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'DrugUseItemDetailsController',
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'drug-use-item.details', {
+                        modelName: 'psn-workItem',
+                        model: {
+                            duration: 30
+                        }
+                        , blockUI: true,
+                        toList: ['nursingLevelId']
+                    })
+                }
+            })
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'drug-directory', {
                 url: '/drug-directory',
                 title: '药品管理',
