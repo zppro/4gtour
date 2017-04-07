@@ -511,7 +511,7 @@
                     nursingScheduleSaveAsTemplateWeekly: nursingScheduleSaveAsTemplateWeekly,
                     nursingScheduleByElderlyDaily: nursingScheduleByElderlyDaily,
                     nursingPlansByRoom: nursingPlansByRoom,
-                    nursingPlanSaveWorkItem: nursingPlanSaveWorkItem,
+                    nursingPlanSaveNursingItem: nursingPlanSaveNursingItem,
                     nursingPlanSaveRemark: nursingPlanSaveRemark,
                     nursingRecordGenerate: nursingRecordGenerate,
                     nursingRecordsByElderlyToday: nursingRecordsByElderlyToday,
@@ -742,8 +742,8 @@
                     return $http.post(baseUrl + 'nursingPlansByRoom', {tenantId: tenantId, elderlySelectArray: elderlySelectArray, nursingPlanSelectArray: nursingPlanSelectArray});
                 }
 
-                function nursingPlanSaveWorkItem(tenantId, elderlyId, work_item_check_info) {
-                    return $http.post(baseUrl + 'nursingPlanSaveWorkItem', {tenantId: tenantId, elderlyId: elderlyId, work_item_check_info: work_item_check_info});
+                function nursingPlanSaveNursingItem(tenantId, elderlyId, work_item_check_info) {
+                    return $http.post(baseUrl + 'nursingPlanSaveNursingItem', {tenantId: tenantId, elderlyId: elderlyId, work_item_check_info: work_item_check_info});
                 }
 
                 function nursingPlanSaveRemark(tenantId, elderlyId, remark) {

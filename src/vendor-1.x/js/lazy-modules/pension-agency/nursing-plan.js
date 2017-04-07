@@ -163,7 +163,7 @@
             var elderlyId = vm.aggrData[trackedKey]['elderly'].id;
             var key = trackedKey + '$' + vm.aggrData[trackedKey]['elderly']['nursingLevelId'];
             var work_item_check_info = { id: workItemId, checked: vm.work_items[key][workItemId]};
-            vmh.psnService.nursingPlanSaveWorkItem(vm.tenantId, elderlyId, work_item_check_info);
+            vmh.psnService.nursingPlanSaveNursingItem(vm.tenantId, elderlyId, work_item_check_info);
         }
 
         function addNursingPlanRemark (trackedKey) {

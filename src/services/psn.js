@@ -4426,9 +4426,9 @@ module.exports = {
                 }
             },
             {
-                method: 'nursingPlanSaveWorkItem',
+                method: 'nursingPlanSaveNursingItem',
                 verb: 'post',
-                url: this.service_url_prefix + "/nursingPlanSaveWorkItem", //为老人保存一条护理类目
+                url: this.service_url_prefix + "/nursingPlanSaveNursingItem", //为老人保存一条护理类目
                 handler: function (app, options) {
                     return function* (next) {
                         var tenant, elderly, workItem, nursingPlan;
@@ -4459,6 +4459,7 @@ module.exports = {
                             }
 
                             var toProcessWorkItem = workItem.toObject();
+                            toProcessWorkItem.type = DIC.D3017.NURSING_ITEM;
                             toProcessWorkItem.workItemId = toProcessWorkItemId;
 
                             var isRemoved = !workItemCheckInfo.checked;
@@ -4472,9 +4473,7 @@ module.exports = {
                                     tenantId: tenantId
                                 }
                             });
-
-
-
+ 
                             if (!elderlyNursingPlan) {
                                 if (!isRemoved) {
 
