@@ -1,8 +1,4 @@
-.col-xs-2(ng-if="vm.switches.leftTree")
-    .tree.tree-basic#tree1(ng-style="{height:vm.size.h-15}")
-        ul
-            li.repeat-modify(ng-repeat='node in vm.trees[0].treeData',ng-include="'tree-basic-renderer.html'",ng-init="tIndex=0;nIndex = $index")
-.text-center(ng-class='{"col-xs-10":vm.switches.leftTree,"col-xs-12":!vm.switches.leftTree}')
+.col-xs-12.text-center
     .row
         form.form-search
             .input-group.pull-right.page-search
@@ -29,8 +25,9 @@
                                 label
                                     input(type='checkbox' data="trBubble" ng-model="row.checked" )
                                     span.fa.fa-check(data="trBubble")
-                        td {{::row.nursingLevelId.name}}
-                        td {{::row.name}}
+                        td {{::row.elderly_name}}
+                        td {{::row.full_name}}
+                        td {{::row.drug_no}}
                         td {{::row.repeat_type_name }}{{row.repeat_values | repeatInfoCombo: row.repeat_start}}
                         td {{::row.duration}}
                         td {{::row.confirm_flag|boolFilter}}

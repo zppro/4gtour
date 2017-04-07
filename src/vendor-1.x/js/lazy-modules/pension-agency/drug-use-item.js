@@ -23,25 +23,6 @@
 
         function init() {
             vm.init({ removeDialog: ngDialog });
-
-            if (vm.switches.leftTree) {
-                vmh.shareService.tmp('T3001/psn-nursingLevel', 'name', vm.treeFilterObject).then(function(rows) {
-                    var treeNodes = _.map(rows, function(row) {
-                        return row
-                    });
-                    treeNodes.unshift({ _id: '', name: '全部' });
-                    vm.trees = [new vmh.treeFactory.sTree('tree1', treeNodes, { mode: 'grid' })];
-                    vm.trees[0].selectedNode = vm.trees[0].findNodeById($scope.$stateParams.nursingLevelId);
-                });
-
-                $scope.$on('tree:node:select', function($event, node) {
-                    var selectNodeId = node._id;
-                    if ($scope.$stateParams.nursingLevelId != selectNodeId) {
-                        $scope.$state.go(vm.viewRoute(), { nursingLevelId: selectNodeId });
-                    }
-                });
-            }
-
             vm.query();
         }
     }
@@ -52,11 +33,6 @@
 
         var vm = $scope.vm = vm;
         $scope.utils = vmh.utils.v;
-        vm.queryElderly = queryElderly;
-        vm.selectElerly = selectElerly;
-        vm.queryDrug = queryDrug;
-        vm.selectDrug = selectDrug;
-
         init();
 
         function init() {
@@ -64,6 +40,10 @@
             vm.init({ removeDialog: ngDialog });
 
             vm.doSubmit = doSubmit;
+            vm.queryElderly = queryElderly;
+            vm.selectElerly = selectElerly;
+            vm.queryDrug = queryDrug;
+            vm.selectDrug = selectDrug;
 
             vm.tab1 = { cid: 'contentTab1' };
 
@@ -83,36 +63,40 @@
                 if (vm.model.repeat_values && vm.model.repeat_values.length > 0) {
                     vm.repeat_values = vm.model.repeat_values.join();
                 }
+                if(vm.model.elderlyId){
+                    vm.selectedElderly = {_id: vm.model.elderlyId, name: vm.model.elderly_name};
+                    vm.selectedDrug = {_id:vm.model.drugId,full_name:vm.model.full_name};
+                }
             });
         }
 
         function queryElderly(keyword) {
             return vmh.fetch(vmh.psnService.queryElderly(vm.tenantId, keyword, {
-                  live_in_flag: true,
-                  // sbegin_exit_flow: {'$in':[false,undefined]}
+                live_in_flag: true,
+                // sbegin_exit_flow: {'$in':[false,undefined]}
             }, 'name'));
         }
 
         function selectElerly(o) {
-            if(o){
+            if (o) {
                 // vm.model.enter_code = o.originalObject.enter_code;
                 vm.model.elderlyId = o.originalObject._id;
                 vm.model.elderly_name = o.originalObject.name;
             }
         }
-         
+
         function queryDrug(keyword) {
             return vmh.fetch(vmh.psnService.queryDrug(vm.tenantId, keyword, {}, 'drug_no full_name'));
         }
 
         function selectDrug(o) {
-            if(o){
+            if (o) {
                 vm.model.drugId = o.originalObject._id;
                 vm.model.drug_no = o.originalObject.drug_no;
-                vm.model.drug_full_name = o.originalObject.full_name.split("--")[0];
+                vm.model.full_name = o.originalObject.full_name.split("--")[0];
             }
         }
-        
+
         function doSubmit() {
             var repeat_values = vm.repeat_values;
             if (repeat_values) {
