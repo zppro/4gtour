@@ -1713,6 +1713,7 @@
                     }
                 },
                 data:{
+                    treeFilterObject: {"status": 1}, //使用tmp时的过滤
                     func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'WORK-ITEM'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'work-item.js')
@@ -1989,8 +1990,9 @@
                     }
                 },
                 data: {
-                    func_id:MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'ROOM',//业务系统使用
-                    selectFilterObject: {"districts": {"status": 1}}
+                    selectFilterObject: {"districts": {"status": 1}},
+                    treeFilterObject: {"status": 1}, //使用tmp时的过滤
+                    func_id:MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'ROOM'//业务系统使用
                 }
                 , resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.PENSION_AGENCY + 'room.js')
             })
