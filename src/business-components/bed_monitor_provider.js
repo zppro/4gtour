@@ -214,7 +214,7 @@ module.exports= {
                 var age = deviceInfo.cpNewAge;
                 var carePerson;
                 var member;
-                if (deviceInfo.sex == "MALE") {
+                if (deviceInfo.sex == "男") {
                     cpNewGender = 0;
                     sex = DIC.D1006.MALE;
                 } else {
@@ -1001,6 +1001,48 @@ module.exports= {
                 self.logger.error(e.message);
             }
 
+        }).catch(self.ctx.coOnError);
+    },
+checkIsAttach: function (openId,deviceId,tenantId) {
+        var self = this;
+        return co(function*() {
+            try {
+                var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
+                    where: {
+                        open_id: openId,
+                        status: 1
+                    }
+                });
+                console.log('deviceId:',deviceId);
+                 console.log('tenantId:',tenantId);
+                var device = yield self.ctx.modelFactory().model_one(self.ctx.models['pub_bedMonitor'], {
+                    where: {
+                        name: deviceId,
+                        status: 1,
+                        tenantId:tenantId
+                    }
+                });
+                console.log('device:',device);
+                if(!device){
+                    return false;
+                }
+                carePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
+                        status:1,
+                        care_by: member._id,
+                        bedMonitorId: device._id,
+                        tenantId: tenantId
+                    });
+                console.log(carePerson);
+                if(!carePerson){
+                    return false;
+                }
+                return true;
+
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+            }
         }).catch(self.ctx.coOnError);
     }
 
