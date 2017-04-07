@@ -425,6 +425,7 @@ module.exports= {
             });
 
             for (var i = 0; i < devices.length; i++) {
+
                 var memberCarePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
                     where: {
                         status: 1,
@@ -432,6 +433,7 @@ module.exports= {
                         bedMonitorId: devices[i]._id
                     }
                 });
+                self.info('memberCarePerson:' + memberCarePerson);
                 if (memberCarePerson) {
                     var sleepStatus = yield self.getSleepBriefReport(sessionId, devices[i].name);
                     devices[i] = {
