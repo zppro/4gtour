@@ -402,52 +402,58 @@ module.exports= {
     getDeviceInfo: function (openid) {
         var self = this;
         return co(function *() {
-            var devices = [];
-            var nowYear = self.ctx.moment().format('YYYY');
-            console.log(openid);
-            sessionId = yield self.getSession(openid);
-            var sessionIsExpired = yield self.checkSessionIsExpired(sessionId);
-            if (sessionIsExpired) {
-                sessionId = yield self.login(sessionId);
-            }
-            var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
-                where: {
-                    status: 1,
-                    open_id: openid
+            try{
+                var devices = [];
+                var nowYear = self.ctx.moment().format('YYYY');
+                console.log(openid);
+                sessionId = yield self.getSession(openid);
+                var sessionIsExpired = yield self.checkSessionIsExpired(sessionId);
+                if (sessionIsExpired) {
+                    sessionId = yield self.login(sessionId);
                 }
-            });
-            console.log(member);
-            var devices = yield self.ctx.modelFactory().model_query(self.ctx.models['pub_bedMonitor'], {
-                where: {
-                    status: 1,
-                    _id: {'$in': member.bindingBedMonitors}
-                }
-            });
-
-            for (var i = 0; i < devices.length; i++) {
-
-                var memberCarePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
+                var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
                         status: 1,
-                        care_by: member._id,
-                        bedMonitorId: devices[i]._id
+                        open_id: openid
                     }
                 });
-                self.info('memberCarePerson:' + memberCarePerson);
-                if (memberCarePerson) {
-                    var sleepStatus = yield self.getSleepBriefReport(sessionId, devices[i].name);
-                    devices[i] = {
-                        deviceId: devices[i].name,
-                        memberName: memberCarePerson.name,
-                        sex: memberCarePerson.sex,
-                        age: Number(nowYear) - Number(memberCarePerson.birthYear),
-                        sleepStatus: sleepStatus.ret
+                console.log(member);
+                var devices = yield self.ctx.modelFactory().model_query(self.ctx.models['pub_bedMonitor'], {
+                    where: {
+                        status: 1,
+                        _id: {'$in': member.bindingBedMonitors}
                     }
-                    devices.unshift();
+                });
+
+                for (var i = 0; i < devices.length; i++) {
+
+                    var memberCarePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
+                        where: {
+                            status: 1,
+                            care_by: member._id,
+                            bedMonitorId: devices[i]._id
+                        }
+                    });
+                    self.logger.info('memberCarePerson:' + memberCarePerson);
+                    if (memberCarePerson) {
+                        var sleepStatus = yield self.getSleepBriefReport(sessionId, devices[i].name);
+                        devices[i] = {
+                            deviceId: devices[i].name,
+                            memberName: memberCarePerson.name,
+                            sex: memberCarePerson.sex,
+                            age: Number(nowYear) - Number(memberCarePerson.birthYear),
+                            sleepStatus: sleepStatus.ret
+                        }
+                        devices.unshift();
+                    }
                 }
+                console.log('devices:', devices);
+                return self.ctx.wrapper.res.rows(devices);
+            } catch (e) {
+                console.log(e);
+                self.logger.error(e);
+                self.isExecuting = false;
             }
-            console.log('devices:', devices);
-            return self.ctx.wrapper.res.rows(devices);
         }).catch(self.ctx.coOnError);
     },
     changeDeviceInfo: function (openid, deviceInfo, tenantId) {
