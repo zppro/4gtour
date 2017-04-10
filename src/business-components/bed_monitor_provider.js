@@ -110,7 +110,7 @@ module.exports= {
         return co(function*() {
             try {
                 if (!sessionId || typeof sessionId !== 'string') {
-                    return false;
+                    return true;
                 }
 
                 var ret = yield rp({
