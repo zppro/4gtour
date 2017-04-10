@@ -428,6 +428,7 @@ module.exports= {
                        care_by: member._id,
                     }
                 }).populate('bedMonitorId', 'name');
+                self.logger.info('memberCarePersons:' + JSON.stringify(memberCarePersons));
                 for (var i = 0, len = memberCarePersons.length, memberCarePerson; i < len; i++) {
                     memberCarePerson = memberCarePersons[i];
                     // var device = yield self.ctx.modelFactory().model_one(self.ctx.models['pub_bedMonitor'], {
@@ -438,10 +439,10 @@ module.exports= {
                     // });
                     self.logger.info('device name:' + memberCarePerson.bedMonitorId.name);
                     self.logger.info('getDeviceInfo sessionId:' + (sessionId || 'null or undefined'));
-                    if (device) {
+                    if (memberCarePerson.bedMonitorId.name) {
                         var sleepStatus = yield self.getSleepBriefReport(sessionId, memberCarePerson.bedMonitorId.name);
                         var memberCarePerson = {
-                            deviceId: device.name,
+                            deviceId: memberCarePerson.bedMonitorId.name,
                             memberName: memberCarePerson.name,
                             sex: memberCarePerson.sex,
                             age: Number(nowYear) - Number(memberCarePerson.birthYear),
