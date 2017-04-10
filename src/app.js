@@ -470,6 +470,8 @@ co(function*() {
 
 
     console.log('listening...');
+
+    // console.log('elderly:', yield  app.modelFactory().model_one(app.models['psn_nursingRecord']).populate('elderlyId', 'birthday').populate('roomId', 'name floor').populate('assigned_worker', 'name'));
     
     // console.log('test app.spu_service');
     // var member1 = yield app.modelFactory().model_query(app.models['het_member']);

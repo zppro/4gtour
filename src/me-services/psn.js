@@ -25,9 +25,9 @@ module.exports = {
 
         this.actions = [
             {
-                method: 'workitem$fetch',
+                method: 'robot$workitem$fetch',
                 verb: 'post',
-                url: this.service_url_prefix + "/workitem/fetch",
+                url: this.service_url_prefix + "/robot/workitem/fetch",
                 handler: function (app, options) {
                     return function *(next) {
                         try {
@@ -36,6 +36,10 @@ module.exports = {
                             self.logger.info("robot_code:" +  robot_code);
                             console.log("body:", this.request.body);
                             self.logger.info("body:" +  this.request.body);
+                            var robot;
+                            if (this.robot_code) {
+
+                            }
                             this.body = app.wrapper.res.rows([]);
                         } catch (e) {
                             self.logger.error(e.message);
@@ -46,9 +50,32 @@ module.exports = {
                 }
             },
             {
-                method: 'workitem$checkin',
+                method: 'robot$workitem$exec',
                 verb: 'post',
-                url: this.service_url_prefix + "/workitem/checkin",
+                url: this.service_url_prefix + "/robot/workitem/exec",
+                handler: function (app, options) {
+                    return function *(next) {
+                        try {
+                            var robot_code = this.robot_code  || 'not found';
+                            console.log("robot_code:", robot_code);
+                            self.logger.info("robot_code:" +  robot_code);
+                            console.log("body:", this.request.body);
+                            self.logger.info("body:" +  this.request.body);
+                            var workItemId = this.request.body.workItemId;
+                            console.log('workItemId:', workItemId);
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
+            {
+                method: 'robot$workitem$confirm',
+                verb: 'post',
+                url: this.service_url_prefix + "/robot/workitem/confirm",
                 handler: function (app, options) {
                     return function *(next) {
                         try {
