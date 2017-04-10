@@ -366,10 +366,10 @@ module.exports= {
             var myDate = new Date();
             var nowYear = myDate.getFullYear();
             console.log(openid);
-            sessionId = yield self.getSession(openid);
+            var sessionId = yield self.getSession(openid);
             var sessionIsExpired = yield self.checkSessionIsExpired(sessionId);
             if (sessionIsExpired) {
-                sessionId = yield self.login(sessionId);
+                sessionId = yield self.login(openid);
             }
             var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                 where: {
@@ -410,10 +410,10 @@ module.exports= {
                 var carePersons = [];
                 var nowYear = self.ctx.moment().format('YYYY');
                 console.log(openid);
-                sessionId = yield self.getSession(openid);
+                var sessionId = yield self.getSession(openid);
                 var sessionIsExpired = yield self.checkSessionIsExpired(sessionId);
                 if (sessionIsExpired) {
-                    sessionId = yield self.login(sessionId);
+                    sessionId = yield self.login(openid);
                 }
                 var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
@@ -774,6 +774,7 @@ module.exports= {
                     return o.id;
                 });
                 // 保证各个tenant作为member的session
+                var tenantId;
                 for (var i = 0, len = tenantIds.length; i < len; i++) {
                     tenantId = tenantIds[i];
                     var isRegist = yield self.checkIsRegist(tenantId);
