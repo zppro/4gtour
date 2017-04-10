@@ -31,34 +31,51 @@ module.exports = {
                 handler: function (app, options) {
                     return function *(next) {
                         try {
-                            var robot_code = this.robot_code  || 'not found';
+                            var robot_code = this.robot_code;
                             console.log("robot_code:", robot_code);
-                            self.logger.info("robot_code:" +  robot_code);
+                            self.logger.info("robot_code:" +  (robot_code || 'not found'));
                             console.log("body:", this.request.body);
                             self.logger.info("body:" +  this.request.body);
-                            var robot, tenantId;
-                            if (this.robot_code) {
-                                robot = yield app.modelFactory().model_one(app.models['pub_robot'], {
-                                    where:{
-                                        code: robot_code
-                                    }
-                                });
-                                // 通过机器人->房间->老人
-                                tenantId = robot.tenantId;
-                                var today = app.moment(app.moment().format('YYYY-MM-DD') + " 00:00:00");
-                                var rows = yield app.modelFactory().model_query(app.models['psn_nursingRecord'], {
-                                    select: 'exec_on executed_flag name description duration assigned_worker confirmed_flag confirmed_on workItemId',
-                                    where: {
-                                        elderlyId: elderlyId,
-                                        exec_on:  {$gte: today.toDate(), $lte: today.add(1, 'days').toDate()},
-                                        tenantId: tenantId
-                                    },
-                                    sort: 'exec_on'
-                                }).populate('assigned_worker').populate('workItemId');
-                                console.log(rows);
-                                
+                            var robot, tenantId, rooms, roomIds;
+                            robot = yield app.modelFactory().model_one(app.models['pub_robot'], {
+                                where:{
+                                    status: 1,
+                                    code: robot_code
+                                }
+                            });
+                            if (!robot) {
+                                this.body = app.wrapper.res.error({message: '无效的机器人编号'});
                             }
-                            this.body = app.wrapper.res.rows([]);
+
+                            // 通过机器人->房间->护理等级
+                            tenantId = robot.tenantId;
+
+                            rooms = yield app.modelFactory().model_query(app.models['psn_room'], {
+                                select: '_id',
+                                where: {
+                                    roomId: roomId,
+                                    tenantId: tenantId
+                                },
+                                sort: 'exec_on'
+                            });
+
+                            roomIds = app._.map(rooms, function (o) {
+                                return o._id;
+                            });
+
+                            var today = app.moment(app.moment().format('YYYY-MM-DD') + " 00:00:00");
+                            var rows = yield app.modelFactory().model_query(app.models['psn_nursingRecord'], {
+                                select: 'exec_on executed_flag name description duration assigned_worker confirmed_flag confirmed_on workItemId',
+                                where: {
+                                    roomId: {$in: roomIds},
+                                    robots: {$elemMatch: robot._id},
+                                    tenantId: tenantId
+                                },
+                                sort: 'exec_on'
+                            }).populate('assigned_worker').populate('workItemId');
+                            console.log(rows);
+
+                            this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -76,11 +93,35 @@ module.exports = {
                         try {
                             var robot_code = this.robot_code  || 'not found';
                             console.log("robot_code:", robot_code);
-                            self.logger.info("robot_code:" +  robot_code);
+                            self.logger.info("robot_code:" +  (robot_code || 'not found'));
                             console.log("body:", this.request.body);
                             self.logger.info("body:" +  this.request.body);
-                            var workItemId = this.request.body.workItemId;
-                            console.log('workItemId:', workItemId);
+                            var nursingRecordId = this.request.body.nursingRecordId;
+                            console.log('nursingRecordId:', nursingRecordId);
+
+                            var robot, tenantId, nursingRecord, roomIds;
+                            robot = yield app.modelFactory().model_one(app.models['pub_robot'], {
+                                where:{
+                                    status: 1,
+                                    code: robot_code
+                                }
+                            });
+                            if (!robot) {
+                                this.body = app.wrapper.res.error({message: '无效的机器人编号'});
+                                return;
+                            }
+
+                            // 通过机器人->房间->护理等级
+                            tenantId = robot.tenantId;
+                            nursingRecord = yield app.modelFactory().model_read(app.models['psn_nursingRecord'], nursingRecordId);
+                            if (!nursingRecord) {
+                                this.body = app.wrapper.res.error({message: '无效的服务项目记录'});
+                                return;
+                            }
+
+                            nursingRecord.executed_flag = true;
+                            yield nursingRecord.save();
+
                             this.body = app.wrapper.res.default();
                         } catch (e) {
                             self.logger.error(e.message);
@@ -99,9 +140,37 @@ module.exports = {
                         try {
                             var robot_code = this.robot_code  || 'not found';
                             console.log("robot_code:", robot_code);
-                            self.logger.info("robot_code:" +  robot_code);
+                            self.logger.info("robot_code:" +  (robot_code || 'not found'));
                             console.log("body:", this.request.body);
                             self.logger.info("body:" +  this.request.body);
+                            var nursingRecordId = this.request.body.nursingRecordId;
+                            console.log('nursingRecordId:', nursingRecordId);
+
+                            var robot, tenantId, nursingRecord, roomIds;
+                            robot = yield app.modelFactory().model_one(app.models['pub_robot'], {
+                                where:{
+                                    status: 1,
+                                    code: robot_code
+                                }
+                            });
+                            if (!robot) {
+                                this.body = app.wrapper.res.error({message: '无效的机器人编号'});
+                                return;
+                            }
+
+                            // 通过机器人->房间->护理等级
+                            tenantId = robot.tenantId;
+                            nursingRecord = yield app.modelFactory().model_read(app.models['psn_nursingRecord'], nursingRecordId);
+                            if (!nursingRecord) {
+                                this.body = app.wrapper.res.error({message: '无效的服务项目记录'});
+                                return;
+                            }
+
+                            nursingRecord.confirmed_flag = true;
+                            nursingRecord.confirmed_on = app.moment();
+
+                            yield nursingRecord.save();
+
                             this.body = app.wrapper.res.default();
                         } catch (e) {
                             self.logger.error(e.message);
