@@ -454,6 +454,7 @@ co(function*() {
         router.use(o, authApp(app));
     });
     _.each(app.conf.authAppRobot.toPaths,function(o){
+        console.log(o);
         router.use(o, authAppRobot(app));
     });
     app.use(router.routes())
