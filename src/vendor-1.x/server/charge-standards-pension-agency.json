@@ -40,24 +40,6 @@
         ]
       },
       {
-        "_id": "ci.pension-agency.NURSING-S1",
-        "name": "护理费",
-        "children": [
-          {
-            "_id": "ci.pension-agency.nursing-s1.SELF-CARE",
-            "name": "自理老人"
-          },
-          {
-            "_id": "ci.pension-agency.nursing-s1.DEVICE-AIDED",
-            "name": "介助老人(半失能/半失智)"
-          },
-          {
-            "_id": "ci.pension-agency.nursing-s1.NURSING-CARD",
-            "name": "介护老人(失能/失智)"
-          }
-        ]
-      },
-      {
         "_id": "ci.pension-agency.OTHER-S1",
         "name": "其他费用",
         "children": [
