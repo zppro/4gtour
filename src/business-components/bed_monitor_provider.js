@@ -427,23 +427,24 @@ module.exports= {
                        status: 1,
                        care_by: member._id,
                     }
-                });
-                for (var i = 0; i < memberCarePersons.length; i++) {
-
-                    var device = yield self.ctx.modelFactory().model_one(self.ctx.models['pub_bedMonitor'], {
-                        where: {
-                            status: 1,
-                            _id:memberCarePersons[i].bedMonitorId
-                        }
-                    });
-                    self.logger.info('device:' + device);
+                }).populate('bedMonitorId', 'name');
+                for (var i = 0, len = memberCarePersons.length, memberCarePerson; i < len; i++) {
+                    memberCarePerson = memberCarePersons[i];
+                    // var device = yield self.ctx.modelFactory().model_one(self.ctx.models['pub_bedMonitor'], {
+                    //     where: {
+                    //         status: 1,
+                    //         _id:memberCarePersons[i].bedMonitorId
+                    //     }
+                    // });
+                    self.logger.info('device name:' + memberCarePerson.bedMonitorId.name);
+                    self.logger.info('getDeviceInfo sessionId:' + (sessionId || 'null or undefined'));
                     if (device) {
-                        var sleepStatus = yield self.getSleepBriefReport(sessionId, device.name);
-                        memberCarePerson = {
+                        var sleepStatus = yield self.getSleepBriefReport(sessionId, memberCarePerson.bedMonitorId.name);
+                        var memberCarePerson = {
                             deviceId: device.name,
-                            memberName: memberCarePersons[i].name,
-                            sex: memberCarePersons[i].sex,
-                            age: Number(nowYear) - Number(memberCarePersons[i].birthYear),
+                            memberName: memberCarePerson.name,
+                            sex: memberCarePerson.sex,
+                            age: Number(nowYear) - Number(memberCarePerson.birthYear),
                             sleepStatus: sleepStatus.ret
                         }
                         carePersons.push(memberCarePerson);
