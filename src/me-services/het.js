@@ -175,7 +175,20 @@
                          try {
                              // console.log("body:");
                              //console.log(this.request.body)"oYoT70Fw1BPC-oTUI7-Q-NiHKOq8"
-                             yield app.bed_monitor_provider.getSleepBriefReport();
+                             var deviceInfo ={
+                                 operator:'add',
+                                 type:'Mattress',
+                                 devId:'A1100123',
+                                 deviceMac:'A0E6F8855129F',
+                                 cpNewName:'HCL',
+                                 sex:'女',
+                                 cpNewAge:'59'
+                             }
+                             var session = {
+                                 openid:'oYoT70Fw1BPC-oTUI7-Q-NiHKOq8'
+                             }
+                             var tenantId = '58cf896e2f0f0a21b026d973'
+                             var ret = yield app.bed_monitor_provider.getDeviceInfo(session.openid);
                              this.body = "ok";
                          } catch (e) {
                              self.logger.error(e.message);
