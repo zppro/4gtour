@@ -157,7 +157,7 @@
                              console.log(this.request.body)
                              var ret = yield app.bed_monitor_provider.checkIsAttach(this.request.body.session.openid, this.request.body.deviceId, this.request.body.tenantId);
                              console.log("isAttach:", ret);
-                             this.body =  app.wrapper.res.ret(ret);
+                             this.body =  app.wrapper.res.ret({isAttach:ret});
                          } catch (e) {
                              self.logger.error(e.message);
                              this.body = app.wrapper.res.error(e);
