@@ -302,7 +302,11 @@ module.exports= {
                         open_id: session.openid
                     }
                 });
-                member.bindingBedMonitors = device._id;
+                member_json = member.toObject();
+                var row_bindingBedMonitors =[];
+                var row_bindingBedMonitors = self.ctx.clone(member_json.bindingBedMonitors);
+                row_bindingBedMonitors.push(device._id);
+                member.bindingBedMonitors = row_bindingBedMonitors;
                 yield member.save();
                 carePerson = yield self.ctx.modelFactory().model_create(self.ctx.models['het_memberCarePerson'], {
                     name: deviceInfo.cpNewName,
@@ -403,7 +407,7 @@ module.exports= {
         var self = this;
         return co(function *() {
             try{
-                var devices = [];
+                var carePersons = [];
                 var nowYear = self.ctx.moment().format('YYYY');
                 console.log(openid);
                 sessionId = yield self.getSession(openid);
@@ -418,37 +422,35 @@ module.exports= {
                     }
                 });
                 console.log(member);
-                var devices = yield self.ctx.modelFactory().model_query(self.ctx.models['pub_bedMonitor'], {
+                var memberCarePersons = yield self.ctx.modelFactory().model_query(self.ctx.models['het_memberCarePerson'], {
                     where: {
-                        status: 1,
-                        _id: {'$in': member.bindingBedMonitors}
+                       status: 1,
+                       care_by: member._id,
                     }
                 });
+                for (var i = 0; i < memberCarePersons.length; i++) {
 
-                for (var i = 0; i < devices.length; i++) {
-
-                    var memberCarePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
+                    var device = yield self.ctx.modelFactory().model_one(self.ctx.models['pub_bedMonitor'], {
                         where: {
                             status: 1,
-                            care_by: member._id,
-                            bedMonitorId: devices[i]._id
+                            _id:memberCarePersons[i].bedMonitorId
                         }
                     });
-                    self.logger.info('memberCarePerson:' + memberCarePerson);
-                    if (memberCarePerson) {
-                        var sleepStatus = yield self.getSleepBriefReport(sessionId, devices[i].name);
-                        devices[i] = {
-                            deviceId: devices[i].name,
-                            memberName: memberCarePerson.name,
-                            sex: memberCarePerson.sex,
-                            age: Number(nowYear) - Number(memberCarePerson.birthYear),
+                    self.logger.info('device:' + device);
+                    if (device) {
+                        var sleepStatus = yield self.getSleepBriefReport(sessionId, device.name);
+                        memberCarePerson = {
+                            deviceId: device.name,
+                            memberName: memberCarePersons[i].name,
+                            sex: memberCarePersons[i].sex,
+                            age: Number(nowYear) - Number(memberCarePersons[i].birthYear),
                             sleepStatus: sleepStatus.ret
                         }
-                        devices.unshift();
+                        carePersons.push(memberCarePerson);
                     }
                 }
-                console.log('devices:', devices);
-                return self.ctx.wrapper.res.rows(devices);
+                console.log('memberCarePersons:', carePersons);
+                return self.ctx.wrapper.res.rows(carePersons);
             } catch (e) {
                 console.log(e);
                 self.logger.error(e);
@@ -776,13 +778,13 @@ module.exports= {
                     tenantId = tenantIds[i];
                     var isRegist = yield self.checkIsRegist(tenantId);
                     if (!isRegist) {
-                        yield self.regist(tenantId);
+                        yield self.registByTenatId(tenantId);
                     }
                     sessionId = yield self.getSession(tenantId);
                     console.log('sessionId:',sessionId);
                     var sessionIsExpired = yield self.checkSessionIsExpired(sessionId);
                     if (sessionIsExpired) {
-                        yield self.login(tenantId);
+                        sessionId = yield self.login(tenantId);
                     }
                 }
 
@@ -978,6 +980,54 @@ module.exports= {
                 self.logger.error(e.message);
             }
         }).catch(self.ctx.coOnError);
+    },
+    registByTenatId: function (tenantId) {
+        var self = this;
+        return co(function*() {
+            try {
+                var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
+                    where: {
+                        open_id: tenantId,
+                        status: 1
+                    }
+                });
+                if (member) {
+                    return member;
+                }
+                console.log("no regist");
+                var psd = self.ctx.crypto.createHash('md5').update('123456').digest('hex');
+                member = yield self.ctx.modelFactory().model_create(self.ctx.models['het_member'], {
+                    open_id: tenantId,
+                    name: tenantId,
+                    passhash: psd,
+                    tenantId: tenantId
+                });
+                var ret = yield rp({
+                    method: 'POST',
+                    url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/userws/userRegister.json',
+                    form: {
+                        userName: tenantId,
+                        encryptedName: tenantId,
+                        encryptedPwd: psd,
+                        userType: "zjwsy"
+                    }
+                });
+                ret = JSON.parse(ret);
+                if (ret.retCode == 'success') {
+                    console.log(" sync regist success");
+                    member.sync_flag_hzfanweng = true;
+                    yield member.save();
+                }
+
+                return member;
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+            }
+
+        }).catch(self.ctx.coOnError);
+
     }
 
 
