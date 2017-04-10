@@ -449,9 +449,10 @@ module.exports = {
 
                             rows = districts.map((o) => {
                                 var districtNode = {_id: o.id, name: o.name};
-                                districtNode.children = app._.uniq(app._.where(rooms, (o1) => {
+                                districtNode.children =  app._.compact(app._.uniq(app._.where(rooms, (o1) => {
                                     return o1.districtId == districtNode._id;
                                 }).map((o2) => {
+                                    // console.log('o2:', o2);
                                     return o2.floor;
                                 })).map((o3) => {
                                     var floorNode = {_id: "floor" +o3 + '#', name: o3  + '层'};
@@ -460,9 +461,12 @@ module.exports = {
                                     }).map((o5) => {
                                         return {_id: o5.id, name: o5.name, capacity: o5.capacity}
                                     });
-                                    console.log(floorNode);
-                                    return floorNode;
-                                });
+                                    if (floorNode.children.length > 0) {
+                                        return floorNode;
+                                    } else {
+                                        return null;
+                                    }
+                                }));
                                 return districtNode;
                             });
 
