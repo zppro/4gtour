@@ -42,12 +42,12 @@
             vm.tab1 = {cid: 'contentTab1'};
             vm.$editings = {};
 
-
             vmh.parallel([
                 vmh.clientData.getJson('nursingPlanAxis'),
                 vmh.shareService.tmp('T3001/psn-nursingLevel', 'name short_name', null),
                 vmh.shareService.tmp('T3001/psn-workItem', 'name nursingLevelId', null),
                 vmh.shareService.tmp('T3001/psn-drugUseItem','drugId full_name elderlyId',null),
+                vmh.shareService.d('D3027')
             ]).then(function (results) {
                 vm.xAxisData = results[0];
                 // console.log('nursingPlanAxis:', vm.xAxisData);
@@ -75,7 +75,7 @@
                     elderlys.push(v.elderlyId);
                 })
                 elderlys=_.uniq(elderlys);
-                // console.log("elderlys",elderlys)
+                 
                 for(var j=0,l = elderlys.length;j< l;j++) {
                     var elderlyId= elderlys[j];
                     drugUseItemMap[elderlyId] = _.filter(drugUseItems, function (o) {
@@ -84,12 +84,11 @@
                 }
                 vm.workItemMap = workItemMap;
                 vm.drugUseItemMap = drugUseItemMap;
-                // console.log("**", drugUseItemMap);
+                vm.nursingType = results[4];
+               
             });
 
             vm.yAxisDataPromise = vmh.shareService.tmp('T3009', null, {tenantId:vm.tenantId}).then(function(nodes){
-                // console.log('yAxisDataPromise');
-                // console.log(nodes);
                 return nodes;
             });
 
@@ -220,7 +219,6 @@
             var drugUseItemkey = trackedKey + '$' + vm.aggrData[trackedKey]['elderly']['id'];
             var drug_use_item_check_info = { id: drugUseItemId, type: 'A0003', checked: vm.work_items['A0003'][drugUseItemkey][drugUseItemId]};
             vmh.psnService.nursingPlanSaveNursingItem(vm.tenantId, elderlyId, drug_use_item_check_info);
-            // vmh.psnService.nursingPlanSaveDrugUseItem(vm.tenantId, elderlyId, drug_use_item_check_info);
         }
         
 

@@ -1114,5 +1114,9 @@
       "name": "用药项目",
       "order": 3
     }
+  },
+  "D3027":{
+    "NURSING_ITEM":"A0001",
+    "DRUG_USE_ITEM":"A0003"
   }
 }
