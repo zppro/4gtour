@@ -771,14 +771,18 @@ module.exports= {
 
                 // console.log('保证各个tenant作为member的session ', tenants);
                 var tenantIds = self.ctx._.map(tenants, (o) => {
-                    return o._id;
+                    return o.id;
                 });
                 // 保证各个tenant作为member的session
                 for (var i = 0, len = tenantIds.length; i < len; i++) {
                     tenantId = tenantIds[i];
                     var isRegist = yield self.checkIsRegist(tenantId);
                     if (!isRegist) {
-                        yield self.registByTenatId(tenantId);
+                        var tenantMember = yield self.registByTenatId(tenantId);
+                         if (tenantMember) {
+                        var token = yield self.getToken(tenantMember.open_id);
+                         yield self.userAuthenticate(tenantMember, token);
+                     }
                     }
                     sessionId = yield self.getSession(tenantId);
                     console.log('sessionId:',sessionId);
@@ -998,6 +1002,7 @@ module.exports= {
                     return member;
                 }
                 console.log("no regist");
+                console.log(typeof(tenantId));
                 var psd = self.ctx.crypto.createHash('md5').update('123456').digest('hex');
                 member = yield self.ctx.modelFactory().model_create(self.ctx.models['het_member'], {
                     open_id: tenantId,
