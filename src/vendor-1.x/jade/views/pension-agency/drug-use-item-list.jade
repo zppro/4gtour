@@ -1,5 +1,3 @@
-// create zhangsx on 17-3-22 
- 
 .col-xs-12.text-center
     .row
         form.form-search
@@ -21,24 +19,25 @@
                             | {{column.label}}
                             i.glyphicon(ng-if="column.name === vm.sort.column && vm.sort.direction",ng-class="vm.sort.direction|orderClass")
                 tbody
-                    tr(ng-repeat="row in vm.rows|filter:vm.filter|orderBy:vm.sort.column:vm.sort.direction===-1|paging:vm" , ng-click="vm.selectRow($event,row)",)
+                    tr(ng-repeat="row in vm.rows|filter:vm.filter|orderBy:vm.sort.column:vm.sort.direction===-1|paging:vm" , ng-click="vm.selectRow($event,row)",ng-dblclick="vm.dblclickRow(row.id)")
                         td
                             .checkbox.c-checkbox
                                 label
                                     input(type='checkbox' data="trBubble" ng-model="row.checked" )
                                     span.fa.fa-check(data="trBubble")
-                        td.text-center {{::row.in_out_no}}                
-                        td.text-center {{::row.elderly_name}}
-                        td.text-center {{::row.drug_full_name}}
-                        td.text-center {{::row.drug_no}}
-                        td.text-center {{::row.type|formatter:'type':vm.columns}}
-                        td.text-center {{::row.in_out_quantity}}
-                        td.text-center {{::row.unit|formatter:'unit':vm.columns}}
-                        td.text-center {{::row.valid_flag|boolFilter}}
-                        td
+                        td {{::row.elderly_name}}
+                        td {{::row.full_name}}
+                        td {{::row.drug_no}}
+                        td {{::row.repeat_type_name }}{{row.repeat_values | repeatInfoCombo: row.repeat_start}}
+                        td {{::row.duration}}
+                        td {{::row.confirm_flag|boolFilter}}
+                        td {{::row.remind_flag|boolFilter}}
+                        td {{::row.remind_mode_name}}
+                        td {{::row.remind_times}}
+                        td.text-left
                             .btn-group
-                                a.btn.btn-primary.btn-xs(title="{{'button.ABOLISH'|translate}}",ng-click="vm.abolish(row)")
-                                    i.glyphicon.glyphicon-ban-circle
+                                a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
+                                    i.glyphicon.glyphicon-pencil
                     tr(ng-if="vm.paged.length==0")
                         td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}
             .panel-footer
@@ -48,5 +47,7 @@
                             .btn-group
                                 a.btn.btn-primary.btn-sm(title="{{'button.ADD'|translate}}",ng-click="vm.add()")
                                     i.glyphicon.glyphicon-plus
+                                a.btn.btn-primary.btn-sm(title="{{'button.REMOVE'|translate}}",ng-click="vm.disable()")
+                                    i.glyphicon.glyphicon-minus
                     .col-md-8
                         pagination.pagination-sm.pull-right(total-items="vm.page.totals",ng-model="vm.page.no",max-size="5",items-per-page="vm.page.size",boundary-links="true" ,ng-change="vm.paging()")
