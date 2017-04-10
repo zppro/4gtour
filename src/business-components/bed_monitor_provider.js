@@ -85,6 +85,7 @@ module.exports= {
         return co(function*() {
             try {
                 console.log("login again");
+                self.logger.info('login =>', openId);
                 var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
                         open_id: openId,
@@ -92,9 +93,13 @@ module.exports= {
                     }
                 });
                 if (member) {
+                    self.logger.info('login member =>', member);
                     var token = yield self.getToken(member.open_id);
+                    self.logger.info('login token =>', token);
                     var ret = yield self.userAuthenticate(member, token);
+                    self.logger.info('login userAuthenticate ret =>', ret);
                     var session_id = yield self.getSession(openId);
+                    self.logger.info('login session_id =>', session_id);
                     return session_id;
                 }
             }
@@ -591,6 +596,7 @@ module.exports= {
         var self = this;
         return co(function*() {
             try {
+                self.logger.info('userAuthenticate');
                 var ret = yield rp({
                     method: 'POST',
                     url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/userws/userAuthenticate.json',
@@ -604,6 +610,7 @@ module.exports= {
                 });
                 ret = JSON.parse(ret);
                 if (ret.retCode == 'success') {
+                    self.logger.info('setSession:',member.open_id, ret.retValue);
                     self.setSession(member.open_id, ret.retValue.sessionId);
                     return ret.retValue;
                 } else {
