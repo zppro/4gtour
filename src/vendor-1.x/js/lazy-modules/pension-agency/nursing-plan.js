@@ -32,6 +32,7 @@
             vm.switchReadonlyWorkItems = switchReadonlyWorkItems;
             vm.switchReadonlyDrugUseItems = switchReadonlyDrugUseItems;
             vm.workItemChecked = workItemChecked;
+            vm.drugUseItemChecked = drugUseItemChecked;
             vm.addNursingPlanRemark = addNursingPlanRemark;
             vm.editNursingPlanRemark = editNursingPlanRemark;
             vm.saveNursingPlanRemark = saveNursingPlanRemark;
@@ -213,10 +214,8 @@
             var work_item_check_info = { id: workItemId, type:"A0001", checked: vm.work_items['A0001'][workItemKey][workItemId]};
             vmh.psnService.nursingPlanSaveNursingItem(vm.tenantId, elderlyId, work_item_check_info);
         }
-        function drugUseItemChecked(trackeKey,drugUseItemId){
-             
-             console.log("***",trackedKey)
-             console.log("^^^^",drugUseItemId);
+        function drugUseItemChecked(trackedKey,drugUseItemId){
+
              var elderlyId = vm.aggrData[trackedKey]['elderly'].id;
             var drugUseItemkey = trackedKey + '$' + vm.aggrData[trackedKey]['elderly']['id'];
             var drug_use_item_check_info = { id: drugUseItemId, type: 'A0003', checked: vm.work_items['A0003'][drugUseItemkey][drugUseItemId]};

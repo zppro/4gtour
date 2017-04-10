@@ -4452,7 +4452,6 @@ module.exports = {
                             var workItemCheckInfo = this.request.body.work_item_check_info;
                             var toProcessWorkItemId = workItemCheckInfo.id;
                             var nursingType = workItemCheckInfo.type;
-                            console.log("h-nursingType:"+nursingType);
                             if(nursingType == DIC.D3017.NURSING_ITEM){
                                  workItem = yield app.modelFactory().model_read(app.models['psn_workItem'], toProcessWorkItemId);
                                 if (!workItem || workItem.status == 0) {
@@ -4488,7 +4487,6 @@ module.exports = {
                                     tenantId: tenantId
                                 }
                             });
- 
                             if (!elderlyNursingPlan) {
                                 if (!isRemoved) {
 

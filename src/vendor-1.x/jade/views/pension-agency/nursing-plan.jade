@@ -59,8 +59,8 @@
                             .btn-group.work-item(ng-if="vm.aggrData[row.trackedKey]['elderly']['id']", ng-repeat="drugUseItem in vm.drugUseItemMap[vm.aggrData[row.trackedKey]['elderly']['id']]")
                                 .checkbox.c-checkbox
                                     label
-                                        input(id="{{row.trackedKey + '$' +drugUseItem.id}}",type='checkbox', ng-disabled="!vm.$editings[row.trackedKey]['drugUseItems']", ng-model="vm.work_items['A0003'][row.trackedKey + '$' + vm.aggrData[row.trackedKey]['elderly']['id']][drugUseItem.id]" ng-change="vm.drugUseItemChecked(row.trackedKey, drugUseItem.id)")
-                                        span.fa.fa-check
+                                        input(id="{{row.trackedKey + '$' +drugUseItem.id}}",type='checkbox', ng-disabled="!vm.$editings[row.trackedKey]['drugUseItems']", ng-model="vm.work_items['A0003'][row.trackedKey + '$' + vm.aggrData[row.trackedKey]['elderly']['id']][drugUseItem.id]" ng-change="vm.drugUseItemChecked(row.trackedKey,drugUseItem.id)")
+                                        span.fa.fa-check 
                                 label(for="{{row.trackedKey + '$' +drugUseItem.id}}") {{ drugUseItem.name }}
 
                         td.text-center
