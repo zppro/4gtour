@@ -25,6 +25,7 @@ var mongoose = require('mongoose');
 var auth = require('./nws/auth.js');
 var crossDomainInterceptor = require('./nws/crossDomainInterceptor.js');
 var authApp = require('./nws/authApp.js');
+var authAppRobot = require('./nws/authAppRobot.js');
 
 var app = koa();
 app.conf = {
@@ -52,7 +53,10 @@ app.conf = {
     authApp: {
         toPaths: ['/me-services'],
         // ignorePaths: [{path: '/me-services/api/orders', method: 'get'}, '/me-services/trv/experience/', '/me-services/api/FourSeasonTour', '/me-services/api/proxyLogin', '/me-services/api/proxyLoginByToken']
-        ignorePaths: ['/me-services/api/FourSeasonTour', '/me-services/api/proxyLogin', '/me-services/api/proxyLoginByToken', '/me-services/api/updateContent', '/me-services/api/reStatMemberInfo', '/me-services/mws', '/me-services/weixin/app','/me-services/het']
+        ignorePaths: ['/me-services/api/FourSeasonTour', '/me-services/api/proxyLogin', '/me-services/api/proxyLoginByToken', '/me-services/api/updateContent', '/me-services/api/reStatMemberInfo', '/me-services/mws', '/me-services/weixin/app','/me-services/het','/me-services/psn']
+    },
+    authAppRobot: {
+        toPaths: ['/me-services/psn'],
     },
     crossDomainInterceptor:{
         toPaths:['/me-services']
@@ -449,7 +453,9 @@ co(function*() {
     _.each(app.conf.authApp.toPaths,function(o){
         router.use(o, authApp(app));
     });
-
+    _.each(app.conf.authAppRobot.toPaths,function(o){
+        router.use(o, authAppRobot(app));
+    });
     app.use(router.routes())
         .use(router.allowedMethods());
 

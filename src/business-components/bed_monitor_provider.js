@@ -410,6 +410,7 @@ module.exports= {
                 var carePersons = [];
                 var nowYear = self.ctx.moment().format('YYYY');
                 console.log(openid);
+                self.logger.info('openid:', openid);
                 var sessionId = yield self.getSession(openid);
                 var sessionIsExpired = yield self.checkSessionIsExpired(sessionId);
                 if (sessionIsExpired) {
@@ -428,7 +429,7 @@ module.exports= {
                        care_by: member._id,
                     }
                 }).populate('bedMonitorId', 'name');
-                self.logger.info('memberCarePersons:' + JSON.stringify(memberCarePersons));
+                self.logger.info('memberCarePersons:', memberCarePersons);
                 for (var i = 0, len = memberCarePersons.length, memberCarePerson; i < len; i++) {
                     memberCarePerson = memberCarePersons[i];
                     // var device = yield self.ctx.modelFactory().model_one(self.ctx.models['pub_bedMonitor'], {

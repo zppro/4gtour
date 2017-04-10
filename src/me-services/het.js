@@ -9,7 +9,7 @@
          this.filename = this.file.substr(this.file.lastIndexOf('/') + 1);
          this.module_name = this.filename.substr(0, this.filename.lastIndexOf('.'));
          this.service_url_prefix = '/me-services/' + this.module_name.split('_').join('/');
-         this.log_name = 'svc_' + this.filename;
+         this.log_name = 'mesvc_' + this.filename;
          option = option || {};
          this.logger = require('log4js').getLogger(this.log_name);
          if (!this.logger) {
@@ -17,6 +17,7 @@
          }
          else {
              this.logger.info(this.file + " loaded!");
+             self.logger.info("body:" , {a:'bbb',c:'ddd'});
          }
 
          this.actions = [
@@ -77,6 +78,7 @@
                          try {
                              console.log("body:");
                              console.log(this.request.body);
+                             self.logger.info('this.request.body:', this.request.body);
                              this.body = yield app.bed_monitor_provider.getDeviceInfo(this.request.body.session.openid);
                          } catch (e) {
                              self.logger.error(e.message);
