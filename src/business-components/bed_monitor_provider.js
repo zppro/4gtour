@@ -924,12 +924,15 @@ module.exports= {
         var self = this;
         return co(function*() {
             try {
+                console.log('getLatestSmbPerMinuteRecord:')
                 var ret = yield rp({
                     method: 'POST',
                     url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/devicews/getLatestSmbPerMinuteRecord.json',
                     form: {sessionId: sessionId, devId: devId}
                 });
+                self.logger.info('b:' + ret);
                 ret = JSON.parse(ret);
+                self.logger.info('a:' + ret);
                 return ret;
             }
             catch (e) {

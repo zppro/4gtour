@@ -36,9 +36,27 @@ module.exports = {
                             self.logger.info("robot_code:" +  robot_code);
                             console.log("body:", this.request.body);
                             self.logger.info("body:" +  this.request.body);
-                            var robot;
+                            var robot, tenantId;
                             if (this.robot_code) {
-
+                                robot = yield app.modelFactory().model_one(app.models['pub_robot'], {
+                                    where:{
+                                        code: robot_code
+                                    }
+                                });
+                                // 通过机器人->房间->老人
+                                tenantId = robot.tenantId;
+                                var today = app.moment(app.moment().format('YYYY-MM-DD') + " 00:00:00");
+                                var rows = yield app.modelFactory().model_query(app.models['psn_nursingRecord'], {
+                                    select: 'exec_on executed_flag name description duration assigned_worker confirmed_flag confirmed_on workItemId',
+                                    where: {
+                                        elderlyId: elderlyId,
+                                        exec_on:  {$gte: today.toDate(), $lte: today.add(1, 'days').toDate()},
+                                        tenantId: tenantId
+                                    },
+                                    sort: 'exec_on'
+                                }).populate('assigned_worker').populate('workItemId');
+                                console.log(rows);
+                                
                             }
                             this.body = app.wrapper.res.rows([]);
                         } catch (e) {
