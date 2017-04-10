@@ -109,6 +109,10 @@ module.exports= {
         var self = this;
         return co(function*() {
             try {
+                if (!sessionId || typeof sessionId !== 'string') {
+                    return false;
+                }
+
                 var ret = yield rp({
                     method: 'POST',
                     url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/userws/sessionIsExpired.json',
