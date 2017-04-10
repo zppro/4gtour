@@ -49,7 +49,7 @@
                 vmh.shareService.tmp('T3001/psn-drugUseItem','drugId full_name elderlyId',null),
             ]).then(function (results) {
                 vm.xAxisData = results[0];
-                console.log('nursingPlanAxis:', vm.xAxisData);
+                // console.log('nursingPlanAxis:', vm.xAxisData);
 
                 vm.selectBinding.nursingLevels = _.map(results[1],function(row){return {id: row._id, name: row.name, short_name: row.short_name }});
                 var nursingLevelMap = {};
@@ -83,7 +83,7 @@
                 }
                 vm.workItemMap = workItemMap;
                 vm.drugUseItemMap = drugUseItemMap;
-                // console.log("**8", drugUseItemMap);
+                // console.log("**", drugUseItemMap);
             });
 
             vm.yAxisDataPromise = vmh.shareService.tmp('T3009', null, {tenantId:vm.tenantId}).then(function(nodes){
@@ -94,7 +94,7 @@
 
             vm.editing$NursingLevel = {};
             vm.editing$NursingPlanRemark = {};
-            vm.work_items = {};
+            vm.work_items = {"A0001":{}, "A0003": {}};
             fetchNursingPlan();
         }
 
@@ -103,19 +103,46 @@
             console.log('parse nursingPlanCatalogs:');
             vmh.psnService.nursingPlansByRoom(vm.tenantId, ['name', 'sex', 'nursingLevelId'], ['elderlyId', 'work_items','remark']).then(function(data){
                 vm.aggrData = data;
+                console.log('data',data);
                 for(var trackedKey in vm.aggrData) {
                     vm.$editings[trackedKey] = {};
-                    var key = trackedKey + '$' + vm.aggrData[trackedKey]['elderly']['nursingLevelId'];
-                    if (key) {
-                        if (!vm.work_items[key]) {
-                            vm.work_items[key] = {};
+                    // 编辑的对象
+                    // 追踪的id
+                    var nursingLevelId = vm.aggrData[trackedKey]['elderly']['nursingLevelId']
+
+                    if (nursingLevelId) {
+                        var workItemkey = trackedKey + '$' +nursingLevelId ;
+                        // console.log("***workItemkey",workItemkey);
+                        if (!vm.work_items['A0001'][workItemkey]) {
+                            vm.work_items['A0001'][workItemkey] = {};
                         }
-                        var nursingPlan = vm.aggrData[trackedKey]['nursing_plan'];
-                        if (vm.aggrData[trackedKey]['nursing_plan']) {
+                        var nursingPlanId = vm.aggrData[trackedKey]['nursing_plan']['id'];
+                        if (nursingPlanId) {
+                            var work_items = vm.aggrData[trackedKey]['nursing_plan']['work_items'];
+                            if (work_items.length>0) {
+                                for (var i = 0, len = work_items.length; i < len; i++) {
+                                    if (work_items[i].type == 'A0001') {
+                                        vm.work_items['A0001'][workItemkey][work_items[i].workItemId] = true;    
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    var elderlyId = vm.aggrData[trackedKey]['elderly']['id']
+                    if (elderlyId) {
+                        var drugUseItemkey = trackedKey + '$' + elderlyId;
+
+                        if (!vm.work_items['A0003'][drugUseItemkey]) {
+                            vm.work_items['A0003'][drugUseItemkey] = {};
+                        }
+                        var nursingPlanId = vm.aggrData[trackedKey]['nursing_plan']['id'];
+                        if (nursingPlanId) {
                             var work_items = vm.aggrData[trackedKey]['nursing_plan']['work_items'];
                             if (work_items) {
                                 for (var i = 0, len = work_items.length; i < len; i++) {
-                                    vm.work_items[key][work_items[i].workItemId] = true;
+                                    if (work_items[i].type == 'A0003') {
+                                        vm.work_items['A0003'][drugUseItemkey][work_items[i].workItemId] = true;
+                                    }
                                 }
                             }
                         }
@@ -158,7 +185,7 @@
                     if (workItemsOfNursingLevel) {
                         for (var i = 0, len = workItemsOfNursingLevel.length; i < len; i++) {
                             // console.log('workItemsOfNursingLevel[i]:', workItemsOfNursingLevel[i]);
-                            vm.work_items[key][workItemsOfNursingLevel[i].id] = false;
+                            vm.work_items["A0001"][key][workItemsOfNursingLevel[i].id] = false;
                         }
                     }
                     // console.log('更改后:', vm.work_items)
@@ -182,17 +209,21 @@
 
         function workItemChecked (trackedKey, workItemId) {
             var elderlyId = vm.aggrData[trackedKey]['elderly'].id;
-            var key = trackedKey + '$' + vm.aggrData[trackedKey]['elderly']['nursingLevelId'];
-            var work_item_check_info = { id: workItemId, checked: vm.work_items[key][workItemId]};
+            var workItemKey = trackedKey + '$' + vm.aggrData[trackedKey]['elderly']['nursingLevelId'];
+            var work_item_check_info = { id: workItemId, type:"A0001", checked: vm.work_items['A0001'][workItemKey][workItemId]};
             vmh.psnService.nursingPlanSaveNursingItem(vm.tenantId, elderlyId, work_item_check_info);
         }
-        function drugUseItemChecked(trackeKey,drug){
-            var elderlyId = vm.aggrData[trackedKey]['elderly'].id;
-            var key = trackedKey + '$' + vm.aggrData[trackedKey]['elderly']['nursingLevelId'];
-            var work_item_check_info = { id: workItemId, checked: vm.work_items[key][workItemId]};
-            vmh.psnService.nursingPlanSaveDrugUseItem(vm.tenantId, elderlyId, work_item_check_info);
+        function drugUseItemChecked(trackeKey,drugUseItemId){
+             
+             console.log("***",trackedKey)
+             console.log("^^^^",drugUseItemId);
+             var elderlyId = vm.aggrData[trackedKey]['elderly'].id;
+            var drugUseItemkey = trackedKey + '$' + vm.aggrData[trackedKey]['elderly']['id'];
+            var drug_use_item_check_info = { id: drugUseItemId, type: 'A0003', checked: vm.work_items['A0003'][drugUseItemkey][drugUseItemId]};
+            vmh.psnService.nursingPlanSaveNursingItem(vm.tenantId, elderlyId, drug_use_item_check_info);
+            // vmh.psnService.nursingPlanSaveDrugUseItem(vm.tenantId, elderlyId, drug_use_item_check_info);
         }
-        }
+        
 
         function addNursingPlanRemark (trackedKey) {
             vm.$editings[trackedKey]['remark'] = true;

@@ -4448,22 +4448,37 @@ module.exports = {
                                 yield next;
                                 return;
                             }
-
+                            
                             var workItemCheckInfo = this.request.body.work_item_check_info;
                             var toProcessWorkItemId = workItemCheckInfo.id;
-                            workItem = yield app.modelFactory().model_read(app.models['psn_workItem'], toProcessWorkItemId);
-                            if (!workItem || workItem.status == 0) {
-                                this.body = app.wrapper.res.error({ message: '无法找到工作项目!' });
-                                yield next;
-                                return;
+                            var nursingType = workItemCheckInfo.type;
+                            console.log("h-nursingType:"+nursingType);
+                            if(nursingType == DIC.D3017.NURSING_ITEM){
+                                 workItem = yield app.modelFactory().model_read(app.models['psn_workItem'], toProcessWorkItemId);
+                                if (!workItem || workItem.status == 0) {
+                                    this.body = app.wrapper.res.error({ message: '无法找到工作项目!' });
+                                    yield next;
+                                    return;
+                                }
+                                var toProcessWorkItem = workItem.toObject();
+                                toProcessWorkItem.type = DIC.D3017.NURSING_ITEM;
+                                toProcessWorkItem.workItemId = toProcessWorkItemId;
+
+                                var isRemoved = !workItemCheckInfo.checked;   
+                            };
+
+                            if(nursingType == DIC.D3017.DRUG_USE_ITEM){
+                                workItem = yield app.modelFactory().model_read(app.models['psn_drugUseItem'], toProcessWorkItemId);
+                                if (!workItem || workItem.status == 0) {
+                                    this.body = app.wrapper.res.error({ message: '无法找到用药管理项目!' });
+                                    yield next;
+                                    return;
+                                }
+                                var toProcessWorkItem = workItem.toObject();
+                                toProcessWorkItem.type = DIC.D3017.DRUG_USE_ITEM;
+                                toProcessWorkItem.workItemId = toProcessWorkItemId;
+                                var isRemoved = !workItemCheckInfo.checked;
                             }
-
-                            var toProcessWorkItem = workItem.toObject();
-                            toProcessWorkItem.type = DIC.D3017.NURSING_ITEM;
-                            toProcessWorkItem.workItemId = toProcessWorkItemId;
-
-                            var isRemoved = !workItemCheckInfo.checked;
-
 
                             var elderlyNursingPlan = yield app.modelFactory().model_one(app.models['psn_nursingPlan'], {
                                 select: 'work_items',
