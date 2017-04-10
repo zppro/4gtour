@@ -778,7 +778,11 @@ module.exports= {
                     tenantId = tenantIds[i];
                     var isRegist = yield self.checkIsRegist(tenantId);
                     if (!isRegist) {
-                        yield self.registByTenatId(tenantId);
+                        var tenantMember = yield self.registByTenatId(tenantId);
+                         if (tenantMember) {
+                        var token = yield self.getToken(tenantMember.open_id);
+                         yield self.userAuthenticate(tenantMember, token);
+                     }
                     }
                     sessionId = yield self.getSession(tenantId);
                     console.log('sessionId:',sessionId);

@@ -157,7 +157,7 @@
                              console.log(this.request.body)
                              var ret = yield app.bed_monitor_provider.checkIsAttach(this.request.body.session.openid, this.request.body.deviceId, this.request.body.tenantId);
                              console.log("isAttach:", ret);
-                             this.body = ret;
+                             this.body =  app.wrapper.res.ret(ret);
                          } catch (e) {
                              self.logger.error(e.message);
                              this.body = app.wrapper.res.error(e);
@@ -188,7 +188,10 @@
                                  openid:'oYoT70Fw1BPC-oTUI7-Q-NiHKOq8'
                              }
                              var tenantId = '58cf896e2f0f0a21b026d973'
-                             var ret = yield app.bed_monitor_provider.getDeviceInfo(session.openid);
+                             var deviceId = 'A1100123'
+                             var ret = yield app.bed_monitor_provider.checkIsAttach(session.openid,deviceId, tenantId);
+                             
+                             console.log("isAttach:", ret);
                              this.body = "ok";
                          } catch (e) {
                              self.logger.error(e.message);
