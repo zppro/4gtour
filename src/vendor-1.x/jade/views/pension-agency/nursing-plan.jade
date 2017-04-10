@@ -49,12 +49,19 @@
                                         input(id="{{row.trackedKey + '$' +workItem.id}}",type='checkbox', ng-disabled="!vm.$editings[row.trackedKey]['workItems']", ng-model="vm.work_items[row.trackedKey + '$' + vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']][workItem.id]" ng-change="vm.workItemChecked(row.trackedKey, workItem.id)")
                                         span.fa.fa-check
                                 label(for="{{row.trackedKey + '$' +workItem.id}}") {{ workItem.name }}
+                        <!--用药-->        
                         td
                             .btn-group(ng-if="vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']")
-                                a.btn.btn-primary.btn-sm(ng-click="vm.addCustomizedWorkItems(row.trackedKey)")
-                                    i.glyphicon.glyphicon-plus
-                                    span.ml-sm {{ vm.moduleTranslatePath('BTN-ADD-CUSTOMIZED-WORK-ITEMS') | translate}}
+                                a.btn.btn-primary.btn-sm(ng-click="vm.switchReadonlyDrugUseItems(row.trackedKey)" ng-class="{'btn-primary': !vm.$editings[row.trackedKey]['drugUseItems'], 'btn-warning': vm.$editings[row.trackedKey]['drugUseItems']}")
+                                    i.glyphicon.glyphicon-pencil
+                                    span.ml-sm {{ vm.$editings[row.trackedKey]['drugUseItems'] ? vm.moduleTranslatePath('BTN-DO-READONLY-WORK-ITEMS') : vm.moduleTranslatePath('BTN-CANCEL-READONLY-WORK-ITEMS') | translate}}
                             .split
+                            .btn-group.work-item(ng-if="vm.aggrData[row.trackedKey]['elderly']['id']", ng-repeat="drugUseItem in vm.drugUseItemMap[vm.aggrData[row.trackedKey]['elderly']['id']]")
+                                .checkbox.c-checkbox
+                                    label
+                                        input(id="{{row.trackedKey + '$' +drugUseItem.id}}",type='checkbox', ng-disabled="!vm.$editings[row.trackedKey]['drugUseItems']", ng-model="vm.work_items[row.trackedKey + '$' + vm.aggrData[row.trackedKey]['elderly']['nursingLevelId']][workItem.id]" ng-change="vm.drugUseItemChecked(row.trackedKey, workItem.id)")
+                                        span.fa.fa-check
+                                label(for="{{row.trackedKey + '$' +drugUseItem.id}}") {{ drugUseItem.name }}
 
                         td.text-center
                             div(ng-if="vm.aggrData[row.trackedKey]['elderly']['id']")

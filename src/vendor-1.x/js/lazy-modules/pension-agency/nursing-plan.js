@@ -30,6 +30,7 @@
             vm.saveElderlyNursingLevel = saveElderlyNursingLevel;
             vm.cancelElderlyEditing = cancelElderlyEditing;
             vm.switchReadonlyWorkItems = switchReadonlyWorkItems;
+            vm.switchReadonlyDrugUseItems = switchReadonlyDrugUseItems;
             vm.workItemChecked = workItemChecked;
             vm.addNursingPlanRemark = addNursingPlanRemark;
             vm.editNursingPlanRemark = editNursingPlanRemark;
@@ -45,6 +46,7 @@
                 vmh.clientData.getJson('nursingPlanAxis'),
                 vmh.shareService.tmp('T3001/psn-nursingLevel', 'name short_name', null),
                 vmh.shareService.tmp('T3001/psn-workItem', 'name nursingLevelId', null),
+                vmh.shareService.tmp('T3001/psn-drugUseItem','drugId full_name elderlyId',null),
             ]).then(function (results) {
                 vm.xAxisData = results[0];
                 console.log('nursingPlanAxis:', vm.xAxisData);
@@ -65,11 +67,27 @@
                        return o.nursingLevelId ===  nursingLevelId;
                     });
                 }
+                var drugUseItems = _.map(results[3],function(row){return {id: row._id, name: row.full_name,drugId: row.drugId,elderlyId:row.elderlyId}});
+                var drugUseItemMap = {};
+                var drugUseItemMap={},elderlys=[];
+                _.each(drugUseItems,function(v){
+                    elderlys.push(v.elderlyId);
+                })
+                elderlys=_.uniq(elderlys);
+                // console.log("elderlys",elderlys)
+                for(var j=0,l = elderlys.length;j< l;j++) {
+                    var elderlyId= elderlys[j];
+                    drugUseItemMap[elderlyId] = _.filter(drugUseItems, function (o) {
+                       return o.elderlyId ===  elderlyId;
+                    });
+                }
                 vm.workItemMap = workItemMap;
+                vm.drugUseItemMap = drugUseItemMap;
+                // console.log("**8", drugUseItemMap);
             });
 
             vm.yAxisDataPromise = vmh.shareService.tmp('T3009', null, {tenantId:vm.tenantId}).then(function(nodes){
-                console.log('yAxisDataPromise');
+                // console.log('yAxisDataPromise');
                 // console.log(nodes);
                 return nodes;
             });
@@ -83,7 +101,7 @@
 
         function fetchNursingPlan() {
             console.log('parse nursingPlanCatalogs:');
-            vmh.psnService.nursingPlansByRoom(vm.tenantId, ['name', 'sex', 'nursingLevelId'], ['elderlyId', 'work_items', 'remark']).then(function(data){
+            vmh.psnService.nursingPlansByRoom(vm.tenantId, ['name', 'sex', 'nursingLevelId'], ['elderlyId', 'work_items','remark']).then(function(data){
                 vm.aggrData = data;
                 for(var trackedKey in vm.aggrData) {
                     vm.$editings[trackedKey] = {};
@@ -107,7 +125,7 @@
         }
         
         function onRoomChange () { 
-            console.log('onRoomChange: ', vm.yAxisData);
+            // console.log('onRoomChange: ', vm.yAxisData);
             var yAxisDataFlatten = [];
             _.each(vm.yAxisData, function (o) {
                 for (var i = 1, len = o.capacity; i <= len; i++) {
@@ -158,12 +176,22 @@
         function switchReadonlyWorkItems(trackedKey) {
             vm.$editings[trackedKey]['workItems'] = !vm.$editings[trackedKey]['workItems'];
         }
+        function switchReadonlyDrugUseItems(trackedKey) {
+            vm.$editings[trackedKey]['drugUseItems'] = !vm.$editings[trackedKey]['drugUseItems'];
+        }
 
         function workItemChecked (trackedKey, workItemId) {
             var elderlyId = vm.aggrData[trackedKey]['elderly'].id;
             var key = trackedKey + '$' + vm.aggrData[trackedKey]['elderly']['nursingLevelId'];
             var work_item_check_info = { id: workItemId, checked: vm.work_items[key][workItemId]};
             vmh.psnService.nursingPlanSaveNursingItem(vm.tenantId, elderlyId, work_item_check_info);
+        }
+        function drugUseItemChecked(trackeKey,drug){
+            var elderlyId = vm.aggrData[trackedKey]['elderly'].id;
+            var key = trackedKey + '$' + vm.aggrData[trackedKey]['elderly']['nursingLevelId'];
+            var work_item_check_info = { id: workItemId, checked: vm.work_items[key][workItemId]};
+            vmh.psnService.nursingPlanSaveDrugUseItem(vm.tenantId, elderlyId, work_item_check_info);
+        }
         }
 
         function addNursingPlanRemark (trackedKey) {
