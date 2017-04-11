@@ -65,7 +65,7 @@
                 }
                 if(vm.model.elderlyId){
                     vm.selectedElderly = {_id: vm.model.elderlyId, name: vm.model.elderly_name};
-                    vm.selectedDrug = {_id:vm.model.drugId,name:vm.model.name};
+                    vm.selectedDrug = {_id:vm.model.drugId,full_name:vm.model.name};
                 }
             });
         }
