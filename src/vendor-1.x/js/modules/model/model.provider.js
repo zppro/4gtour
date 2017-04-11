@@ -521,7 +521,9 @@
                     nursingRecordGenerate: nursingRecordGenerate,
                     nursingRecordsByElderlyToday: nursingRecordsByElderlyToday,
                     elderlysByDistrictFloors: elderlysByDistrictFloors,
-                    nursingStationCloseBedMonitorAlarm: nursingStationCloseBedMonitorAlarm
+                    nursingStationCloseBedMonitorAlarm: nursingStationCloseBedMonitorAlarm,
+                    nursingLevelsByAssessmentGrade: nursingLevelsByAssessmentGrade,
+                    nursingLevels:nursingLevels
                 };
 
                 function roomStatusInfo(tenantId) {
@@ -769,6 +771,14 @@
                 
                 function nursingStationCloseBedMonitorAlarm(alarm, sharedData) {
                     return $http.post(baseUrl + 'nursingStationCloseBedMonitorAlarm', {elderlyId: alarm.elderly._id, bedMonitorName: alarm.bedMonitorName, reason: alarm.reason, tenantId: sharedData.tenantId,  operated_by: sharedData.operated_by, operated_by_name: sharedData.operated_by_name});
+                }
+
+                function nursingLevelsByAssessmentGrade(tenantId,nursing_assessment_grade){
+                    return $http.post(baseUrl + 'nursingLevelsByAssessmentGrade', {tenantId: tenantId,nursing_assessment_grade: nursing_assessment_grade});
+                }
+
+                function nursingLevels(tenantId){
+                    return $http.post(baseUrl + 'nursingLevels', {tenantId: tenantId});
                 }
             }]
         };

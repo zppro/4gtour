@@ -51,7 +51,7 @@ module.exports = function(ctx,name) {
                 bed_no: {type: Number, min: 1}
             },
             room_summary: {type: String},//districtName-roomName-bedNo
-            nursing_summary: {type: String, required: true},
+            // nursing_summary: {type: String, required: true},
             charge_standard: {type: String, required: true},
             charge_items:[{
                 item_id: {type: String, required: true},

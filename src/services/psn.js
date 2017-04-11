@@ -2938,6 +2938,67 @@ module.exports = {
                     };
                 }
             },
+            {
+                method: 'nursingLevelsByAssessmentGrade',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingLevelsByAssessmentGrade",
+                handler: function (app, options) {
+                    return function* (next) {
+                        try {
+                            var nursing_assessment_grade = this.request.body.nursing_assessment_grade;
+                            var tenantId = this.request.body.tenantId;
+                            if (!nursing_assessment_grade) {
+                                this.body = app.wrapper.res.error({ message: '缺少评估等级!' });
+                                yield next;
+                                return;
+                            }
+                            if (!tenantId) {
+                                this.body = app.wrapper.res.error({ message: '缺少养老机构!' });
+                                yield next;
+                                return;
+                            }
+                            var nursing_levels = yield app.modelFactory().model_query(app.models['psn_nursingLevel'], {
+                                    where: {
+                                        nursing_assessment_grade: nursing_assessment_grade,
+                                        status: 1,
+                                        tenantId:tenantId
+                                    }
+                                });
+                            this.body = app.wrapper.res.rows(nursing_levels);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                    }
+                }
+            },
+            {
+                method: 'nursingLevels',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingLevels",
+                handler: function (app, options) {
+                    return function* (next) {
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            if (!tenantId) {
+                                this.body = app.wrapper.res.error({ message: '缺少养老机构!' });
+                                yield next;
+                                return;
+                            }
+                            var nursing_levels = yield app.modelFactory().model_query(app.models['psn_nursingLevel'], {
+                                    where: {
+                                        status: 1,
+                                        tenantId:tenantId
+                                    }
+                                });
+                            this.body = app.wrapper.res.rows(nursing_levels);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                    }
+                }
+            },
             /**********************出院相关*****************************/
             {
                 method: 'submitApplicationToExit',//提交出院申请

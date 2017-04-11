@@ -68,6 +68,8 @@
         "TAB2-BOARD-INFO":"饮食套餐",
         "TAB2-ROOM-INFO":"房间床位",
         "TAB3-NURSING-INFO":"护理信息",
+        "TAB3-NURSING-ASSESSMENT-GRADE":"评估等级",
+        "TAB3-NURSING-LEVEL":"护理等级",
         "TAB3-CUSTOM-SERVICE-INFO":"特色服务",
         "TAB4-CHARGE-ITEM":"收费项目",
         "TAB4-CHARGE-PERIOD-PRICE-SUM":"费用小计",
