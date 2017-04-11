@@ -191,7 +191,12 @@
                              }
                              var tenantId = '58cf896e2f0f0a21b026d973'
                              var deviceId = 'A1100123'
-                             var ret = yield app.bed_monitor_provider.checkIsAttach(session.openid,deviceId, tenantId);
+                             var member = {
+                                 name:'1l42o',
+                                 passhash:'e10adc3949ba59abbe56e057f20f883e',
+                             }
+                             var token='47843085';
+                             var ret = yield app.bed_monitor_provider.userAuthenticate(member,token);
                              
                              console.log("isAttach:", ret);
                              this.body = "ok";
