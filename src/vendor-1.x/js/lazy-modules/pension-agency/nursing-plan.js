@@ -46,8 +46,8 @@
                 vmh.clientData.getJson('nursingPlanAxis'),
                 vmh.shareService.tmp('T3001/psn-nursingLevel', 'name short_name', null),
                 vmh.shareService.tmp('T3001/psn-workItem', 'name nursingLevelId', null),
-                vmh.shareService.tmp('T3001/psn-drugUseItem','drugId full_name elderlyId',null),
-                vmh.shareService.d('D3027')
+                vmh.shareService.tmp('T3001/psn-drugUseItem','drugId name elderlyId',null),
+                
             ]).then(function (results) {
                 vm.xAxisData = results[0];
                 // console.log('nursingPlanAxis:', vm.xAxisData);
@@ -68,7 +68,7 @@
                        return o.nursingLevelId ===  nursingLevelId;
                     });
                 }
-                var drugUseItems = _.map(results[3],function(row){return {id: row._id, name: row.full_name,drugId: row.drugId,elderlyId:row.elderlyId}});
+                var drugUseItems = _.map(results[3],function(row){return {id: row._id, name: row.name,drugId: row.drugId,elderlyId:row.elderlyId}});
                 var drugUseItemMap = {};
                 var drugUseItemMap={},elderlys=[];
                 _.each(drugUseItems,function(v){
@@ -84,8 +84,6 @@
                 }
                 vm.workItemMap = workItemMap;
                 vm.drugUseItemMap = drugUseItemMap;
-                vm.nursingType = results[4];
-               
             });
 
             vm.yAxisDataPromise = vmh.shareService.tmp('T3009', null, {tenantId:vm.tenantId}).then(function(nodes){
@@ -103,11 +101,8 @@
             console.log('parse nursingPlanCatalogs:');
             vmh.psnService.nursingPlansByRoom(vm.tenantId, ['name', 'sex', 'nursingLevelId'], ['elderlyId', 'work_items','remark']).then(function(data){
                 vm.aggrData = data;
-                console.log('data',data);
                 for(var trackedKey in vm.aggrData) {
                     vm.$editings[trackedKey] = {};
-                    // 编辑的对象
-                    // 追踪的id
                     var nursingLevelId = vm.aggrData[trackedKey]['elderly']['nursingLevelId']
 
                     if (nursingLevelId) {
