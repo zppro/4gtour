@@ -51,6 +51,3 @@ pub-client-production
 
 #执行
 dev-*.sh
-
-#执行启动hcl
-dev-app-h.sh

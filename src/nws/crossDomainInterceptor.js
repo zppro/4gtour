@@ -9,6 +9,7 @@ module.exports = function (app) {
         // console.log('crossDomain');
         var self = this;
         var origin = (this.request.headers['origin'] || '').toLowerCase();
+        // console.log(origin);
         var patched = app._.contains(cdaOrigins, origin) || origin.match(re);
         if (patched) {
             this.set('Access-Control-Allow-Origin', origin);

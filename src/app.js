@@ -27,6 +27,7 @@ var auth = require('./nws/auth.js');
 var crossDomainInterceptor = require('./nws/crossDomainInterceptor.js');
 var authApp = require('./nws/authApp.js');
 var authAppRobot = require('./nws/authAppRobot.js');
+var authWXApp = require('./nws/authWXApp.js');
 
 var app = koa();
 app.conf = {
@@ -52,15 +53,18 @@ app.conf = {
         ignorePaths: ['/services/share/login', '/services/robot/sendTestMail', '/services/open']
     },
     authApp: {
-        toPaths: ['/me-services'],
+        toPaths: ['/me-services/api', '/me-services/trv', '/me-services/qiniu/open/uploadToken'],
         // ignorePaths: [{path: '/me-services/api/orders', method: 'get'}, '/me-services/trv/experience/', '/me-services/api/FourSeasonTour', '/me-services/api/proxyLogin', '/me-services/api/proxyLoginByToken']
-        ignorePaths: ['/me-services/api/FourSeasonTour', '/me-services/api/proxyLogin', '/me-services/api/proxyLoginByToken', '/me-services/api/updateContent', '/me-services/api/reStatMemberInfo', '/me-services/mws', '/me-services/weixin/app','/me-services/het','/me-services/psn']
+        ignorePaths: ['/me-services/api/FourSeasonTour', '/me-services/api/proxyLogin', '/me-services/api/proxyLoginByToken', '/me-services/api/updateContent', '/me-services/api/reStatMemberInfo', '/me-services/mws']
     },
     authAppRobot: {
-        toPaths: ['/me-services/psn'],
+        toPaths: ['/me-services/psn']
+    },
+    authWXApp: {
+        toPaths: ['/me-services/het', '/me-services/qiniu/open/uploadTokenForWXApp']
     },
     crossDomainInterceptor:{
-        toPaths:['/me-services']
+        toPaths:['/me-services/api', '/me-services/trv', '/me-services/weixin/open', '/me-services/weixin/open', '/me-services/qiniu/open/uploadToken']
     },
     db: {
         //mssql数据库配置
@@ -80,7 +84,9 @@ app.conf = {
         }
     },
     secure: {
-        authSecret: '认证密钥'
+        authSecret: '认证密钥',
+        authSecretRobot: '机器人App使用的认证密钥',
+        authSecretWXApp: '微信小程序使用的认证密钥'
     },
     client: {
         bulidtarget: 'default'
@@ -96,7 +102,7 @@ rfcore.config(app.conf,process.argv);
 //去除字符对bool的影响
 app.conf.isProduction = app.conf.isProduction == true || app.conf.isProduction === 'true';
 
-//console.log(JSON.stringify(app.conf.db.mongodb));
+console.log(JSON.stringify(app.conf.secure));
 
 //ensure dirs
 console.log('ensure dirs...');
@@ -460,6 +466,11 @@ co(function*() {
         console.log(o);
         router.use(o, authAppRobot(app));
     });
+    _.each(app.conf.authWXApp.toPaths,function(o){
+        console.log(o);
+        router.use(o, authWXApp(app));
+    });
+
     app.use(router.routes())
         .use(router.allowedMethods());
 

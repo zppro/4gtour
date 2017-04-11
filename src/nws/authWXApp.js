@@ -1,14 +1,14 @@
 /**
- * Created by zppro on 17-4-7.
+ * Created by zppro on 17-4-11.
  */
 var _ = require('underscore');
 var jwt = require('jsonwebtoken');
 
 
 module.exports = function (app){
-    var ignoreAuthPaths = app.conf.authAppRobot.ignorePaths;
+    var ignoreAuthPaths = app.conf.authWXApp.ignorePaths;
     return function * (next) {
-        console.log('authAppRobot');
+        console.log('authWXApp');
         var self = this;
         var isIgnored = false;
         if(ignoreAuthPaths) { 
@@ -51,11 +51,10 @@ module.exports = function (app){
                     // console.log('timestamp:', timestamp);
 
                     this.request_timestamp = timestamp;
-                    // var authSecret = 'woosiyuan-robot-pension-agency';
-                    var payload = jwt.verify(token, app.conf.secure.authSecretRobot + ':' + timestamp);
-                    this.robot_code = payload.sub;
-                    // console.log('this.robot_code:', this.robot_code);
-                    // console.log(this.payload);
+                    var payload = jwt.verify(token, app.conf.secure.authSecretWXApp + ':' + timestamp);
+                    this.openid = payload.open_id;
+                    console.log('this.openid:', this.openid);
+                    console.log(this.payload);
                 }catch(e){
                     console.log(e);
                     this.status = 401;
