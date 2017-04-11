@@ -116,6 +116,8 @@
             vm.serverSideCheck = serverSideCheck;
             vm.setBoardSummary = setBoardSummary;
             vm.setNursingSummary = setNursingSummary;
+            vm.setBindingNursingLevelsByAssessmentGrade = setBindingNursingLevelsByAssessmentGrade;
+            vm.setNursingLevel = setNursingLevel;
             vm.isSelected = isSelected;
             vm.isDisabled = isDisabled;
             vm.getOccupyElderlyName = getOccupyElderlyName;
@@ -156,7 +158,11 @@
                     floorSuffix: 'F',
                     bedNoSuffix: '#床'
                 }),
-                vmh.psnService.roomStatusInfo(vm.tenantId)
+                vmh.psnService.roomStatusInfo(vm.tenantId),
+                vmh.shareService.d('D3015'),
+                vmh.psnService.nursingLevels(vm.tenantId),
+                //tenantChargeItemNursingLevelAsTree
+                vmh.extensionService.tenantChargeItemNursingLevelAsTree(vm.tenantId, PENSION_AGENCY_DEFAULT_CHARGE_STANDARD, vm._subsystem_)
             ]).then(function (results) {
                 vm.selectBinding.sex = results[0];
                 vm.selectBinding.marriages = results[1];
@@ -181,6 +187,10 @@
                     //增加特色服务
                     if(results[10].children.length>0) {
                         vm.selectedStandard.children.push(results[10]);
+                    }
+                    //增加护理费
+                    if(results[15].children.length>0){
+                        vm.selectedStandard.children.push(results[15]);
                     }
                     //将预订义收费标准模板替换为当前租户的收费标准
                     _.each(vm.selectedStandard.children, function (item) {
@@ -235,6 +245,18 @@
                         }
                     });
                 });
+                vm.selectBinding.nursing_assessment_grades = results[13];
+                console.log(results[13]);
+                // if(vm.elderlyModel.nursing_assessment_grade){
+                //     console.log('have nursing_assessment_grade');
+                //     vm.setBindingNursingLevelsByAssessmentGrade(nursing_assessment_grade);
+                // }else{
+                //     console.log('no nursing_assessment_grade');
+                //     vm.selectBinding.nursing_levels = results[14];
+                //     console.log(results[14]);
+                // }
+                vm.selectBinding.nursing_levels = results[14];
+                console.log(results[14]);
             });
 
 
@@ -253,7 +275,6 @@
                 //if (!vm.model.period_value_in_advance) {
                 //    vm.elderlyModel.f = 1;
                 //}
-
                 if (!vm.elderlyModel.family_members) {
                     vm.elderlyModel.family_members = [];
                 }
@@ -266,6 +287,13 @@
                         _.each(vm.elderlyModel.charge_items, function (item) {
                             vm.selectionOfManualSelectable[item.item_id] = true;
                         });
+                        
+                        var nursing_assessment_grade = vm.elderlyModel.nursing_assessment_grade;
+                        if(nursing_assessment_grade){
+                            console.log('nursing_assessment_grade:'+nursing_assessment_grade);
+                            vm.setBindingNursingLevelsByAssessmentGrade(nursing_assessment_grade);
+                        }
+                        
 
                         //vm.treeDataPromiseOfRoom = vm.treeDataPromiseOfRoom;
 
@@ -386,6 +414,19 @@
 
         function setNursingSummary(nursing_info){
             vm.elderlyModel.nursing_summary = nursing_info.item_name;
+        }
+
+        function setBindingNursingLevelsByAssessmentGrade(nursing_assessment_grade){
+            vm.elderlyModel.nursing_assessment_grade = nursing_assessment_grade;
+            console.log("nursing_assessment_grade:"+nursing_assessment_grade);
+            vmh.psnService.nursingLevelsByAssessmentGrade(vm.tenantId,nursing_assessment_grade).then(function(rows){
+                console.log(rows);
+                vm.selectBinding.nursing_levels = rows;
+            });
+        }
+
+        function setNursingLevel(nursingLevelId){
+            vm.elderlyModel.nursingLevelId = nursingLevelId;
         }
 
         function sumPeriodPrice() {

@@ -35,7 +35,7 @@ module.exports = function(ctx,name) {
             elderly_summary: {type: String},
             board_info:{type: String},
             room_info:{type: String},
-            nursing_info:{type: String},
+            nursing_info:{type: String},//废弃字段
             sum_period_price:{type: Number, default: 0.00},//期间费用汇总计算列
             period_value_in_advance:{type: Number,default:0},//预收区间
             remark: {type: String,maxLength:400},

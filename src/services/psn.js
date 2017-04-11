@@ -2938,6 +2938,67 @@ module.exports = {
                     };
                 }
             },
+            {
+                method: 'nursingLevelsByAssessmentGrade',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingLevelsByAssessmentGrade",
+                handler: function (app, options) {
+                    return function* (next) {
+                        try {
+                            var nursing_assessment_grade = this.request.body.nursing_assessment_grade;
+                            var tenantId = this.request.body.tenantId;
+                            if (!nursing_assessment_grade) {
+                                this.body = app.wrapper.res.error({ message: '缺少评估等级!' });
+                                yield next;
+                                return;
+                            }
+                            if (!tenantId) {
+                                this.body = app.wrapper.res.error({ message: '缺少养老机构!' });
+                                yield next;
+                                return;
+                            }
+                            var nursing_levels = yield app.modelFactory().model_query(app.models['psn_nursingLevel'], {
+                                    where: {
+                                        nursing_assessment_grade: nursing_assessment_grade,
+                                        status: 1,
+                                        tenantId:tenantId
+                                    }
+                                });
+                            this.body = app.wrapper.res.rows(nursing_levels);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                    }
+                }
+            },
+            {
+                method: 'nursingLevels',
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingLevels",
+                handler: function (app, options) {
+                    return function* (next) {
+                        try {
+                            var tenantId = this.request.body.tenantId;
+                            if (!tenantId) {
+                                this.body = app.wrapper.res.error({ message: '缺少养老机构!' });
+                                yield next;
+                                return;
+                            }
+                            var nursing_levels = yield app.modelFactory().model_query(app.models['psn_nursingLevel'], {
+                                    where: {
+                                        status: 1,
+                                        tenantId:tenantId
+                                    }
+                                });
+                            this.body = app.wrapper.res.rows(nursing_levels);
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                    }
+                }
+            },
             /**********************出院相关*****************************/
             {
                 method: 'submitApplicationToExit',//提交出院申请
@@ -4431,7 +4492,7 @@ module.exports = {
                 url: this.service_url_prefix + "/nursingPlanSaveNursingItem", //为老人保存一条护理类目
                 handler: function (app, options) {
                     return function* (next) {
-                        var tenant, elderly, workItem, nursingPlan;
+                        var tenant, elderly, workItem, nursingPlan,toProcessWorkItem
                         try {
                             var tenantId = this.request.body.tenantId;
                             tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
@@ -4448,23 +4509,31 @@ module.exports = {
                                 yield next;
                                 return;
                             }
-
+                            
                             var workItemCheckInfo = this.request.body.work_item_check_info;
                             var toProcessWorkItemId = workItemCheckInfo.id;
-                            workItem = yield app.modelFactory().model_read(app.models['psn_workItem'], toProcessWorkItemId);
-                            if (!workItem || workItem.status == 0) {
-                                this.body = app.wrapper.res.error({ message: '无法找到工作项目!' });
-                                yield next;
-                                return;
+                            var type = workItemCheckInfo.type;
+                            if(type == DIC.D3017.NURSING_ITEM){
+                                 workItem = yield app.modelFactory().model_read(app.models['psn_workItem'], toProcessWorkItemId);
+                                if (!workItem || workItem.status == 0) {
+                                    this.body = app.wrapper.res.error({ message: '无法找到工作项目!' });
+                                    yield next;
+                                    return;
+                                }
+                               
+                            }else if(type == DIC.D3017.DRUG_USE_ITEM){
+                                workItem = yield app.modelFactory().model_read(app.models['psn_drugUseItem'], toProcessWorkItemId);
+                                if (!workItem || workItem.status == 0) {
+                                    this.body = app.wrapper.res.error({ message: '无法找到用药管理项目!' });
+                                    yield next;
+                                    return;
+                                }
+                                
                             }
-
-                            var toProcessWorkItem = workItem.toObject();
-                            toProcessWorkItem.type = DIC.D3017.NURSING_ITEM;
+                            toProcessWorkItem = workItem.toObject();
+                            toProcessWorkItem.type = type;
                             toProcessWorkItem.workItemId = toProcessWorkItemId;
-
                             var isRemoved = !workItemCheckInfo.checked;
-
-
                             var elderlyNursingPlan = yield app.modelFactory().model_one(app.models['psn_nursingPlan'], {
                                 select: 'work_items',
                                 where: {
@@ -4473,7 +4542,6 @@ module.exports = {
                                     tenantId: tenantId
                                 }
                             });
- 
                             if (!elderlyNursingPlan) {
                                 if (!isRemoved) {
 

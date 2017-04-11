@@ -230,16 +230,36 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                     span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab3')")
                         i.glyphicon.glyphicon-minus-sign
                 div#contentTab3
+                    //- fieldset: .form-group
+                        //- <!--护理信息-->
+                        //- label.col-md-2.control-label {{ vm.viewTranslatePath('TAB3-NURSING-INFO') | translate}}:
+                        //- .col-md-10(ng-if="!vm.readonly")
+                        //-     .btn-group
+                        //-         .btn.btn-primary(name='nursing_info',ng-repeat='nursing_info in vm.selectBinding.nursing_infos',ng-model='vm.model.nursing_info',ng-click='vm.setNursingSummary(nursing_info)',btn-radio="nursing_info.item_id",required='') {{nursing_info.item_name}}
+                        //-     span.text-danger(ng-show="utils.vinput(this.theForm,'nursing_info','required')") {{ "validator.REQUIRED" | translate}}
+                        //- .col-md-10(ng-if="vm.readonly")
+                        //-     .btn-group
+                        //-         .btn.btn-primary.cursor-not-allowed(name='nursing_info',ng-repeat='nursing_info in vm.selectBinding.nursing_infos',ng-class="{'active':vm.model.nursing_info==nursing_info.item_id}") {{nursing_info.item_name}}
                     fieldset: .form-group
-                        <!--护理信息-->
-                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB3-NURSING-INFO') | translate}}:
+                        <!--评估等级-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB3-NURSING-ASSESSMENT-GRADE') | translate}}:
                         .col-md-10(ng-if="!vm.readonly")
                             .btn-group
-                                .btn.btn-primary(name='nursing_info',ng-repeat='nursing_info in vm.selectBinding.nursing_infos',ng-model='vm.model.nursing_info',ng-click='vm.setNursingSummary(nursing_info)',btn-radio="nursing_info.item_id",required='') {{nursing_info.item_name}}
-                            span.text-danger(ng-show="utils.vinput(this.theForm,'nursing_info','required')") {{ "validator.REQUIRED" | translate}}
+                                .btn.btn-primary(name='nursing_assessment_grade',ng-repeat='nursing_assessment_grade in vm.selectBinding.nursing_assessment_grades',ng-model='vm.elderlyModel.nursing_assessment_grade',ng-click='vm.setBindingNursingLevelsByAssessmentGrade(nursing_assessment_grade.value)',btn-radio="nursing_assessment_grade.value",required='') {{nursing_assessment_grade.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'nursing_assessment_grade','required')") {{ "validator.REQUIRED" | translate}}
                         .col-md-10(ng-if="vm.readonly")
                             .btn-group
-                                .btn.btn-primary.cursor-not-allowed(name='nursing_info',ng-repeat='nursing_info in vm.selectBinding.nursing_infos',ng-class="{'active':vm.model.nursing_info==nursing_info.item_id}") {{nursing_info.item_name}}
+                                .btn.btn-primary.cursor-not-allowed(name='nursing_assessment_grade',ng-repeat='nursing_assessment_grade in vm.selectBinding.nursing_assessment_grades',ng-class="{'active':vm.elderlyModel.nursing_assessment_grade==nursing_assessment_grade.value}") {{nursing_assessment_grade.name}}
+                    fieldset: .form-group
+                        <!--护理等级-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB3-NURSING-LEVEL') | translate}}:
+                        .col-md-10(ng-if="!vm.readonly")
+                            .btn-group
+                                .btn.btn-primary(name='nursing_level',ng-disabled="!vm.elderlyModel.nursing_assessment_grade",ng-repeat='nursing_level in vm.selectBinding.nursing_levels',ng-model='vm.elderlyModel.nursingLevelId',ng-click='vm.setNursingLevel(nursing_level._id)',btn-radio="nursing_level._id",required='') {{nursing_level.name}}
+                            span.text-danger(ng-show="utils.vinput(this.theForm,'nursing_level','required')") {{ "validator.REQUIRED" | translate}}
+                         .col-md-10(ng-if="vm.readonly")
+                            .btn-group
+                                .btn.btn-primary.cursor-not-allowed(name='nursing_level',ng-repeat='nursing_level in vm.selectBinding.nursing_levels',ng-class="{'active':vm.elderlyModel.nursingLevelId==nursing_level._id}") {{nursing_level.name}}
                     fieldset: .form-group
                         <!--特色服务-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB3-CUSTOM-SERVICE-INFO') | translate}}:
