@@ -85,6 +85,7 @@ module.exports= {
         return co(function*() {
             try {
                 console.log("login again");
+                self.logger.info('login =>', openId);
                 var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
                         open_id: openId,
@@ -92,9 +93,13 @@ module.exports= {
                     }
                 });
                 if (member) {
+                    self.logger.info('login member =>', member);
                     var token = yield self.getToken(member.open_id);
+                    self.logger.info('login token =>', token);
                     var ret = yield self.userAuthenticate(member, token);
+                    self.logger.info('login userAuthenticate ret =>', ret);
                     var session_id = yield self.getSession(openId);
+                    self.logger.info('login session_id =>', session_id);
                     return session_id;
                 }
             }
@@ -109,6 +114,10 @@ module.exports= {
         var self = this;
         return co(function*() {
             try {
+                if (!sessionId || typeof sessionId !== 'string') {
+                    return true;
+                }
+
                 var ret = yield rp({
                     method: 'POST',
                     url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/userws/sessionIsExpired.json',
@@ -302,7 +311,11 @@ module.exports= {
                         open_id: session.openid
                     }
                 });
-                member.bindingBedMonitors = device._id;
+                member_json = member.toObject();
+                var row_bindingBedMonitors =[];
+                var row_bindingBedMonitors = self.ctx.clone(member_json.bindingBedMonitors);
+                row_bindingBedMonitors.push(device._id);
+                member.bindingBedMonitors = row_bindingBedMonitors;
                 yield member.save();
                 carePerson = yield self.ctx.modelFactory().model_create(self.ctx.models['het_memberCarePerson'], {
                     name: deviceInfo.cpNewName,
@@ -362,10 +375,10 @@ module.exports= {
             var myDate = new Date();
             var nowYear = myDate.getFullYear();
             console.log(openid);
-            sessionId = yield self.getSession(openid);
+            var sessionId = yield self.getSession(openid);
             var sessionIsExpired = yield self.checkSessionIsExpired(sessionId);
             if (sessionIsExpired) {
-                sessionId = yield self.login(sessionId);
+                sessionId = yield self.login(openid);
             }
             var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                 where: {
@@ -402,50 +415,59 @@ module.exports= {
     getDeviceInfo: function (openid) {
         var self = this;
         return co(function *() {
-            var devices = [];
-            var nowYear = self.ctx.moment().format('YYYY');
-            console.log(openid);
-            sessionId = yield self.getSession(openid);
-            var sessionIsExpired = yield self.checkSessionIsExpired(sessionId);
-            if (sessionIsExpired) {
-                sessionId = yield self.login(sessionId);
-            }
-            var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
-                where: {
-                    status: 1,
-                    open_id: openid
+            try{
+                var carePersons = [];
+                var nowYear = self.ctx.moment().format('YYYY');
+                console.log(openid);
+                self.logger.info('openid:', openid);
+                var sessionId = yield self.getSession(openid);
+                var sessionIsExpired = yield self.checkSessionIsExpired(sessionId);
+                if (sessionIsExpired) {
+                    sessionId = yield self.login(openid);
                 }
-            });
-            console.log(member);
-            var devices = yield self.ctx.modelFactory().model_query(self.ctx.models['pub_bedMonitor'], {
-                where: {
-                    status: 1,
-                    _id: {'$in': member.bindingBedMonitors}
-                }
-            });
-
-            for (var i = 0; i < devices.length; i++) {
-                var memberCarePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
+                var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
                         status: 1,
-                        care_by: member._id,
-                        bedMonitorId: devices[i]._id
+                        open_id: openid
                     }
                 });
-                if (memberCarePerson) {
-                    var sleepStatus = yield self.getSleepBriefReport(sessionId, devices[i].name);
-                    devices[i] = {
-                        deviceId: devices[i].name,
-                        memberName: memberCarePerson.name,
-                        sex: memberCarePerson.sex,
-                        age: Number(nowYear) - Number(memberCarePerson.birthYear),
-                        sleepStatus: sleepStatus.ret
+                console.log(member);
+                var memberCarePersons = yield self.ctx.modelFactory().model_query(self.ctx.models['het_memberCarePerson'], {
+                    where: {
+                       status: 1,
+                       care_by: member._id,
                     }
-                    devices.unshift();
+                }).populate('bedMonitorId', 'name');
+                self.logger.info('memberCarePersons:', memberCarePersons);
+                for (var i = 0, len = memberCarePersons.length, memberCarePerson; i < len; i++) {
+                    memberCarePerson = memberCarePersons[i];
+                    // var device = yield self.ctx.modelFactory().model_one(self.ctx.models['pub_bedMonitor'], {
+                    //     where: {
+                    //         status: 1,
+                    //         _id:memberCarePersons[i].bedMonitorId
+                    //     }
+                    // });
+                    self.logger.info('device name:' + memberCarePerson.bedMonitorId.name);
+                    self.logger.info('getDeviceInfo sessionId:' + (sessionId || 'null or undefined'));
+                    if (memberCarePerson.bedMonitorId.name) {
+                        var sleepStatus = yield self.getSleepBriefReport(sessionId, memberCarePerson.bedMonitorId.name);
+                        var memberCarePerson = {
+                            deviceId: memberCarePerson.bedMonitorId.name,
+                            memberName: memberCarePerson.name,
+                            sex: memberCarePerson.sex,
+                            age: Number(nowYear) - Number(memberCarePerson.birthYear),
+                            sleepStatus: sleepStatus.ret
+                        }
+                        carePersons.push(memberCarePerson);
+                    }
                 }
+                console.log('memberCarePersons:', carePersons);
+                return self.ctx.wrapper.res.rows(carePersons);
+            } catch (e) {
+                console.log(e);
+                self.logger.error(e);
+                self.isExecuting = false;
             }
-            console.log('devices:', devices);
-            return self.ctx.wrapper.res.rows(devices);
         }).catch(self.ctx.coOnError);
     },
     changeDeviceInfo: function (openid, deviceInfo, tenantId) {
@@ -570,10 +592,12 @@ module.exports= {
             }
         }).catch(self.ctx.coOnError);
     },
-    userAuthenticate: function (member, token) {
+    userAuthenticate: function (member, token,authenticateTryTimes) {
         var self = this;
+        authenticateTryTimes = authenticateTryTimes === undefined ? 1 : authenticateTryTimes;
         return co(function*() {
             try {
+                self.logger.info('userAuthenticate');
                 var ret = yield rp({
                     method: 'POST',
                     url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/userws/userAuthenticate.json',
@@ -587,10 +611,24 @@ module.exports= {
                 });
                 ret = JSON.parse(ret);
                 if (ret.retCode == 'success') {
+                    self.logger.info('setSession:',member.open_id, ret.retValue);
                     self.setSession(member.open_id, ret.retValue.sessionId);
                     return ret.retValue;
                 } else {
-                    return self.ctx.wrapper.res.default();
+                    if(ret.retValue == '1'){//用户不存在 重新注册
+                       var regist_status =  yield self.registByQinKeShi(member);
+                       console.log(regist_status);
+                       if(regist_status.ret.registStatus == 'success'){//成功 重新登陆
+                           if (authenticateTryTimes === 0) {
+                                return self.ctx.wrapper.res.error({message: 'regist fail again'});
+                            } else {
+                                return self.userAuthenticate(member,token, 0);
+                            }
+                       }else{//失败 返回
+                             return self.ctx.wrapper.res.error({message: 'regist fail'});
+                       }
+                    }
+                   ;
                 }
             }
             catch (e) {
@@ -601,9 +639,9 @@ module.exports= {
         }).catch(self.ctx.coOnError);
 
     },
-    updateDevice: function (sendData, tryTimes) {
+    updateDevice: function (sendData, updateDevicetryTimes) {
         var self = this;
-        tryTimes = tryTimes === undefined ? 1 : tryTimes;
+        updateDevicetryTimes = updateDevicetryTimes === undefined ? 1 : updateDevicetryTimes;
         return co(function*() {
             try {
                 console.log(sendData);
@@ -620,7 +658,7 @@ module.exports= {
                     var sessionId = yield self.login(sendData.openId);
                     sendData.sessionId = sessionId;
                     console.log(sendData);
-                    if (tryTimes === 0) {
+                    if (updateDevicetryTimes === 0) {
                         return self.ctx.wrapper.res.error({message: 'sessionId overdue'});
                     } else {
                         return self.updateDevice(sendData, 0);
@@ -761,20 +799,25 @@ module.exports= {
 
                 // console.log('保证各个tenant作为member的session ', tenants);
                 var tenantIds = self.ctx._.map(tenants, (o) => {
-                    return o._id;
+                    return o.id;
                 });
                 // 保证各个tenant作为member的session
+                var tenantId;
                 for (var i = 0, len = tenantIds.length; i < len; i++) {
                     tenantId = tenantIds[i];
                     var isRegist = yield self.checkIsRegist(tenantId);
                     if (!isRegist) {
-                        yield self.regist(tenantId);
+                        var tenantMember = yield self.registByTenatId(tenantId);
+                         if (tenantMember) {
+                        var token = yield self.getToken(tenantMember.open_id);
+                         yield self.userAuthenticate(tenantMember, token);
+                     }
                     }
                     sessionId = yield self.getSession(tenantId);
                     console.log('sessionId:',sessionId);
                     var sessionIsExpired = yield self.checkSessionIsExpired(sessionId);
                     if (sessionIsExpired) {
-                        yield self.login(tenantId);
+                        sessionId = yield self.login(tenantId);
                     }
                 }
 
@@ -889,7 +932,7 @@ module.exports= {
             }
             catch (e) {
                 console.log(e);
-                self.logger.error(e.message);
+                self.logger.error(e);
                 self.isExecuting = false;
             }
         }).catch(self.ctx.coOnError);
@@ -914,12 +957,15 @@ module.exports= {
         var self = this;
         return co(function*() {
             try {
+                console.log('getLatestSmbPerMinuteRecord:')
                 var ret = yield rp({
                     method: 'POST',
                     url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/devicews/getLatestSmbPerMinuteRecord.json',
                     form: {sessionId: sessionId, devId: devId}
                 });
+                self.logger.info('b:' + ret);
                 ret = JSON.parse(ret);
+                self.logger.info('a:' + ret);
                 return ret;
             }
             catch (e) {
@@ -969,6 +1015,93 @@ module.exports= {
                 console.log(e);
                 self.logger.error(e.message);
             }
+        }).catch(self.ctx.coOnError);
+    },
+    registByTenatId: function (tenantId) {
+        var self = this;
+        return co(function*() {
+            try {
+                var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
+                    where: {
+                        open_id: tenantId,
+                        status: 1
+                    }
+                });
+                if (member) {
+                    return member;
+                }
+                console.log("no regist");
+                console.log(typeof(tenantId));
+                var psd = self.ctx.crypto.createHash('md5').update('123456').digest('hex');
+                member = yield self.ctx.modelFactory().model_create(self.ctx.models['het_member'], {
+                    open_id: tenantId,
+                    name: tenantId,
+                    passhash: psd,
+                    tenantId: tenantId
+                });
+                var ret = yield rp({
+                    method: 'POST',
+                    url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/userws/userRegister.json',
+                    form: {
+                        userName: tenantId,
+                        encryptedName: tenantId,
+                        encryptedPwd: psd,
+                        userType: "zjwsy"
+                    }
+                });
+                ret = JSON.parse(ret);
+                if (ret.retCode == 'success') {
+                    console.log(" sync regist success");
+                    member.sync_flag_hzfanweng = true;
+                    yield member.save();
+                }
+
+                return member;
+            }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+            }
+
+        }).catch(self.ctx.coOnError);
+
+    },
+    registByQinKeShi:function(userInfo){
+        var self = this;
+        return co(function*() {
+            try {
+                var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
+                    where: {
+                        open_id: userInfo.open_id,
+                        status: 1
+                    }
+                });
+                var ret = yield rp({
+                    method: 'POST',
+                    url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/userws/userRegister.json',
+                    form: {
+                        userName: userInfo.name,
+                        encryptedName: userInfo.name,
+                        encryptedPwd: userInfo.passhash,
+                        userType: "zjwsy"
+                    }
+                });
+                ret = JSON.parse(ret);
+                if (ret.retCode == 'success') {//注册成功
+                    console.log(" sync regist success");
+                    member.sync_flag_hzfanweng = true;
+                    yield member.save();
+                    return self.ctx.wrapper.res.ret({registStatus:'success'});
+                }else{//注册失败
+                    return self.ctx.wrapper.res.error({message: ret.retValue});
+                }
+       
+               }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+            }
+
         }).catch(self.ctx.coOnError);
     }
 

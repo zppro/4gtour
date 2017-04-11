@@ -6,9 +6,9 @@ var jwt = require('jsonwebtoken');
 
 
 module.exports = function (app){
-    var ignoreAuthPaths = app.conf.authApp.ignorePaths;
+    var ignoreAuthPaths = app.conf.authAppRobot.ignorePaths;
     return function * (next) {
-        // console.log('authApp');
+        console.log('authAppRobot');
         var self = this;
         var isIgnored = false;
         if(ignoreAuthPaths) { 
@@ -46,13 +46,15 @@ module.exports = function (app){
                 }
                 
                 try {
-                    token = token.substr('Bearer '.length)
+                    token = token.substr('Bearer '.length);
                     var timestamp = this.get('X-Custom-TS');
-                    this.request_timestamp = timestamp;
-                    this.payload = jwt.verify(token, app.conf.secure.authSecret + ':' + timestamp);
-                    
-                    this.robot_code = this.get('X-Custom-ROBOT');
+                    // console.log('timestamp:', timestamp);
 
+                    this.request_timestamp = timestamp;
+                    var authSecret = 'woosiyuan-robot-pension-agency';
+                    var payload = jwt.verify(token, authSecret + ':' + timestamp);
+                    this.robot_code = payload.sub;
+                    // console.log('this.robot_code:', this.robot_code);
                     // console.log(this.payload);
                 }catch(e){
                     console.log(e);
