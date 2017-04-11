@@ -592,8 +592,9 @@ module.exports= {
             }
         }).catch(self.ctx.coOnError);
     },
-    userAuthenticate: function (member, token) {
+    userAuthenticate: function (member, token,authenticateTryTimes) {
         var self = this;
+        authenticateTryTimes = authenticateTryTimes === undefined ? 1 : authenticateTryTimes;
         return co(function*() {
             try {
                 self.logger.info('userAuthenticate');
@@ -614,7 +615,20 @@ module.exports= {
                     self.setSession(member.open_id, ret.retValue.sessionId);
                     return ret.retValue;
                 } else {
-                    return self.ctx.wrapper.res.default();
+                    if(ret.retValue == '1'){//用户不存在 重新注册
+                       var regist_status =  yield self.registByQinKeShi(member);
+                       console.log(regist_status);
+                       if(regist_status.ret.registStatus == 'success'){//成功 重新登陆
+                           if (authenticateTryTimes === 0) {
+                                return self.ctx.wrapper.res.error({message: 'regist fail again'});
+                            } else {
+                                return self.userAuthenticate(member,token, 0);
+                            }
+                       }else{//失败 返回
+                             return self.ctx.wrapper.res.error({message: 'regist fail'});
+                       }
+                    }
+                   ;
                 }
             }
             catch (e) {
@@ -625,9 +639,9 @@ module.exports= {
         }).catch(self.ctx.coOnError);
 
     },
-    updateDevice: function (sendData, tryTimes) {
+    updateDevice: function (sendData, updateDevicetryTimes) {
         var self = this;
-        tryTimes = tryTimes === undefined ? 1 : tryTimes;
+        updateDevicetryTimes = updateDevicetryTimes === undefined ? 1 : updateDevicetryTimes;
         return co(function*() {
             try {
                 console.log(sendData);
@@ -644,7 +658,7 @@ module.exports= {
                     var sessionId = yield self.login(sendData.openId);
                     sendData.sessionId = sessionId;
                     console.log(sendData);
-                    if (tryTimes === 0) {
+                    if (updateDevicetryTimes === 0) {
                         return self.ctx.wrapper.res.error({message: 'sessionId overdue'});
                     } else {
                         return self.updateDevice(sendData, 0);
@@ -1051,6 +1065,44 @@ module.exports= {
 
         }).catch(self.ctx.coOnError);
 
+    },
+    registByQinKeShi:function(userInfo){
+        var self = this;
+        return co(function*() {
+            try {
+                var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
+                    where: {
+                        open_id: userInfo.open_id,
+                        status: 1
+                    }
+                });
+                var ret = yield rp({
+                    method: 'POST',
+                    url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/userws/userRegister.json',
+                    form: {
+                        userName: userInfo.name,
+                        encryptedName: userInfo.name,
+                        encryptedPwd: userInfo.passhash,
+                        userType: "zjwsy"
+                    }
+                });
+                ret = JSON.parse(ret);
+                if (ret.retCode == 'success') {//注册成功
+                    console.log(" sync regist success");
+                    member.sync_flag_hzfanweng = true;
+                    yield member.save();
+                    return self.ctx.wrapper.res.ret({registStatus:'success'});
+                }else{//注册失败
+                    return self.ctx.wrapper.res.error({message: ret.retValue});
+                }
+       
+               }
+            catch (e) {
+                console.log(e);
+                self.logger.error(e.message);
+            }
+
+        }).catch(self.ctx.coOnError);
     }
 
 
