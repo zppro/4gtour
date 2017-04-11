@@ -22,6 +22,7 @@ var co = require('co');
 var thunkify = require('thunkify');
 var rfcore = require('rfcore');
 var mongoose = require('mongoose');
+var clog = require('./libs/CombineLogger');
 var auth = require('./nws/auth.js');
 var crossDomainInterceptor = require('./nws/crossDomainInterceptor.js');
 var authApp = require('./nws/authApp.js');
@@ -176,6 +177,8 @@ app.getModelOption =  function (ctx) {
 };
 
 app.uid = require('rand-token').uid;
+
+app.clog = clog;
 
 // logger
 //app.use(function *(next){
