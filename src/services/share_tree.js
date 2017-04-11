@@ -470,7 +470,8 @@ module.exports = {
                                 return districtNode;
                             });
 
-                            console.dir(rows);
+                            // console.dir(rows);
+                            // app.clog.log(self.logger, 'T3009:', rows);
                             this.body = app.wrapper.res.rows(rows);
 
                         } catch (e) {
