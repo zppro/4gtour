@@ -160,13 +160,13 @@ module.exports= {
             }
         }).catch(self.ctx.coOnError);
     },
-    regist: function (session, userInfo, tenantId) {
+    regist: function (openid, userInfo, tenantId) {
         var self = this;
         return co(function*() {
             try {
                 var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
-                        open_id: session.openid,
+                        open_id:openid,
                         status: 1
                     }
                 });
@@ -176,7 +176,7 @@ module.exports= {
                 console.log("no regist");
                 var psd = self.ctx.crypto.createHash('md5').update('123456').digest('hex');
                 member = yield self.ctx.modelFactory().model_create(self.ctx.models['het_member'], {
-                    open_id: session.openid,
+                    open_id: openid,
                     name: userInfo.nickName,
                     passhash: psd,
                     head_portrait: userInfo.avatarUrl,
@@ -210,11 +210,11 @@ module.exports= {
         }).catch(self.ctx.coOnError);
 
     },
-    addDevice: function (deviceInfo, session, tenantId) {
+    addDevice: function (deviceInfo, openid, tenantId) {
         var self = this;
         return co(function *() {
             try {
-                var session_id = yield self.getSession(session.openid);
+                var session_id = yield self.getSession(openid);
                 var cpNewGender = null;
                 var sex = null;
                 var myDate = new Date();
@@ -244,7 +244,7 @@ module.exports= {
                 if (device) { //device existed
                     member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                         where: {
-                            open_id: session.openid,
+                            open_id: openid,
                             status: 1
                         }
                     });
@@ -308,7 +308,7 @@ module.exports= {
                 });
                 member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
-                        open_id: session.openid
+                        open_id: openid
                     }
                 });
                 member_json = member.toObject();
@@ -985,8 +985,7 @@ module.exports= {
                         status: 1
                     }
                 });
-                console.log('deviceId:',deviceId);
-                 console.log('tenantId:',tenantId);
+			console.log('member:',member)
                 var device = yield self.ctx.modelFactory().model_one(self.ctx.models['pub_bedMonitor'], {
                     where: {
                         name: deviceId,
@@ -995,20 +994,22 @@ module.exports= {
                     }
                 });
                 console.log('device:',device);
-                if(!device){
+              if(!device){
                     return false;
                 }
-                carePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
+                var carePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
+			where:{
                         status:1,
                         care_by: member._id,
                         bedMonitorId: device._id,
                         tenantId: tenantId
+			}
                     });
                 console.log(carePerson);
-                if(!carePerson){
-                    return false;
-                }
-                return true;
+                if(carePerson){
+                    return true;
+                     }
+                return false;
 
             }
             catch (e) {
