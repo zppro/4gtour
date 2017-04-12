@@ -74,7 +74,7 @@ module.exports = {
                             var bucket = default_bucket;
 
                             var key = this.params.key;
-                            var open_id = this.payload.open_id;
+                            var open_id = this.openid;
 
                             var pubPolicyObj = {
                                 scope: key ? bucket + ':' + key : bucket,
@@ -88,6 +88,8 @@ module.exports = {
                             this.set("Expires", 0);
                             this.set('Parse','no-parse');
                             var token = pubPolicy.token();
+
+                            console.log('uploadTokenForWXApp token:', token);
                             this.body = app.wrapper.res.ret(token);
 
                         } catch (e) {
