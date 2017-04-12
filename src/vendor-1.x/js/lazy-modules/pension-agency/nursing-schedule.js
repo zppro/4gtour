@@ -46,7 +46,6 @@
             vm.baseWeek = 0;
             var p1 = loadWeek();
             var p2 = vm.yAxisDataPromise = vmh.shareService.tmp('T3009', null, {tenantId:vm.tenantId}).then(function(nodes){
-                console.log('yAxisDataPromise');
                 return nodes;
             });
         }
@@ -86,7 +85,7 @@
         function parseNursingSchedule(nursingSchedule) {
             console.log('parse nursingScheduleItems');
             var nursingScheduleItems = nursingSchedule.items;
-            vm.yAxisData = nursingSchedule.yAxisData;
+            // vm.yAxisData = nursingSchedule.yAxisData;
             var nursingWorkers = vm.selectBinding.nursingWorkers;
             vm.aggrData = {};
             for(var i=0,len=nursingScheduleItems.length;i<len;i++) {
