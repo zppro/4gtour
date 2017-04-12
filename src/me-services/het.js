@@ -38,7 +38,6 @@
                                  var session_id = yield app.bed_monitor_provider.getSession(member.open_id)
                                  console.log(session_id);
                                  this.body = app.wrapper.res.default();
-
                              }
                          } catch (e) {
                              self.logger.error(e.message);
@@ -201,6 +200,26 @@
                               
                              console.log("isAttach:", ret);
                              this.body = "ok";
+                         } catch (e) {
+                             self.logger.error(e.message);
+                             this.body = app.wrapper.res.error(e);
+                         }
+                         yield next;
+                     };
+                 }
+             },
+             {
+                 method: 'sleepDevicews$changeCarePersonPortrait',
+                 verb: 'post',
+                 url: this.service_url_prefix + "/sleepDevicews$changeCarePersonPortrait",
+                 handler: function (app, options) {
+                     return function *(next) {
+                         try {
+                             console.log("body:");
+                             console.log(this.request.body)
+                             var ret = yield app.bed_monitor_provider.changeCarePersonPortrait(this.openid, this.request.body.portraitUrl,this.request.body.deviceName, this.request.body.tenantId);
+                             console.log("isAttach:", ret);
+                             this.body =  app.wrapper.res.ret({isAttach:ret});
                          } catch (e) {
                              self.logger.error(e.message);
                              this.body = app.wrapper.res.error(e);

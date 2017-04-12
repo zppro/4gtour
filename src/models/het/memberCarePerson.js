@@ -22,7 +22,8 @@ module.exports = function(ctx,name) {
             sex: {type: String, required: true, minlength: 1, maxlength: 1, enum: ctx._.rest(ctx.dictionary.keys["D1006"])},
             care_by: {type: mongoose.Schema.Types.ObjectId, ref: 'het_member'},
             bedMonitorId: {type: mongoose.Schema.Types.ObjectId, ref: 'pub_bedMonitor'}, //绑定关心人的设备
-            tenantId: {type: mongoose.Schema.Types.ObjectId}
+            tenantId: {type: mongoose.Schema.Types.ObjectId},
+            portrait:  {type: String}, // 关心人的头像
         });
 
         memberCarePersonSchema.pre('update', function (next) {
