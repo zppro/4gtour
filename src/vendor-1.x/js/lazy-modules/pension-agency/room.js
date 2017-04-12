@@ -310,7 +310,10 @@
         function init() {
 
             vm.init({removeDialog: ngDialog});
+            vm.selectBinding.districts = vm.modelNode.services['psn-district'].query(_.defaults(vm.selectFilterObject.districts, vm.selectFilterObject.common), '_id name');
 
+
+            vm.switchDistrict = switchDistrict;
             vm.doSubmit = doSubmit;
             vm.tab1 = {cid: 'contentTab1'};
 
@@ -318,12 +321,32 @@
 
         }
 
+        function switchDistrict() {
+            if (!vm.model.districtId) {
+                if ($scope.theForm['districtId'])
+                    $scope.theForm['districtId'].$dirty = true;
+                return;
+            }
+            vmh.fetch(vm.modelService.query({
+                districtId: vm.model.districtId,
+                status: 1
+            }, 'name')).then(function (rooms) {
+                console.log(rooms);
+                if (rooms.length > 0) {
+                    vm.existsRooms = rooms;
+                }
+                else{
+                    vm.existsRooms = [];
+                }
+            });
+        }
+
         function doSubmit() {
 
             if ($scope.theForm.$valid) {
                 var conditions = {"_id": {"$in": vm.getParam('selectedIds')}};
-                //console.log(conditions);
-                var batchModel = {capacity: vm.model.capacity, stop_flag: !!vm.model.stop_flag};
+                //console.log(conditions); 
+                var batchModel = {districtId:vm.model.districtId,capacity: vm.model.capacity, stop_flag: !!vm.model.stop_flag};
                 console.log(batchModel);
                 vm.saveWhenBatchEdit(conditions, batchModel);
             }

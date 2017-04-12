@@ -637,6 +637,8 @@
       "details-batch-edit": {
         "TITLE": "养老机构-基础设置-房间-批量编辑",
         "TAB1": "批量编辑信息",
+        "TAB1-LABEL-DISTRICT_ID":"所在片区",
+        "TAB1-PLACEHOLDER-DISTRICT_ID":"请选择一个片区..",
         "TAB1-LABEL-CAPACITY": "床位数量",
         "TAB1-PLACEHOLDER-CAPACITY": "4..",
         "TAB1-LABEL-FLAG-COLLECTION": "标志集合",
