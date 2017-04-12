@@ -47,16 +47,17 @@ module.exports = function (app){
                 
                 try {
                     token = token.substr('Bearer '.length);
+                    console.log('token:', token);
                     var timestamp = this.get('X-Custom-TS');
                     // console.log('timestamp:', timestamp);
-
                     this.request_timestamp = timestamp;
 			  console.log('app.conf.secure.authSecretWXApp:', app.conf.secure.authSecretWXApp);
                           console.log('timestamp:', timestamp);
                     var payload = jwt.verify(token, app.conf.secure.authSecretWXApp + ':' + timestamp);
-                    this.openid = payload.open_id;
-                    console.log('this.openid:', this.openid);
                     console.log(payload);
+                    this.openid = payload.sub;
+                    console.log('this.openid:', this.openid);
+
                 }catch(e){
                     console.log(e);
                     this.status = 401;
