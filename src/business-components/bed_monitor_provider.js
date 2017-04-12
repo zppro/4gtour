@@ -164,6 +164,7 @@ module.exports= {
         var self = this;
         return co(function*() {
             try {
+			console.log("openid:",openid);
                 var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
                         open_id:openid,
@@ -418,7 +419,7 @@ module.exports= {
             try{
                 var carePersons = [];
                 var nowYear = self.ctx.moment().format('YYYY');
-                console.log(openid);
+                console.log("OPEINID:",openid);
                 self.logger.info('openid:', openid);
                 var sessionId = yield self.getSession(openid);
                 var sessionIsExpired = yield self.checkSessionIsExpired(sessionId);

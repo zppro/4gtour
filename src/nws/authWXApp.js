@@ -51,10 +51,12 @@ module.exports = function (app){
                     // console.log('timestamp:', timestamp);
 
                     this.request_timestamp = timestamp;
+			  console.log('app.conf.secure.authSecretWXApp:', app.conf.secure.authSecretWXApp);
+                          console.log('timestamp:', timestamp);
                     var payload = jwt.verify(token, app.conf.secure.authSecretWXApp + ':' + timestamp);
                     this.openid = payload.open_id;
                     console.log('this.openid:', this.openid);
-                    console.log(this.payload);
+                    console.log(payload);
                 }catch(e){
                     console.log(e);
                     this.status = 401;
