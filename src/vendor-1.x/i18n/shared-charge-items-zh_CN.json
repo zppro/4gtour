@@ -18,6 +18,7 @@
         "DEVICE-AIDED":"介助老人(半失能/半失智)",
         "NURSING-CARD":"介护老人(失能/失智)"
       },
+      "NURSING_LEVEL-S1":"护理费",
       "OTHER-S1": "其他费用",
       "other-s1":{
         "DEPOSIT":"押金/保证金",
