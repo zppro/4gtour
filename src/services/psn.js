@@ -4492,7 +4492,7 @@ module.exports = {
                 url: this.service_url_prefix + "/nursingPlanSaveNursingItem", //为老人保存一条护理类目
                 handler: function (app, options) {
                     return function* (next) {
-                        var tenant, elderly, workItem, nursingPlan;
+                        var tenant, elderly, workItem, nursingPlan,toProcessWorkItem
                         try {
                             var tenantId = this.request.body.tenantId;
                             tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
@@ -4509,23 +4509,31 @@ module.exports = {
                                 yield next;
                                 return;
                             }
-
+                            
                             var workItemCheckInfo = this.request.body.work_item_check_info;
                             var toProcessWorkItemId = workItemCheckInfo.id;
-                            workItem = yield app.modelFactory().model_read(app.models['psn_workItem'], toProcessWorkItemId);
-                            if (!workItem || workItem.status == 0) {
-                                this.body = app.wrapper.res.error({ message: '无法找到工作项目!' });
-                                yield next;
-                                return;
+                            var type = workItemCheckInfo.type;
+                            if(type == DIC.D3017.NURSING_ITEM){
+                                 workItem = yield app.modelFactory().model_read(app.models['psn_workItem'], toProcessWorkItemId);
+                                if (!workItem || workItem.status == 0) {
+                                    this.body = app.wrapper.res.error({ message: '无法找到工作项目!' });
+                                    yield next;
+                                    return;
+                                }
+                               
+                            }else if(type == DIC.D3017.DRUG_USE_ITEM){
+                                workItem = yield app.modelFactory().model_read(app.models['psn_drugUseItem'], toProcessWorkItemId);
+                                if (!workItem || workItem.status == 0) {
+                                    this.body = app.wrapper.res.error({ message: '无法找到用药管理项目!' });
+                                    yield next;
+                                    return;
+                                }
+                                
                             }
-
-                            var toProcessWorkItem = workItem.toObject();
-                            toProcessWorkItem.type = DIC.D3017.NURSING_ITEM;
+                            toProcessWorkItem = workItem.toObject();
+                            toProcessWorkItem.type = type;
                             toProcessWorkItem.workItemId = toProcessWorkItemId;
-
                             var isRemoved = !workItemCheckInfo.checked;
-
-
                             var elderlyNursingPlan = yield app.modelFactory().model_one(app.models['psn_nursingPlan'], {
                                 select: 'work_items',
                                 where: {
@@ -4534,7 +4542,6 @@ module.exports = {
                                     tenantId: tenantId
                                 }
                             });
- 
                             if (!elderlyNursingPlan) {
                                 if (!isRemoved) {
 

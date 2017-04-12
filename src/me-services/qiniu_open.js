@@ -62,6 +62,41 @@ module.exports = {
                         yield next;
                     };
                 }
+            },
+            {
+                method: 'uploadTokenForWXApp',
+                verb: 'get',
+                url: this.service_url_prefix + "/uploadTokenForWXApp/:key?",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+
+                            var bucket = default_bucket;
+
+                            var key = this.params.key;
+                            var open_id = this.payload.open_id;
+
+                            var pubPolicyObj = {
+                                scope: key ? bucket + ':' + key : bucket,
+                                expire: app.moment().add(1, 'day'),
+                                endUser: open_id
+                            };
+                            var pubPolicy = new qiniu.rs.PutPolicy2(pubPolicyObj);
+
+                            this.set("Cache-Control", "max-age=0, private, must-revalidate");
+                            this.set("Pragma", "no-cache");
+                            this.set("Expires", 0);
+                            this.set('Parse','no-parse');
+                            var token = pubPolicy.token();
+                            this.body = app.wrapper.res.ret(token);
+
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
             }
         ];
 
