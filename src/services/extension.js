@@ -46,11 +46,8 @@ module.exports = {
                 verb: 'get',
                 url: this.service_url_prefix + "/tenantChargeItemNursingLevelAsTree/:id,:charge_standard,:subsystem",
                 handler: function (app, options) {
-                    console.log(3333333333333333333333);
                     return function * (next) {
-                        console.log(3333333333333333333333);
                         try {
-                            console.log(3333333333333333333333);
                             var tenantId = this.params.id;
                             var tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
                             if (!tenant || tenant.status == 0) {
