@@ -35,8 +35,8 @@
                                  console.log("getToken");
                                  var token = yield app.bed_monitor_provider.getToken(member.open_id);
                                  var ret = yield app.bed_monitor_provider.userAuthenticate(member, token);
-                                 var session_id = yield app.bed_monitor_provider.getSession(member.open_id)
-                                 console.log(session_id);
+                                //  var session_id = yield app.bed_monitor_provider.getSession(member.open_id)
+                                //  console.log(session_id);
                                  this.body = app.wrapper.res.default();
                              }
                          } catch (e) {
@@ -218,8 +218,9 @@
                              console.log("body:");
                              console.log(this.request.body)
                              var ret = yield app.bed_monitor_provider.changeCarePersonPortrait(this.openid, this.request.body.portraitUrl,this.request.body.deviceName, this.request.body.tenantId);
-                             console.log("isAttach:", ret);
-                             this.body =  app.wrapper.res.ret({isAttach:ret});
+                             console.log("changeCarePersonPortrait:", ret);
+                             this.body =  app.wrapper.res.default();
+                            
                          } catch (e) {
                              self.logger.error(e.message);
                              this.body = app.wrapper.res.error(e);
