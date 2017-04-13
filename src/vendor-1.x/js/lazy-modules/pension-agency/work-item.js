@@ -81,11 +81,7 @@
         }
 
         function doSubmit() {
-            var repeat_values = vm.repeat_values;
-            if (repeat_values) {
-                var arr = repeat_values.split(',');
-                vm.model.repeat_values = repeat_values.split(',');
-            }
+            vm.model.repeat_values = vm.repeat_values?repeat_values.split(","):"";
             if ($scope.theForm.$valid) {
 
                 vm.save();
