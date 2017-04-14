@@ -19,7 +19,7 @@ module.exports = function(ctx,name) {
         var sleepDateReportOfHZFanWengSchema = new mongoose.Schema({
             check_in_time: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
-            devId: {type: string},  // 对方的devId 对应我们的pub_bedMonitor.name
+            devId: {type: String},  // 对方的devId 对应我们的pub_bedMonitor.name
             date_begin: {type: Date},  // 日报样本开始时间
             date_end: {type: Date},  // 日报样本结束时间
             bed_time: {type: Date},  // 上床时间
