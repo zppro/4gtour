@@ -4832,6 +4832,7 @@ module.exports = {
                                                         exec_date = app.moment(now).add(i, 'days');
                                                         if (app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start).isAfter(now)) {
                                                             exec_on = app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start)
+                                                            nursingRecord.exec_on = exec_on;
                                                             if (workItem.remind_flag) {
                                                                 remind_start = app.moment(exec_on);
                                                                 for (var remind_count = 0; remind_count < remind_max; remind_count++) {
