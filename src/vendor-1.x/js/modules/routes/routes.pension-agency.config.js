@@ -1171,7 +1171,7 @@
                             type: 'number',
                             width: 80
                         }, {
-                            label: '',
+                            label: '操作',
                             name: 'actions',
                             sortable: false,
                             width: 60

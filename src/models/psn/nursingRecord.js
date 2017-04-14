@@ -19,6 +19,7 @@ module.exports = function(ctx,name) {
             check_in_time: {type: Date, default: Date.now},
             operated_on: {type: Date, default: Date.now},
             elderlyId: {type: mongoose.Schema.Types.ObjectId, ref: 'psn_elderly'},
+            status: {type: Number, min: 0, max: 1, default: 1},
             elderly_name: {type: String},
             roomId: {type: mongoose.Schema.Types.ObjectId, ref: 'psn_room'},
             bed_no: {type: Number, min: 1},
