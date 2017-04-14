@@ -4758,9 +4758,6 @@ module.exports = {
                                                     // console.log(o);
                                                     nursingRecord.remind_on = [];
                                                     exec_on = app.moment(exec_date_string + ' ' + o + workItem.repeat_start);
-                                                    console.log("exec_on",exec_on);
-                                                    console.log("now",now)
-                                                    console.log("***",exec_on.isAfter(now))
                                                     if (exec_on.isAfter(now)) {
                                                         // 当天没有过期的时刻
                                                         nursingRecord.exec_on = exec_on;
