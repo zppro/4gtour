@@ -129,15 +129,15 @@
                  }
              },
              {
-                 method: 'sleepDevicews$changeDeviceInfo',
+                 method: 'sleepDevicews$changeCarePersonInfo',
                  verb: 'post',
-                 url: this.service_url_prefix + "/sleepDevicews$changeDeviceInfo",
+                 url: this.service_url_prefix + "/sleepDevicews$changeCarePersonInfo",
                  handler: function (app, options) {
                      return function *(next) {
                          try {
                              console.log("body:");
                              console.log(this.request.body)
-                             var ret = yield app.bed_monitor_provider.changeDeviceInfo(this.openid, this.request.body.deviceInfo, this.request.body.tenantId);
+                             var ret = yield app.bed_monitor_provider.changeCarePersonInfo(this.openid, this.request.body.memberCarePersonInfo, this.request.body.tenantId);
                              console.log("ret++++:", ret);
                              this.body = app.wrapper.res.ret(ret);
                          } catch (e) {
@@ -217,10 +217,28 @@
                          try {
                              console.log("body:");
                              console.log(this.request.body)
-                             var ret = yield app.bed_monitor_provider.changeCarePersonPortrait(this.openid, this.request.body.portraitUrl,this.request.body.deviceName, this.request.body.tenantId);
+                             var ret = yield app.bed_monitor_provider.changeCarePersonPortrait(this.request.body.id,this.request.body.portraitUrl);
                              console.log("changeCarePersonPortrait:", ret);
                              this.body =  app.wrapper.res.default();
                             
+                         } catch (e) {
+                             self.logger.error(e.message);
+                             this.body = app.wrapper.res.error(e);
+                         }
+                         yield next;
+                     };
+                 }
+             },
+             {
+                 method: 'sleepDevicews$getCarePersonInfoById',
+                 verb: 'post',
+                 url: this.service_url_prefix + "/sleepDevicews$getCarePersonInfoById",
+                 handler: function (app, options) {
+                     return function *(next) {
+                         try {
+                             console.log("body:");
+                             console.log(this.request.body)
+                             this.body= yield app.bed_monitor_provider.getCarePersonInfoById( this.request.body.cid);    
                          } catch (e) {
                              self.logger.error(e.message);
                              this.body = app.wrapper.res.error(e);
