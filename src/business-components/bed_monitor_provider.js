@@ -457,7 +457,8 @@ module.exports= {
                             memberName: memberCarePerson.name,
                             sex: memberCarePerson.sex,
                             age: Number(nowYear) - Number(memberCarePerson.birthYear),
-                            sleepStatus: sleepStatus.ret
+                            sleepStatus: sleepStatus.ret,
+                            portraitUrl:memberCarePerson.portrait
                         }
                         carePersons.push(memberCarePerson);
                     }
@@ -614,7 +615,7 @@ module.exports= {
                 if (ret.retCode == 'success') {
                     self.logger.info('setSession:',member.open_id, ret.retValue);
                     self.setSession(member.open_id, ret.retValue.sessionId);
-                    return ret.retValue;
+                    return self.ctx.wrapper.res.default();
                 } else {
                     if(ret.retValue == '1'){//用户不存在 重新注册
                        var regist_status =  yield self.registByQinKeShi(member);
@@ -1130,7 +1131,7 @@ module.exports= {
                     bedMonitorId: device._id
                 }
             });
-            memberCarePerson.portraitUrl = portraitUrl;
+            memberCarePerson.portrait = portraitUrl;
             yield memberCarePerson.save();
             return self.ctx.wrapper.res.default();
         }).catch(self.ctx.coOnError);
