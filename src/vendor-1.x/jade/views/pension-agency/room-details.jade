@@ -18,18 +18,12 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                     fieldset: .form-group
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-FLOOR') | translate}}:
                         .col-md-10
-                            .btn-group
-                                label.btn.btn-primary(ng-disabled="!vm.model.districtId||vm.diableFloor(floor)",ng-repeat='floor in vm.selectBinding.floors',ng-class="{active: floor == vm.model.floor}")
-                                    input(ng-disabled="!vm.model.districtId||vm.diableFloor(floor)",type='radio',class="hidden",name="floor" ng-model="vm.model.floor" ng-value="floor",ng-change='vm.genRoomName()',required='')
-                                    |{{floor}}F
+                            input.form-control(ng-disabled="!vm.model.districtId||vm.diableFloor(floor)",type='number', name='floor',ng-model='vm.model.floor',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-FLOOR")|translate}}' ,required='',ng-change='vm.genRoomName()',ui-validate="'$value>=1&&$value<=vm.maxFloors'")
                             span.text-danger(ng-show="utils.vinput(this.theForm,'floor','required')") {{ "validator.REQUIRED" | translate}}
                     fieldset: .form-group
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NUMBER-IN-FLOOR') | translate}}:
                         .col-md-10
-                            .btn-group
-                                label.btn.btn-primary(ng-disabled="!vm.model.districtId||vm.diableNumberInFloor(number_in_floor)",ng-repeat='number_in_floor in vm.selectBinding.numbers_in_floor',ng-class="{active: number_in_floor == vm.model.number_in_floor}")
-                                    input(ng-disabled="!vm.model.districtId||vm.diableNumberInFloor(number_in_floor)",type='radio',class="hidden",name="number_in_floor" ng-model="vm.model.number_in_floor" ng-value="number_in_floor",ng-change='vm.genRoomName()',required='')
-                                    |{{number_in_floor}}#
+                            input.form-control(ng-disabled="!vm.model.districtId||vm.diableNumberInFloor(number_in_floor)",type='number', name='number_in_floor',ng-model='vm.model.number_in_floor',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-NUMBER-IN-FLOOR")|translate}}' ,required='',ng-change='vm.genRoomName()',ui-validate="'$value>=1&&$value<=vm.maxNumbersInFloor'")
                             span.text-danger(ng-show="utils.vinput(this.theForm,'number_in_floor','required')") {{ "validator.REQUIRED" | translate}}
                     fieldset: .form-group
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NAME') | translate}}:
