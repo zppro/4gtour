@@ -744,6 +744,17 @@
         "TAB1-LABEL-TEMPLATES-WX_TEMPLATE_ID": "微信模版id",
         "TAB1-PLACEHOLDER-TEMPLATES-WX_TEMPLATE_ID": "从微信小程序平台复制过来.."
       }
+    },
+    "other-config":{
+      "list":{
+        "TITLE":"养老机构-系统管理-其它配置-列表"
+      },
+      "details": {
+        "TITLE": "养老机构-系统管理-其它配置-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-NAME": "超时时间（分钟）",
+        "TAB1-PLACEHOLDER-NAME": "5.."
+      }
     }
   }
 }

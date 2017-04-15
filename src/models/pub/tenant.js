@@ -76,6 +76,9 @@ module.exports = function(ctx,name) {
             subsidiary_ledger: {
                 self: {type: Number, default: 0.00},//主账户
                 other: {type: Number, default: 0.00} //其他账户
+            },
+            other_config:{
+                psn_bed_monitor_timeout:{type:Number,default:5.00}//睡眠带超时时间设置，单位：分钟，默认5分钟
             }
         });
 
