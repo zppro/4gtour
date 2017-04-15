@@ -164,6 +164,7 @@ module.exports= {
         var self = this;
         return co(function*() {
             try {
+			console.log("openid:",openid);
                 var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
                         open_id:openid,
@@ -418,7 +419,7 @@ module.exports= {
             try{
                 var carePersons = [];
                 var nowYear = self.ctx.moment().format('YYYY');
-                console.log(openid);
+                console.log("OPEINID:",openid);
                 self.logger.info('openid:', openid);
                 var sessionId = yield self.getSession(openid);
                 var sessionIsExpired = yield self.checkSessionIsExpired(sessionId);
@@ -456,7 +457,8 @@ module.exports= {
                             memberName: memberCarePerson.name,
                             sex: memberCarePerson.sex,
                             age: Number(nowYear) - Number(memberCarePerson.birthYear),
-                            sleepStatus: sleepStatus.ret
+                            sleepStatus: sleepStatus.ret,
+                            portraitUrl:memberCarePerson.portrait
                         }
                         carePersons.push(memberCarePerson);
                     }
@@ -613,7 +615,7 @@ module.exports= {
                 if (ret.retCode == 'success') {
                     self.logger.info('setSession:',member.open_id, ret.retValue);
                     self.setSession(member.open_id, ret.retValue.sessionId);
-                    return ret.retValue;
+                    return self.ctx.wrapper.res.default();
                 } else {
                     if(ret.retValue == '1'){//用户不存在 重新注册
                        var regist_status =  yield self.registByQinKeShi(member);
@@ -1103,6 +1105,35 @@ module.exports= {
                 self.logger.error(e.message);
             }
 
+        }).catch(self.ctx.coOnError);
+    },
+    changeCarePersonPortrait: function (openid, portraitUrl, deviceName,tenantId) {
+        var self = this;
+        return co(function *() {
+            var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
+                where: {
+                    status: 1,
+                    open_id: openid,
+                    tenantId: tenantId
+                }
+            });
+            var device = yield self.ctx.modelFactory().model_one(self.ctx.models['pub_bedMonitor'], {
+                where: {
+                    status: 1,
+                    name: deviceName,
+                    tenantId: tenantId,
+                }
+            });
+            var memberCarePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
+                where: {
+                    status: 1,
+                    care_by: member._id,
+                    bedMonitorId: device._id
+                }
+            });
+            memberCarePerson.portrait = portraitUrl;
+            yield memberCarePerson.save();
+            return self.ctx.wrapper.res.default();
         }).catch(self.ctx.coOnError);
     }
 

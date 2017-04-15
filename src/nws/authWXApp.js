@@ -51,6 +51,8 @@ module.exports = function (app){
                     var timestamp = this.get('X-Custom-TS');
                     // console.log('timestamp:', timestamp);
                     this.request_timestamp = timestamp;
+			  console.log('app.conf.secure.authSecretWXApp:', app.conf.secure.authSecretWXApp);
+                          console.log('timestamp:', timestamp);
                     var payload = jwt.verify(token, app.conf.secure.authSecretWXApp + ':' + timestamp);
                     console.log(payload);
                     this.openid = payload.sub;
