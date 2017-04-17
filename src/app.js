@@ -97,12 +97,12 @@ app.conf = {
 console.log('config...');
 console.log(process.version);
 // conf
-// rfcore.config(app.conf,process.argv);
+rfcore.config(app.conf,process.argv);
 
 //去除字符对bool的影响
 app.conf.isProduction = app.conf.isProduction == true || app.conf.isProduction === 'true';
 
-console.log(JSON.stringify(app.conf.secure));
+// console.log(JSON.stringify(app.conf.secure));
 
 //ensure dirs
 console.log('ensure dirs...');
