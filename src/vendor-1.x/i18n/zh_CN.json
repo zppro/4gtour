@@ -213,7 +213,8 @@
       "------------": "",
       "SYSTEM-MANAGE": "系统管理",
       "USER-MANAGE": "用户管理",
-      "WXA-CONFIG": "微信小程序配置*"
+      "WXA-CONFIG": "微信小程序配置*",
+      "OTHER-CONFIG":"其它配置"
     },
     "health-center": {
       "SYSTEM-MANAGE": "系统管理",

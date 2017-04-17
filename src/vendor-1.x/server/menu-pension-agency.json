@@ -259,6 +259,11 @@
         "_id": "menu.pension-agency.WXA-CONFIG",
         "name": "微信小程序配置*",
         "sref": "app.pension-agency.wxa-config.list"
+      },
+      {
+        "_id": "menu.pension-agency.OTHER-CONFIG",
+        "name": "其它配置",
+        "sref": "app.pension-agency.other-config.list"
       }
     ]
   }

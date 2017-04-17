@@ -158,6 +158,9 @@
                     entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'in.list', {
                         modelName: 'psn-elderly',
                         searchForm: { "status": 1, "live_in_flag": true },
+                        transTo: {
+                            "inConfig": MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'in.config'
+                        },
                         serverPaging: true,
                         columns: [{
                             label: '老人',
@@ -210,7 +213,7 @@
                             label: '',
                             name: 'actions',
                             sortable: false,
-                            width: 40
+                            width: 60
                         }]
                     })
                 }
@@ -222,6 +225,18 @@
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 resolve: {
                     entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'in.details', {
+                        modelName: 'psn-elderly',
+                        blockUI: true
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'in.config', {
+                url: '/config/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'in-config.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'InConfigController',
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'in.config', {
                         modelName: 'psn-elderly',
                         blockUI: true
                     })
@@ -2447,6 +2462,63 @@
                         blockUI: true
                     }),
                     deps: helper.resolveFor2('qiniu', 'qiniu-ng')
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'other-config', {
+                url: '/other-config',
+                title: '其它配置',
+                abstract: true,
+                views: {
+                    "module-header": {
+                        templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
+                    },
+                    "module-content": {
+                        template: '<div class="data-ui-view"></div>'
+                    }
+                },
+                data: {
+                    func_id: MODEL_VARIABLES.BIZ_FUNC_PREFIXS.PENSION_AGENCY + 'OTHER-CONFIG' //业务系统使用
+                },
+                resolve: helper.resolveFor(MODEL_VARIABLES.RES_PREFIXS.SHARED + 'other-config.js')
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'other-config.list', {
+                url: '/list/:action',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'other-config-list.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.OTHERCONFIG_GRID,
+                resolve: {
+                    entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'other-config.list', {
+                        modelName: 'pub-tenant',
+                        searchForm: { "status": 1 },
+                        serverPaging: true,
+                        blockUI: true,
+                          columns: [{
+                            label: '睡眠带超时时间(分钟)',
+                            name: 'other_config.psn_bed_monitor_timeout',
+                            type: 'string',
+                            width: 320,
+                            sortable: true
+                        }, {
+                            label: '',
+                            name: 'actions',
+                            sortable: false,
+                            width: 60
+                        }]
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'other-config.details', {
+                url: '/details/:action/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'other-config-details.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: MODEL_VARIABLES.CONTROLLER_NAMES.OTHERCONFIG_DETAILS,
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'other-config.details', {
+                        modelName: 'pub-tenant',
+                        model: {},
+                        blockUI: true
+                    }),
                 }
             });
 

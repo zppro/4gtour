@@ -28,7 +28,9 @@
                 USER_MANAGE_GRID: 'Shared_UserManageGridController',
                 USER_MANAGE_DETAILS: 'Shared_UserManageDetailsController',
                 WXACONFIG_GRID: 'Shared_wxaConfigGridController',
-                WXACONFIG_DETAILS: 'Shared_wxaConfigDetailsController'
+                WXACONFIG_DETAILS: 'Shared_wxaConfigDetailsController',
+                OTHERCONFIG_GRID: 'Shared_OtherConfigGridController',
+                OTHERCONFIG_DETAILS: 'Shared_OtherConfigDetailsController'
             },
             SUBSYSTEM_NAMES: {
                 MERCHANT_WEBSTORE: MERCHANT_WEBSTORE,
