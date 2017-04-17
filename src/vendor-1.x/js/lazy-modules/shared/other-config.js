@@ -48,14 +48,13 @@
         function init() {
 
             vm.init({removeDialog: ngDialog});
-            vmh.fetch(tenantService.query({_id: vm.tenantId})).then(function(results){
-                vm.psn_bed_monitor_timeout = results[0].other_config.psn_bed_monitor_timeout;
-        });
 
             vm.doSubmit = doSubmit;
             vm.tab1 = {cid: 'contentTab1'};
 
-            vm.load();
+            vm.load().then(function(){
+                console.log('time is:'+vm.model.other_config.psn_bed_monitor_timeout);
+            });
 
         }
 
@@ -63,7 +62,6 @@
         function doSubmit() {
             console.log(vm.psn_bed_monitor_timeout);
             if ($scope.theForm.$valid) {
-                vm.model.other_config.psn_bed_monitor_timeout = vm.psn_bed_monitor_timeout;
                 vm.save();
             }
             else {
