@@ -453,8 +453,9 @@ module.exports= {
                     if (memberCarePerson.bedMonitorId.name) {
                         var sleepStatus = yield self.getSleepBriefReport(sessionId, memberCarePerson.bedMonitorId.name);
                         var memberCarePerson = {
-                            deviceId: memberCarePerson.bedMonitorId.name,
-                            memberName: memberCarePerson.name,
+                            deviceName: memberCarePerson.bedMonitorId.name,
+                            carePersonId:memberCarePerson._id,
+                            carePersonName: memberCarePerson.name,
                             sex: memberCarePerson.sex,
                             age: Number(nowYear) - Number(memberCarePerson.birthYear),
                             sleepStatus: sleepStatus.ret,
@@ -472,45 +473,30 @@ module.exports= {
             }
         }).catch(self.ctx.coOnError);
     },
-    changeDeviceInfo: function (openid, deviceInfo, tenantId) {
+    changeCarePersonInfo: function (openid, memberCarePersonInfo, tenantId) {
         var self = this;
         return co(function *() {
             var myDate = new Date();
             var nowYear = myDate.getFullYear();
             var sex;
-            var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
-                where: {
-                    status: 1,
-                    open_id: openid,
-                    tenantId: tenantId
-                }
-            });
-            var device = yield self.ctx.modelFactory().model_one(self.ctx.models['pub_bedMonitor'], {
-                where: {
-                    status: 1,
-                    name: deviceInfo.devId,
-                    tenantId: tenantId,
-                }
-            });
             var memberCarePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
                 where: {
                     status: 1,
-                    care_by: member._id,
-                    bedMonitorId: device._id
+                    _id:memberCarePersonInfo.carePersonId
                 }
             });
-            if (deviceInfo.sex == "男") {
+            if (memberCarePersonInfo.sex == "男") {
                 sex = DIC.D1006.MALE;
             } else {
                 sex = DIC.D1006.FEMALE;
             }
-            if (deviceInfo.cpAge == null || deviceInfo.cpAge == "") {
+            if (memberCarePersonInfo.cpAge == null || memberCarePersonInfo.cpAge == "") {
                 birthYear = 0;
             } else {
-                birthYear = nowYear - Number(deviceInfo.cpAge);
+                birthYear = nowYear - Number(memberCarePersonInfo.cpAge);
             }
             console.log('+++++++', birthYear);
-            memberCarePerson.name = deviceInfo.cpName;
+            memberCarePerson.name = memberCarePersonInfo.cpName;
             memberCarePerson.birthYear = birthYear;
             memberCarePerson.sex = sex;
             yield memberCarePerson.save();
@@ -1107,33 +1093,47 @@ module.exports= {
 
         }).catch(self.ctx.coOnError);
     },
-    changeCarePersonPortrait: function (openid, portraitUrl, deviceName,tenantId) {
+    changeCarePersonPortrait: function (id, portraitUrl) {
         var self = this;
         return co(function *() {
-            var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
-                where: {
-                    status: 1,
-                    open_id: openid,
-                    tenantId: tenantId
-                }
-            });
-            var device = yield self.ctx.modelFactory().model_one(self.ctx.models['pub_bedMonitor'], {
-                where: {
-                    status: 1,
-                    name: deviceName,
-                    tenantId: tenantId,
-                }
-            });
             var memberCarePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
                 where: {
                     status: 1,
-                    care_by: member._id,
-                    bedMonitorId: device._id
+                    _id:id
                 }
             });
             memberCarePerson.portrait = portraitUrl;
             yield memberCarePerson.save();
             return self.ctx.wrapper.res.default();
+        }).catch(self.ctx.coOnError);
+    },
+    getCarePersonInfoById: function (id) {
+        var self = this;
+        return co(function *() {
+            try{
+                var nowYear = self.ctx.moment().format('YYYY');
+                var memberCarePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
+                    where: {
+                       status: 1,
+                       _id: id,
+                    }
+                }).populate('bedMonitorId', 'name');
+                if (memberCarePerson) {
+                        var memberCarePerson = {
+                            deviceName: memberCarePerson.bedMonitorId.name,
+                            carePersonId:memberCarePerson._id,
+                            carePersonName: memberCarePerson.name,
+                            sex: memberCarePerson.sex,
+                            age: Number(nowYear) - Number(memberCarePerson.birthYear),
+                            portraitUrl:memberCarePerson.portrait
+                        }
+                    }  
+                return self.ctx.wrapper.res.ret({memberCarePerson:memberCarePerson});
+            } catch (e) {
+                console.log(e);
+                self.logger.error(e);
+                self.isExecuting = false;
+            }
         }).catch(self.ctx.coOnError);
     }
 
