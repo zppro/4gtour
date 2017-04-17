@@ -17,7 +17,7 @@ module.exports = function(ctx,name) {
             operated_on: {type: Date, default: Date.now},
             status: {type: Number, min: 0, max: 1, default: 1},
             elderlyId:{type: mongoose.Schema.Types.ObjectId,required: true,ref:'psn_elderly'},//关联老人
-
+            valid_flag:{type:Boolean, default: true},
             elderly_name: {type: String, required: true, maxlength: 20},
             drugId:{type: mongoose.Schema.Types.ObjectId,required: true,ref:'psn_drugDirectory'},//关联药品
             drug_no: {type: String, required: true, maxlength: 20},
