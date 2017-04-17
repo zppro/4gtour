@@ -85,7 +85,7 @@
         function parseNursingSchedule(nursingSchedule) {
             console.log('parse nursingScheduleItems');
             var nursingScheduleItems = nursingSchedule.items;
-            // vm.yAxisData = nursingSchedule.yAxisData;
+            // vm.yAxisData = nursingSchedule.yAxisData;  ?  //The default nursing scheduling state is not selected
             var nursingWorkers = vm.selectBinding.nursingWorkers;
             vm.aggrData = {};
             for(var i=0,len=nursingScheduleItems.length;i<len;i++) {

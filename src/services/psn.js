@@ -4884,7 +4884,6 @@ module.exports = {
                                     allEdlerlyIds = app._.allKeys(elderlyMapRoom);
                                     yield app.modelFactory().model_bulkInsert(app.models['psn_nursingRecord'], {
                                         removeWhere: {
-                                            status: 1,
                                             tenantId: tenantId,
                                             elderlyId: { '$in': allEdlerlyIds },
                                             exec_on: { '$gt': now },
