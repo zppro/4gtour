@@ -143,6 +143,12 @@
         "TAB2-LABEL-JOURNAL_ACCOUNT-AMOUNT": "金额",
         "COMPLETE-ENTER":"确认完成入院",
         "EXIT-CONFIRM-MESSAGE": "您确定要申请出院么？"
+      },
+      "config": {
+        "TITLE": "养老机构-老人管理-在院-配置",
+        "TAB1": "配置信息",
+        "TAB1-LABEL-NAME": "睡眠带超时时间（分钟）",
+        "TAB1-PLACEHOLDER-NAME": "5.."
       }
     },
     "exit": {

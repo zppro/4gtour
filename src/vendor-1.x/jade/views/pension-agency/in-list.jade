@@ -40,6 +40,9 @@
                             .btn-group(ng-if="!row.begin_exit_flow")
                                 a.btn.btn-primary.btn-xs(title="{{'button.EDIT'|translate}}",ng-click="vm.edit(row._id)")
                                     i.glyphicon.glyphicon-pencil
+                            .btn-group
+                                a.btn.btn-primary.btn-xs(title="{{'button.CONFIG'|translate}}",ng-click="$state.go(vm.transTo.inConfig,{_id:row._id})")
+                                    i.glyphicon.glyphicon-cog
                     tr(ng-if="vm.paged.length==0")
                         td(colspan="{{utils.noResultsColspan(vm)}}") {{ 'grid.NO-RESULTS' | translate}}
             .panel-footer

@@ -158,6 +158,9 @@
                     entryVM: helper.buildEntryVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'in.list', {
                         modelName: 'psn-elderly',
                         searchForm: { "status": 1, "live_in_flag": true },
+                        transTo: {
+                            "inConfig": MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'in.config'
+                        },
                         serverPaging: true,
                         columns: [{
                             label: '老人',
@@ -210,7 +213,7 @@
                             label: '',
                             name: 'actions',
                             sortable: false,
-                            width: 40
+                            width: 60
                         }]
                     })
                 }
@@ -222,6 +225,18 @@
                 access_level: AUTH_ACCESS_LEVELS.USER,
                 resolve: {
                     entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'in.details', {
+                        modelName: 'psn-elderly',
+                        blockUI: true
+                    })
+                }
+            })
+            .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'in.config', {
+                url: '/config/:_id',
+                templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.PENSION_AGENCY + 'in-config.html'),
+                access_level: AUTH_ACCESS_LEVELS.USER,
+                controller: 'InConfigController',
+                resolve: {
+                    entityVM: helper.buildEntityVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'in.config', {
                         modelName: 'psn-elderly',
                         blockUI: true
                     })
