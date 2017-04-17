@@ -4714,14 +4714,14 @@ module.exports = {
                                     }
                                 });
                             }
-
+                            
                             if (nursingPlanItems.length) {
                                 now = app.moment();
                                 gen_batch_no = yield app.sequenceFactory.getSequenceVal(app.modelVariables.SEQUENCE_DEFS.CODE_OF_NURSING_RECORD);
                                 for (var i = 0, len = nursingPlanItems.length; i < len; i++) {
                                     nursingPlanItem = nursingPlanItems[i];
                                     elderlyRoomValue = elderlyMapRoom[nursingPlanItem.elderlyId];
-                                    console.log(nursingPlanItem.elderlyId);
+                                    // console.log(nursingPlanItem.elderlyId);
                                     nursingRecord = {
                                         elderlyId: nursingPlanItem.elderlyId,
                                         elderly_name: nursingPlanItem.elderly_name,
@@ -4733,11 +4733,11 @@ module.exports = {
                                     workItems = nursingPlanItem.work_items;
                                     for (var j = 0, len2 = workItems.length; j < len2; j++) {
                                         workItem = workItems[j];
-                                        console.log('workItem: ', workItem.name);
+                                        console.log('workItem.name', workItem.name);
                                         remind_max = workItem.remind_times || 1;
                                         remind_step = workItem.duration / remind_max;
-                                        console.log('remind_max: ', remind_max);
-                                        console.log('remind_step: ', remind_step);
+                                        // console.log('remind_max: ', remind_max);
+                                        // console.log('remind_step: ', remind_step);
 
                                         nursingRecord.workItemId = workItem._id
                                         nursingRecord.name = workItem.name;
@@ -4745,7 +4745,6 @@ module.exports = {
                                         nursingRecord.remark = workItem.remark;
                                         nursingRecord.duration = workItem.duration;
                                         nursingRecord.remind_on = [];
-
                                         if (workItem.repeat_type == DIC.D0103.AS_NEEDED) {
                                             //按需工作不需要提醒
                                             nursingRecord.exec_on = app.moment(now.format('YYYY-MM-DD'));
@@ -4756,7 +4755,7 @@ module.exports = {
                                             if (workItem.repeat_values.length > 0) {
                                                 // 每天某几个时刻执行,考虑到时间间隔比较近,因此将当天的全部生成
                                                 app._.each(workItem.repeat_values, (o) => {
-                                                    console.log(o);
+                                                    // console.log(o);
                                                     nursingRecord.remind_on = [];
                                                     exec_on = app.moment(exec_date_string + ' ' + o + workItem.repeat_start);
                                                     if (exec_on.isAfter(now)) {
@@ -4780,7 +4779,7 @@ module.exports = {
                                                     // 当天已经过期,生成明天
                                                     exec_on = app.moment(now).add(1, 'days').format('YYYY-MM-DD') + ' ' + workItem.repeat_start;
                                                 }
-                                                console.log('exec_on:', exec_on.format('YYYY-DD-MM HH:mm'));
+                                                // console.log('exec_on:', exec_on.format('YYYY-DD-MM HH:mm'));
                                                 nursingRecord.exec_on = exec_on;
                                                 if (workItem.remind_flag) {
                                                     remind_start = app.moment(exec_on);
@@ -4788,7 +4787,7 @@ module.exports = {
                                                         // console.log('remind_start:', remind_start.format('YYYY-DD-MM HH:mm'));
                                                         // console.log('remind_count:', remind_count);
                                                         // console.log('remind_step:', remind_step);
-                                                        nursingRecord.remind_on.push(app.moment(remind_start.add(remind_step * remind_count, 'minutes')));
+                                                        nursingRecord.remind_on.push(app.moment(app.moment(remind_start).add(remind_step * remind_count, 'minutes')));
                                                     }
                                                 }
                                                 nursingRecordsToSave.push(app._.extend({}, nursingRecord));
@@ -4801,13 +4800,19 @@ module.exports = {
                                                         return weekDay % 7 === o % 7;
                                                     })) {
                                                         // day 相等以后,判断是否时是生成当天,如果是则比较时刻,时刻过期的话需要生成下一个执行点
-                                                        exec_date = now.day(weekDay);
+                                                        // console.log('weekDay',weekDay);
+                                                        exec_date = app.moment(now).day(weekDay);
+                                                        // console.log("exec_date",app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start).toDate());
+                                                        // console.log("now",now.toDate());
+                                                        // console.log("exec_date is after now:",app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start).isAfter(now));
                                                         if (app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start).isAfter(now)) {
                                                             exec_on = app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start)
+                                                             nursingRecord.exec_on = exec_on;
                                                             if (workItem.remind_flag) {
                                                                 remind_start = app.moment(exec_on);
                                                                 for (var remind_count = 0; remind_count < remind_max; remind_count++) {
-                                                                    nursingRecord.remind_on.push(app.moment(remind_start.add(remind_step * remind_count, 'minutes')));
+
+                                                                    nursingRecord.remind_on.push(app.moment(app.moment(remind_start).add(remind_step * remind_count, 'minutes')));
                                                                 }
                                                             }
                                                             nursingRecordsToSave.push(app._.extend({}, nursingRecord));
@@ -4827,10 +4832,11 @@ module.exports = {
                                                         exec_date = app.moment(now).add(i, 'days');
                                                         if (app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start).isAfter(now)) {
                                                             exec_on = app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start)
+                                                            nursingRecord.exec_on = exec_on;
                                                             if (workItem.remind_flag) {
                                                                 remind_start = app.moment(exec_on);
                                                                 for (var remind_count = 0; remind_count < remind_max; remind_count++) {
-                                                                    nursingRecord.remind_on.push(app.moment(remind_start.add(remind_step * remind_count, 'minutes')));
+                                                                    nursingRecord.remind_on.push(app.moment(app.moment(remind_start).add(remind_step * remind_count, 'minutes')));
                                                                 }
                                                             }
                                                             nursingRecordsToSave.push(app._.extend({}, nursingRecord));
@@ -4843,7 +4849,7 @@ module.exports = {
                                     }
                                 }
 
-                                console.log('nursingRecordsToSave:', nursingRecordsToSave);
+                                // console.log('nursingRecordsToSave:', nursingRecordsToSave);
                                 for (var i = 0, findNuringWorkerCount = 0, len = nursingRecordsToSave.length; i < len; i++) {
                                     nursingRecordToSave = nursingRecordsToSave[i];
                                     elderlyRoomValue = elderlyMapRoom[nursingRecordToSave.elderlyId];
@@ -4878,7 +4884,6 @@ module.exports = {
                                     allEdlerlyIds = app._.allKeys(elderlyMapRoom);
                                     yield app.modelFactory().model_bulkInsert(app.models['psn_nursingRecord'], {
                                         removeWhere: {
-                                            status: 1,
                                             tenantId: tenantId,
                                             elderlyId: { '$in': allEdlerlyIds },
                                             exec_on: { '$gt': now },

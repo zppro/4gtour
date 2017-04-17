@@ -103,7 +103,7 @@
                 vm.aggrData = data;
                 for(var trackedKey in vm.aggrData) {
                     vm.$editings[trackedKey] = {};
-                    var nursingLevelId = vm.aggrData[trackedKey]['elderly']['nursingLevelId']
+                    var nursingLevelId = vm.aggrData[trackedKey]['elderly']['nursingLevelId'];
 
                     if (nursingLevelId) {
                         var workItemkey = trackedKey + '$' +nursingLevelId ;
@@ -123,7 +123,7 @@
                             }
                         }
                     }
-                    var elderlyId = vm.aggrData[trackedKey]['elderly']['id']
+                    var elderlyId = vm.aggrData[trackedKey]['elderly']['id'];
                     if (elderlyId) {
                         var drugUseItemkey = trackedKey + '$' + elderlyId;
 
