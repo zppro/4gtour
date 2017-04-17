@@ -7,7 +7,7 @@ var externalSystemConfig = require('../pre-defined/external-system-config.json')
 var DIC = require('../pre-defined/dictionary-constants.json');
 var socketServerEvents = require('../pre-defined/socket-server-events.json');
 
-module.exports= {
+module.exports = {
     init: function (ctx) {
         console.log('init sleep... ');
         var self = this;
@@ -31,7 +31,7 @@ module.exports= {
     },
     getSession: function (gen_session_key) {
         var self = this;
-        return co(function*() {
+        return co(function* () {
             try {
                 var key = self.CACHE_MODULE + self.CACHE_ITEM_SESSION + '@' + gen_session_key;
                 console.log("getToken1");
@@ -62,7 +62,7 @@ module.exports= {
     },
     setSession: function (gen_session_key, sessionId) {
         var self = this;
-        return co(function*() {
+        return co(function* () {
             try {
                 var key = self.CACHE_MODULE + self.CACHE_ITEM_SESSION + '@' + gen_session_key;
                 self.ctx.cache.put(key, sessionId);
@@ -82,7 +82,7 @@ module.exports= {
     },
     login: function (openId) {
         var self = this;
-        return co(function*() {
+        return co(function* () {
             try {
                 console.log("login again");
                 self.logger.info('login =>', openId);
@@ -112,7 +112,7 @@ module.exports= {
     },
     checkSessionIsExpired: function (sessionId) {
         var self = this;
-        return co(function*() {
+        return co(function* () {
             try {
                 if (!sessionId || typeof sessionId !== 'string') {
                     return true;
@@ -121,7 +121,7 @@ module.exports= {
                 var ret = yield rp({
                     method: 'POST',
                     url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/userws/sessionIsExpired.json',
-                    form: {sessionId: sessionId},
+                    form: { sessionId: sessionId },
                 });
                 ret = JSON.parse(ret);
                 if (ret.retCode == "fail") {
@@ -144,7 +144,7 @@ module.exports= {
     },
     checkIsRegist: function (code) {
         var self = this;
-        return co(function*() {
+        return co(function* () {
             try {
                 var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
@@ -162,12 +162,12 @@ module.exports= {
     },
     regist: function (openid, userInfo, tenantId) {
         var self = this;
-        return co(function*() {
+        return co(function* () {
             try {
-			console.log("openid:",openid);
+                console.log("openid:", openid);
                 var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
-                        open_id:openid,
+                        open_id: openid,
                         status: 1
                     }
                 });
@@ -213,7 +213,7 @@ module.exports= {
     },
     addDevice: function (deviceInfo, openid, tenantId) {
         var self = this;
-        return co(function *() {
+        return co(function* () {
             try {
                 var session_id = yield self.getSession(openid);
                 var cpNewGender = null;
@@ -313,7 +313,7 @@ module.exports= {
                     }
                 });
                 member_json = member.toObject();
-                var row_bindingBedMonitors =[];
+                var row_bindingBedMonitors = [];
                 var row_bindingBedMonitors = self.ctx.clone(member_json.bindingBedMonitors);
                 row_bindingBedMonitors.push(device._id);
                 member.bindingBedMonitors = row_bindingBedMonitors;
@@ -340,7 +340,7 @@ module.exports= {
     },
     removeDevice: function (openid, devId, tenantId) {
         var self = this;
-        return co(function *() {
+        return co(function* () {
             var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                 where: {
                     status: 1,
@@ -371,7 +371,7 @@ module.exports= {
     },
     getDeviceDetails: function (openid, devId, tenantId) {
         var self = this;
-        return co(function *() {
+        return co(function* () {
             var deviceInfo = new Array();
             var myDate = new Date();
             var nowYear = myDate.getFullYear();
@@ -415,11 +415,11 @@ module.exports= {
     },
     getDeviceInfo: function (openid) {
         var self = this;
-        return co(function *() {
-            try{
+        return co(function* () {
+            try {
                 var carePersons = [];
                 var nowYear = self.ctx.moment().format('YYYY');
-                console.log("OPEINID:",openid);
+                console.log("OPEINID:", openid);
                 self.logger.info('openid:', openid);
                 var sessionId = yield self.getSession(openid);
                 var sessionIsExpired = yield self.checkSessionIsExpired(sessionId);
@@ -435,8 +435,8 @@ module.exports= {
                 console.log(member);
                 var memberCarePersons = yield self.ctx.modelFactory().model_query(self.ctx.models['het_memberCarePerson'], {
                     where: {
-                       status: 1,
-                       care_by: member._id,
+                        status: 1,
+                        care_by: member._id,
                     }
                 }).populate('bedMonitorId', 'name');
                 self.logger.info('memberCarePersons:', memberCarePersons);
@@ -454,12 +454,12 @@ module.exports= {
                         var sleepStatus = yield self.getSleepBriefReport(sessionId, memberCarePerson.bedMonitorId.name);
                         var memberCarePerson = {
                             deviceName: memberCarePerson.bedMonitorId.name,
-                            carePersonId:memberCarePerson._id,
+                            carePersonId: memberCarePerson._id,
                             carePersonName: memberCarePerson.name,
                             sex: memberCarePerson.sex,
                             age: Number(nowYear) - Number(memberCarePerson.birthYear),
                             sleepStatus: sleepStatus.ret,
-                            portraitUrl:memberCarePerson.portrait
+                            portraitUrl: memberCarePerson.portrait
                         }
                         carePersons.push(memberCarePerson);
                     }
@@ -475,14 +475,14 @@ module.exports= {
     },
     changeCarePersonInfo: function (openid, memberCarePersonInfo, tenantId) {
         var self = this;
-        return co(function *() {
+        return co(function* () {
             var myDate = new Date();
             var nowYear = myDate.getFullYear();
             var sex;
             var memberCarePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
                 where: {
                     status: 1,
-                    _id:memberCarePersonInfo.carePersonId
+                    _id: memberCarePersonInfo.carePersonId
                 }
             });
             if (memberCarePersonInfo.sex == "男") {
@@ -499,13 +499,14 @@ module.exports= {
             memberCarePerson.name = memberCarePersonInfo.cpName;
             memberCarePerson.birthYear = birthYear;
             memberCarePerson.sex = sex;
+            memberCarePerson.portrait = memberCarePersonInfo.portraitUrl
             yield memberCarePerson.save();
             return self.ctx.wrapper.res.default();
         }).catch(self.ctx.coOnError);
     },
     getSleepBriefReport: function (sessionId, devId) {//报表
         var self = this;
-        return co(function *() {
+        return co(function* () {
             try {
                 var endTime = self.ctx.moment(self.ctx.moment().format('YYYY-MM-DD 12:00:00'));
                 var startTime = endTime.subtract(1, 'days');
@@ -514,11 +515,11 @@ module.exports= {
                 var ret = yield rp({
                     method: 'POST',
                     url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/devicews/getSleepBriefReport.json',
-                    form:{sessionId:sessionId,devId:devId,startTime:startTime.unix(),endTime:endTime.unix()}
+                    form: { sessionId: sessionId, devId: devId, startTime: startTime.unix(), endTime: endTime.unix() }
                 });
                 ret = JSON.parse(ret);
                 console.log(ret);
-                console.log(typeof(ret.retValue));
+                console.log(typeof (ret.retValue));
                 var value = ret.retValue;
                 var evalution = value.evalution;
                 if (evalution == '差') {
@@ -545,14 +546,16 @@ module.exports= {
                 var fallAsleepTime = self.ctx.moment.unix(value.fallAsleepTime).format('HH:MM:SS');
                 var awakeTime = self.ctx.moment.unix(value.awakeTime).format('HH:MM:SS');
                 var sleepTime = self.ctx.moment(fallAsleepTime).diff(self.ctx.moment(awakeTime), 'hours');
-                var deepSleepTime = self.ctx.moment.unix(value.deepSleepTime).format('HH:MM:SS');
-
+               // var deepSleepTime = self.ctx.moment.unix(value.deepSleepTime).format('HH:MM:SS');
+                var deepSleepTime = Number(value.deepSleepTime)/3600000;
                 ret = {
                     fallAsleepTime: fallAsleepTime,
                     sleepTime: sleepTime,
                     deepSleepTime: deepSleepTime,
                     evalution: evalution
                 }
+              
+
                 return self.ctx.wrapper.res.ret(ret);
             }
             catch (e) {
@@ -563,7 +566,7 @@ module.exports= {
     },
     getToken: function (uniqueId) {
         var self = this;
-        return co(function *() {
+        return co(function* () {
             try {
                 console.log(uniqueId);
                 var ret = yield rp({
@@ -580,10 +583,10 @@ module.exports= {
             }
         }).catch(self.ctx.coOnError);
     },
-    userAuthenticate: function (member, token,authenticateTryTimes) {
+    userAuthenticate: function (member, token, authenticateTryTimes) {
         var self = this;
         authenticateTryTimes = authenticateTryTimes === undefined ? 1 : authenticateTryTimes;
-        return co(function*() {
+        return co(function* () {
             try {
                 self.logger.info('userAuthenticate');
                 var ret = yield rp({
@@ -599,24 +602,24 @@ module.exports= {
                 });
                 ret = JSON.parse(ret);
                 if (ret.retCode == 'success') {
-                    self.logger.info('setSession:',member.open_id, ret.retValue);
+                    self.logger.info('setSession:', member.open_id, ret.retValue);
                     self.setSession(member.open_id, ret.retValue.sessionId);
                     return self.ctx.wrapper.res.default();
                 } else {
-                    if(ret.retValue == '1'){//用户不存在 重新注册
-                       var regist_status =  yield self.registByQinKeShi(member);
-                       console.log(regist_status);
-                       if(regist_status.ret.registStatus == 'success'){//成功 重新登陆
-                           if (authenticateTryTimes === 0) {
-                                return self.ctx.wrapper.res.error({message: 'regist fail again'});
+                    if (ret.retValue == '1') {//用户不存在 重新注册
+                        var regist_status = yield self.registByQinKeShi(member);
+                        console.log(regist_status);
+                        if (regist_status.ret.registStatus == 'success') {//成功 重新登陆
+                            if (authenticateTryTimes === 0) {
+                                return self.ctx.wrapper.res.error({ message: 'regist fail again' });
                             } else {
-                                return self.userAuthenticate(member,token, 0);
+                                return self.userAuthenticate(member, token, 0);
                             }
-                       }else{//失败 返回
-                             return self.ctx.wrapper.res.error({message: 'regist fail'});
-                       }
+                        } else {//失败 返回
+                            return self.ctx.wrapper.res.error({ message: 'regist fail' });
+                        }
                     }
-                   ;
+                    ;
                 }
             }
             catch (e) {
@@ -630,7 +633,7 @@ module.exports= {
     updateDevice: function (sendData, updateDevicetryTimes) {
         var self = this;
         updateDevicetryTimes = updateDevicetryTimes === undefined ? 1 : updateDevicetryTimes;
-        return co(function*() {
+        return co(function* () {
             try {
                 console.log(sendData);
                 var ret = yield rp({
@@ -647,7 +650,7 @@ module.exports= {
                     sendData.sessionId = sessionId;
                     console.log(sendData);
                     if (updateDevicetryTimes === 0) {
-                        return self.ctx.wrapper.res.error({message: 'sessionId overdue'});
+                        return self.ctx.wrapper.res.error({ message: 'sessionId overdue' });
                     } else {
                         return self.updateDevice(sendData, 0);
                     }
@@ -666,7 +669,7 @@ module.exports= {
     updateConcernPerson: function (sendData, tryTimes) {
         var self = this;
         tryTimes = tryTimes === undefined ? 1 : tryTimes;
-        return co(function*() {
+        return co(function* () {
             try {
                 var ret = yield rp({
                     method: 'POST',
@@ -680,7 +683,7 @@ module.exports= {
                     setUserConcernPersonJson.sessionId = sessionId;
                     sendData.setUserConcernPersonJson = JSON.stringify(setUserConcernPersonJson);
                     if (tryTimes === 0) {
-                        return self.ctx.wrapper.res.error({message: 'sessionId overdue'});
+                        return self.ctx.wrapper.res.error({ message: 'sessionId overdue' });
                     } else {
                         return self.updateConcernPerson(sendData, 0);
                     }
@@ -698,7 +701,7 @@ module.exports= {
     },
     updateDeviceAttachState: function (sendData) {
         var self = this;
-        return co(function*() {
+        return co(function* () {
             try {
                 var ret = yield rp({
                     method: 'POST',
@@ -720,17 +723,17 @@ module.exports= {
     },
     autoRegistLogin: function () {
         var self = this;
-        return co(function*() {
+        return co(function* () {
             try {
 
                 var tenants = yield self.ctx.modelFactory().model_query(self.ctx.models['pub_tenant'], {
                     select: 'name',
                     where: {
                         status: 1,
-                        type: {'$in': ['A0001', 'A0002', 'A0003']},
+                        type: { '$in': ['A0001', 'A0002', 'A0003'] },
                         active_flag: true,
                         certificate_flag: true,
-                        validate_util: {"$gte": self.ctx.moment()}
+                        validate_util: { "$gte": self.ctx.moment() }
                     }
                 });
                 for (var i = 0; i < tenants.length; i++) {
@@ -745,7 +748,7 @@ module.exports= {
                         select: 'name',
                         where: {
                             status: 1,
-                            type: {'$in': ['A0001', 'A0002', 'A0003']}
+                            type: { '$in': ['A0001', 'A0002', 'A0003'] }
                         }
                     });
 
@@ -767,7 +770,7 @@ module.exports= {
         var self = this;
         var timeout = 5 * 60 * 1000; // 离床5分钟报警
         var channelName = 'psn$bed_monitor';
-        return co(function*() {
+        return co(function* () {
             try {
                 if (self.isExecuting) {
                     console.log('back');
@@ -778,10 +781,10 @@ module.exports= {
                     select: '_id name',
                     where: {
                         status: 1,
-                        type: {'$in': [DIC.D1002.MINI_PENSION_ORG, DIC.D1002.MIDDLE_SIZE_PENSION_ORG, DIC.D1002.LARGE_SCALE_ORG]},
+                        type: { '$in': [DIC.D1002.MINI_PENSION_ORG, DIC.D1002.MIDDLE_SIZE_PENSION_ORG, DIC.D1002.LARGE_SCALE_ORG] },
                         active_flag: true,
                         certificate_flag: true,
-                        validate_util: {'$gte': self.ctx.moment()}
+                        validate_util: { '$gte': self.ctx.moment() }
                     }
                 });
 
@@ -796,13 +799,13 @@ module.exports= {
                     var isRegist = yield self.checkIsRegist(tenantId);
                     if (!isRegist) {
                         var tenantMember = yield self.registByTenatId(tenantId);
-                         if (tenantMember) {
-                        var token = yield self.getToken(tenantMember.open_id);
-                         yield self.userAuthenticate(tenantMember, token);
-                     }
+                        if (tenantMember) {
+                            var token = yield self.getToken(tenantMember.open_id);
+                            yield self.userAuthenticate(tenantMember, token);
+                        }
                     }
                     sessionId = yield self.getSession(tenantId);
-                    console.log('sessionId:',sessionId);
+                    console.log('sessionId:', sessionId);
                     var sessionIsExpired = yield self.checkSessionIsExpired(sessionId);
                     if (sessionIsExpired) {
                         sessionId = yield self.login(tenantId);
@@ -834,7 +837,7 @@ module.exports= {
                             yield bedMonitor.save();
                             console.log('睡眠带状态变化 在线 -> 离线');
                             self.logger.info('睡眠带状态变化 在线 -> 离线');
-                            self.ctx.socket_service.sendToChannel(channelName, socketServerEvents.PSN.BED_MONITOR.OFF_LINE, {bedMonitorName: bedMonitor.name});
+                            self.ctx.socket_service.sendToChannel(channelName, socketServerEvents.PSN.BED_MONITOR.OFF_LINE, { bedMonitorName: bedMonitor.name });
                             self.ctx.cache.del(key);
                         }
                     } else {
@@ -843,7 +846,7 @@ module.exports= {
                             yield bedMonitor.save();
                             console.log('睡眠带状态变化 离线 -> 在线');
                             self.logger.info('睡眠带状态变化 离线 -> 在线');
-                            self.ctx.socket_service.sendToChannel(channelName, socketServerEvents.PSN.BED_MONITOR.ON_LINE, {bedMonitorName: bedMonitor.name});
+                            self.ctx.socket_service.sendToChannel(channelName, socketServerEvents.PSN.BED_MONITOR.ON_LINE, { bedMonitorName: bedMonitor.name });
                         }
                         oldBedStatus = self.ctx.cache.get(key);
                         bedStatus = {
@@ -857,7 +860,7 @@ module.exports= {
                                 console.log('a系统启动或者刚报警 -> 在床 不做任何事情');
                                 self.logger.info('a系统启动或者刚报警 -> 在床 不做任何事情');
                                 self.ctx.cache.put(key, bedStatus);
-                                self.ctx.socket_service.sendToChannel(channelName, socketServerEvents.PSN.BED_MONITOR.COME, {bedMonitorName: bedMonitor.name});
+                                self.ctx.socket_service.sendToChannel(channelName, socketServerEvents.PSN.BED_MONITOR.COME, { bedMonitorName: bedMonitor.name });
                             } else {
                                 console.log('a系统启动或者刚报警 -> 离床 重置报警');
                                 self.logger.info('a系统启动或者刚报警 -> 离床 重置报警');
@@ -871,7 +874,7 @@ module.exports= {
                                     v.alarm = true;
                                     self.ctx.cache.put(k, v);
                                 });
-                                self.ctx.socket_service.sendToChannel(channelName, socketServerEvents.PSN.BED_MONITOR.LEAVE, {bedMonitorName: bedMonitor.name});
+                                self.ctx.socket_service.sendToChannel(channelName, socketServerEvents.PSN.BED_MONITOR.LEAVE, { bedMonitorName: bedMonitor.name });
                             }
                         } else {
                             if (!oldBedStatus.alarm) {
@@ -890,7 +893,7 @@ module.exports= {
                                         console.log('b离床 -> 在床 时限内回来了');
                                         self.logger.info('b离床 -> 在床 时限内回来了');
                                         self.ctx.cache.put(key, bedStatus);
-                                        self.ctx.socket_service.sendToChannel(channelName, socketServerEvents.PSN.BED_MONITOR.COME, {bedMonitorName: bedMonitor.name});
+                                        self.ctx.socket_service.sendToChannel(channelName, socketServerEvents.PSN.BED_MONITOR.COME, { bedMonitorName: bedMonitor.name });
                                     } else {
                                         console.log('b在床 -> 离床 开始离床计时');
                                         self.logger.info('b在床 -> 离床 开始离床计时');
@@ -904,7 +907,7 @@ module.exports= {
                                             v.alarm = true;
                                             self.ctx.cache.put(k, v);
                                         });
-                                        self.ctx.socket_service.sendToChannel(channelName, socketServerEvents.PSN.BED_MONITOR.LEAVE, {bedMonitorName: bedMonitor.name});
+                                        self.ctx.socket_service.sendToChannel(channelName, socketServerEvents.PSN.BED_MONITOR.LEAVE, { bedMonitorName: bedMonitor.name });
                                     }
                                 }
                             } else {
@@ -928,12 +931,12 @@ module.exports= {
     closeAlarm: function (bedMonitorName) {
         var self = this;
         var channelName = 'psn$bed_monitor';
-        return co(function*() {
+        return co(function* () {
             try {
                 console.log('c 关闭报警');
                 var key = bedMonitorName;
                 self.ctx.cache.del(key);
-                self.ctx.socket_service.sendToChannel(channelName, socketServerEvents.PSN.BED_MONITOR.COME, {bedMonitorName: bedMonitorName});
+                self.ctx.socket_service.sendToChannel(channelName, socketServerEvents.PSN.BED_MONITOR.COME, { bedMonitorName: bedMonitorName });
             } catch (e) {
                 console.log(e);
                 self.logger.error(e.message);
@@ -943,13 +946,13 @@ module.exports= {
     },
     getLatestSmbPerMinuteRecord: function (sessionId, devId) {
         var self = this;
-        return co(function*() {
+        return co(function* () {
             try {
                 console.log('getLatestSmbPerMinuteRecord:')
                 var ret = yield rp({
                     method: 'POST',
                     url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/devicews/getLatestSmbPerMinuteRecord.json',
-                    form: {sessionId: sessionId, devId: devId}
+                    form: { sessionId: sessionId, devId: devId }
                 });
                 self.logger.info('b:' + ret);
                 ret = JSON.parse(ret);
@@ -963,9 +966,9 @@ module.exports= {
 
         }).catch(self.ctx.coOnError);
     },
-    checkIsAttach: function (openId,deviceId,tenantId) {
+    checkIsAttach: function (openId, deviceId, tenantId) {
         var self = this;
-        return co(function*() {
+        return co(function* () {
             try {
                 var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
@@ -973,30 +976,30 @@ module.exports= {
                         status: 1
                     }
                 });
-			console.log('member:',member)
+                console.log('member:', member)
                 var device = yield self.ctx.modelFactory().model_one(self.ctx.models['pub_bedMonitor'], {
                     where: {
                         name: deviceId,
                         status: 1,
-                        tenantId:tenantId
+                        tenantId: tenantId
                     }
                 });
-                console.log('device:',device);
-              if(!device){
+                console.log('device:', device);
+                if (!device) {
                     return false;
                 }
                 var carePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
-			where:{
-                        status:1,
+                    where: {
+                        status: 1,
                         care_by: member._id,
                         bedMonitorId: device._id,
                         tenantId: tenantId
-			}
-                    });
+                    }
+                });
                 console.log(carePerson);
-                if(carePerson){
+                if (carePerson) {
                     return true;
-                     }
+                }
                 return false;
 
             }
@@ -1008,7 +1011,7 @@ module.exports= {
     },
     registByTenatId: function (tenantId) {
         var self = this;
-        return co(function*() {
+        return co(function* () {
             try {
                 var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
@@ -1020,7 +1023,7 @@ module.exports= {
                     return member;
                 }
                 console.log("no regist");
-                console.log(typeof(tenantId));
+                console.log(typeof (tenantId));
                 var psd = self.ctx.crypto.createHash('md5').update('123456').digest('hex');
                 member = yield self.ctx.modelFactory().model_create(self.ctx.models['het_member'], {
                     open_id: tenantId,
@@ -1055,9 +1058,9 @@ module.exports= {
         }).catch(self.ctx.coOnError);
 
     },
-    registByQinKeShi:function(userInfo){
+    registByQinKeShi: function (userInfo) {
         var self = this;
-        return co(function*() {
+        return co(function* () {
             try {
                 var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
@@ -1080,12 +1083,12 @@ module.exports= {
                     console.log(" sync regist success");
                     member.sync_flag_hzfanweng = true;
                     yield member.save();
-                    return self.ctx.wrapper.res.ret({registStatus:'success'});
-                }else{//注册失败
-                    return self.ctx.wrapper.res.error({message: ret.retValue});
+                    return self.ctx.wrapper.res.ret({ registStatus: 'success' });
+                } else {//注册失败
+                    return self.ctx.wrapper.res.error({ message: ret.retValue });
                 }
-       
-               }
+
+            }
             catch (e) {
                 console.log(e);
                 self.logger.error(e.message);
@@ -1095,11 +1098,11 @@ module.exports= {
     },
     changeCarePersonPortrait: function (id, portraitUrl) {
         var self = this;
-        return co(function *() {
+        return co(function* () {
             var memberCarePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
                 where: {
                     status: 1,
-                    _id:id
+                    _id: id
                 }
             });
             memberCarePerson.portrait = portraitUrl;
@@ -1109,26 +1112,26 @@ module.exports= {
     },
     getCarePersonInfoById: function (id) {
         var self = this;
-        return co(function *() {
-            try{
+        return co(function* () {
+            try {
                 var nowYear = self.ctx.moment().format('YYYY');
                 var memberCarePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
                     where: {
-                       status: 1,
-                       _id: id,
+                        status: 1,
+                        _id: id,
                     }
                 }).populate('bedMonitorId', 'name');
                 if (memberCarePerson) {
-                        var memberCarePerson = {
-                            deviceName: memberCarePerson.bedMonitorId.name,
-                            carePersonId:memberCarePerson._id,
-                            carePersonName: memberCarePerson.name,
-                            sex: memberCarePerson.sex,
-                            age: Number(nowYear) - Number(memberCarePerson.birthYear),
-                            portraitUrl:memberCarePerson.portrait
-                        }
-                    }  
-                return self.ctx.wrapper.res.ret({memberCarePerson:memberCarePerson});
+                    var memberCarePerson = {
+                        deviceName: memberCarePerson.bedMonitorId.name,
+                        carePersonId: memberCarePerson._id,
+                        carePersonName: memberCarePerson.name,
+                        sex: memberCarePerson.sex,
+                        age: Number(nowYear) - Number(memberCarePerson.birthYear),
+                        portraitUrl: memberCarePerson.portrait
+                    }
+                }
+                return self.ctx.wrapper.res.ret({ memberCarePerson: memberCarePerson });
             } catch (e) {
                 console.log(e);
                 self.logger.error(e);
@@ -1136,6 +1139,9 @@ module.exports= {
             }
         }).catch(self.ctx.coOnError);
     }
+    
+    
+
 
 
 };
