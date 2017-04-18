@@ -168,7 +168,8 @@ module.exports = {
                 var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
                         open_id: openid,
-                        status: 1
+                        status: 1,
+                        tenantId: tenantId
                     }
                 });
                 if (member) {
@@ -238,15 +239,17 @@ module.exports = {
                 }
                 var device = yield self.ctx.modelFactory().model_one(self.ctx.models['pub_bedMonitor'], {
                     where: {
-                        code: deviceInfo.deviceMac,
-                        status: 1
+                        code: deviceInfo.devId,
+                        status: 1,
+                        tenantId: tenantId
                     }
                 });
                 if (device) { //device existed
                     member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                         where: {
                             open_id: openid,
-                            status: 1
+                            status: 1,
+                            tenantId: tenantId
                         }
                     });
                     carePerson = yield self.ctx.modelFactory().model_create(self.ctx.models['het_memberCarePerson'], {
@@ -303,13 +306,13 @@ module.exports = {
                 var retCp = yield self.updateConcernPerson(cpInfo);//第三方 add user concern person
 
                 device = yield self.ctx.modelFactory().model_create(self.ctx.models['pub_bedMonitor'], {
-                    code: deviceInfo.deviceMac,
                     name: deviceInfo.devId,
                     tenantId: tenantId
                 });
                 member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
-                        open_id: openid
+                        open_id: openid,
+                        tenantId: tenantId
                     }
                 });
                 member_json = member.toObject();
@@ -361,7 +364,8 @@ module.exports = {
                 where: {
                     status: 1,
                     care_by: member._id,
-                    bedMonitorId: device._id
+                    bedMonitorId: device._id,
+                    tenantId: tenantId
                 }
             });
             memberCarePerson.status = 0;
