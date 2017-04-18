@@ -212,6 +212,31 @@ module.exports = {
                     };
                 }
             },
+            {
+                method: 'saveTenantOtherConfig',//保存机构其它配置
+                verb: 'post',
+                url: this.service_url_prefix + "/saveTenantOtherConfig/:id",
+                handler: function (app, options) {
+                    return function * (next) {
+                        try {
+                            var tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], this.params.id);
+                            if (!tenant || tenant.status == 0) {
+                                this.body = app.wrapper.res.error({message: '无法找到租户!'});
+                                yield next;
+                                return;
+                            }
+                            console.log(this.request.body.psn_bed_monitor_timeout);
+                            tenant.other_config.psn_bed_monitor_timeout = this.request.body.psn_bed_monitor_timeout;
+                            yield tenant.save();
+                            this.body = app.wrapper.res.default();
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            },
             /**********************订单相关*****************************/
             {
                 method: 'completeOrder',//完成订单

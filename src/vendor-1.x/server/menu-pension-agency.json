@@ -263,7 +263,7 @@
       {
         "_id": "menu.pension-agency.OTHER-CONFIG",
         "name": "其它配置",
-        "sref": "app.pension-agency.other-config.list"
+        "sref": "app.pension-agency.other-config"
       }
     ]
   }
