@@ -143,6 +143,12 @@
         "TAB2-LABEL-JOURNAL_ACCOUNT-AMOUNT": "金额",
         "COMPLETE-ENTER":"确认完成入院",
         "EXIT-CONFIRM-MESSAGE": "您确定要申请出院么？"
+      },
+      "config": {
+        "TITLE": "养老机构-老人管理-在院-配置",
+        "TAB1": "配置信息",
+        "TAB1-LABEL-NAME": "睡眠带超时时间（分钟）",
+        "TAB1-PLACEHOLDER-NAME": "5.."
       }
     },
     "exit": {
@@ -618,7 +624,9 @@
         "TAB1-LABEL-DISTRICT_ID":"所在片区",
         "TAB1-PLACEHOLDER-DISTRICT_ID":"请选择一个片区..",
         "TAB1-LABEL-FLOOR": "所在楼层",
+        "TAB1-PLACEHOLDER-FLOOR":"请选择一个楼层..",
         "TAB1-LABEL-NUMBER-IN-FLOOR": "楼层房间号",
+        "TAB1-PLACEHOLDER-NUMBER-IN-FLOOR":"请选择一个房间..",
         "TAB1-LABEL-NAME": "房间名称",
         "TAB1-PLACEHOLDER-NAME": "1201..",
         "TAB1-LABEL-CAPACITY": "床位数量",
@@ -747,6 +755,17 @@
         "TAB1-PLACEHOLDER-TEMPLATES-KEY": "OrderShipped..",
         "TAB1-LABEL-TEMPLATES-WX_TEMPLATE_ID": "微信模版id",
         "TAB1-PLACEHOLDER-TEMPLATES-WX_TEMPLATE_ID": "从微信小程序平台复制过来.."
+      }
+    },
+    "other-config":{
+      "list":{
+        "TITLE":"养老机构-系统管理-其它配置-列表"
+      },
+      "details": {
+        "TITLE": "养老机构-系统管理-其它配置-详情",
+        "TAB1": "基本信息",
+        "TAB1-LABEL-NAME": "超时时间（分钟）",
+        "TAB1-PLACEHOLDER-NAME": "5.."
       }
     }
   }

@@ -102,7 +102,7 @@ rfcore.config(app.conf,process.argv);
 //去除字符对bool的影响
 app.conf.isProduction = app.conf.isProduction == true || app.conf.isProduction === 'true';
 
-console.log(JSON.stringify(app.conf.secure));
+// console.log(JSON.stringify(app.conf.secure));
 
 //ensure dirs
 console.log('ensure dirs...');
@@ -218,10 +218,10 @@ co(function*() {
         console.log('mongodb error:');
         console.error(err);
     });
-    mongoose.Promise =  global.Promise;
+    mongoose.Promise = global.Promise;
 
     console.log('configure models...');
-    app.modelsDirStructure = yield app.util.readDictionaryStructure(path.resolve('models'),'.js');
+    app.modelsDirStructure = yield app.util.readDictionaryStructure(path.resolve('models'), '.js');
     var ModelFactory = require('./libs/ModelFactory');
     ModelFactory.loadModel.bind(app)(app.modelsDirStructure);
     app.models = ModelFactory.models;
@@ -233,7 +233,7 @@ co(function*() {
         return o.substr(0, o.indexOf('.'))
     });
 
-    
+
     console.log('configure business-components...');
     app.conf.businessComponentNames = _.map((yield app.wrapper.cb(fs.readdir)(app.conf.dir.businessComponents)), function (o) {
         return o.substr(0, o.indexOf('.'))
@@ -243,12 +243,12 @@ co(function*() {
     app.conf.socketProviderNames = _.map((yield app.wrapper.cb(fs.readdir)(app.conf.dir.socketProviders)), function (o) {
         return o.substr(0, o.indexOf('.'))
     });
- 
+
     console.log('configure schedule jobs...');
     app.conf.scheduleJobNames = _.map((yield app.wrapper.cb(fs.readdir)(app.conf.dir.scheduleJobs)), function (o) {
         return o.substr(0, o.indexOf('.'))
     });
- 
+
     console.log('configure services...');
     app.conf.serviceNames = _.map((yield app.wrapper.cb(fs.readdir)(app.conf.dir.service)), function (o) {
         return o.substr(0, o.indexOf('.'))
@@ -258,7 +258,7 @@ co(function*() {
     });
 
 
-    if(!app.conf.isProduction){
+    if (!app.conf.isProduction) {
         app.conf.debugServiceNames = _.map((yield app.wrapper.cb(fs.readdir)(app.conf.dir.debugServices)), function (o) {
             return o.substr(0, o.indexOf('.'))
         });
@@ -268,7 +268,7 @@ co(function*() {
     var configAppenders = [];
     configAppenders = _.union(configAppenders,
         _.map(app.conf.serviceNames, function (o) {
-            var logName = 'svc_' + o+ '.js';
+            var logName = 'svc_' + o + '.js';
             return {
                 type: 'dateFile',
                 filename: path.join(app.conf.dir.log, logName),
@@ -278,7 +278,7 @@ co(function*() {
             };
         }),
         _.map(app.conf.meServiceNames, function (o) {
-            var logName = 'mesvc_' + o+ '.js';
+            var logName = 'mesvc_' + o + '.js';
             return {
                 type: 'dateFile',
                 filename: path.join(app.conf.dir.log, logName),
@@ -308,9 +308,9 @@ co(function*() {
             };
         }));
 
-    if(!app.conf.isProduction){
-        configAppenders = _.union(configAppenders,_.map(app.conf.debugServiceNames, function (o) {
-            var logName = 'dsvc_' + o+ '.js';
+    if (!app.conf.isProduction) {
+        configAppenders = _.union(configAppenders, _.map(app.conf.debugServiceNames, function (o) {
+            var logName = 'dsvc_' + o + '.js';
             return {
                 type: 'dateFile',
                 filename: path.join(app.conf.dir.log, logName),
@@ -364,7 +364,7 @@ co(function*() {
         var service_module = require('./services/' + o);
         _.each(service_module.actions, function (action) {
             var bodyParser;
-            if (app.conf.bodyParser.xml.findIndex(function(o){
+            if (app.conf.bodyParser.xml.findIndex(function (o) {
                     return action.url.startsWith(o);
                 }) == -1) {
                 // router.use(action.url, koaBody);
@@ -388,7 +388,7 @@ co(function*() {
             //support options for CORS
             Router.prototype['options'].apply(router, [action.url]);
             var bodyParser;
-            if (app.conf.bodyParser.xml.findIndex(function(o){
+            if (app.conf.bodyParser.xml.findIndex(function (o) {
                     return action.url.startsWith(o);
                 }) == -1) {
                 bodyParser = koaBody;
@@ -407,12 +407,12 @@ co(function*() {
 
         });
     });
-    if(!app.conf.isProduction){
+    if (!app.conf.isProduction) {
         _.each(app.conf.debugServiceNames, function (o) {
             var service_module = require('./debug-services/' + o);
             _.each(service_module.actions, function (action) {
                 var bodyParser;
-                if (app.conf.bodyParser.xml.findIndex(function(o){
+                if (app.conf.bodyParser.xml.findIndex(function (o) {
                         return action.url.startsWith(o);
                     }) == -1) {
                     bodyParser = koaBody;
@@ -434,11 +434,11 @@ co(function*() {
 
     //注册静态文件（客户端文件）
     if (app.conf.isProduction) {
-        app.use(staticCache(app.conf.dir.static_production + app.conf.client.bulidtarget, {alias :{'/':'/index.html'}}));
+        app.use(staticCache(app.conf.dir.static_production + app.conf.client.bulidtarget, {alias: {'/': '/index.html'}}));
     }
     else {
         // app.use(koaStatic(app.conf.dir.static_develop + app.conf.client.bulidtarget));
-        app.use(staticCache(app.conf.dir.static_develop + app.conf.client.bulidtarget, {alias :{'/':'/index-dev.html'}}));
+        app.use(staticCache(app.conf.dir.static_develop + app.conf.client.bulidtarget, {alias: {'/': '/index-dev.html'}}));
         app.use(require('koa-livereload')());
     }
 
@@ -451,29 +451,28 @@ co(function*() {
 
     // 注意router.use的middleware有顺序
     // router.use(koaBody);
-    
+
     //中间件
-    _.each(app.conf.auth.toPaths,function(o){
+    _.each(app.conf.auth.toPaths, function (o) {
         router.use(o, auth(app));
     });
-    _.each(app.conf.crossDomainInterceptor.toPaths,function(o){
+    _.each(app.conf.crossDomainInterceptor.toPaths, function (o) {
         router.use(o, crossDomainInterceptor(app));
     });
-    _.each(app.conf.authApp.toPaths,function(o){
+    _.each(app.conf.authApp.toPaths, function (o) {
         router.use(o, authApp(app));
     });
-    _.each(app.conf.authAppRobot.toPaths,function(o){
+    _.each(app.conf.authAppRobot.toPaths, function (o) {
         console.log(o);
         router.use(o, authAppRobot(app));
     });
-    _.each(app.conf.authWXApp.toPaths,function(o){
+    _.each(app.conf.authWXApp.toPaths, function (o) {
         console.log(o);
         router.use(o, authWXApp(app));
     });
 
     app.use(router.routes())
         .use(router.allowedMethods());
-
 
 
     var svr = app.listen(app.conf.port);
@@ -493,14 +492,14 @@ co(function*() {
     console.log('listening...');
 
     // console.log('elderly:', yield  app.modelFactory().model_one(app.models['psn_nursingRecord']).populate('elderlyId', 'birthday').populate('roomId', 'name floor').populate('assigned_worker', 'name'));
-    
+
     // console.log('test app.spu_service');
     // var member1 = yield app.modelFactory().model_query(app.models['het_member']);
     // var member2 = yield app.modelFactory().model_query(app.models['trv_member']);
     // console.log(member1);
     // console.log(member2);
     // yield app.spu_service.appendSaleInfoByOrderPaySuccess(order);
-   
+
 
 }).catch(app.coOnError);
 

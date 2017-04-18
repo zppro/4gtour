@@ -43,6 +43,7 @@
                 {name:'subsystem.shared.receipts-and-disbursements.js',files:['app/js/lazy-modules/shared/receipts-and-disbursements.js']},
                 {name:'subsystem.shared.user-manage.js',files:['app/js/lazy-modules/shared/user-manage.js']},
                 {name:'subsystem.shared.wxa-config.js',files:['app/js/lazy-modules/shared/wxa-config.js']},
+                {name:'subsystem.shared.other-config.js',files:['app/js/lazy-modules/shared/other-config.js']},
                 {name:'subsystem.shared.charge-standard.js',files:['app/js/lazy-modules/shared/charge-standard.js']},
                 {name:'subsystem.shared.charge-item-customized.js',files:['app/js/lazy-modules/shared/charge-item-customized.js']},
                 {name:'subsystem.shared.robot.js',files:['app/js/lazy-modules/shared/robot.js']},
