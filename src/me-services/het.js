@@ -186,6 +186,16 @@
                                  sex:'女',
                                  cpNewAge:'59'
                              }
+                             var deviceInfo={
+                                 devId:'A1100065',
+                                 deviceMac:'A0E6F88550DF2',
+                                 cpNewName:'HCC',
+                                 sex:'女',
+                                 cpNewAge:'59',
+                                 type:'Mattress',
+                                 operator:'add'
+
+                             }
                              var openid = 'oYoT70Fw1BPC-oTUI7-Q-NiHKOq8'
                             
                              var tenantId = '58cf896e2f0f0a21b026d973'
@@ -196,7 +206,7 @@
                              }
 					
                              var token='47843085';
-                             var ret = yield app.bed_monitor_provider.regist(openid, userInfo, tenantId);
+                             var ret = yield app.bed_monitor_provider.addDevice(deviceInfo,openid,tenantId);
                               
                              console.log("isAttach:", ret);
                              this.body = "ok";
