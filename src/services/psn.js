@@ -4753,7 +4753,7 @@ module.exports = {
                                                 work_item_repeat_values = workItem.repeat_values;
                                                 for (var i = 0; i < 32; i++) {
                                                     if (app._.find(work_item_repeat_values, (o) => {
-                                                            return app.moment(now).add(i, 'danursingRecordToSaveys').date() === o;
+                                                            return app.moment(now).add(i, 'days').date() === o;
                                                         })) {
                                                         // date 相等以后,判断是否时是生成当天,如果是则比较时刻,时刻过期的话需要生成下一个执行点
                                                         exec_date = app.moment(now).add(i, 'days');
@@ -4856,9 +4856,9 @@ module.exports = {
                             var tenantId = currentNursingRecord.tenantId;
 
                             var cur_exec_on = app.moment(currentNursingRecord.exec_on).format('YYYY-MM-DD')
-                                exec_date_string = app.moment(cur_exec_on).add(1, "days").format('YYYY-MM-DD');
-                                now =  app.moment(cur_exec_on).add(1, "days");
-                                 
+                            exec_date_string = app.moment(cur_exec_on).add(1, "days").format('YYYY-MM-DD');
+                            now = app.moment(cur_exec_on).add(1, "days");
+
                             tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
                             if (!tenant || tenant.status == 0) {
                                 this.body = app.wrapper.res.error({ message: '无法找到养老机构!' });
@@ -5027,7 +5027,7 @@ module.exports = {
                                                     return weekDay % 7 === o % 7;
                                                 })) {
                                                 exec_date = app.moment(now).day(weekDay);
-                                                 
+
                                                 if (app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start).isAfter(now)) {
                                                     exec_on = app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start)
                                                     nursingRecord.exec_on = exec_on;
@@ -5049,9 +5049,11 @@ module.exports = {
                                         work_item_repeat_values = workItem.repeat_values;
                                         for (var i = 0; i < 32; i++) {
                                             if (app._.find(work_item_repeat_values, (o) => {
-                                                    return app.moment(now).add(i, 'danursingRecordToSaveys').date() === o;
+                                                    return app.moment(now).add(i, 'days').date() === o;
                                                 })) {
+                                                // date 相等以后,判断是否时是生成当天,如果是则比较时刻,时刻过期的话需要生成下一个执行点
                                                 exec_date = app.moment(now).add(i, 'days');
+                                                // console.log("exec_date_M",exec_date)
                                                 if (app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start).isAfter(now)) {
                                                     exec_on = app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start)
                                                     nursingRecord.exec_on = exec_on;
@@ -5070,6 +5072,7 @@ module.exports = {
                                 }
 
                             }
+
                             for (var i = 0, findNuringWorkerCount = 0, len = nursingRecordsToSave.length; i < len; i++) {
                                 nursingRecordToSave = nursingRecordsToSave[i];
                                 elderlyRoomValue = elderlyMapRoom[nursingRecordToSave.elderlyId];
