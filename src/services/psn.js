@@ -4672,6 +4672,22 @@ module.exports = {
                                         nursingRecord.remark = workItem.remark;
                                         nursingRecord.duration = workItem.duration;
                                         nursingRecord.remind_on = [];
+                                        var str = workItem.voice_template;
+                                        var reg = /\${([^}]+)}/;
+                                        while ((result = reg.exec(str)) != null) {
+                                            if (RegExp.$1 == "老人姓名") {
+                                                str = str.replace(reg, nursingPlanItem.elderly_name);
+
+                                            } else if (RegExp.$1 == "工作项目"||RegExp.$1 == "药品名称") {
+                                                str = str.replace(reg, workItem.name);
+
+                                            } else if (RegExp.$1 == "工作描述"||RegExp.$1 == "服用方法") {
+                                                str = str.replace(reg, workItem.description);
+                                            }
+                                        }
+                                        console.log("$$$$",str);
+                                        nursingRecord.voice_content = str;
+
                                         if (workItem.repeat_type == DIC.D0103.AS_NEEDED) {
                                             //按需工作不需要提醒
                                             nursingRecord.exec_on = app.moment(now.format('YYYY-MM-DD'));
@@ -4955,6 +4971,21 @@ module.exports = {
                                     remark: workItem.remark,
                                     duration: workItem.duration
                                 }
+                                var str = workItem.voice_template;
+                                var reg = /\${([^}]+)}/;
+                                while ((result = reg.exec(str)) != null) {
+                                    if (RegExp.$1 == "老人姓名") {
+                                        str = str.replace(reg, nursingPlanItem.elderly_name);
+
+                                    } else if (RegExp.$1 == "工作项目"||RegExp.$1 == "药品名称") {
+                                        str = str.replace(reg, workItem.name);
+
+                                    } else if (RegExp.$1 == "工作描述"||RegExp.$1 == "服用方法") {
+                                        str = str.replace(reg, workItem.description);
+                                    }
+
+                                }
+                                nursingRecord.voice_content = str;
                                 nursingRecord.remind_on = [];
 
                                 if (workItem.repeat_type == DIC.D0103.AS_NEEDED) {
