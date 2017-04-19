@@ -37,6 +37,7 @@ module.exports = function(ctx,name) {
             remind_times: {type: Number}, // 提醒次数
             fee_flag: {type: Boolean, default: false}, // 是否需要收费
             fee: {type: Number}, // 费用
+            voice_template:{type:String,maxlength:400},
             tenantId: {type: mongoose.Schema.Types.ObjectId}
         }, {
             toObject: {

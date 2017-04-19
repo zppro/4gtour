@@ -79,7 +79,7 @@
                              console.log("body:");
                              console.log(this.request.body);
                              self.logger.info('this.request.body:', this.openid);
-                             this.body = yield app.bed_monitor_provider.getDeviceInfo(this.openid);
+                             this.body = yield app.bed_monitor_provider.getDeviceInfo(this.openid,this.request.body.tenantId);
                          } catch (e) {
                              self.logger.error(e.message);
                              this.body = app.wrapper.res.error(e);
@@ -206,7 +206,7 @@
                              }
 					
                              var token='47843085';
-                             var ret = yield app.bed_monitor_provider.addDevice(deviceInfo,openid,tenantId);
+                             var ret = yield app.bed_monitor_provider.getDateReport(deviceInfo.devId,tenantId);
                               
                              console.log("isAttach:", ret);
                              this.body = "ok";
@@ -249,6 +249,25 @@
                              console.log("body:");
                              console.log(this.request.body)
                              this.body= yield app.bed_monitor_provider.getCarePersonInfoById( this.request.body.cid);    
+                         } catch (e) {
+                             self.logger.error(e.message);
+                             this.body = app.wrapper.res.error(e);
+                         }
+                         yield next;
+                     };
+                 }
+             },
+             {
+                 method: 'sleepDevicews$getDateReport',
+                 verb: 'post',
+                 url: this.service_url_prefix + "/sleepDevicews$getDateReport",
+                 handler: function (app, options) {
+                     return function *(next) {
+                         try {
+                             console.log("body:");
+                             console.log(this.request.body)
+                             this.body =  yield app.bed_monitor_provider.getDateReport(this.request.body.devId,this.request.body.tenantId,this.openid,this.request.body.skip);
+                            
                          } catch (e) {
                              self.logger.error(e.message);
                              this.body = app.wrapper.res.error(e);

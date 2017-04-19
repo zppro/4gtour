@@ -5,7 +5,7 @@
 var DIC = require('../pre-defined/dictionary-constants.json');
 
 module.exports = {
-    init: function (option) {
+    init: function(option) {
         var self = this;
         this.file = __filename;
         this.filename = this.file.substr(this.file.lastIndexOf('/') + 1);
@@ -18,8 +18,7 @@ module.exports = {
 
         if (!this.logger) {
             console.error('logger not loaded in ' + this.file);
-        }
-        else {
+        } else {
             this.logger.info(this.file + " loaded!");
         }
 
@@ -29,8 +28,8 @@ module.exports = {
                 method: 'queryElderly',
                 verb: 'post',
                 url: this.service_url_prefix + "/q/elderly",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         try {
                             var tenantId = this.request.body.tenantId;
                             var keyword = this.request.body.keyword;
@@ -55,13 +54,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'elderlyInfo',
                 verb: 'get',
-                url: this.service_url_prefix + "/elderlyInfo/:_id/:select",//:select需要提取的字段域用逗号分割 e.g. name,type
-                handler: function (app, options) {
-                    return function* (next) {
+                url: this.service_url_prefix + "/elderlyInfo/:_id/:select", //:select需要提取的字段域用逗号分割 e.g. name,type
+                handler: function(app, options) {
+                    return function*(next) {
                         try {
                             var elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], this.params._id);
                             var ret = app._.pick(elderly.toObject(), this.params.select.split(','));
@@ -73,13 +71,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'changeElderlyRoomBed',
                 verb: 'post',
                 url: this.service_url_prefix + "/changeElderlyRoomBed",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var tenant, elderly, room;
                         var oldRoomStatus, newRoomStatus, updateRoomStatus, old_roomOccupancyChangeHistory, new_roomOccupancyChangeHistory;
@@ -142,8 +139,7 @@ module.exports = {
                                 this.body = app.wrapper.res.error({ message: '无法找到老人搬离房间床位信息!' });
                                 yield next;
                                 return;
-                            }
-                            else {
+                            } else {
                                 oldRoomStatus = oldRoomStatuses[0];
                             }
                             if (!oldRoomStatus.occupied) {
@@ -194,8 +190,7 @@ module.exports = {
                                     occupied: [{ bed_no: bed_no, bed_status: 'A0003', elderlyId: elderlyId }],
                                     tenantId: tenantId
                                 };
-                            }
-                            else {
+                            } else {
                                 updateRoomStatus = newRoomStatuses[0];
 
                                 //rollback用
@@ -216,8 +211,7 @@ module.exports = {
                                         bed_status: 'A0003',
                                         elderlyId: elderlyId
                                     });
-                                }
-                                else {
+                                } else {
                                     //判断要入住的床位是否有其他老人，如有其他老人已经预占则返回
                                     if (bedInfo1.elderlyId) {
                                         //改成
@@ -242,8 +236,7 @@ module.exports = {
                                 raw_in_flag = old_roomOccupancyChangeHistory.in_flag;
                                 old_roomOccupancyChangeHistory.in_flag = false;
                                 old_roomOccupancyChangeHistory.check_out_time = app.moment();
-                            }
-                            else {
+                            } else {
                                 this.body = app.wrapper.res.error({ message: '无法找到旧的房间占用历史!' });
                                 yield next;
                                 return;
@@ -270,8 +263,7 @@ module.exports = {
 
                             if (newRoomStatus) {
                                 newRoomStatus = yield app.modelFactory().model_create(app.models['psn_roomStatus'], newRoomStatus);
-                            }
-                            else if (updateRoomStatus) {
+                            } else if (updateRoomStatus) {
                                 yield updateRoomStatus.save();
                             }
                             steps += 'A';
@@ -284,8 +276,7 @@ module.exports = {
                             steps += 'A';
 
                             this.body = app.wrapper.res.default();
-                        }
-                        catch (e) {
+                        } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
 
@@ -308,8 +299,7 @@ module.exports = {
                                         case 2:
                                             if (newRoomStatus) {
                                                 yield app.modelFactory().model_delete(app.models['pfta_roomStatus'], newRoomStatus._id);
-                                            }
-                                            else if (updateRoomStatus) {
+                                            } else if (updateRoomStatus) {
                                                 updateRoomStatus.occupied = raw_updateRoomStatus_occupied;
                                                 yield updateRoomStatus.save();
                                             }
@@ -320,10 +310,10 @@ module.exports = {
                                                 yield old_roomOccupancyChangeHistory.save();
                                             }
                                             break;
-                                        //case 4:
-                                        //    if(new_roomOccupancyChangeHistory) {
-                                        //        yield app.modelFactory().model_delete(app.models['pfta_roomOccupancyChangeHistory'], new_roomOccupancyChangeHistory._id);
-                                        //    }
+                                            //case 4:
+                                            //    if(new_roomOccupancyChangeHistory) {
+                                            //        yield app.modelFactory().model_delete(app.models['pfta_roomOccupancyChangeHistory'], new_roomOccupancyChangeHistory._id);
+                                            //    }
                                     }
                                 }
                             }
@@ -331,13 +321,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'changeElderlyChargeItem',
                 verb: 'post',
                 url: this.service_url_prefix + "/changeElderlyChargeItem",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var tenant, elderly, charge_item;
                         var journal_account_item_A0003, journal_account_item_B0001, tenantJournalAccount_B0006, tenantJournalAccount_A0001;
@@ -391,7 +380,7 @@ module.exports = {
                             var firstPrepayDate = elderly.charging_on_of_monthly_prepay;
                             if (!firstPrepayDate) {
                                 var arr_journal_account_B0001 = app._.where(elderly_json.journal_account, { revenue_and_expenditure_type: 'B0001' });
-                                var latest_journal_account_B0001 = app._.max(arr_journal_account_B0001, function (item) {
+                                var latest_journal_account_B0001 = app._.max(arr_journal_account_B0001, function(item) {
                                     return item.check_in_time;
                                 });
                                 firstPrepayDate = latest_journal_account_B0001.check_in_time;
@@ -401,7 +390,7 @@ module.exports = {
 
                             var except_old_monthly_prepay_price = 0;
                             var old_monthly_prepay_price = 0;
-                            app._.each(elderly.charge_items, function (item) {
+                            app._.each(elderly.charge_items, function(item) {
                                 if (item.item_id != charge_item.item_id) {
                                     except_old_monthly_prepay_price += item.period_price;
                                 }
@@ -451,7 +440,7 @@ module.exports = {
                             elderly.subsidiary_ledger.self += journal_account_item_A0003.amount - journal_account_item_B0001.amount;
 
                             //修改月租预付重新计费时间
-                            elderly.charging_on_of_monthly_prepay = app.moment();//更新月租预付的计费时间
+                            elderly.charging_on_of_monthly_prepay = app.moment(); //更新月租预付的计费时间
 
                             //增加老人收费项目变动历史
                             old_elderly_charge_item_change_history = app.clone(elderly_json.charge_item_change_history);
@@ -525,8 +514,7 @@ module.exports = {
                             steps += "A";
 
                             this.body = app.wrapper.res.default();
-                        }
-                        catch (e) {
+                        } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
 
@@ -562,13 +550,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'changeElderlyChargeItemForOtherAndCustomized',
                 verb: 'post',
                 url: this.service_url_prefix + "/changeElderlyChargeItemForOtherAndCustomized",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var tenant, elderly;
                         var journal_account_item_A0003, journal_account_item_B0001, tenantJournalAccount_B0006, tenantJournalAccount_A0001;
@@ -607,7 +594,7 @@ module.exports = {
                             var charge_item_catalog_id_of_cutomized = app.modelVariables['PENSION-AGENCY'].CHARGE_ITEM_CUSTOMIZED_CATAGORY._ID + '-' + elderly_json.charge_standard;
                             var charge_item_catalog_id_of_other = app.modelVariables['PENSION-AGENCY'].CHARGE_ITEM_OTHER_CATAGORY._ID + '-' + elderly_json.charge_standard;
 
-                            var charge_itemsForOtherAndCustomized = app._.filter(elderly_json.charge_items, function (o) {
+                            var charge_itemsForOtherAndCustomized = app._.filter(elderly_json.charge_items, function(o) {
                                 return app._.initial(o.item_id.split('.')).join('.') == charge_item_catalog_id_of_cutomized.toLowerCase() ||
                                     app._.initial(o.item_id.split('.')).join('.') == charge_item_catalog_id_of_other.toLowerCase();
                             });
@@ -645,8 +632,7 @@ module.exports = {
                                                 new_period_price: chargeItemOfTenant.period_price,
                                                 new_period: chargeItemOfTenant.period
                                             });
-                                        }
-                                        else {
+                                        } else {
                                             //增加一条初始记录
                                             elderly.charge_item_change_history.push({
                                                 charge_item_catalog_id: (chargeItemOfTenant.item_id.indexOf(charge_item_catalog_id.toLowerCase()) != -1) ? charge_item_catalog_id_of_cutomized : charge_item_catalog_id,
@@ -658,8 +644,7 @@ module.exports = {
                                         }
                                     }
 
-                                }
-                                else {
+                                } else {
 
                                     elderly.charge_items.push(chargeItemOfTenant);
 
@@ -703,13 +688,13 @@ module.exports = {
                             var firstPrepayDate = elderly.charging_on_of_monthly_prepay;
                             if (!firstPrepayDate) {
                                 var arr_journal_account_B0001 = app._.where(elderly_json.journal_account, { revenue_and_expenditure_type: 'B0001' });
-                                var latest_journal_account_B0001 = app._.max(arr_journal_account_B0001, function (item) {
+                                var latest_journal_account_B0001 = app._.max(arr_journal_account_B0001, function(item) {
                                     return item.check_in_time;
                                 });
                                 firstPrepayDate = latest_journal_account_B0001.check_in_time;
                             }
                             var daysOfMonthOnAverage = 30;
-                            var raw_monthly_prepay_price = app._.reduce(app._.pluck(raw_elderly_charge_items, 'period_price'), function (total, period_price) {
+                            var raw_monthly_prepay_price = app._.reduce(app._.pluck(raw_elderly_charge_items, 'period_price'), function(total, period_price) {
                                 return total + period_price;
                             }, 0);
 
@@ -725,7 +710,7 @@ module.exports = {
                                 amount: refund
                             };
 
-                            var new_monthly_prepay_price = app._.reduce(app._.pluck(elderly.charge_items, 'period_price'), function (total, period_price) {
+                            var new_monthly_prepay_price = app._.reduce(app._.pluck(elderly.charge_items, 'period_price'), function(total, period_price) {
                                 return total + period_price;
                             }, 0);
 
@@ -788,8 +773,7 @@ module.exports = {
                             steps += "A";
 
                             this.body = app.wrapper.res.default();
-                        }
-                        catch (e) {
+                        } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
 
@@ -822,13 +806,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'changeElderlyNursingLevel',
                 verb: 'post',
                 url: this.service_url_prefix + "/changeElderlyNursingLevel", //直接修改老人护理级别
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var tenant, elderly, nursingLevel, nursingPlan;
                         try {
                             var tenantId = this.request.body.tenantId;
@@ -893,8 +876,7 @@ module.exports = {
                             yield elderlyNursingPlan.save();
 
                             this.body = app.wrapper.res.ret({ oldNursingLevelId: oldNursingLevelId, nursingLevelId: nursingLevelId, nursingLevelName: nursingLevel.name });
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -908,8 +890,8 @@ module.exports = {
                 method: 'bookingRecharge',
                 verb: 'post',
                 url: this.service_url_prefix + "/bookingRecharge/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var recharge, elderly, tenant;
                         var raw_recharge_operated_by, raw_recharge_operated_by_name;
@@ -1012,11 +994,11 @@ module.exports = {
                                             recharge.operated_by_name = raw_recharge_operated_by_name;
                                             yield recharge.save();
                                             break;
-                                        //case 1:
-                                        //    elderly.subsidiary_ledger = raw_elderly_subsidiary_ledger;
-                                        //    elderly.journal_account = raw_elderly_journal_account;
-                                        //    yield elderly.save();
-                                        //    break;
+                                            //case 1:
+                                            //    elderly.subsidiary_ledger = raw_elderly_subsidiary_ledger;
+                                            //    elderly.journal_account = raw_elderly_journal_account;
+                                            //    yield elderly.save();
+                                            //    break;
                                     }
                                 }
                             }
@@ -1024,13 +1006,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
-                method: 'checkCanChangeBookingOrUnbookingRecharge',//检测是否能够记账或撤销记账
+            }, {
+                method: 'checkCanChangeBookingOrUnbookingRecharge', //检测是否能够记账或撤销记账
                 verb: 'get',
                 url: this.service_url_prefix + "/checkCanChangeBookingOrUnbookingRecharge/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var recharge, elderly, tenant;
 
@@ -1075,13 +1056,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'disableRechargeAndUnbooking', //作废充值记录并撤销记账
                 verb: 'post',
                 url: this.service_url_prefix + "/disableRechargeAndUnbooking/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var recharge, elderly, tenant;
                         var raw_recharge_status, raw_recharge_operated_by, raw_recharge_operated_by_name;
@@ -1149,8 +1129,7 @@ module.exports = {
                                 if (arr_journal_account[i].voucher_no == recharge_json.voucher_no) {
                                     if (arr_journal_account[i].carry_over_flag == false) {
                                         unbookingAmount = arr_journal_account[i].amount;
-                                    }
-                                    else {
+                                    } else {
                                         isBookingJournalAccountItemCarryOver = true;
                                     }
                                 }
@@ -1188,11 +1167,11 @@ module.exports = {
                                             recharge.operated_by_name = raw_recharge_operated_by_name;
                                             yield recharge.save();
                                             break;
-                                        //case 1:
-                                        //    elderly.subsidiary_ledger = raw_elderly_subsidiary_ledger;
-                                        //    elderly.journal_account = raw_elderly_journal_account;
-                                        //    yield elderly.save();
-                                        //    break;
+                                            //case 1:
+                                            //    elderly.subsidiary_ledger = raw_elderly_subsidiary_ledger;
+                                            //    elderly.journal_account = raw_elderly_journal_account;
+                                            //    yield elderly.save();
+                                            //    break;
                                     }
                                 }
                             }
@@ -1200,13 +1179,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
-                method: 'changeRechargeBookingAmount',//修改充值记账的数额
+            }, {
+                method: 'changeRechargeBookingAmount', //修改充值记账的数额
                 verb: 'post',
                 url: this.service_url_prefix + "/changeRechargeBookingAmount/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var recharge, elderly, tenant;
                         var raw_recharge_operated_by, raw_recharge_operated_by_name;
@@ -1272,8 +1250,7 @@ module.exports = {
                                     if (arr_journal_account[i].carry_over_flag == false) {
                                         oldBookingAmount = arr_journal_account[i].amount;
                                         arr_journal_account[i].amount = newBookingAmount;
-                                    }
-                                    else {
+                                    } else {
                                         isBookingJournalAccountItemCarryOver = true;
                                     }
                                 }
@@ -1308,11 +1285,11 @@ module.exports = {
                                             recharge.operated_by_name = raw_recharge_operated_by_name;
                                             yield recharge.save();
                                             break;
-                                        //case 1:
-                                        //    elderly.subsidiary_ledger = raw_elderly_subsidiary_ledger;
-                                        //    elderly.journal_account = raw_elderly_journal_account;
-                                        //    yield elderly.save();
-                                        //    break;
+                                            //case 1:
+                                            //    elderly.subsidiary_ledger = raw_elderly_subsidiary_ledger;
+                                            //    elderly.journal_account = raw_elderly_journal_account;
+                                            //    yield elderly.save();
+                                            //    break;
                                     }
                                 }
                             }
@@ -1323,11 +1300,11 @@ module.exports = {
             },
             /**********************老人充值记账后的冲红相关*****************************/
             {
-                method: 'checkCanBookingRedToElderlyRecharge',//检查是否是系统内部记账，如果是则需要在前台做好提醒不需要冲红，但不强制禁止冲红
+                method: 'checkCanBookingRedToElderlyRecharge', //检查是否是系统内部记账，如果是则需要在前台做好提醒不需要冲红，但不强制禁止冲红
                 verb: 'post',
                 url: this.service_url_prefix + "/checkCanBookingRedToElderlyRecharge",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var recharge_to_red, tenantJournalAccount_to_red, elderly, tenant;
                         try {
                             var tenantId = this.request.body.tenantId;
@@ -1411,13 +1388,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'bookingRedToElderlyRecharge',
                 verb: 'post',
                 url: this.service_url_prefix + "/bookingRedToElderlyRecharge",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var recharge_to_red, tenantJournalAccount_to_red, red, elderly, tenant;
                         var raw_red_operated_by, raw_red_operated_by_name;
@@ -1509,8 +1485,7 @@ module.exports = {
 
                                 yield elderly.save();
                                 steps = 'A';
-                            }
-                            else {
+                            } else {
                                 //系统内部流水
                                 tenantJournalAccount_to_red = yield app.modelFactory().model_one(app.models['pub_tenantJournalAccount'], {
                                     where: {
@@ -1544,8 +1519,7 @@ module.exports = {
                                         yield next;
                                         return;
                                     }
-                                }
-                                else {
+                                } else {
                                     this.body = app.wrapper.res.error({ message: '当前流水没有记录来源，无法冲红!' });
                                     yield next;
                                     return;
@@ -1579,8 +1553,7 @@ module.exports = {
 
                                     yield elderly.save();
                                     steps = 'A';
-                                }
-                                else {
+                                } else {
                                     steps = 'Z';
                                 }
 
@@ -1655,13 +1628,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
-                method: 'checkCanChangeBookingOrUnbookingRedToElderlyRecharge',//检测是否能够修改或撤销冲红记录
+            }, {
+                method: 'checkCanChangeBookingOrUnbookingRedToElderlyRecharge', //检测是否能够修改或撤销冲红记录
                 verb: 'get',
                 url: this.service_url_prefix + "/checkCanChangeBookingOrUnbookingRedToElderlyRecharge/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var red, recharge_to_red, tenantJournalAccount_to_red, elderly, tenant;
 
@@ -1701,8 +1673,7 @@ module.exports = {
                                 });
 
                                 itCan = tenantJournalAccount_to_red != null;
-                            }
-                            else {
+                            } else {
                                 //冲红的是充值记录，则通过其找到目标老人
                                 elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
                                 if (!elderly || elderly.status == 0) {
@@ -1734,13 +1705,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'disableRedAndUnbookingToElderlyRecharge',
                 verb: 'post',
                 url: this.service_url_prefix + "/disableRedAndUnbookingToElderlyRecharge/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var red, recharge_to_red, tenantJournalAccount_to_red, elderly, tenant;
                         var raw_red_status, raw_red_operated_by, raw_red_operated_by_name, raw_elderly_subsidiary_ledger, raw_elderly_journal_account, raw_tenantJournalAccountStatus, raw_tenant_subsidiary_ledger;
@@ -1794,14 +1764,14 @@ module.exports = {
                                     this.body = app.wrapper.res.error({ message: '无法找到需要撤销的流水记录!' });
                                     yield next;
                                     return;
-                                }
-                                else if (tenantJournalAccount_to_red.carry_over_flag) {
+                                } else if (tenantJournalAccount_to_red.carry_over_flag) {
                                     this.body = app.wrapper.res.error({ message: '当前流水记录已经结转!' });
                                     yield next;
                                     return;
                                 }
 
-                                var index = -1, elderly_json, amountOfElderlyJournalAccount;
+                                var index = -1,
+                                    elderly_json, amountOfElderlyJournalAccount;
                                 //通过source_type,source_id找到对应的老人冲红流水删除
                                 if (tenantJournalAccount_to_red.source_type == app.modelVariables.SOURCE_TYPES.ELDERLY) {
                                     elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], tenantJournalAccount_to_red.source_id);
@@ -1851,8 +1821,7 @@ module.exports = {
 
                                     yield elderly.save();
                                     steps = 'A';
-                                }
-                                else {
+                                } else {
                                     this.body = app.wrapper.res.error({ message: '当前流水没有记录来源，无法撤销冲红!' });
                                     yield next;
                                     return;
@@ -1871,8 +1840,7 @@ module.exports = {
                                 yield tenantJournalAccount_to_red.save();
                                 steps += 'A';
 
-                            }
-                            else {
+                            } else {
                                 //撤销冲红的是充值记录，则通过其找到目标老人
 
                                 elderly = yield app.modelFactory().model_read(app.models['pub_elderly'], recharge_to_red.elderlyId);
@@ -1969,13 +1937,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'changeRedBookingAmountToElderlyRecharge',
                 verb: 'post',
                 url: this.service_url_prefix + "/changeRedBookingAmountToElderlyRecharge/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var red, recharge_to_red, tenantJournalAccount_to_red, elderly, tenant;
                         var raw_red_operated_by, raw_red_operated_by_name, raw_elderly_subsidiary_ledger, raw_elderly_journal_account, raw_tenantJournalAccountAmount, raw_tenant_subsidiary_ledger;
@@ -2030,15 +1997,15 @@ module.exports = {
                                     this.body = app.wrapper.res.error({ message: '无法找到需要修改的流水记录!' });
                                     yield next;
                                     return;
-                                }
-                                else if (tenantJournalAccount_to_red.carry_over_flag) {
+                                } else if (tenantJournalAccount_to_red.carry_over_flag) {
                                     this.body = app.wrapper.res.error({ message: '当前流水记录已经结转!' });
                                     yield next;
                                     return;
                                 }
 
-                                var index = -1, elderly_json, amountOfElderlyJournalAccountToCancel, amountOfElderlyJournalAccountToRed
-                                //通过source_type,source_id找到对应的老人冲红流水删除
+                                var index = -1,
+                                    elderly_json, amountOfElderlyJournalAccountToCancel, amountOfElderlyJournalAccountToRed
+                                    //通过source_type,source_id找到对应的老人冲红流水删除
                                 if (tenantJournalAccount_to_red.source_type == app.modelVariables.SOURCE_TYPES.ELDERLY) {
                                     elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], tenantJournalAccount_to_red.source_id);
                                     if (!elderly || elderly.status == 0) {
@@ -2090,8 +2057,7 @@ module.exports = {
 
                                     yield elderly.save();
                                     steps = 'A';
-                                }
-                                else {
+                                } else {
                                     this.body = app.wrapper.res.error({ message: '当前流水没有记录来源，无法修改冲红!' });
                                     yield next;
                                     return;
@@ -2111,8 +2077,7 @@ module.exports = {
                                 yield tenantJournalAccount_to_red.save();
                                 steps += 'A';
 
-                            }
-                            else {
+                            } else {
                                 //撤销冲红的是充值记录，则通过其找到目标老人
 
                                 elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], recharge_to_red.elderlyId);
@@ -2217,8 +2182,8 @@ module.exports = {
                 method: 'roomStatusInfo',
                 verb: 'get',
                 url: this.service_url_prefix + "/roomStatusInfo/:tenantId",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         try {
 
                             var roomStatuses = yield app.modelFactory().model_query(app.models['psn_roomStatus'], { where: { tenantId: this.params.tenantId } })
@@ -2234,13 +2199,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'updateRoomStatusInfo',
                 verb: 'post',
                 url: this.service_url_prefix + "/updateRoomStatusInfo",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var tenant, elderly, room;
                         var remove_created_roomStatus_id, raw_bed_status_for_cancel_occupy_roomStatus, raw_elderly_for_cancel_occupy_roomStatus;
@@ -2325,8 +2289,7 @@ module.exports = {
                                     occupied: [{ bed_no: bed_no, bed_status: 'A0002', elderlyId: elderlyId }],
                                     tenantId: tenantId
                                 };
-                            }
-                            else {
+                            } else {
                                 var bedInfo1
                                 for (var i = 0; i < roomStatus.occupied.length; i++) {
                                     if (bed_no == roomStatus.occupied[i].bed_no) {
@@ -2336,8 +2299,7 @@ module.exports = {
 
                                 if (!bedInfo1) {
                                     roomStatus.occupied.push({ bed_no: bed_no, bed_status: 'A0002', elderlyId: elderlyId });
-                                }
-                                else {
+                                } else {
                                     //判断要入住的床位是否有其他老人，如有其他老人已经预占则返回
                                     if (bedInfo1.elderlyId && bedInfo1.elderlyId != elderlyId) {
                                         //改成
@@ -2363,8 +2325,7 @@ module.exports = {
                                 steps += "A";
                             }
                             this.body = app.wrapper.res.default();
-                        }
-                        catch (e) {
+                        } catch (e) {
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
 
@@ -2395,8 +2356,8 @@ module.exports = {
                 method: 'robotRemoveRoomConfig',
                 verb: 'post',
                 url: this.service_url_prefix + "/robotRemoveRoomConfig",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var tenant, robot, rooms, room, robots;
                         try {
@@ -2450,8 +2411,7 @@ module.exports = {
                             }
 
                             this.body = app.wrapper.res.default();
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -2459,13 +2419,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'bedMonitorRemoveRoomConfig',
                 verb: 'post',
                 url: this.service_url_prefix + "/bedMonitorRemoveRoomConfig",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var tenant, bedMonitor, rooms, room, bedMonitors;
                         try {
@@ -2518,8 +2477,7 @@ module.exports = {
                             }
 
                             this.body = app.wrapper.res.default();
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -2530,11 +2488,11 @@ module.exports = {
             },
             /**********************入院相关*****************************/
             {
-                method: 'completeEnter',//完成入院
+                method: 'completeEnter', //完成入院
                 verb: 'post',
                 url: this.service_url_prefix + "/completeEnter/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var enter, tenant, elderly, roomStatus, roomOccupancyChangeHistory, recharge,
                             journal_account_item_A0001, journal_account_item_B0001,
@@ -2614,8 +2572,7 @@ module.exports = {
                                     occupied: [{ bed_no: bed_no, bed_status: 'A0003', elderlyId: enter.elderlyId }],
                                     tenantId: enter.tenantId
                                 };
-                            }
-                            else {
+                            } else {
                                 old_roomStatus_occupied = app.clone(roomStatus.toObject().occupied);
                                 if (!old_roomStatus_occupied)
                                     old_roomStatus_occupied = undefined;
@@ -2714,8 +2671,7 @@ module.exports = {
                             if (roomStatus._id) {
                                 yield roomStatus.save();
                                 steps += "A";
-                            }
-                            else {
+                            } else {
                                 roomStatus = yield app.modelFactory().model_create(app.models['psn_roomStatus'], roomStatus);
                                 remove_roomStatus_id = roomStatus._id;
                                 steps += "B";
@@ -2760,8 +2716,7 @@ module.exports = {
                                                 //修改
                                                 roomStatus.occupied = old_roomStatus_occupied;
                                                 yield roomStatus.save();
-                                            }
-                                            else {
+                                            } else {
                                                 //删除
                                                 yield app.modelFactory().delete(roomStatusModelOption.model_name, roomStatusModelOption.model_path, remove_roomStatus_id);
                                             }
@@ -2784,13 +2739,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
-                method: 'disableEnterRelatedAction',//作废入院记录的相关动作
+            }, {
+                method: 'disableEnterRelatedAction', //作废入院记录的相关动作
                 verb: 'post',
                 url: this.service_url_prefix + "/disableEnterRelatedAction/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var enter, tenant, elderly;
                         var toUpdateRoomStatus = [];
@@ -2867,13 +2821,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
-                method: 'checkBeforeAddEnter',//入院前前检测
+            }, {
+                method: 'checkBeforeAddEnter', //入院前前检测
                 verb: 'get',
                 url: this.service_url_prefix + "/checkBeforeAddEnter/:tenantId/:id_no",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var enter, tenant, elderly;
                         var toUpdateRoomStatus = [];
@@ -2937,13 +2890,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'nursingLevelsByAssessmentGrade',
                 verb: 'post',
                 url: this.service_url_prefix + "/nursingLevelsByAssessmentGrade",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         try {
                             var nursing_assessment_grade = this.request.body.nursing_assessment_grade;
                             var tenantId = this.request.body.tenantId;
@@ -2958,12 +2910,12 @@ module.exports = {
                                 return;
                             }
                             var nursing_levels = yield app.modelFactory().model_query(app.models['psn_nursingLevel'], {
-                                    where: {
-                                        nursing_assessment_grade: nursing_assessment_grade,
-                                        status: 1,
-                                        tenantId:tenantId
-                                    }
-                                });
+                                where: {
+                                    nursing_assessment_grade: nursing_assessment_grade,
+                                    status: 1,
+                                    tenantId: tenantId
+                                }
+                            });
                             this.body = app.wrapper.res.rows(nursing_levels);
                         } catch (e) {
                             self.logger.error(e.message);
@@ -2971,13 +2923,12 @@ module.exports = {
                         }
                     }
                 }
-            },
-            {
+            }, {
                 method: 'nursingLevels',
                 verb: 'post',
                 url: this.service_url_prefix + "/nursingLevels",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         try {
                             var tenantId = this.request.body.tenantId;
                             if (!tenantId) {
@@ -2986,11 +2937,11 @@ module.exports = {
                                 return;
                             }
                             var nursing_levels = yield app.modelFactory().model_query(app.models['psn_nursingLevel'], {
-                                    where: {
-                                        status: 1,
-                                        tenantId:tenantId
-                                    }
-                                });
+                                where: {
+                                    status: 1,
+                                    tenantId: tenantId
+                                }
+                            });
                             this.body = app.wrapper.res.rows(nursing_levels);
                         } catch (e) {
                             self.logger.error(e.message);
@@ -3001,11 +2952,11 @@ module.exports = {
             },
             /**********************出院相关*****************************/
             {
-                method: 'submitApplicationToExit',//提交出院申请
+                method: 'submitApplicationToExit', //提交出院申请
                 verb: 'post',
                 url: this.service_url_prefix + "/submitApplicationToExit/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var elderly, newExit;
                         var raw_elderly_begin_exit_flow;
@@ -3034,12 +2985,12 @@ module.exports = {
                             }
 
                             if (elderly.begin_exit_flow || (yield app.modelFactory().model_totals(app.models['psn_exit'], {
-                                where: {
-                                    tenantId: elderly.tenantId,
-                                    elderlyId: elderly._id,
-                                    enter_code: elderly.enter_code
-                                }
-                            })).length > 0) {
+                                    where: {
+                                        tenantId: elderly.tenantId,
+                                        elderlyId: elderly._id,
+                                        enter_code: elderly.enter_code
+                                    }
+                                })).length > 0) {
                                 this.body = app.wrapper.res.error({ message: '老人出院申请已经提交，请按照出院流程办理出院手续!' });
                                 yield next;
                                 return;
@@ -3094,13 +3045,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
-                method: 'submitToAuditItemReturn',//提交归还物品检查
+            }, {
+                method: 'submitToAuditItemReturn', //提交归还物品检查
                 verb: 'post',
                 url: this.service_url_prefix + "/submitToAuditItemReturn/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var exit;
                         try {
                             exit = yield app.modelFactory().model_read(app.models['psn_exit'], this.params._id);
@@ -3129,13 +3079,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
-                method: 'submitToAuditSettlement',//提交出院结算审核
+            }, {
+                method: 'submitToAuditSettlement', //提交出院结算审核
                 verb: 'post',
                 url: this.service_url_prefix + "/submitToAuditSettlement/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var exit;
                         try {
                             var operated_by = this.request.body.operated_by;
@@ -3178,13 +3127,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
-                method: 'submitToConfirmExit',//提交到确认出院步骤
+            }, {
+                method: 'submitToConfirmExit', //提交到确认出院步骤
                 verb: 'post',
                 url: this.service_url_prefix + "/submitToConfirmExit/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var exit;
                         try {
                             var operated_by = this.request.body.operated_by;
@@ -3227,13 +3175,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'advancePaymentItemsWhenExitSettlement',
                 verb: 'get',
                 url: this.service_url_prefix + "/advancePaymentItemsWhenExitSettlement/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         try {
                             var exit = yield app.modelFactory().model_read(app.models['psn_exit'], this.params._id);
                             if (!exit || exit.status == 0) {
@@ -3278,13 +3225,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'chargeItemsRecordedWhenExitSettlement',
                 verb: 'get',
                 url: this.service_url_prefix + "/chargeItemsRecordedWhenExitSettlement/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         try {
                             var exit = yield app.modelFactory().model_read(app.models['psn_exit'], this.params._id);
                             if (!exit || exit.status == 0) {
@@ -3328,13 +3274,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'chargeItemsUnRecordedWhenExitSettlement',
                 verb: 'get',
                 url: this.service_url_prefix + "/chargeItemsUnRecordedWhenExitSettlement/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         try {
                             var exit = yield app.modelFactory().model_read(app.models['psn_exit'], this.params._id);
                             if (!exit || exit.status == 0) {
@@ -3365,14 +3310,14 @@ module.exports = {
                             var firstPrepayDate = elderly.charging_on_of_monthly_prepay;
                             if (!firstPrepayDate) {
                                 var arr_journal_account_B0001 = app._.where(elderly_json.journal_account, { revenue_and_expenditure_type: 'B0001' });
-                                var latest_journal_account_B0001 = app._.max(arr_journal_account_B0001, function (item) {
+                                var latest_journal_account_B0001 = app._.max(arr_journal_account_B0001, function(item) {
                                     return item.check_in_time;
                                 });
 
                                 firstPrepayDate = latest_journal_account_B0001.check_in_time;
                             }
                             var daysOfMonthOnAverage = 30;
-                            var monthly_prepay_price = app._.reduce(app._.pluck(elderly_json.charge_items, 'period_price'), function (total, period_price) {
+                            var monthly_prepay_price = app._.reduce(app._.pluck(elderly_json.charge_items, 'period_price'), function(total, period_price) {
                                 return total + period_price;
                             }, 0);
 
@@ -3397,19 +3342,18 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
-                method: 'exitSettlement',//出院结算
+            }, {
+                method: 'exitSettlement', //出院结算
                 verb: 'post',
                 url: this.service_url_prefix + "/exitSettlement/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var exit, elderly, tenant;
                         var raw_elderly_general_ledger, raw_elderly_subsidiary_ledger, raw_elderly_journal_account;
                         var raw_tenant_general_ledger, raw_tenant_subsidiary_ledger;
                         var raw_exit_settlement_info;
-                        var new_elderly_journal_account_item_A0003;//未入账费用当前仅A0003预付月租退款
+                        var new_elderly_journal_account_item_A0003; //未入账费用当前仅A0003预付月租退款
                         var new_tenantJournalAccount_B0006, remove_tenantJournalAccount_B0006_id;
                         var new_elderly_journal_account_item, new_tenantJournalAccount_item, remove_tenantJournalAccount_item_id;
                         try {
@@ -3466,8 +3410,7 @@ module.exports = {
                             raw_tenant_subsidiary_ledger = app.clone(tenant_json.subsidiary_ledger);
                             if (exit_json.settlement_info) {
                                 raw_exit_settlement_info = app.clone(tenant_json.settlement_info);
-                            }
-                            else {
+                            } else {
                                 raw_exit_settlement_info = undefined;
                             }
 
@@ -3496,13 +3439,13 @@ module.exports = {
                             var firstPrepayDate = elderly.charging_on_of_monthly_prepay;
                             if (!firstPrepayDate) {
                                 var arr_journal_account_B0001 = app._.where(elderly_json.journal_account, { revenue_and_expenditure_type: 'B0001' });
-                                var latest_journal_account_B0001 = app._.max(arr_journal_account_B0001, function (item) {
+                                var latest_journal_account_B0001 = app._.max(arr_journal_account_B0001, function(item) {
                                     return item.check_in_time;
                                 });
                                 firstPrepayDate = latest_journal_account_B0001.check_in_time;
                             }
                             var daysOfMonthOnAverage = 30;
-                            var monthly_prepay_price = app._.reduce(app._.pluck(elderly_json.charge_items, 'period_price'), function (total, period_price) {
+                            var monthly_prepay_price = app._.reduce(app._.pluck(elderly_json.charge_items, 'period_price'), function(total, period_price) {
                                 return total + period_price;
                             }, 0);
 
@@ -3557,7 +3500,7 @@ module.exports = {
                                 var sign = elderly.general_ledger > 0 ? -1 : 1;
                                 new_elderly_journal_account_item = {
                                     voucher_no: yield app.sequenceFactory.getSequenceVal(app.modelVariables.SEQUENCE_DEFS.BOOKING_TO_TENANT, elderly_json.tenantId),
-                                    revenue_and_expenditure_type: elderly.general_ledger > 0 ? 'B0002' : 'A0004',//租户需要退款给老人:老人需要补缴给租户欠费
+                                    revenue_and_expenditure_type: elderly.general_ledger > 0 ? 'B0002' : 'A0004', //租户需要退款给老人:老人需要补缴给租户欠费
                                     digest: '出院' + exit.enter_code,
                                     carry_over_flag: true,
                                     amount: elderly.general_ledger
@@ -3567,7 +3510,7 @@ module.exports = {
                                 //计算结果老人分类账应该为0
                                 new_tenantJournalAccount_item = {
                                     voucher_no: new_elderly_journal_account_item.voucher_no,
-                                    revenue_and_expenditure_type: elderly.general_ledger > 0 ? 'B0007' : 'A0004',//租户需要退款给老人:老人需要补缴给租户欠费
+                                    revenue_and_expenditure_type: elderly.general_ledger > 0 ? 'B0007' : 'A0004', //租户需要退款给老人:老人需要补缴给租户欠费
                                     digest: elderly.name + ' ' + new_elderly_journal_account_item.digest,
                                     amount: new_elderly_journal_account_item.amount,
                                     source_type: app.modelVariables.SOURCE_TYPES.ELDERLY,
@@ -3642,13 +3585,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
-                method: 'completeExit',//完成出院
+            }, {
+                method: 'completeExit', //完成出院
                 verb: 'post',
                 url: this.service_url_prefix + "/completeExit/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var steps;
                         var exit, tenant, elderly, roomStatus, now_roomOccupancyChangeHistory, new_roomOccupancyChangeHistory;
                         var raw_exit_current_step, raw_exit_exit_on, raw_exit_elderly_snapshot,
@@ -3698,13 +3640,13 @@ module.exports = {
                                     bed_no: elderly.room_value.bed_no,
                                     elderlyId: elderly._id,
                                     in_flag: true
-                                }, sort: { check_in_time: -1 }
+                                },
+                                sort: { check_in_time: -1 }
                             });
 
                             if (roomOccupancyChangeHistories && roomOccupancyChangeHistories.length > 0) {
                                 now_roomOccupancyChangeHistory = roomOccupancyChangeHistories[0];
-                            }
-                            else {
+                            } else {
                                 this.body = app.wrapper.res.error({ message: '无法找到旧的房间占用历史!' });
                                 yield next;
                                 return;
@@ -3805,8 +3747,8 @@ module.exports = {
                 method: 'receptionVisiterSyncElderlyFamilyMembers',
                 verb: 'post',
                 url: this.service_url_prefix + "/receptionVisiterSyncElderlyFamilyMembers/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var reception, elderly;
                         try {
                             reception = yield app.modelFactory().model_read(app.models['psn_reception'], this.params._id);
@@ -3835,8 +3777,7 @@ module.exports = {
 
                             if (!member) {
                                 elderly.family_members.push(app._.extend({}, reception.toObject().visit_info));
-                            }
-                            else {
+                            } else {
 
                                 reception.visit_info.id_no && (member.id_no = reception.visit_info.id_no);
                                 reception.visit_info.sex && (member.sex = reception.visit_info.sex);
@@ -3855,13 +3796,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'leaveAccompanierSyncElderlyFamilyMembers',
                 verb: 'post',
                 url: this.service_url_prefix + "/leaveAccompanierSyncElderlyFamilyMembers/:_id",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var leave, elderly;
                         try {
                             leave = yield app.modelFactory().model_read(app.models['psn_leave'], this.params._id);
@@ -3891,8 +3831,7 @@ module.exports = {
 
                             if (!member) {
                                 elderly.family_members.push(app._.extend({}, leave.toObject().accompany_info));
-                            }
-                            else {
+                            } else {
 
                                 leave.accompany_info.id_no && (member.id_no = leave.accompany_info.id_no);
                                 leave.accompany_info.sex && (member.sex = leave.accompany_info.sex);
@@ -3917,8 +3856,8 @@ module.exports = {
                 method: 'nursingScheduleWeekly',
                 verb: 'post',
                 url: this.service_url_prefix + "/nursingScheduleWeekly", //按周查找护理排班
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var tenant, xAxisValueStart, xAxisValueEnd;
                         try {
                             //this.request.body
@@ -3958,8 +3897,7 @@ module.exports = {
                                 yAxisData: yAxisData,
                                 items: rows
                             });
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -3967,13 +3905,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'nursingScheduleSave',
                 verb: 'post',
                 url: this.service_url_prefix + "/nursingScheduleSave",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var tenant;
                         try {
                             //this.request.body
@@ -4019,7 +3956,8 @@ module.exports = {
                             });
 
                             console.log('排班保存成功');
-                            var now = app.moment(), toSaveRow, exec_start, exec_end, nursingRecordsMatched, nursingRecordIds, batchConditions, batchModel, needUpdateNursingRecord;
+                            var now = app.moment(),
+                                toSaveRow, exec_start, exec_end, nursingRecordsMatched, nursingRecordIds, batchConditions, batchModel, needUpdateNursingRecord;
                             for (var i = 0, len = toSaveRows.length; i < len; i++) {
                                 toSaveRow = toSaveRows[i];
                                 exec_start = app.moment(toSaveRow.x_axis);
@@ -4066,8 +4004,7 @@ module.exports = {
                             }
 
                             this.body = app.wrapper.res.default();
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -4075,13 +4012,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'nursingScheduleRemove',
                 verb: 'post',
                 url: this.service_url_prefix + "/nursingScheduleRemove",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var tenant;
                         try {
                             //this.request.body
@@ -4121,7 +4057,8 @@ module.exports = {
 
 
                             console.log('排班删除成功');
-                            var now = app.moment(), toRemoveRow, exec_start, exec_end, nursingRecordsMatched, nursingRecordIds, batchConditions, batchModel, needUpdateNursingRecord;
+                            var now = app.moment(),
+                                toRemoveRow, exec_start, exec_end, nursingRecordsMatched, nursingRecordIds, batchConditions, batchModel, needUpdateNursingRecord;
                             for (var i = 0, len = toRemoveRows.length; i < len; i++) {
                                 toRemoveRow = toRemoveRows[i];
                                 exec_start = app.moment(toRemoveRow.x_axis);
@@ -4166,8 +4103,7 @@ module.exports = {
                                     });
                                 }
                             }
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -4175,13 +4111,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'nursingScheduleTemplateImport',
                 verb: 'post',
                 url: this.service_url_prefix + "/nursingScheduleTemplateImport",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var nursingScheduleTemplate;
                         try {
                             //this.request.body
@@ -4233,7 +4168,8 @@ module.exports = {
                             });
 
                             console.log('排班模版导入成功');
-                            var now = app.moment(), toSaveRow, exec_start, exec_end, nursingRecordsMatched, nursingRecordIds, batchConditions, batchModel, needUpdateNursingRecord;
+                            var now = app.moment(),
+                                toSaveRow, exec_start, exec_end, nursingRecordsMatched, nursingRecordIds, batchConditions, batchModel, needUpdateNursingRecord;
                             for (var i = 0, len = toSaveRows.length; i < len; i++) {
                                 toSaveRow = toSaveRows[i];
                                 exec_start = app.moment(toSaveRow.x_axis);
@@ -4280,8 +4216,7 @@ module.exports = {
                             }
 
                             this.body = app.wrapper.res.default();
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -4289,13 +4224,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'nursingScheduleSaveAsTemplateWeekly',
                 verb: 'post',
                 url: this.service_url_prefix + "/nursingScheduleSaveAsTemplateWeekly",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var tenant;
                         try {
                             //this.request.body
@@ -4337,8 +4271,7 @@ module.exports = {
                             }
 
                             this.body = app.wrapper.res.ret(isCreate);
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -4346,13 +4279,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'nursingScheduleByElderlyDaily',
                 verb: 'post',
                 url: this.service_url_prefix + "/nursingScheduleByElderlyDaily", //按老人和天查找护理排班
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var tenant, elderly, dateString, xAxisValueStart;
                         try {
                             //this.request.body
@@ -4366,8 +4298,8 @@ module.exports = {
 
                             var elderlyId = this.request.body.elderlyId;
                             elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
-                            if(!elderly || elderly.status == 0){
-                                this.body = app.wrapper.res.error({message: '无法找到老人!'});
+                            if (!elderly || elderly.status == 0) {
+                                this.body = app.wrapper.res.error({ message: '无法找到老人!' });
                                 yield next;
                                 return;
                             }
@@ -4393,8 +4325,7 @@ module.exports = {
                             // console.log(yAxisData);
                             // console.log(rows);
                             this.body = app.wrapper.res.rows(rows);
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -4408,8 +4339,8 @@ module.exports = {
                 method: 'nursingPlansByRoom',
                 verb: 'post',
                 url: this.service_url_prefix + "/nursingPlansByRoom", //按房间查找入住老人的护理计划
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var tenant, elderly, nursingPlan;
                         try {
                             var tenantId = this.request.body.tenantId;
@@ -4453,7 +4384,7 @@ module.exports = {
                             });
 
                             var nursingPlansByRoom = {};
-                            app._.each(rooms, function (o) {
+                            app._.each(rooms, function(o) {
                                 for (var i = 1, len = o.capacity; i <= len; i++) {
                                     elderly = app._.find(elderlys, (o2) => {
                                         return o2.room_value.roomId.toString() == o._id.toString() && o2.room_value.bed_no == i;
@@ -4476,8 +4407,7 @@ module.exports = {
                             });
 
                             this.body = app.wrapper.res.ret(nursingPlansByRoom);
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -4485,14 +4415,13 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'nursingPlanSaveNursingItem',
                 verb: 'post',
                 url: this.service_url_prefix + "/nursingPlanSaveNursingItem", //为老人保存一条护理类目
-                handler: function (app, options) {
-                    return function* (next) {
-                        var tenant, elderly, workItem, nursingPlan,toProcessWorkItem
+                handler: function(app, options) {
+                    return function*(next) {
+                        var tenant, elderly, workItem, nursingPlan, toProcessWorkItem
                         try {
                             var tenantId = this.request.body.tenantId;
                             tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
@@ -4509,26 +4438,26 @@ module.exports = {
                                 yield next;
                                 return;
                             }
-                            
+
                             var workItemCheckInfo = this.request.body.work_item_check_info;
                             var toProcessWorkItemId = workItemCheckInfo.id;
                             var type = workItemCheckInfo.type;
-                            if(type == DIC.D3017.NURSING_ITEM){
-                                 workItem = yield app.modelFactory().model_read(app.models['psn_workItem'], toProcessWorkItemId);
+                            if (type == DIC.D3017.NURSING_ITEM) {
+                                workItem = yield app.modelFactory().model_read(app.models['psn_workItem'], toProcessWorkItemId);
                                 if (!workItem || workItem.status == 0) {
                                     this.body = app.wrapper.res.error({ message: '无法找到工作项目!' });
                                     yield next;
                                     return;
                                 }
-                               
-                            }else if(type == DIC.D3017.DRUG_USE_ITEM){
+
+                            } else if (type == DIC.D3017.DRUG_USE_ITEM) {
                                 workItem = yield app.modelFactory().model_read(app.models['psn_drugUseItem'], toProcessWorkItemId);
                                 if (!workItem || workItem.status == 0) {
                                     this.body = app.wrapper.res.error({ message: '无法找到用药管理项目!' });
                                     yield next;
                                     return;
                                 }
-                                
+
                             }
                             toProcessWorkItem = workItem.toObject();
                             toProcessWorkItem.type = type;
@@ -4574,8 +4503,7 @@ module.exports = {
                             }
 
                             this.body = app.wrapper.res.default();
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -4583,13 +4511,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'nursingPlanSaveRemark',
                 verb: 'post',
                 url: this.service_url_prefix + "/nursingPlanSaveRemark", //为老人保存一条护理项目
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var tenant, elderly, nursingPlan;
                         try {
                             var tenantId = this.request.body.tenantId;
@@ -4633,8 +4560,7 @@ module.exports = {
                             }
 
                             this.body = app.wrapper.res.default();
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -4648,11 +4574,13 @@ module.exports = {
                 method: 'nursingRecordGenerate',
                 verb: 'post',
                 url: this.service_url_prefix + "/nursingRecordGenerate", //按照护理计划一轮护理记录
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var tenant, elderly, elderlyRoomValue, roomId, nursingPlanItems, nursingPlanItem, workItems, workItem,
                             nursingRecord, now, gen_batch_no, nursingWorkerScheduleItem, exec_date, exec_on, exec_date_string, remind_on;
-                        var elderlyMapRoom = {}, nursingRecordsToSave = [], nursingRecordToSave, work_item_repeat_values, allEdlerlyIds, allElderly, nursingRecordExist,
+                        var elderlyMapRoom = {},
+                            nursingRecordsToSave = [],
+                            nursingRecordToSave, work_item_repeat_values, allEdlerlyIds, allElderly, nursingRecordExist,
                             remind_max, remind_step, remind_start, exec_start, exec_end, warningMsg;
                         try {
                             var tenantId = this.request.body.tenantId;
@@ -4714,7 +4642,7 @@ module.exports = {
                                     }
                                 });
                             }
-                            
+
                             if (nursingPlanItems.length) {
                                 now = app.moment();
                                 gen_batch_no = yield app.sequenceFactory.getSequenceVal(app.modelVariables.SEQUENCE_DEFS.CODE_OF_NURSING_RECORD);
@@ -4733,7 +4661,6 @@ module.exports = {
                                     workItems = nursingPlanItem.work_items;
                                     for (var j = 0, len2 = workItems.length; j < len2; j++) {
                                         workItem = workItems[j];
-                                        console.log('workItem.name', workItem.name);
                                         remind_max = workItem.remind_times || 1;
                                         remind_step = workItem.duration / remind_max;
                                         // console.log('remind_max: ', remind_max);
@@ -4745,6 +4672,22 @@ module.exports = {
                                         nursingRecord.remark = workItem.remark;
                                         nursingRecord.duration = workItem.duration;
                                         nursingRecord.remind_on = [];
+                                        var str = workItem.voice_template;
+                                        var reg = /\${([^}]+)}/;
+                                        while ((result = reg.exec(str)) != null) {
+                                            if (RegExp.$1 == "老人姓名") {
+                                                str = str.replace(reg, nursingPlanItem.elderly_name);
+
+                                            } else if (RegExp.$1 == "工作项目"||RegExp.$1 == "药品名称") {
+                                                str = str.replace(reg, workItem.name);
+
+                                            } else if (RegExp.$1 == "工作描述"||RegExp.$1 == "服用方法") {
+                                                str = str.replace(reg, workItem.description);
+                                            }
+                                        }
+                                        console.log("$$$$",str);
+                                        nursingRecord.voice_content = str;
+
                                         if (workItem.repeat_type == DIC.D0103.AS_NEEDED) {
                                             //按需工作不需要提醒
                                             nursingRecord.exec_on = app.moment(now.format('YYYY-MM-DD'));
@@ -4797,8 +4740,8 @@ module.exports = {
                                                 work_item_repeat_values = workItem.repeat_values;
                                                 for (var weekDay = now.day(), weekMax = weekDay + 8; weekDay < weekMax; weekDay++) {
                                                     if (app._.find(work_item_repeat_values, (o) => {
-                                                        return weekDay % 7 === o % 7;
-                                                    })) {
+                                                            return weekDay % 7 === o % 7;
+                                                        })) {
                                                         // day 相等以后,判断是否时是生成当天,如果是则比较时刻,时刻过期的话需要生成下一个执行点
                                                         // console.log('weekDay',weekDay);
                                                         exec_date = app.moment(now).day(weekDay);
@@ -4807,7 +4750,7 @@ module.exports = {
                                                         // console.log("exec_date is after now:",app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start).isAfter(now));
                                                         if (app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start).isAfter(now)) {
                                                             exec_on = app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start)
-                                                             nursingRecord.exec_on = exec_on;
+                                                            nursingRecord.exec_on = exec_on;
                                                             if (workItem.remind_flag) {
                                                                 remind_start = app.moment(exec_on);
                                                                 for (var remind_count = 0; remind_count < remind_max; remind_count++) {
@@ -4826,8 +4769,8 @@ module.exports = {
                                                 work_item_repeat_values = workItem.repeat_values;
                                                 for (var i = 0; i < 32; i++) {
                                                     if (app._.find(work_item_repeat_values, (o) => {
-                                                        return app.moment(now).add(i, 'danursingRecordToSaveys').date() === o;
-                                                    })) {
+                                                            return app.moment(now).add(i, 'days').date() === o;
+                                                        })) {
                                                         // date 相等以后,判断是否时是生成当天,如果是则比较时刻,时刻过期的话需要生成下一个执行点
                                                         exec_date = app.moment(now).add(i, 'days');
                                                         if (app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start).isAfter(now)) {
@@ -4895,8 +4838,7 @@ module.exports = {
                             }
 
                             this.body = app.wrapper.res.default(warningMsg);
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -4904,13 +4846,312 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
+                method: "nursingRecordNextGenerate",
+                verb: 'post',
+                url: this.service_url_prefix + "/nursingRecordNextGenerate",
+                handler: function(app, options) {
+                    return function*(next) {
+                        try {
+                            var nursingRecordId = this.request.body.nursingRecordId;
+                            var currentNursingRecord = yield app.modelFactory().model_one(app.models['psn_nursingRecord'], { where: { _id: nursingRecordId } });
+                            // console.log('currentNursingRecord',currentNursingRecord);
+                            currentNursingRecord.executed_flag = true;
+                            currentNursingRecord.save();
+                            var elderlyId = currentNursingRecord.elderlyId;
+                            var workItemId = currentNursingRecord.workItemId;
+
+
+                            var tenant, elderly, elderlyRoomValue, roomId, nursingPlanItems, nursingPlanItem, workItems, workItem,
+                                nursingRecord, now, gen_batch_no, nursingWorkerScheduleItem, exec_date, exec_on, exec_date_string, remind_on;
+                            var elderlyMapRoom = {},
+                                nursingRecordsToSave = [],
+                                nursingRecordToSave, work_item_repeat_values, allEdlerlyIds, allElderly, nursingRecordExist,
+                                remind_max, remind_step, remind_start, exec_start, exec_end, warningMsg;
+
+                            var tenantId = currentNursingRecord.tenantId;
+
+                            var cur_exec_on = app.moment(currentNursingRecord.exec_on).format('YYYY-MM-DD')
+                            exec_date_string = app.moment(cur_exec_on).add(1, "days").format('YYYY-MM-DD');
+                            now = app.moment(cur_exec_on).add(1, "days");
+
+                            tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
+                            if (!tenant || tenant.status == 0) {
+                                this.body = app.wrapper.res.error({ message: '无法找到养老机构!' });
+                                yield next;
+                                return;
+                            }
+
+
+                            if (elderlyId) {
+                                // 为单个老人
+                                elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
+                                if (!elderly || elderly.status == 0) {
+                                    this.body = app.wrapper.res.error({ message: '无法找到老人!' });
+                                    yield next;
+                                    return;
+                                }
+
+                                if (!elderly.live_in_flag) {
+                                    this.body = app.wrapper.res.error({ message: '老人已出院或离世!' });
+                                    yield next;
+                                    return;
+                                }
+
+                                nursingPlanItems = yield app.modelFactory().model_query(app.models['psn_nursingPlan'], {
+                                    select: 'elderlyId elderly_name work_items',
+                                    where: {
+                                        status: 1,
+                                        elderlyId: elderlyId,
+                                        tenantId: tenantId
+                                    }
+                                });
+
+                                // 查询房间号
+                                elderlyMapRoom[elderlyId] = elderly.room_value;
+
+                            } else {
+                                allElderly = yield app.modelFactory().model_query(app.models['psn_elderly'], {
+                                    select: 'room_value',
+                                    where: {
+                                        status: 1,
+                                        live_in_flag: true,
+                                        tenantId: tenantId
+                                    }
+                                });
+
+                                app._.each(allElderly, (o) => {
+                                    elderlyMapRoom[o._id.toString()] = o.room_value;
+                                });
+
+                                // 为所有老人
+                                nursingPlanItems = yield app.modelFactory().model_query(app.models['psn_nursingPlan'], {
+                                    select: 'elderlyId elderly_name work_items',
+                                    where: {
+                                        status: 1,
+                                        tenantId: tenantId
+                                    }
+                                });
+                            }
+
+                            if (nursingPlanItems) {
+
+                                var flag = false; // work_item is exist flag;
+                                for (var i = 0, len = nursingPlanItems.length; i < len; i++) {
+                                    workItems = nursingPlanItems[i].work_items;
+                                    for (var j = 0, len2 = workItems.length; j < len2; j++) {
+                                        if (workItems[j].workItemId.toString() == workItemId) {
+                                            flag = true;
+                                            workItem = workItems[j];
+                                            break;
+                                        }
+                                    }
+                                    if (flag = true) {
+                                        nursingPlanItem = nursingPlanItems[i];
+                                        break;
+                                    }
+                                }
+                                // console.log("workItem", workItem);
+                                gen_batch_no = yield app.sequenceFactory.getSequenceVal(app.modelVariables.SEQUENCE_DEFS.CODE_OF_NURSING_RECORD);
+                                elderlyRoomValue = elderlyMapRoom[nursingPlanItem.elderlyId];
+                                remind_max = workItem.remind_times || 1;
+
+                                remind_step = workItem.duration / remind_max;
+
+                                nursingRecord = {
+                                    elderlyId: nursingPlanItem.elderlyId,
+                                    elderly_name: nursingPlanItem.elderly_name,
+                                    roomId: elderlyRoomValue.roomId,
+                                    bed_no: elderlyRoomValue.bed_no,
+                                    gen_batch_no: gen_batch_no,
+                                    tenantId: tenantId,
+                                    workItemId: workItem._id,
+                                    name: workItem.name,
+                                    description: workItem.description,
+                                    remark: workItem.remark,
+                                    duration: workItem.duration
+                                }
+                                var str = workItem.voice_template;
+                                var reg = /\${([^}]+)}/;
+                                while ((result = reg.exec(str)) != null) {
+                                    if (RegExp.$1 == "老人姓名") {
+                                        str = str.replace(reg, nursingPlanItem.elderly_name);
+
+                                    } else if (RegExp.$1 == "工作项目"||RegExp.$1 == "药品名称") {
+                                        str = str.replace(reg, workItem.name);
+
+                                    } else if (RegExp.$1 == "工作描述"||RegExp.$1 == "服用方法") {
+                                        str = str.replace(reg, workItem.description);
+                                    }
+
+                                }
+                                nursingRecord.voice_content = str;
+                                nursingRecord.remind_on = [];
+
+                                if (workItem.repeat_type == DIC.D0103.AS_NEEDED) {
+                                    //按需工作不需要提醒
+                                    nursingRecord.exec_on = app.moment(now.format('YYYY-MM-DD'));
+                                    nursingRecord.assigned_worker = null; // 待补
+                                    nursingRecordsToSave.push(app._.extend({}, nursingRecord));
+                                } else if (workItem.repeat_type == DIC.D0103.TIME_IN_DAY) {
+                                    //Whether the current record is the last one
+                                    var currentAllRecords = yield app.modelFactory().model_query(app.models['psn_nursingRecord'], { where: { elderlyId: elderlyId, workItemId: workItemId } });
+                                    // console.log("currentAllRecords", currentAllRecords);
+                                    if (app._.find(currentAllRecords, (c) => {
+                                            return app.moment(c.exec_on).isAfter(app.moment(currentNursingRecord.exec_on))
+                                        })) {
+                                        this.body = app.wrapper.res.default();
+                                        yield next;
+                                        return
+
+                                    } else {
+                                        yield app.modelFactory().model_bulkDelete(app.models['psn_nursingRecord'], {
+                                            where: {
+                                                tenantId: tenantId,
+                                                elderlyId: { '$in': allEdlerlyIds },
+                                                workItemId: workItemId,
+                                                executed_flag: false,
+                                            }
+                                        })
+
+
+
+                                        // console.log("exec_date_string", exec_date_string);
+                                        if (workItem.repeat_values.length > 0) {
+                                            app._.each(workItem.repeat_values, (o) => {
+
+                                                nursingRecord.remind_on = [];
+                                                exec_on = app.moment(exec_date_string + ' ' + o + workItem.repeat_start);
+                                                // console.log("exec_on", exec_on);
+                                                nursingRecord.exec_on = exec_on;
+                                                if (workItem.remind_flag) {
+                                                    remind_start = app.moment(exec_on);
+
+                                                    for (var remind_count = 0; remind_count < remind_max; remind_count++) {
+                                                        nursingRecord.remind_on.push(app.moment(app.moment(remind_start).add(remind_step * remind_count, 'minutes')));
+                                                    }
+                                                }
+                                                nursingRecordsToSave.push(app._.extend({}, nursingRecord));
+
+                                            });
+                                        } else {
+                                            exec_on = app.moment(exec_date_string + ' ' + workItem.repeat_start)
+                                            if (exec_on.isBefore(now)) {
+                                                exec_on = app.moment(now).add(1, 'days').format('YYYY-MM-DD') + ' ' + workItem.repeat_start;
+                                            }
+                                            nursingRecord.exec_on = exec_on;
+                                            if (workItem.remind_flag) {
+                                                remind_start = app.moment(exec_on);
+                                                for (var remind_count = 0; remind_count < remind_max; remind_count++) {
+                                                    nursingRecord.remind_on.push(app.moment(app.moment(remind_start).add(remind_step * remind_count, 'minutes')));
+                                                }
+                                            }
+                                            nursingRecordsToSave.push(app._.extend({}, nursingRecord));
+                                        }
+                                    }
+
+                                } else if (workItem.repeat_type == DIC.D0103.DAY_IN_WEEK) {
+                                    if (workItem.repeat_values) {
+                                        work_item_repeat_values = workItem.repeat_values;
+                                        for (var weekDay = now.day(), weekMax = weekDay + 8; weekDay < weekMax; weekDay++) {
+                                            if (app._.find(work_item_repeat_values, (o) => {
+                                                    return weekDay % 7 === o % 7;
+                                                })) {
+                                                exec_date = app.moment(now).day(weekDay);
+
+                                                if (app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start).isAfter(now)) {
+                                                    exec_on = app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start)
+                                                    nursingRecord.exec_on = exec_on;
+                                                    if (workItem.remind_flag) {
+                                                        remind_start = app.moment(exec_on);
+                                                        for (var remind_count = 0; remind_count < remind_max; remind_count++) {
+
+                                                            nursingRecord.remind_on.push(app.moment(app.moment(remind_start).add(remind_step * remind_count, 'minutes')));
+                                                        }
+                                                    }
+                                                    nursingRecordsToSave.push(app._.extend({}, nursingRecord));
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else if (workItem.repeat_type == DIC.D0103.DATE_IN_MONTH) {
+                                    if (workItem.repeat_values) {
+                                        work_item_repeat_values = workItem.repeat_values;
+                                        for (var i = 0; i < 32; i++) {
+                                            if (app._.find(work_item_repeat_values, (o) => {
+                                                    return app.moment(now).add(i, 'days').date() === o;
+                                                })) {
+                                                // date 相等以后,判断是否时是生成当天,如果是则比较时刻,时刻过期的话需要生成下一个执行点
+                                                exec_date = app.moment(now).add(i, 'days');
+                                                // console.log("exec_date_M",exec_date)
+                                                if (app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start).isAfter(now)) {
+                                                    exec_on = app.moment(exec_date.format('YYYY-MM-DD') + ' ' + workItem.repeat_start)
+                                                    nursingRecord.exec_on = exec_on;
+                                                    if (workItem.remind_flag) {
+                                                        remind_start = app.moment(exec_on);
+                                                        for (var remind_count = 0; remind_count < remind_max; remind_count++) {
+                                                            nursingRecord.remind_on.push(app.moment(app.moment(remind_start).add(remind_step * remind_count, 'minutes')));
+                                                        }
+                                                    }
+                                                    nursingRecordsToSave.push(app._.extend({}, nursingRecord));
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+
+                            for (var i = 0, findNuringWorkerCount = 0, len = nursingRecordsToSave.length; i < len; i++) {
+                                nursingRecordToSave = nursingRecordsToSave[i];
+                                elderlyRoomValue = elderlyMapRoom[nursingRecordToSave.elderlyId];
+                                exec_start = app.moment(nursingRecordToSave.exec_on.format('YYYY-MM-DD'));
+                                exec_end = app.moment(exec_start).add(1, 'days');
+                                nursingWorkerScheduleItem = yield app.modelFactory().model_one(app.models['psn_nursingSchedule'], {
+                                    select: 'aggr_value',
+                                    where: {
+                                        status: 1,
+                                        x_axis: { '$gte': exec_start, '$lt': exec_end },
+                                        y_axis: elderlyRoomValue.roomId,
+                                        tenantId: tenantId
+                                    }
+                                });
+                                if (nursingWorkerScheduleItem) {
+                                    nursingRecordToSave.assigned_worker = nursingWorkerScheduleItem.aggr_value;
+                                    findNuringWorkerCount++;
+                                }
+                            }
+                            if (findNuringWorkerCount == 0) {
+                                warningMsg = '无法找到护理记录执行时间对应的护工,可能还没有排班';
+                            } else if (findNuringWorkerCount < len) {
+                                warningMsg = '部分护理记录无法找到执行时间对应的护工,可能那些时间段还没有排班';
+                            }
+
+                            // 最终需要先删除当前时间之后的所有记录,并插入重新计算以后的护理记录
+                            if (nursingRecordsToSave.length > 0) {
+                                allEdlerlyIds = app._.allKeys(elderlyMapRoom);
+                                yield app.modelFactory().model_bulkInsert(app.models['psn_nursingRecord'], {
+                                    rows: nursingRecordsToSave
+                                });
+                            }
+
+                            this.body = app.wrapper.res.default(warningMsg);
+
+                        } catch (e) {
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
+                        }
+                        yield next;
+                    };
+                }
+            }, {
                 method: 'nursingRecordsByElderlyToday',
                 verb: 'post',
                 url: this.service_url_prefix + "/nursingRecordsByElderlyToday", //老人的今日的护理记录
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var tenant, elderly, nursingPlan;
                         try {
                             var tenantId = this.request.body.tenantId;
@@ -4923,8 +5164,8 @@ module.exports = {
 
                             var elderlyId = this.request.body.elderlyId;
                             elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
-                            if(!elderly || elderly.status == 0){
-                                this.body = app.wrapper.res.error({message: '无法找到老人!'});
+                            if (!elderly || elderly.status == 0) {
+                                this.body = app.wrapper.res.error({ message: '无法找到老人!' });
                                 yield next;
                                 return;
                             }
@@ -4934,15 +5175,14 @@ module.exports = {
                                 select: 'exec_on executed_flag name description duration assigned_worker confirmed_flag confirmed_on workItemId',
                                 where: {
                                     elderlyId: elderlyId,
-                                    exec_on:  {$gte: today.toDate(), $lte: today.add(1, 'days').toDate()},
+                                    exec_on: { $gte: today.toDate(), $lte: today.add(1, 'days').toDate() },
                                     tenantId: tenantId
                                 },
                                 sort: 'exec_on'
                             }).populate('assigned_worker').populate('workItemId');
-                            console.log(rows);
+                            // console.log(rows);
                             this.body = app.wrapper.res.rows(rows);
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -4956,8 +5196,8 @@ module.exports = {
                 method: 'elderlysByDistrictFloors',
                 verb: 'post',
                 url: this.service_url_prefix + "/elderlysByDistrictFloors", //按片区楼层查找入住老人
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var tenant, districtFloors, pairOfDistrictFloor, roomObjects, roomIds, elderlyObjects, elderlyIds;
                         try {
                             var tenantId = this.request.body.tenantId;
@@ -5005,22 +5245,21 @@ module.exports = {
                             });
 
                             var rows = yield app.modelFactory().model_query(app.models['psn_elderly'], {
-                                select: 'name birthday nursingLevelId room_value avatar',
-                                where: {
-                                    status: 1,
-                                    live_in_flag: true,
-                                    _id: { '$in': elderlyIds },
-                                    tenantId: tenantId
-                                }
+                                    select: 'name birthday nursingLevelId room_value avatar',
+                                    where: {
+                                        status: 1,
+                                        live_in_flag: true,
+                                        _id: { '$in': elderlyIds },
+                                        tenantId: tenantId
+                                    }
 
-                            }).populate('nursingLevelId', 'name short_name nursing_assessment_grade', 'psn_nursingLevel')
+                                }).populate('nursingLevelId', 'name short_name nursing_assessment_grade', 'psn_nursingLevel')
                                 .populate('room_value.roomId', 'name bedMonitors', 'psn_room');
 
                             // console.log('elderlys:', rows);
 
                             this.body = app.wrapper.res.rows(rows);
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -5028,31 +5267,30 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'nursingStationCloseBedMonitorAlarm',
                 verb: 'post',
                 url: this.service_url_prefix + "/nursingStationCloseBedMonitorAlarm", //关闭离床报警,此处永远为插入记录,因为采用报警数据后置插入模型
-                handler: function (app, options) {
-                    return function * (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var tenant, elderly, bedMonitor;
                         try {
                             var tenantId = this.request.body.tenantId;
                             tenant = yield app.modelFactory().model_read(app.models['pub_tenant'], tenantId);
-                            if(!tenant || tenant.status == 0){
-                                this.body = app.wrapper.res.error({message: '无法找到养老机构!'});
+                            if (!tenant || tenant.status == 0) {
+                                this.body = app.wrapper.res.error({ message: '无法找到养老机构!' });
                                 yield next;
                                 return;
                             }
 
                             var elderlyId = this.request.body.elderlyId;
                             elderly = yield app.modelFactory().model_read(app.models['psn_elderly'], elderlyId);
-                            if(!elderly || elderly.status == 0){
-                                this.body = app.wrapper.res.error({message: '无法找到老人!'});
+                            if (!elderly || elderly.status == 0) {
+                                this.body = app.wrapper.res.error({ message: '无法找到老人!' });
                                 yield next;
                                 return;
                             }
-                            
+
                             var bedMonitorName = this.request.body.bedMonitorName;
 
                             bedMonitor = yield app.modelFactory().model_one(app.models['pub_bedMonitor'], {
@@ -5064,8 +5302,8 @@ module.exports = {
                                 }
                             });
 
-                            if(!bedMonitor){
-                                this.body = app.wrapper.res.error({message: '无法找到睡眠带!'});
+                            if (!bedMonitor) {
+                                this.body = app.wrapper.res.error({ message: '无法找到睡眠带!' });
                                 yield next;
                                 return;
                             }
@@ -5076,7 +5314,7 @@ module.exports = {
 
                             console.log('前置检查完成');
 
-                            yield app.modelFactory().model_create(app.models['pub_alarm'],{
+                            yield app.modelFactory().model_create(app.models['pub_alarm'], {
                                 subject: 'pub_bedMonitor',
                                 subjectId: bedMonitor._id,
                                 subject_name: bedMonitor.name,
@@ -5094,8 +5332,7 @@ module.exports = {
                             app.bed_monitor_provider.closeAlarm(bedMonitorName);
 
                             this.body = app.wrapper.res.default();
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -5109,27 +5346,27 @@ module.exports = {
                 method: 'queryDrug',
                 verb: 'post',
                 url: this.service_url_prefix + "/q/drug",
-                handler: function (app, options) {
-                    return function * (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         try {
                             var tenantId = this.request.body.tenantId;
                             var keyword = this.request.body.keyword;
                             var data = this.request.body.data;
 
-                            app._.extend(data.where,{
+                            app._.extend(data.where, {
                                 status: 1,
                                 tenantId: tenantId
                             });
 
-                            if(keyword){
+                            if (keyword) {
                                 data.where.full_name = new RegExp(keyword);
                             }
                             var rows = yield app.modelFactory().model_query(app.models['psn_drugDirectory'], data);
                             this.body = app.wrapper.res.rows(rows);
                         } catch (e) {
-                          console.log(e);
-                          self.logger.error(e.message);
-                          this.body = app.wrapper.res.error(e);
+                            console.log(e);       
+                            self.logger.error(e.message);
+                            this.body = app.wrapper.res.error(e);
                         }
                         yield next;
                     };
@@ -5140,8 +5377,8 @@ module.exports = {
                 method: 'inStock',
                 verb: 'post',
                 url: this.service_url_prefix + "/inStock",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var tenant, elderly, drug;
                         try {
                             var tenantId = this.request.body.tenantId;
@@ -5155,38 +5392,37 @@ module.exports = {
                             var unit = this.request.body.unit;
                             var type = this.request.body.type;
 
-                            var drugStock  = yield app.modelFactory().model_one(app.models['psn_drugStock'],{
-                                    where: {
-                                        status: 1,
-                                        elderlyId: elderlyId,
-                                        drugId: drugId,
-                                        tenantId: tenantId,
-                                        unit:unit
-                                    }
-                                });
-                              
-                                 
-                            if(!drugStock){
-                                yield app.modelFactory().model_create(app.models['psn_drugStock'],{
-                                    status:1,
+                            var drugStock = yield app.modelFactory().model_one(app.models['psn_drugStock'], {
+                                where: {
+                                    status: 1,
                                     elderlyId: elderlyId,
-                                    elderly_name:elderly_name,
+                                    drugId: drugId,
+                                    tenantId: tenantId,
+                                    unit: unit
+                                }
+                            });
+
+
+                            if (!drugStock) {
+                                yield app.modelFactory().model_create(app.models['psn_drugStock'], {
+                                    status: 1,
+                                    elderlyId: elderlyId,
+                                    elderly_name: elderly_name,
                                     tenantId: tenantId,
                                     drugId: drugId,
                                     drug_no: drug_no,
-                                    drug_full_name:drug_full_name,
+                                    drug_full_name: drug_full_name,
                                     current_quantity: in_out_quantity,
                                     type: type,
                                     unit: unit
                                 });
 
-                            }else{
-                                drugStock.current_quantity = parseInt(drugStock.current_quantity) + parseInt(in_out_quantity); 
+                            } else {
+                                drugStock.current_quantity = parseInt(drugStock.current_quantity) + parseInt(in_out_quantity);
                                 yield drugStock.save();
                             }
                             this.body = app.wrapper.res.default();
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -5194,38 +5430,37 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'inStockAbolish',
                 verb: 'get',
-                url: this.service_url_prefix + "/inStockAbolish/:_id",//:select需要提取的字段域用逗号分割 e.g. name,type
-                handler: function (app, options) {
-                    return function * (next) {
+                url: this.service_url_prefix + "/inStockAbolish/:_id", //:select需要提取的字段域用逗号分割 e.g. name,type
+                handler: function(app, options) {
+                    return function*(next) {
                         try {
                             var inStock = yield app.modelFactory().model_read(app.models['psn_drugInOutStock'], this.params._id);
-                            var inStockJson =  inStock.toObject();
-                            
-                            var drugStock  = yield app.modelFactory().model_one(app.models['psn_drugStock'],{
-                                    where: {
-                                        status: 1,
-                                        elderlyId: inStockJson.elderlyId,
-                                        drugId: inStockJson.drugId,
-                                        unit: inStockJson.unit,
-                                    }
-                                });
+                            var inStockJson = inStock.toObject();
+
+                            var drugStock = yield app.modelFactory().model_one(app.models['psn_drugStock'], {
+                                where: {
+                                    status: 1,
+                                    elderlyId: inStockJson.elderlyId,
+                                    drugId: inStockJson.drugId,
+                                    unit: inStockJson.unit,
+                                }
+                            });
                             // console.log(drugStock);
-                            if(!drugStock){
-                                this.body = app.wrapper.res.error({message: '当前无库存，无法取消记录'});
+                            if (!drugStock) {
+                                this.body = app.wrapper.res.error({ message: '当前无库存，无法取消记录' });
                                 yield next;
                                 return;
-                            }else{
-                                if(drugStock.current_quantity < inStockJson.in_out_quantity){
-                                    this.body = app.wrapper.res.error({message: '库存不足，无法取消记录!'});
+                            } else {
+                                if (drugStock.current_quantity < inStockJson.in_out_quantity) {
+                                    this.body = app.wrapper.res.error({ message: '库存不足，无法取消记录!' });
                                     yield next;
                                     return;
-                                }else{
+                                } else {
                                     inStock.valid_flag = false;
-                                    yield inStock.save();        
+                                    yield inStock.save();
                                     drugStock.current_quantity = parseInt(drugStock.current_quantity) - parseInt(inStockJson.in_out_quantity);
                                     yield drugStock.save();
                                 }
@@ -5238,13 +5473,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'outStock',
                 verb: 'post',
                 url: this.service_url_prefix + "/outStock",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         var tenant, elderly, drug;
                         try {
                             var tenantId = this.request.body.tenantId;
@@ -5292,7 +5526,7 @@ module.exports = {
                                     elderlyId: elderlyId,
                                     drugId: drugId,
                                     tenantId: tenantId,
-                                    unit:unit
+                                    unit: unit
                                 }
                             });
 
@@ -5325,8 +5559,7 @@ module.exports = {
 
                             }
                             this.body = app.wrapper.res.default();
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -5334,13 +5567,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'drugOutStockInvalid',
                 verb: 'post',
                 url: this.service_url_prefix + "/drugOutStockInvalid",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         try {
                             var drugInOutStockId = this.request.body.drugInOutStockId;
                             console.log(drugInOutStockId);
@@ -5356,19 +5588,18 @@ module.exports = {
                                         elderlyId: drugInOutStock.elderlyId,
                                         drugId: drugInOutStock.drugId,
                                         tenantId: drugInOutStock.tenantId,
-                                        unit:drugInOutStock.unit
+                                        unit: drugInOutStock.unit
                                     }
                                 });
                                 drugStock.current_quantity = parseInt(drugStock.current_quantity) + parseInt(drugInOutStock.in_out_quantity);
-                            
+
                                 yield drugStock.save();
                                 drugInOutStock.valid_flag = false;
                                 yield drugInOutStock.save();
 
                             }
                             this.body = app.wrapper.res.default();
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
@@ -5376,13 +5607,12 @@ module.exports = {
                         yield next;
                     };
                 }
-            },
-            {
+            }, {
                 method: 'drugStockEditLogInsert',
                 verb: 'post',
                 url: this.service_url_prefix + "/drugStockEditLogInsert",
-                handler: function (app, options) {
-                    return function* (next) {
+                handler: function(app, options) {
+                    return function*(next) {
                         try {
                             var drugStockId = this.request.body.drugStockId;
                             var revised_quantity = this.request.body.revised_quantity;
@@ -5402,17 +5632,16 @@ module.exports = {
                                 return;
                             } else {
                                 yield app.modelFactory().model_create(app.models['psn_drugStockEditLog'], {
-                                        tenantId: tenantId,
-                                        revised_quantity:revised_quantity,
-                                        origin_quantity:origin_quantity,
-                                        status:1,
-                                        drugStockId:drugStockId,
-                                        operated_by_name:operated_by_name
-                                    });
+                                    tenantId: tenantId,
+                                    revised_quantity: revised_quantity,
+                                    origin_quantity: origin_quantity,
+                                    status: 1,
+                                    drugStockId: drugStockId,
+                                    operated_by_name: operated_by_name
+                                });
                             }
                             this.body = app.wrapper.res.default();
-                        }
-                        catch (e) {
+                        } catch (e) {
                             console.log(e);
                             self.logger.error(e.message);
                             this.body = app.wrapper.res.error(e);
