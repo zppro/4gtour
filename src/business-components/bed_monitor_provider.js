@@ -306,7 +306,7 @@ module.exports = {
                 var retCp = yield self.updateConcernPerson(cpInfo);//第三方 add user concern person
 
                 device = yield self.ctx.modelFactory().model_create(self.ctx.models['pub_bedMonitor'], {
-                    code:deviceInfo.deviceMac,
+                    code: deviceInfo.deviceMac,
                     name: deviceInfo.devId,
                     tenantId: tenantId
                 });
@@ -520,7 +520,7 @@ module.exports = {
                 var ret = yield rp({
                     method: 'POST',
                     url: externalSystemConfig.bed_monitor_provider.api_url + '/ECSServer/devicews/getSleepBriefReport.json',
-                    form: { sessionId: sessionId, devId: devId, startTime: startTime.unix()*1000, endTime: endTime.unix()*1000 }
+                    form: { sessionId: sessionId, devId: devId, startTime: startTime.unix() * 1000, endTime: endTime.unix() * 1000 }
                 });
                 ret = JSON.parse(ret);
                 console.log(ret);
@@ -549,11 +549,11 @@ module.exports = {
                     }
                     return self.ctx.wrapper.res.ret(ret);
                 }
-                var fallAsleepTime = self.ctx.moment.unix(value.fallAsleepTime/1000);
-                var awakeTime = self.ctx.moment.unix(value.awakeTime/1000);
+                var fallAsleepTime = self.ctx.moment.unix(value.fallAsleepTime / 1000);
+                var awakeTime = self.ctx.moment.unix(value.awakeTime / 1000);
                 var sleepTime = awakeTime.diff(fallAsleepTime, 'hours');
                 // var deepSleepTime = self.ctx.moment.unix(value.deepSleepTime).format('HH:MM:SS');
-                console.log("sleepTime:",sleepTime);
+                console.log("sleepTime:", sleepTime);
                 var deepSleepTime = (Number(value.deepSleepTime) / 3600000).toFixed(2);
                 ret = {
                     fallAsleepTime: fallAsleepTime.format('HH:MM:SS'),
@@ -834,13 +834,14 @@ module.exports = {
                     var bedMonitor = bedMonitors[i], key, oldBedStatus, bedStatus, sessionId;
 
                     //20170418-yrm-modify-satrt
-                    var room = yield self.ctx.modelFactory().model_one(self.ctx.models['psn_room'],{
-                        where:{
-                            status:1,
+                    var room = yield self.ctx.modelFactory().model_one(self.ctx.models['psn_room'], {
+                        where: {
+                            status: 1,
                             "bedMonitors.bedMonitorName": bedMonitor.name,
                             tenantId: bedMonitor.tenantId
-                        } 
+                        }
                     });
+
                     if(room){
                         var room_bedMonitors = room.bedMonitors;
                         var bed_no = (self.ctx._.find(room.bedMonitors ,function(o) {
@@ -852,8 +853,9 @@ module.exports = {
                                 "room_value.roomId": room._id,
                                 "room_value.bed_no": bed_no,
                                 tenantId: bedMonitor.tenantId
-                            }    
+                            }
                         });
+
                         if(elderly){
                             if(elderly.bed_monitor_timeout){
                                 timeout = elderly.bed_monitor_timeout;
@@ -1186,14 +1188,12 @@ module.exports = {
         var self = this;
         return co(function* () {
             try {
-                //  devId = "A1200006";
                 var endTime = self.ctx.moment(self.ctx.moment().format('YYYY-MM-DD 12:00:00'));
                 var startTime = self.ctx.moment(endTime).subtract(1, 'days');
-                console.log("endTime1:", self.ctx.moment().format('YYYY-MM-DD'));
-                console.log("startTime1:", startTime.format('YYYY-MM-DD'));
                 var fallAsleepTime, awakeTime, bedTime, wakeUpTime;
                 var turnOverFrequency, offBedFrequency;
                 var deepSleepTime, lightSleepTime;
+
                 var report = yield self.ctx.modelFactory().model_one(self.ctx.models['dwh_sleepDateReportOfHZFanWeng'], {
                     where: {
                         status: 1,
@@ -1211,9 +1211,9 @@ module.exports = {
                     }
                 });
                 if (report) {
-                    console.log("已经有了");
                     return self.ctx.wrapper.res.default();
                 }
+
                 if (dateReport.fallAsleepTime == '0') {
                     fallAsleepTime = undefined;
                     awakeTime = undefined;
@@ -1225,17 +1225,17 @@ module.exports = {
                     turnOverFrequency = undefined;
                     offBedFrequency = undefined;
                 } else {
-                    console.log("新增不为0");
-                    fallAsleepTime = self.ctx.moment.unix(dateReport.fallAsleepTime/1000);
-                    awakeTime = self.ctx.moment.unix(dateReport.awakeTime/1000);
-                    bedTime = self.ctx.moment.unix(dateReport.bedTime/1000);
-                    wakeUpTime = self.ctx.moment.unix(dateReport.wakeUpTime/1000);
+                    fallAsleepTime = self.ctx.moment.unix(dateReport.fallAsleepTime / 1000);
+                    awakeTime = self.ctx.moment.unix(dateReport.awakeTime / 1000);
+                    bedTime = self.ctx.moment.unix(dateReport.bedTime / 1000);
+                    wakeUpTime = self.ctx.moment.unix(dateReport.wakeUpTime / 1000);
                     deepSleepTime = Number(dateReport.deepSleepTime) / 3600000;
                     lightSleepTime = Number(dateReport.lightSleepTime) / 3600000;
                     evalution = dateReport.evalution;
                     turnOverFrequency = dateReport.turnOverFrequency
-                    off_bed_frequency = dateReport.offBedFrequency
+                    offBedFrequency = dateReport.offBedFrequency
                 }
+
                 yield self.ctx.modelFactory().model_create(self.ctx.models['dwh_sleepDateReportOfHZFanWeng'], {
                     status: 1,
                     devId: devId,
@@ -1253,7 +1253,6 @@ module.exports = {
                     evalution: evalution,
                     off_bed_frequency: offBedFrequency
                 });
-                console.log("新增成功");
                 return self.ctx.wrapper.res.default();
             }
             catch (e) {
@@ -1262,11 +1261,10 @@ module.exports = {
             }
         }).catch(self.ctx.coOnError);
     },
-    getDateReport: function (devId, tenantId, openid,skip) {
+    getDateReport: function (devId, tenantId, openid, skip) {
         var self = this;
         return co(function* () {
             try {
-                 console.log("devId:", devId);
                 var device = yield self.ctx.modelFactory().model_one(self.ctx.models['pub_bedMonitor'], {
                     where: {
                         name: devId,
@@ -1274,7 +1272,6 @@ module.exports = {
                         tenantId: tenantId
                     }
                 });
-                 console.log("device:", device);
                 var member = yield self.ctx.modelFactory().model_one(self.ctx.models['het_member'], {
                     where: {
                         open_id: openid,
@@ -1282,33 +1279,56 @@ module.exports = {
                         tenantId: tenantId
                     }
                 });
-                  console.log("member:", member);
                 var memberCarePerson = yield self.ctx.modelFactory().model_one(self.ctx.models['het_memberCarePerson'], {
                     where: {
                         care_by: member._id,
-                        bedMonitorId:device._id,
+                        bedMonitorId: device._id,
                         status: 1,
                         tenantId: tenantId
                     }
                 });
                 var reports = yield self.ctx.modelFactory().model_query(self.ctx.models['dwh_sleepDateReportOfHZFanWeng'], {
                     where: {
-                        check_in_time: {$gte: memberCarePerson.check_in_time },
+                        check_in_time: { $gte: memberCarePerson.check_in_time },
                         status: 1,
                         devId: devId,
                         tenantId: tenantId
+                    },
+                    sort: { check_in_time: -1 }
+                }, { limit: 5, skip: skip });
+
+                var dateReports = [];//数据格式修改 封装
+                for (var i = 0, length = reports.length; i < length; i++) {
+                    var report = reports[i];
+                    var date_end_result =  report.date_end.format("yyyy-MM-dd");
+                    if (report.fallasleep_time) {
+                        var light_sleep_duraion = Number(report.light_sleep_duraion).toFixed(2);
+                        var deep_sleep_duraion = Number(report.deep_sleep_duraion).toFixed(2);
+                        var dateReport = {
+                            fallasleep_time:report.fallasleep_time.format("hh:mm:ss"),
+                            awake_time:report.awake_time.format("hh:mm:ss"),
+                            light_sleep_duraion:light_sleep_duraion,
+                            deep_sleep_duraion:deep_sleep_duraion,
+                            endTime:date_end_result,
+                            turn_over_frequency:report.turn_over_frequency,
+                            off_bed_frequency:report.off_bed_frequency
+                        }
+                        dateReports.push(dateReport);             
+                    } else {
+                         var dateReport = {
+                            endTime:date_end_result
+                            
+                        }
+                        dateReports.push(dateReport);
                     }
-                },{limit:5,skip:skip});
-                
-                
-                console.log("reports:", reports);
-                return self.ctx.wrapper.res.rows(reports);
-            }
+                }
+                    return self.ctx.wrapper.res.rows(dateReports);
+                }
             catch (e) {
-                console.log(e);
-                self.logger.error(e.message);
-            }
-        }).catch(self.ctx.coOnError);
+                    console.log(e);
+                    self.logger.error(e.message);
+                }
+            }).catch(self.ctx.coOnError);
     }
 
 
