@@ -53,6 +53,11 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
                         .col-md-10
                             input.form-control(type='text', name='repeat_start',ng-model='vm.model.repeat_start',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-REPEAT_START")|translate}}')
                     fieldset: .form-group
+                        <!--语音播报-->
+                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-VOICE-TEMPLATE') | translate}}:
+                        .col-md-10
+                            textarea.form-control(name='voice_template',ng-model='vm.model.voice_template',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-VOICE")|translate}}',maxlength="400")            
+                    fieldset: .form-group
                         <!--标识集合-->
                         label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-FLAG-COLLECTION') | translate}}:
                         .col-md-2
