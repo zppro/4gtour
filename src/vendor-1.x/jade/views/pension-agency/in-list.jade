@@ -31,7 +31,8 @@
                         td {{::row.birthday|calcAge}}
                         td {{::row.board_summary}}
                         td {{::row.room_summary}}
-                        td {{::row.nursing_summary}}
+                        //- td {{::row.nursing_summary}}D3015
+                        td {{::row.nursing_assessment_grade|formatter:'nursing_assessment_grade':vm.columns}}
                         td {{::row.begin_exit_flow|formatter:'begin_exit_flow':vm.columns}}
                         td
                             .btn-group
