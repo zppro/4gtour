@@ -782,7 +782,7 @@ module.exports = {
                 }
                 self.isExecuting = true;
                 var tenants = yield self.ctx.modelFactory().model_query(self.ctx.models['pub_tenant'], {
-                    select: '_id name',
+                    select: '_id name other_config',
                     where: {
                         status: 1,
                         type: { '$in': [DIC.D1002.MINI_PENSION_ORG, DIC.D1002.MIDDLE_SIZE_PENSION_ORG, DIC.D1002.LARGE_SCALE_ORG] },
@@ -796,6 +796,7 @@ module.exports = {
                 var tenantIds = self.ctx._.map(tenants, (o) => {
                     return o.id;
                 });
+
                 // 保证各个tenant作为member的session
                 var tenantId;
                 for (var i = 0, len = tenantIds.length; i < len; i++) {
@@ -828,6 +829,42 @@ module.exports = {
                 // console.log('获取全部监控睡眠带 ', bedMonitors);
                 for (var i = 0; i < bedMonitors.length; i++) {
                     var bedMonitor = bedMonitors[i], key, oldBedStatus, bedStatus, sessionId;
+
+                    //20170418-yrm-modify-satrt
+                    var room = yield self.ctx.modelFactory().model_one(self.ctx.models['psn_room'],{
+                        where:{
+                            status:1,
+                            "bedMonitors.bedMonitorName": bedMonitor.name,
+                            tenantId: bedMonitor.tenantId
+                        } 
+                    });
+                    if(room){
+                        var room_object = room.toObject();
+                        var room_bedMonitors = room_object.bedMonitors;
+                        var elderly = yield self.ctx.modelFactory().model_one(self.ctx.models['psn_elderly'],{
+                            where:{
+                                status:1,
+                                "room_value.roomId": room_object._id,
+                                "room_value.bed_no": room_bedMonitors.bed_no,
+                                tenantId: bedMonitor.tenantId
+                            }    
+                        });
+                        if(elderly){
+                            var elderly_object = elderly.toObject();
+                            if(elderly_object.bed_monitor_timeout){
+                                timeout = elderly_object.bed_monitor_timeout;
+                            }else{
+                                var tenant = self.ctx._.findWhere(tenants, { _id: bedMonitor.tenantId });
+                                if(tenant){
+                                    if(tenant.other_config.psn_bed_monitor_timeout){
+                                        timeout = tenant.other_config.psn_bed_monitor_timeout;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    //20170418-yrm-modify-end
+
                     console.log('>>>>> 睡眠带 >>>>> ', bedMonitor.name);
                     self.logger.info('>>>>> 睡眠带 >>>>> ' + bedMonitor.name);
                     key = bedMonitor.name;

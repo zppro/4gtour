@@ -2467,14 +2467,21 @@
             .state(MODEL_VARIABLES.STATE_PREFIXS.PENSION_AGENCY + 'other-config', {
                 url: '/other-config',
                 title: '其它配置',
-                abstract: true,
+                access_level: AUTH_ACCESS_LEVELS.USER,
                 views: {
                     "module-header": {
                         templateUrl: helper.basepath(MODEL_VARIABLES.HEAD_TEMPLATES.PENSION_AGENCY),
                         controller: MODEL_VARIABLES.CONTROLLER_NAMES.MODULE_HEADER_FOR_TENANT
                     },
                     "module-content": {
-                        template: '<div class="data-ui-view"></div>'
+                        templateUrl: helper.basepath(MODEL_VARIABLES.CONTENT_TEMPLATES.SHARED + 'other-config.html'),
+                        controller: MODEL_VARIABLES.CONTROLLER_NAMES.OTHERCONFIG_GRID,
+                        resolve: {
+                            instanceVM: helper.buildInstanceVM(MODEL_VARIABLES.VM_PREFIXS.PENSION_AGENCY + 'other-config', {
+                                modelName: 'psn-tenant',
+                                searchForm: { "status": 1 }
+                            })
+                        }
                     }
                 },
                 data: {

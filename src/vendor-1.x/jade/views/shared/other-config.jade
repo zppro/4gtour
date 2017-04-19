@@ -3,14 +3,14 @@ form.form-validate.mb-lg(role='form', name="theForm", novalidate='', ng-submit="
         tabset(justified="true")
             tab(active="vm.tab1.active")
                 tab-heading
-                    | {{ vm.viewTranslatePath('TAB1') | translate}}
+                    | {{ vm.moduleTranslatePath('TAB1') | translate}}
                     span.text-danger(title="{{'validator.FIELD-INVALID'|translate}}" , ng-show="utils.vtab('contentTab1')")
                         i.glyphicon.glyphicon-minus-sign
                 div#contentTab1
                     fieldset: .form-group
-                        label.col-md-2.control-label {{ vm.viewTranslatePath('TAB1-LABEL-NAME') | translate}}:
+                        label.col-md-2.control-label {{ vm.moduleTranslatePath('TAB1-LABEL-NAME') | translate}}:
                         .col-md-10
-                            input.form-control(type='number', name='psn_bed_monitor_timeout',ng-model='vm.model.other_config.psn_bed_monitor_timeout',placeholder='{{vm.viewTranslatePath("TAB1-PLACEHOLDER-NAME")|translate}}' ,required='',ui-validate="'$value>=1'" )
+                            input.form-control(type='number', name='psn_bed_monitor_timeout',ng-model='vm.other_configs.psn_bed_monitor_timeout',placeholder='{{vm.moduleTranslatePath("TAB1-PLACEHOLDER-NAME")|translate}}' ,required='',ui-validate="'$value>=1'" )
                             span.text-danger(ng-show="utils.vinput(this.theForm,'psn_bed_monitor_timeout','required')") {{ "validator.REQUIRED" | translate}}
     .text-right.mt-lg
         button.btn.btn-warning(type="button",ng-click="vm.cancel()") {{'button.CANCEL'|translate}}

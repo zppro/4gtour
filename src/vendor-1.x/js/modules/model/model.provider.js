@@ -262,6 +262,7 @@
                     tenantChargeItemNursingLevelAsTree: tenantChargeItemNursingLevelAsTree,
                     tenantChargeItemCustomizedAsTree: tenantChargeItemCustomizedAsTree,
                     saveTenantChargeItemCustomized: saveTenantChargeItemCustomized,
+                    saveTenantOtherConfig:saveTenantOtherConfig,
                     queryVoucherNo: queryVoucherNo,
                     completeOrder: completeOrder,
                     refundOrder: refundOrder,
@@ -285,6 +286,10 @@
 
                 function saveTenantChargeItemCustomized(tenantId, chargeStandard) {
                     return $http.post(baseUrl + 'saveTenantChargeItemCustomized/' + tenantId, chargeStandard);
+                }
+
+                function saveTenantOtherConfig(tenantId,psn_bed_monitor_timeout){
+                    return $http.post(baseUrl + 'saveTenantOtherConfig/' + tenantId,{psn_bed_monitor_timeout:psn_bed_monitor_timeout} );
                 }
 
                 function queryVoucherNo(tenantId, modelName, keyword, where, select, sort){
