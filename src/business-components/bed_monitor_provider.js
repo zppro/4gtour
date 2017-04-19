@@ -842,26 +842,25 @@ module.exports = {
                         } 
                     });
                     if(room){
-                        var room_object = room.toObject();
-                        var room_bedMonitors = room_object.bedMonitors;
+                        var room_bedMonitors = room.bedMonitors;
+                        var bed_no = (self.ctx._.find(room.bedMonitors ,function(o) {
+                            return o.bedMonitorId == bedMonitor._id;
+                        })).bed_no;
                         var elderly = yield self.ctx.modelFactory().model_one(self.ctx.models['psn_elderly'],{
                             where:{
                                 status:1,
-                                "room_value.roomId": room_object._id,
-                                "room_value.bed_no": room_bedMonitors.bed_no,
+                                "room_value.roomId": room._id,
+                                "room_value.bed_no": bed_no,
                                 tenantId: bedMonitor.tenantId
                             }    
                         });
                         if(elderly){
-                            var elderly_object = elderly.toObject();
-                            if(elderly_object.bed_monitor_timeout){
-                                timeout = elderly_object.bed_monitor_timeout;
+                            if(elderly.bed_monitor_timeout){
+                                timeout = elderly.bed_monitor_timeout;
                             }else{
                                 var tenant = self.ctx._.findWhere(tenants, { _id: bedMonitor.tenantId });
-                                if(tenant){
-                                    if(tenant.other_config.psn_bed_monitor_timeout){
-                                        timeout = tenant.other_config.psn_bed_monitor_timeout;
-                                    }
+                                if(tenant && tenant.other_config && tenant.other_config.psn_bed_monitor_timeout){
+                                    timeout = tenant.other_config.psn_bed_monitor_timeout;
                                 }
                             }
                         }
